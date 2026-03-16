@@ -5,6 +5,32 @@ import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState } from "./gameState.js";
 
 const gameStates = new Map<string, GameState>();
+const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
+
+const EMPTY_ROOM_TTL_MS = 15 * 60 * 1000; // 15 minutes
+
+async function scheduleRoomDeletion(roomId: string) {
+  cancelRoomDeletion(roomId);
+  const timer = setTimeout(async () => {
+    emptyRoomTimers.delete(roomId);
+    gameStates.delete(roomId);
+    try {
+      await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
+      console.log(`Deleted empty room ${roomId} after inactivity`);
+    } catch (err) {
+      console.error(`Failed to delete room ${roomId}:`, err);
+    }
+  }, EMPTY_ROOM_TTL_MS);
+  emptyRoomTimers.set(roomId, timer);
+}
+
+function cancelRoomDeletion(roomId: string) {
+  const existing = emptyRoomTimers.get(roomId);
+  if (existing) {
+    clearTimeout(existing);
+    emptyRoomTimers.delete(roomId);
+  }
+}
 
 export function setupSocketHandlers(io: SocketServer) {
   io.on("connection", (socket: Socket) => {
@@ -28,6 +54,9 @@ export function setupSocketHandlers(io: SocketServer) {
           console.error("Failed to load room:", err);
         }
       }
+
+      // Cancel any pending deletion for this room (player is rejoining)
+      cancelRoomDeletion(roomId);
 
       const state = gameStates.get(roomId);
       if (state) {
@@ -278,7 +307,18 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       // ignore
     }
     if (state.players.size === 0) {
-      gameStates.delete(roomId);
+      if (state.status !== "waiting") {
+        // Game had started — schedule deletion after 15 minutes of emptiness
+        await scheduleRoomDeletion(roomId);
+      } else {
+        // Still in lobby — delete immediately
+        gameStates.delete(roomId);
+        try {
+          await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
+        } catch (err) {
+          // ignore
+        }
+      }
     } else {
       if (playerName) io.to(roomId).emit("player_left", { playerName });
       io.to(roomId).emit("game_state", serializeGameState(state));
