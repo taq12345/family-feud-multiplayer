@@ -131,5 +131,10 @@ export function useGameSocket(
     getSocket().emit("pass_turn", { roomId });
   }, [roomId]);
 
-  return { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent };
+  const leaveRoom = useCallback(() => {
+    if (!roomId) return;
+    getSocket().emit("leave_room", { roomId });
+  }, [roomId]);
+
+  return { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom };
 }

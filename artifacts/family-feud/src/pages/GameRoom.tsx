@@ -4,7 +4,8 @@ import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
-import { ArrowLeft, Send, Tv2, AlertTriangle, Trophy, Zap, Users, Crown } from "lucide-react";
+import { ArrowLeft, Send, Tv2, AlertTriangle, Trophy, Zap, Users, Crown, LogOut } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 
 function StrikeDisplay({ strikes }: { strikes: number }) {
   return (
@@ -79,6 +80,7 @@ export default function GameRoom() {
   const [answerInput, setAnswerInput] = useState("");
   const [notification, setNotification] = useState<string | null>(null);
   const [buzzedPlayer, setBuzzedPlayer] = useState<string | null>(null);
+  const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const showNotification = useCallback((msg: string) => {
@@ -86,7 +88,7 @@ export default function GameRoom() {
     setTimeout(() => setNotification(null), 3000);
   }, []);
 
-  const { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent } = useGameSocket(
+  const { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -122,6 +124,11 @@ export default function GameRoom() {
   const canBuzz = gameState?.status === "faceoff";
   const canFaceoff = gameState?.status === "faceoff" && buzzedPlayer === playerName;
 
+  function handleLeave() {
+    leaveRoom();
+    setLocation("/");
+  }
+
   function handleSendChat(e: React.FormEvent) {
     e.preventDefault();
     if (!chatInput.trim()) return;
@@ -153,9 +160,6 @@ export default function GameRoom() {
       {/* Header */}
       <div className="bg-blue-950 border-b border-blue-800 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button onClick={() => setLocation("/")} className="text-blue-400 hover:text-white transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
           <Tv2 className="w-6 h-6 text-yellow-400" />
           <span className="font-bold text-yellow-400 text-lg">Family Feud</span>
           <Badge className="bg-blue-800 text-blue-200 text-xs">Room: {roomId}</Badge>
@@ -164,6 +168,14 @@ export default function GameRoom() {
           <Users className="w-4 h-4 text-blue-300" />
           <span className="text-sm text-blue-300">{gameState.players.length} players</span>
           {isHost && <Crown className="w-4 h-4 text-yellow-400" title="You are the host" />}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setLeaveConfirmOpen(true)}
+            className="ml-2 border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600"
+          >
+            <LogOut className="w-3.5 h-3.5 mr-1" /> Leave
+          </Button>
         </div>
       </div>
 
@@ -396,6 +408,35 @@ export default function GameRoom() {
           </form>
         </div>
       </div>
+
+      {/* Leave confirmation dialog */}
+      <Dialog open={leaveConfirmOpen} onOpenChange={setLeaveConfirmOpen}>
+        <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-red-400 flex items-center gap-2">
+              <LogOut className="w-5 h-5" /> Leave Room?
+            </DialogTitle>
+            <DialogDescription className="text-blue-300">
+              Are you sure you want to leave? Your spot will be freed up for others.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 mt-2">
+            <Button
+              variant="outline"
+              className="flex-1 border-blue-700 text-blue-300 hover:bg-blue-900/40"
+              onClick={() => setLeaveConfirmOpen(false)}
+            >
+              Stay
+            </Button>
+            <Button
+              className="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold"
+              onClick={handleLeave}
+            >
+              <LogOut className="w-4 h-4 mr-1" /> Leave
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

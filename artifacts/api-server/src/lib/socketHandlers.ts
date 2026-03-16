@@ -251,29 +251,39 @@ export function setupSocketHandlers(io: SocketServer) {
       io.to(roomId).emit("game_state", serializeGameState(state));
     });
 
-    socket.on("disconnect", async () => {
-      const { roomId, playerName } = socket.data;
-      if (!roomId) return;
+    socket.on("leave_room", async ({ roomId }: { roomId: string }) => {
+      await handlePlayerLeave(io, socket, roomId);
+      socket.leave(roomId);
+      socket.data.roomId = null;
+    });
 
-      const state = gameStates.get(roomId);
-      if (state) {
-        state.players.delete(socket.id);
-        try {
-          await db.update(roomsTable)
-            .set({ playerCount: state.players.size })
-            .where(eq(roomsTable.id, roomId));
-        } catch (err) {
-          // ignore
-        }
-        if (state.players.size === 0) {
-          gameStates.delete(roomId);
-        } else {
-          io.to(roomId).emit("player_left", { playerName });
-          io.to(roomId).emit("game_state", serializeGameState(state));
-        }
-      }
+    socket.on("disconnect", async () => {
+      const { roomId } = socket.data;
+      if (!roomId) return;
+      await handlePlayerLeave(io, socket, roomId);
     });
   });
+}
+
+async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: string) {
+  const playerName = socket.data.playerName;
+  const state = gameStates.get(roomId);
+  if (state) {
+    state.players.delete(socket.id);
+    try {
+      await db.update(roomsTable)
+        .set({ playerCount: state.players.size })
+        .where(eq(roomsTable.id, roomId));
+    } catch (err) {
+      // ignore
+    }
+    if (state.players.size === 0) {
+      gameStates.delete(roomId);
+    } else {
+      if (playerName) io.to(roomId).emit("player_left", { playerName });
+      io.to(roomId).emit("game_state", serializeGameState(state));
+    }
+  }
 }
 
 async function endRound(io: SocketServer, state: GameState, roomId: string, winningTeam: 1 | 2) {
