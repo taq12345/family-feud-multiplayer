@@ -1,15 +1,18 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Family Feud Multiplayer API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: rooms
+    description: Game room operations
+  - name: questions
+    description: Survey question operations
 paths:
   /healthz:
     get:
@@ -24,6 +27,85 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /rooms:
+    get:
+      operationId: listRooms
+      tags: [rooms]
+      summary: List all open game rooms
+      responses:
+        "200":
+          description: List of rooms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+    post:
+      operationId: createRoom
+      tags: [rooms]
+      summary: Create a new game room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRoomRequest"
+      responses:
+        "201":
+          description: Room created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /rooms/{roomId}:
+    get:
+      operationId: getRoom
+      tags: [rooms]
+      summary: Get a specific room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Room details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "404":
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /questions:
+    get:
+      operationId: listQuestions
+      tags: [questions]
+      summary: List all survey questions
+      responses:
+        "200":
+          description: List of questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Question"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +116,103 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    Room:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        hostName:
+          type: string
+        status:
+          type: string
+          enum: [waiting, playing, finished]
+        playerCount:
+          type: integer
+        maxPlayers:
+          type: integer
+        team1Name:
+          type: string
+        team2Name:
+          type: string
+        team1Score:
+          type: integer
+        team2Score:
+          type: integer
+        currentRound:
+          type: integer
+        totalRounds:
+          type: integer
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - hostName
+        - status
+        - playerCount
+        - maxPlayers
+        - team1Name
+        - team2Name
+        - team1Score
+        - team2Score
+        - currentRound
+        - totalRounds
+        - createdAt
+
+    CreateRoomRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        hostName:
+          type: string
+        team1Name:
+          type: string
+        team2Name:
+          type: string
+        maxPlayers:
+          type: integer
+        totalRounds:
+          type: integer
+      required:
+        - name
+        - hostName
+        - team1Name
+        - team2Name
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Answer"
+      required:
+        - id
+        - question
+        - answers
+
+    Answer:
+      type: object
+      properties:
+        text:
+          type: string
+        points:
+          type: integer
+      required:
+        - text
+        - points
