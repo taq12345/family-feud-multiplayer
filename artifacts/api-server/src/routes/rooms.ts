@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { roomsTable } from "@workspace/db/schema";
-import { getRoomPlayers } from "../lib/socketHandlers.js";
+import { getRoomPlayers, isNicknameTaken } from "../lib/socketHandlers.js";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { surveyQuestions } from "../data/questions.js";
@@ -39,6 +39,12 @@ router.post("/rooms", async (req, res) => {
 
   const id = nanoid(8);
   try {
+    // Enforce at most one room per host
+    const existing = await db.select().from(roomsTable).where(eq(roomsTable.hostName, hostName));
+    if (existing.length > 0) {
+      return res.status(400).json({ error: "You already have an active room." });
+    }
+
     const [room] = await db.insert(roomsTable).values({
       id,
       name,
@@ -108,6 +114,11 @@ router.get("/rooms/:roomId/players", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch room players" });
   }
+});
+
+router.get("/nicknames/:name/check", (req, res) => {
+  const { name } = req.params;
+  res.json({ taken: isNicknameTaken(name) });
 });
 
 router.get("/questions", (_req, res) => {

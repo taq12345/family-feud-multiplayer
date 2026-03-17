@@ -9,6 +9,15 @@ const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const faceoffTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
+// nickname (lowercase) → socket.id – tracks every connected player across all rooms
+const activeNicknames = new Map<string, string>();
+
+export function isNicknameTaken(name: string, excludeSocketId?: string): boolean {
+  const existing = activeNicknames.get(name.trim().toLowerCase());
+  if (!existing) return false;
+  return existing !== excludeSocketId;
+}
+
 const EMPTY_ROOM_TTL_MS = 15 * 60 * 1000; // 15 minutes
 const FACE_OFF_ANSWER_MS = 8 * 1000; // 8 seconds after buzz-in
 const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
@@ -115,6 +124,15 @@ export function setupSocketHandlers(io: SocketServer) {
     console.log("Client connected:", socket.id);
 
     socket.on("join_room", async ({ roomId, playerName, team }: { roomId: string; playerName: string; team: 1 | 2 }) => {
+      // Reject if another connected socket already owns this nickname
+      if (isNicknameTaken(playerName, socket.id)) {
+        socket.emit("join_rejected", { reason: `Nickname "${playerName}" is already in use by another player.` });
+        return;
+      }
+
+      // Register the nickname before doing anything else
+      activeNicknames.set(playerName.trim().toLowerCase(), socket.id);
+
       socket.join(roomId);
       socket.data.roomId = roomId;
       socket.data.playerName = playerName;
@@ -379,6 +397,22 @@ export function setupSocketHandlers(io: SocketServer) {
       io.to(roomId).emit("game_state", serializeGameState(state));
     });
 
+    socket.on("delete_room", async ({ roomId }: { roomId: string }) => {
+      const state = gameStates.get(roomId);
+      if (!state) return;
+      const player = state.players.get(socket.id);
+      if (!player?.isHost) return;
+
+      gameStates.delete(roomId);
+      try {
+        await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
+      } catch {
+        // ignore DB errors
+      }
+
+      io.to(roomId).emit("room_deleted", { roomId });
+    });
+
     socket.on("leave_room", async ({ roomId }: { roomId: string }) => {
       await handlePlayerLeave(io, socket, roomId);
       socket.leave(roomId);
@@ -386,8 +420,15 @@ export function setupSocketHandlers(io: SocketServer) {
     });
 
     socket.on("disconnect", async () => {
-      const { roomId } = socket.data;
-      if (!roomId) return;
+      const { roomId, playerName } = socket.data;
+      if (!roomId) {
+        // Player disconnected without ever joining a room – still clean up nickname
+        if (playerName) {
+          const key = (playerName as string).trim().toLowerCase();
+          if (activeNicknames.get(key) === socket.id) activeNicknames.delete(key);
+        }
+        return;
+      }
       await handlePlayerLeave(io, socket, roomId);
     });
   });
@@ -395,6 +436,13 @@ export function setupSocketHandlers(io: SocketServer) {
 
 async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: string) {
   const playerName = socket.data.playerName;
+  if (playerName) {
+    // Only remove if this socket still owns the nickname
+    const key = playerName.trim().toLowerCase();
+    if (activeNicknames.get(key) === socket.id) {
+      activeNicknames.delete(key);
+    }
+  }
   const state = gameStates.get(roomId);
   if (state) {
     state.players.delete(socket.id);

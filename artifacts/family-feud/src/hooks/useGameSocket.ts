@@ -60,6 +60,8 @@ export function useGameSocket(
     onStrike?: (data: { strikes: number }) => void;
     onStealChance?: (data: { team: 1 | 2 }) => void;
     onRoundOver?: (data: { winningTeam: 1 | 2; points: number; team1Score: number; team2Score: number }) => void;
+    onRoomDeleted?: (data: { roomId: string }) => void;
+    onJoinRejected?: (data: { reason: string }) => void;
   }
 ) {
   const callbacksRef = useRef(callbacks);
@@ -81,6 +83,8 @@ export function useGameSocket(
       strike: (data: { strikes: number }) => callbacksRef.current.onStrike?.(data),
       steal_chance: (data: { team: 1 | 2 }) => callbacksRef.current.onStealChance?.(data),
       round_over: (data: { winningTeam: 1 | 2; points: number; team1Score: number; team2Score: number }) => callbacksRef.current.onRoundOver?.(data),
+      room_deleted: (data: { roomId: string }) => callbacksRef.current.onRoomDeleted?.(data),
+      join_rejected: (data: { reason: string }) => callbacksRef.current.onJoinRejected?.(data),
     };
 
     Object.entries(handlers).forEach(([event, handler]) => {
@@ -136,5 +140,10 @@ export function useGameSocket(
     getSocket().emit("leave_room", { roomId });
   }, [roomId]);
 
-  return { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom };
+  const deleteRoom = useCallback(() => {
+    if (!roomId) return;
+    getSocket().emit("delete_room", { roomId });
+  }, [roomId]);
+
+  return { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom };
 }

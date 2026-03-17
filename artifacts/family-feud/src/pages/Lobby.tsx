@@ -23,14 +23,28 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+async function checkNickname(name: string): Promise<boolean> {
+  try {
+    const res = await fetch(`/api/nicknames/${encodeURIComponent(name.trim())}/check`);
+    if (!res.ok) return false;
+    const { taken } = await res.json();
+    return taken as boolean;
+  } catch {
+    return false;
+  }
+}
+
 export default function Lobby() {
   const [, setLocation] = useLocation();
   const [nickname, setNickname] = useState(() => localStorage.getItem("playerName") ?? "");
   const [nicknameDialogOpen, setNicknameDialogOpen] = useState(() => !localStorage.getItem("playerName"));
+  const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
   const [joinTeam, setJoinTeam] = useState<1 | 2>(1);
   const [joinRoomId, setJoinRoomId] = useState<string | null>(null);
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);
+  const [joinError, setJoinError] = useState<string | null>(null);
   const [joinRoomPlayers, setJoinRoomPlayers] = useState<Array<{ id: string; name: string; team: 1 | 2; isHost: boolean }> | null>(null);
 
   const [form, setForm] = useState({
@@ -60,15 +74,26 @@ export default function Lobby() {
     return () => clearInterval(id);
   }, [refetch]);
 
-  function handleCreate(e: React.FormEvent) {
+  async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !nickname) return;
+    setCreateError(null);
+
+    const taken = await checkNickname(nickname);
+    if (taken) {
+      setCreateError(`Nickname "${nickname}" is already in use. Change it first.`);
+      return;
+    }
 
     createRoom.mutate({ data: { ...form, hostName: nickname, maxPlayers: 10 } }, {
       onSuccess: (room) => {
         localStorage.setItem("playerName", nickname);
         setCreateOpen(false);
         setLocation(`/room/${room.id}?name=${encodeURIComponent(nickname)}&team=1`);
+      },
+      onError: (err: unknown) => {
+        const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
+        setCreateError(msg ?? "Failed to create room.");
       },
     });
   }
@@ -88,8 +113,16 @@ export default function Lobby() {
     }
   }
 
-  function confirmJoin() {
+  async function confirmJoin() {
     if (!joinRoomId || !nickname) return;
+    setJoinError(null);
+
+    const taken = await checkNickname(nickname);
+    if (taken) {
+      setJoinError(`Nickname "${nickname}" is already in use. Change it first.`);
+      return;
+    }
+
     localStorage.setItem("playerName", nickname);
     setJoinDialogOpen(false);
     setLocation(`/room/${joinRoomId}?name=${encodeURIComponent(nickname)}&team=${joinTeam}`);
@@ -116,7 +149,7 @@ export default function Lobby() {
             <Button variant="outline" size="sm" onClick={() => refetch()} className="border-blue-600 text-blue-200 hover:bg-blue-800">
               <RefreshCw className="w-4 h-4 mr-1" /> Refresh
             </Button>
-            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+            <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
                 <Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold">
                   <Plus className="w-4 h-4 mr-1" /> Create Room
@@ -173,6 +206,9 @@ export default function Lobby() {
                       />
                     </div>
                   </div>
+                  {createError && (
+                    <p className="text-red-400 text-sm font-semibold">{createError}</p>
+                  )}
                   <Button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold" disabled={createRoom.isPending}>
                     {createRoom.isPending ? "Creating..." : "Create Room"}
                   </Button>
@@ -256,7 +292,7 @@ export default function Lobby() {
       </div>
 
       {/* Join dialog */}
-      <Dialog open={joinDialogOpen} onOpenChange={setJoinDialogOpen}>
+      <Dialog open={joinDialogOpen} onOpenChange={v => { setJoinDialogOpen(v); if (!v) setJoinError(null); }}>
         <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
           <DialogHeader>
             <DialogTitle className="text-yellow-400">Join Game</DialogTitle>
@@ -315,6 +351,9 @@ export default function Lobby() {
                 </button>
               </div>
             </div>
+            {joinError && (
+              <p className="text-red-400 text-sm font-semibold">{joinError}</p>
+            )}
             <Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold" onClick={confirmJoin} disabled={!nickname.trim()}>
               Join Game
             </Button>
@@ -342,12 +381,21 @@ export default function Lobby() {
                 className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
               />
             </div>
+            {nicknameError && (
+              <p className="text-red-400 text-sm font-semibold">{nicknameError}</p>
+            )}
             <Button
               className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold"
               disabled={!nickname.trim()}
-              onClick={() => {
+              onClick={async () => {
                 if (!nickname.trim()) return;
                 const trimmed = nickname.trim();
+                setNicknameError(null);
+                const taken = await checkNickname(trimmed);
+                if (taken) {
+                  setNicknameError(`"${trimmed}" is already taken. Pick a different nickname.`);
+                  return;
+                }
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
                 setNicknameDialogOpen(false);

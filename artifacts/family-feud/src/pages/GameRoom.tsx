@@ -83,6 +83,8 @@ export default function GameRoom() {
   const [faceoffCountdown, setFaceoffCountdown] = useState<number | null>(null);
   const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [wrongAnswers, setWrongAnswers] = useState<Array<{ playerName: string; answer: string }>>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const showNotification = useCallback((msg: string) => {
@@ -90,7 +92,7 @@ export default function GameRoom() {
     setTimeout(() => setNotification(null), 3000);
   }, []);
 
-  const { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom } = useGameSocket(
+  const { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -106,16 +108,32 @@ export default function GameRoom() {
         setTimeout(() => setBuzzedPlayer(null), 8000);
       },
       onAnswerCorrect: (data) => showNotification(`✅ ${data.playerName}: "${gameState?.currentQuestion?.answers[data.answerIndex]?.text}" — ${data.points} pts`),
-      onAnswerWrong: (data) => showNotification(`❌ ${data.playerName}: "${data.answer}" — Wrong answer!`),
+      onAnswerWrong: (data) => {
+        showNotification(`❌ ${data.playerName}: "${data.answer}" — Wrong answer!`);
+        setWrongAnswers(prev => [...prev.slice(-9), { playerName: data.playerName, answer: data.answer }]);
+      },
       onStrike: (data) => showNotification(`❌ STRIKE ${data.strikes}/3!`),
       onStealChance: (data) => showNotification(`🎯 Team ${data.team} gets a steal chance!`),
       onRoundOver: (data) => showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`),
+      onRoomDeleted: () => {
+        showNotification("Room was deleted by host.");
+        setTimeout(() => setLocation("/"), 800);
+      },
+      onJoinRejected: (data) => {
+        showNotification(`Rejected: ${data.reason}`);
+        setTimeout(() => setLocation("/"), 1200);
+      },
     }
   );
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
+
+  // Clear wrong-answer log at the start of each new round
+  useEffect(() => {
+    setWrongAnswers([]);
+  }, [gameState?.currentRound, gameState?.status === "faceoff"]);
 
   // Local 8s countdown for face-off answer window
   useEffect(() => {
@@ -215,14 +233,26 @@ export default function GameRoom() {
           <Users className="w-4 h-4 text-blue-300" />
           <span className="text-sm text-blue-300">{gameState.players.length} players</span>
           {isHost && <Crown className="w-4 h-4 text-yellow-400" title="You are the host" />}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setLeaveConfirmOpen(true)}
-            className="ml-2 border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600"
-          >
-            <LogOut className="w-3.5 h-3.5 mr-1" /> Leave
-          </Button>
+          <div className="flex items-center gap-2 ml-2">
+            {isHost && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setDeleteConfirmOpen(true)}
+                className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600"
+              >
+                <LogOut className="w-3.5 h-3.5 mr-1" /> Delete Room
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setLeaveConfirmOpen(true)}
+              className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600"
+            >
+              <LogOut className="w-3.5 h-3.5 mr-1" /> Leave
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -271,6 +301,22 @@ export default function GameRoom() {
               question={gameState.currentQuestion.question}
               answers={gameState.currentQuestion.answers}
             />
+          )}
+
+          {/* Wrong answers this round – visible to all */}
+          {wrongAnswers.length > 0 && (
+            <div className="mt-3 bg-red-950/60 border border-red-800 rounded-xl p-3">
+              <div className="text-xs text-red-400 font-bold uppercase tracking-wide mb-2">Wrong Answers This Round</div>
+              <div className="space-y-1">
+                {wrongAnswers.map((w, i) => (
+                  <div key={i} className="flex items-center gap-2 text-sm">
+                    <span className="text-red-400 font-bold">✗</span>
+                    <span className="text-red-300 font-semibold">{w.playerName}:</span>
+                    <span className="text-white">{w.answer}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
           {/* Game controls */}
@@ -497,6 +543,38 @@ export default function GameRoom() {
               onClick={handleLeave}
             >
               <LogOut className="w-4 h-4 mr-1" /> Leave
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete room confirmation dialog (host only) */}
+      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-red-400 flex items-center gap-2">
+              <LogOut className="w-5 h-5" /> Delete Room?
+            </DialogTitle>
+            <DialogDescription className="text-blue-300">
+              This will remove the room for all players and send everyone back to the lobby.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 mt-2">
+            <Button
+              variant="outline"
+              className="flex-1 border-blue-700 text-blue-300 hover:bg-blue-900/40"
+              onClick={() => setDeleteConfirmOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold"
+              onClick={() => {
+                deleteRoom();
+                setDeleteConfirmOpen(false);
+              }}
+            >
+              Delete
             </Button>
           </div>
         </DialogContent>
