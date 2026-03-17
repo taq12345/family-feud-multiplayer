@@ -479,6 +479,14 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
   } else {
     state.team2Score += state.roundPoints;
   }
+
+  // Reveal all remaining answers at end of round
+  if (state.currentQuestion) {
+    state.revealedAnswers = new Set(
+      state.currentQuestion.answers.map((_, idx) => idx)
+    );
+  }
+
   state.status = "between_rounds";
 
   try {
