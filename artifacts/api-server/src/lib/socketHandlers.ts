@@ -351,3 +351,14 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
   });
   io.to(roomId).emit("game_state", serializeGameState(state));
 }
+
+export function getRoomPlayers(roomId: string) {
+  const state = gameStates.get(roomId);
+  if (!state) return [];
+  return Array.from(state.players.values()).map(p => ({
+    id: p.id,
+    name: p.name,
+    team: p.team,
+    isHost: p.isHost,
+  }));
+}

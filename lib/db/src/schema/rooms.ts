@@ -10,7 +10,7 @@ export const roomsTable = pgTable("rooms", {
   hostName: text("host_name").notNull(),
   status: roomStatusEnum("status").notNull().default("waiting"),
   playerCount: integer("player_count").notNull().default(0),
-  maxPlayers: integer("max_players").notNull().default(12),
+  maxPlayers: integer("max_players").notNull().default(10),
   team1Name: text("team1_name").notNull().default("Team 1"),
   team2Name: text("team2_name").notNull().default("Team 2"),
   team1Score: integer("team1_score").notNull().default(0),

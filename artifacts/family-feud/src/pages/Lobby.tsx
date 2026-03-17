@@ -25,19 +25,20 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function Lobby() {
   const [, setLocation] = useLocation();
-  const [playerName, setPlayerName] = useState(() => localStorage.getItem("playerName") ?? "");
+  const [nickname, setNickname] = useState(() => localStorage.getItem("playerName") ?? "");
+  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(() => !localStorage.getItem("playerName"));
   const [createOpen, setCreateOpen] = useState(false);
   const [joinTeam, setJoinTeam] = useState<1 | 2>(1);
   const [joinRoomId, setJoinRoomId] = useState<string | null>(null);
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);
-  const [joinPlayerName, setJoinPlayerName] = useState(() => localStorage.getItem("playerName") ?? "");
+  const [joinRoomPlayers, setJoinRoomPlayers] = useState<Array<{ id: string; name: string; team: 1 | 2; isHost: boolean }> | null>(null);
 
   const [form, setForm] = useState({
     name: "",
     hostName: localStorage.getItem("playerName") ?? "",
     team1Name: "Team 1",
     team2Name: "Team 2",
-    maxPlayers: 12,
+    maxPlayers: 10,
     totalRounds: 5,
   });
 
@@ -48,33 +49,50 @@ export default function Lobby() {
   const createRoom = useCreateRoom();
 
   useEffect(() => {
+    if (nickname) {
+      localStorage.setItem("playerName", nickname);
+      setForm(f => ({ ...f, hostName: nickname }));
+    }
+  }, [nickname]);
+
+  useEffect(() => {
     const id = setInterval(() => refetch(), 5000);
     return () => clearInterval(id);
   }, [refetch]);
 
   function handleCreate(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.name || !form.hostName) return;
+    if (!form.name || !nickname) return;
 
-    createRoom.mutate({ data: form }, {
+    createRoom.mutate({ data: { ...form, hostName: nickname, maxPlayers: 10 } }, {
       onSuccess: (room) => {
-        localStorage.setItem("playerName", form.hostName);
+        localStorage.setItem("playerName", nickname);
         setCreateOpen(false);
-        setLocation(`/room/${room.id}?name=${encodeURIComponent(form.hostName)}&team=1`);
+        setLocation(`/room/${room.id}?name=${encodeURIComponent(nickname)}&team=1`);
       },
     });
   }
 
-  function handleJoin(roomId: string) {
+  async function handleJoin(roomId: string) {
     setJoinRoomId(roomId);
     setJoinDialogOpen(true);
+    setJoinRoomPlayers(null);
+    try {
+      const res = await fetch(`/api/rooms/${roomId}/players`);
+      if (res.ok) {
+        const data = await res.json();
+        setJoinRoomPlayers(data);
+      }
+    } catch {
+      // ignore fetch errors, dialog will still allow joining
+    }
   }
 
   function confirmJoin() {
-    if (!joinRoomId || !joinPlayerName) return;
-    localStorage.setItem("playerName", joinPlayerName);
+    if (!joinRoomId || !nickname) return;
+    localStorage.setItem("playerName", nickname);
     setJoinDialogOpen(false);
-    setLocation(`/room/${joinRoomId}?name=${encodeURIComponent(joinPlayerName)}&team=${joinTeam}`);
+    setLocation(`/room/${joinRoomId}?name=${encodeURIComponent(nickname)}&team=${joinTeam}`);
   }
 
   return (
@@ -90,6 +108,11 @@ export default function Lobby() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {nickname && (
+              <span className="text-sm text-blue-300 mr-2">
+                Playing as <span className="font-semibold text-yellow-400">{nickname}</span>
+              </span>
+            )}
             <Button variant="outline" size="sm" onClick={() => refetch()} className="border-blue-600 text-blue-200 hover:bg-blue-800">
               <RefreshCw className="w-4 h-4 mr-1" /> Refresh
             </Button>
@@ -114,15 +137,10 @@ export default function Lobby() {
                       required
                     />
                   </div>
-                  <div>
-                    <Label className="text-blue-200">Your Name (Host)</Label>
-                    <Input
-                      placeholder="Your name"
-                      value={form.hostName}
-                      onChange={e => setForm(f => ({ ...f, hostName: e.target.value }))}
-                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
-                      required
-                    />
+                  <div className="text-sm text-blue-300">
+                    You will host this game as{" "}
+                    <span className="font-semibold text-yellow-400">{nickname}</span>. Max players are fixed at{" "}
+                    <span className="font-semibold">10</span> per room.
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -143,17 +161,6 @@ export default function Lobby() {
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-blue-200">Max Players</Label>
-                      <Input
-                        type="number"
-                        min={2}
-                        max={20}
-                        value={form.maxPlayers}
-                        onChange={e => setForm(f => ({ ...f, maxPlayers: parseInt(e.target.value) || 12 }))}
-                        className="bg-blue-900 border-blue-700 text-white"
-                      />
-                    </div>
                     <div>
                       <Label className="text-blue-200">Rounds</Label>
                       <Input
@@ -256,14 +263,39 @@ export default function Lobby() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label className="text-blue-200">Your Name</Label>
-              <Input
-                placeholder="Enter your name"
-                value={joinPlayerName}
-                onChange={e => setJoinPlayerName(e.target.value)}
-                className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
-              />
+              <p className="text-sm text-blue-300">
+                You are joining as{" "}
+                <span className="font-semibold text-yellow-400">{nickname}</span>.
+              </p>
             </div>
+            {joinRoomPlayers && joinRoomPlayers.length > 0 && (
+              <div>
+                <Label className="text-blue-200">Current Players</Label>
+                <div className="grid grid-cols-2 gap-2 mt-1">
+                  {[1, 2].map(team => (
+                    <div
+                      key={team}
+                      className={`rounded-lg p-2 border text-xs ${
+                        team === 1 ? "bg-red-950 border-red-800" : "bg-blue-950 border-blue-800"
+                      }`}
+                    >
+                      <div className={team === 1 ? "text-red-300 font-semibold mb-1" : "text-blue-300 font-semibold mb-1"}>
+                        Team {team}
+                      </div>
+                      {joinRoomPlayers.filter(p => p.team === team).map(p => (
+                        <div key={p.id} className="flex items-center gap-1 text-white">
+                          {p.isHost && <span className="text-yellow-400 font-bold">★</span>}
+                          <span>{p.name}</span>
+                        </div>
+                      ))}
+                      {joinRoomPlayers.filter(p => p.team === team).length === 0 && (
+                        <div className="text-blue-500 italic">No players yet</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div>
               <Label className="text-blue-200">Choose Team</Label>
               <div className="grid grid-cols-2 gap-2 mt-1">
@@ -283,8 +315,45 @@ export default function Lobby() {
                 </button>
               </div>
             </div>
-            <Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold" onClick={confirmJoin} disabled={!joinPlayerName.trim()}>
+            <Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold" onClick={confirmJoin} disabled={!nickname.trim()}>
               Join Game
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Nickname dialog shown on first visit */}
+      <Dialog open={nicknameDialogOpen} onOpenChange={() => {}}>
+        <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-yellow-400">Choose a Nickname</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-blue-300">
+              Pick the name you want to use in all games. You can change it later by refreshing the page.
+            </p>
+            <div>
+              <Label className="text-blue-200">Nickname</Label>
+              <Input
+                autoFocus
+                placeholder="Enter your nickname"
+                value={nickname}
+                onChange={e => setNickname(e.target.value)}
+                className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
+              />
+            </div>
+            <Button
+              className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold"
+              disabled={!nickname.trim()}
+              onClick={() => {
+                if (!nickname.trim()) return;
+                const trimmed = nickname.trim();
+                setNickname(trimmed);
+                localStorage.setItem("playerName", trimmed);
+                setNicknameDialogOpen(false);
+              }}
+            >
+              Save
             </Button>
           </div>
         </DialogContent>

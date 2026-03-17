@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { roomsTable } from "@workspace/db/schema";
+import { getRoomPlayers } from "../lib/socketHandlers.js";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { surveyQuestions } from "../data/questions.js";
@@ -44,7 +45,7 @@ router.post("/rooms", async (req, res) => {
       hostName,
       team1Name,
       team2Name,
-      maxPlayers: maxPlayers ?? 12,
+      maxPlayers: 10,
       totalRounds: totalRounds ?? 5,
       status: "waiting",
       playerCount: 0,
@@ -96,6 +97,16 @@ router.get("/rooms/:roomId", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch room" });
+  }
+});
+
+router.get("/rooms/:roomId/players", async (req, res) => {
+  const { roomId } = req.params;
+  try {
+    const players = getRoomPlayers(roomId);
+    res.json(players);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch room players" });
   }
 });
 

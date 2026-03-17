@@ -101,10 +101,10 @@ export default function GameRoom() {
       onBuzzedIn: (data) => {
         setBuzzedPlayer(data.playerName);
         showNotification(`🔔 ${data.playerName} buzzed in!`);
-        setTimeout(() => setBuzzedPlayer(null), 3000);
+        setTimeout(() => setBuzzedPlayer(null), 8000);
       },
       onAnswerCorrect: (data) => showNotification(`✅ ${data.playerName}: "${gameState?.currentQuestion?.answers[data.answerIndex]?.text}" — ${data.points} pts`),
-      onAnswerWrong: (data) => showNotification(`❌ ${data.playerName}: Wrong answer!`),
+      onAnswerWrong: (data) => showNotification(`❌ ${data.playerName}: "${data.answer}" — Wrong answer!`),
       onStrike: (data) => showNotification(`❌ STRIKE ${data.strikes}/3!`),
       onStealChance: (data) => showNotification(`🎯 Team ${data.team} gets a steal chance!`),
       onRoundOver: (data) => showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`),
