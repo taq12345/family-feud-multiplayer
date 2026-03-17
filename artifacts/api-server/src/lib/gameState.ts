@@ -23,6 +23,7 @@ export interface GameState {
   strikes: number;
   playingTeam: 1 | 2 | null;
   faceoffWinner: 1 | 2 | null;
+  buzzedPlayerId: string | null;
   questions: SurveyQuestion[];
   usedQuestionIds: Set<number>;
 }
@@ -51,6 +52,7 @@ export function createGameState(roomId: string, team1Name: string, team2Name: st
     strikes: 0,
     playingTeam: null,
     faceoffWinner: null,
+    buzzedPlayerId: null,
     questions: allQuestions,
     usedQuestionIds: new Set(),
   };

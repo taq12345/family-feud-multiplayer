@@ -6,8 +6,12 @@ import { GameState, createGameState, getNextQuestion, serializeGameState } from 
 
 const gameStates = new Map<string, GameState>();
 const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const faceoffTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 const EMPTY_ROOM_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const FACE_OFF_ANSWER_MS = 8 * 1000; // 8 seconds after buzz-in
+const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
 
 async function scheduleRoomDeletion(roomId: string) {
   cancelRoomDeletion(roomId);
@@ -30,6 +34,80 @@ function cancelRoomDeletion(roomId: string) {
     clearTimeout(existing);
     emptyRoomTimers.delete(roomId);
   }
+}
+
+function clearFaceoffTimer(roomId: string) {
+  const existing = faceoffTimers.get(roomId);
+  if (existing) {
+    clearTimeout(existing);
+    faceoffTimers.delete(roomId);
+  }
+}
+
+function clearAnswerTimer(roomId: string) {
+  const existing = answerTimers.get(roomId);
+  if (existing) {
+    clearTimeout(existing);
+    answerTimers.delete(roomId);
+  }
+}
+
+function startFaceoffTimer(io: SocketServer, roomId: string) {
+  clearFaceoffTimer(roomId);
+  const timer = setTimeout(() => {
+    const state = gameStates.get(roomId);
+    if (!state || state.status !== "faceoff" || !state.buzzedPlayerId) return;
+    const player = state.players.get(state.buzzedPlayerId);
+    if (!player) return;
+
+    io.to(roomId).emit("answer_wrong", {
+      playerName: player.name,
+      team: player.team,
+      answer: "(no answer in time)",
+    });
+    state.buzzedPlayerId = null;
+    io.to(roomId).emit("game_state", serializeGameState(state));
+  }, FACE_OFF_ANSWER_MS);
+  faceoffTimers.set(roomId, timer);
+}
+
+function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
+  clearAnswerTimer(roomId);
+  const timer = setTimeout(async () => {
+    const current = gameStates.get(roomId);
+    if (!current || (current.status !== "playing" && current.status !== "stealing") || !current.currentQuestion) return;
+
+    const activeTeam = current.status === "playing" ? current.playingTeam : current.playingTeam === 1 ? 2 : 1;
+    const player = Array.from(current.players.values()).find(p => p.team === activeTeam) ?? null;
+
+    if (player) {
+      io.to(roomId).emit("answer_wrong", {
+        playerName: player.name,
+        team: player.team,
+        answer: "(no answer in time)",
+      });
+    }
+
+    if (current.status === "playing") {
+      current.strikes++;
+      io.to(roomId).emit("strike", { strikes: current.strikes });
+
+      if (current.strikes >= 3) {
+        current.status = "stealing";
+        current.strikes = 0;
+        const stealingTeam = current.playingTeam === 1 ? 2 : 1;
+        io.to(roomId).emit("steal_chance", { team: stealingTeam });
+        io.to(roomId).emit("game_state", serializeGameState(current));
+        startAnswerTimer(io, current, roomId);
+      } else {
+        io.to(roomId).emit("game_state", serializeGameState(current));
+        startAnswerTimer(io, current, roomId);
+      }
+    } else if (current.status === "stealing") {
+      await endRound(io, current, roomId, current.playingTeam!);
+    }
+  }, ROUND_ANSWER_MS);
+  answerTimers.set(roomId, timer);
 }
 
 export function setupSocketHandlers(io: SocketServer) {
@@ -108,6 +186,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.roundPoints = 0;
       state.playingTeam = null;
       state.faceoffWinner = null;
+      state.buzzedPlayerId = null;
 
       await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
@@ -117,10 +196,13 @@ export function setupSocketHandlers(io: SocketServer) {
     socket.on("buzz_in", ({ roomId }: { roomId: string }) => {
       const state = gameStates.get(roomId);
       if (!state || state.status !== "faceoff") return;
+      if (state.buzzedPlayerId) return;
       const player = state.players.get(socket.id);
       if (!player) return;
 
+      state.buzzedPlayerId = socket.id;
       io.to(roomId).emit("buzzed_in", { playerName: player.name, team: player.team });
+      startFaceoffTimer(io, roomId);
     });
 
     socket.on("faceoff_answer", async ({ roomId, answer }: { roomId: string; answer: string }) => {
@@ -129,12 +211,16 @@ export function setupSocketHandlers(io: SocketServer) {
       const player = state.players.get(socket.id);
       if (!player) return;
 
+      if (state.buzzedPlayerId !== socket.id) return;
+
       const normalizedAnswer = answer.trim().toLowerCase();
       const matchIndex = state.currentQuestion.answers.findIndex(
         a => a.text.toLowerCase().includes(normalizedAnswer) || normalizedAnswer.includes(a.text.toLowerCase().split(" ")[0])
       );
 
       if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
+        clearFaceoffTimer(roomId);
+        state.buzzedPlayerId = null;
         state.revealedAnswers.add(matchIndex);
         state.faceoffWinner = player.team;
         state.playingTeam = player.team;
@@ -148,8 +234,12 @@ export function setupSocketHandlers(io: SocketServer) {
           points: state.currentQuestion.answers[matchIndex].points,
         });
         io.to(roomId).emit("game_state", serializeGameState(state));
+        startAnswerTimer(io, state, roomId);
       } else {
         io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+        clearFaceoffTimer(roomId);
+        state.buzzedPlayerId = null;
+        io.to(roomId).emit("game_state", serializeGameState(state));
       }
     });
 
@@ -160,6 +250,8 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player) return;
       if (state.status === "playing" && player.team !== state.playingTeam) return;
       if (state.status === "stealing" && player.team === state.playingTeam) return;
+
+      clearAnswerTimer(roomId);
 
       const normalizedAnswer = answer.trim().toLowerCase();
       const matchIndex = state.currentQuestion.answers.findIndex(
@@ -185,9 +277,11 @@ export function setupSocketHandlers(io: SocketServer) {
           await endRound(io, state, roomId, player.team);
         } else {
           io.to(roomId).emit("game_state", serializeGameState(state));
+          startAnswerTimer(io, state, roomId);
         }
       } else {
         if (state.status === "playing") {
+          io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           state.strikes++;
           io.to(roomId).emit("strike", { strikes: state.strikes });
 
@@ -197,8 +291,13 @@ export function setupSocketHandlers(io: SocketServer) {
             const stealingTeam = state.playingTeam === 1 ? 2 : 1;
             io.to(roomId).emit("steal_chance", { team: stealingTeam });
             io.to(roomId).emit("game_state", serializeGameState(state));
+            startAnswerTimer(io, state, roomId);
+          } else {
+            io.to(roomId).emit("game_state", serializeGameState(state));
+            startAnswerTimer(io, state, roomId);
           }
         } else if (state.status === "stealing") {
+          io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           // Failed steal — playing team gets points
           await endRound(io, state, roomId, state.playingTeam!);
         }
