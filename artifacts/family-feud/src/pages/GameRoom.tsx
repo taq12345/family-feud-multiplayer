@@ -80,6 +80,8 @@ export default function GameRoom() {
   const [answerInput, setAnswerInput] = useState("");
   const [notification, setNotification] = useState<string | null>(null);
   const [buzzedPlayer, setBuzzedPlayer] = useState<string | null>(null);
+  const [faceoffCountdown, setFaceoffCountdown] = useState<number | null>(null);
+  const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -115,6 +117,50 @@ export default function GameRoom() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
+  // Local 8s countdown for face-off answer window
+  useEffect(() => {
+    if (gameState?.status === "faceoff" && buzzedPlayer && buzzedPlayer === playerName) {
+      setFaceoffCountdown(8);
+      const interval = setInterval(() => {
+        setFaceoffCountdown(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setFaceoffCountdown(null);
+    }
+  }, [gameState?.status, buzzedPlayer, playerName]);
+
+  // Local 15s countdown for normal/steal answers
+  useEffect(() => {
+    const active =
+      gameState &&
+      (gameState.status === "playing" || gameState.status === "stealing") &&
+      canAnswer;
+    if (active) {
+      setRoundCountdown(15);
+      const interval = setInterval(() => {
+        setRoundCountdown(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setRoundCountdown(null);
+    }
+  }, [gameState?.status, canAnswer]);
+
   const myPlayer = gameState?.players.find(p => p.name === playerName);
   const isHost = myPlayer?.isHost ?? false;
   const isMyTeamPlaying = gameState?.playingTeam === team;
@@ -145,6 +191,7 @@ export default function GameRoom() {
       submitAnswer(answerInput);
     }
     setAnswerInput("");
+    setRoundCountdown(null);
   }
 
   if (!gameState) {
@@ -264,7 +311,14 @@ export default function GameRoom() {
             {gameState.status === "faceoff" && (
               <div className="space-y-2">
                 {buzzedPlayer ? (
-                  <div className="text-center text-yellow-400 font-bold mb-2">{buzzedPlayer} buzzed in!</div>
+                  <div className="text-center text-yellow-400 font-bold mb-2">
+                    {buzzedPlayer} buzzed in!
+                    {buzzedPlayer === playerName && faceoffCountdown !== null && (
+                      <span className="ml-2 text-xs text-yellow-200">
+                        ({faceoffCountdown}s to answer)
+                      </span>
+                    )}
+                  </div>
                 ) : (
                   <Button onClick={buzzIn} className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xl py-6">
                     🔔 BUZZ IN!
@@ -300,6 +354,11 @@ export default function GameRoom() {
                     <Button type="submit" className="bg-green-600 hover:bg-green-500 font-bold">Answer</Button>
                   </form>
                 )}
+                {canAnswer && roundCountdown !== null && (
+                  <div className="text-center text-xs text-yellow-300">
+                    You have {roundCountdown}s to answer.
+                  </div>
+                )}
                 {!canAnswer && (
                   <div className="text-center text-blue-400 bg-blue-900/40 rounded-lg py-3 text-sm">
                     {isMyTeamPlaying ? "Your turn! Give your answer above" : `Waiting for ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} to answer...`}
@@ -331,6 +390,11 @@ export default function GameRoom() {
                     />
                     <Button type="submit" className="bg-orange-600 hover:bg-orange-500 font-bold">Steal!</Button>
                   </form>
+                )}
+                {isMyTeamStealing && roundCountdown !== null && (
+                  <div className="text-center text-xs text-orange-200 mt-1">
+                    You have {roundCountdown}s to steal.
+                  </div>
                 )}
               </div>
             )}
