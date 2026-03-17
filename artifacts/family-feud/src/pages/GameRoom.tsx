@@ -137,6 +137,15 @@ export default function GameRoom() {
     }
   }, [gameState?.status, buzzedPlayer, playerName]);
 
+  const myPlayer = gameState?.players.find(p => p.name === playerName);
+  const isHost = myPlayer?.isHost ?? false;
+  const isMyTeamPlaying = gameState?.playingTeam === team;
+  const isMyTeamStealing = gameState?.status === "stealing" && gameState?.playingTeam !== team;
+  const canAnswer = (gameState?.status === "playing" && isMyTeamPlaying) ||
+    (gameState?.status === "stealing" && isMyTeamStealing);
+  const canBuzz = gameState?.status === "faceoff";
+  const canFaceoff = gameState?.status === "faceoff" && buzzedPlayer === playerName;
+
   // Local 15s countdown for normal/steal answers
   useEffect(() => {
     const active =
@@ -160,15 +169,6 @@ export default function GameRoom() {
       setRoundCountdown(null);
     }
   }, [gameState?.status, canAnswer]);
-
-  const myPlayer = gameState?.players.find(p => p.name === playerName);
-  const isHost = myPlayer?.isHost ?? false;
-  const isMyTeamPlaying = gameState?.playingTeam === team;
-  const isMyTeamStealing = gameState?.status === "stealing" && gameState?.playingTeam !== team;
-  const canAnswer = (gameState?.status === "playing" && isMyTeamPlaying) ||
-    (gameState?.status === "stealing" && isMyTeamStealing);
-  const canBuzz = gameState?.status === "faceoff";
-  const canFaceoff = gameState?.status === "faceoff" && buzzedPlayer === playerName;
 
   function handleLeave() {
     leaveRoom();
