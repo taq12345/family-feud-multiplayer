@@ -6,6 +6,7 @@ import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
 import { ArrowLeft, Send, Tv2, AlertTriangle, Trophy, Zap, Users, Crown, LogOut } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
 function StrikeDisplay({ strikes }: { strikes: number }) {
   return (
@@ -166,6 +167,17 @@ export default function GameRoom() {
     (gameState?.status === "stealing" && isMyTeamStealing);
   const canBuzz = gameState?.status === "faceoff";
   const canFaceoff = gameState?.status === "faceoff" && buzzedPlayer === playerName;
+
+  const team1Count = gameState?.players.filter(p => p.team === 1).length ?? 0;
+  const team2Count = gameState?.players.filter(p => p.team === 2).length ?? 0;
+  const canStartGame = team1Count > 0 && team2Count > 0;
+  const startGameTooltip = !canStartGame
+    ? team1Count === 0 && team2Count === 0
+      ? "Both teams need at least 1 player."
+      : team1Count === 0
+        ? "Team 1 needs at least 1 player."
+        : "Team 2 needs at least 1 player."
+    : "";
 
   // Local 15s countdown for normal/steal answers
   useEffect(() => {
@@ -349,9 +361,24 @@ export default function GameRoom() {
                   </div>
                 </div>
                 {isHost && (
-                  <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8">
-                    <Zap className="w-4 h-4 mr-2" /> Start Game!
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-block">
+                        <Button
+                          onClick={startGame}
+                          disabled={!canStartGame}
+                          className="bg-yellow-500 hover:bg-yellow-400 disabled:bg-yellow-500/40 disabled:text-black/60 text-black font-bold px-8"
+                        >
+                          <Zap className="w-4 h-4 mr-2" /> Start Game!
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    {!canStartGame && (
+                      <TooltipContent side="top">
+                        {startGameTooltip}
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
                 )}
               </div>
             )}
