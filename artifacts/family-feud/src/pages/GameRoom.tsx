@@ -363,11 +363,11 @@ export default function GameRoom() {
                 {isHost && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="inline-block">
+                      <span className="inline-flex">
                         <Button
                           onClick={startGame}
                           disabled={!canStartGame}
-                          className="bg-yellow-500 hover:bg-yellow-400 disabled:bg-yellow-500/40 disabled:text-black/60 text-black font-bold px-8"
+                          className="bg-yellow-500 hover:bg-yellow-400 disabled:bg-yellow-500/40 disabled:text-black/60 disabled:pointer-events-none text-black font-bold px-8"
                         >
                           <Zap className="w-4 h-4 mr-2" /> Start Game!
                         </Button>
