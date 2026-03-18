@@ -304,50 +304,56 @@ export default function Lobby() {
                 <span className="font-semibold text-yellow-400">{nickname}</span>.
               </p>
             </div>
-            {joinRoomPlayers && joinRoomPlayers.length > 0 && (
-              <div>
-                <Label className="text-blue-200">Current Players</Label>
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                  {[1, 2].map(team => (
-                    <div
-                      key={team}
-                      className={`rounded-lg p-2 border text-xs ${
-                        team === 1 ? "bg-red-950 border-red-800" : "bg-blue-950 border-blue-800"
-                      }`}
-                    >
-                      <div className={team === 1 ? "text-red-300 font-semibold mb-1" : "text-blue-300 font-semibold mb-1"}>
-                        Team {team}
-                      </div>
-                      {joinRoomPlayers.filter(p => p.team === team).map(p => (
-                        <div key={p.id} className="flex items-center gap-1 text-white">
-                          {p.isHost && <span className="text-yellow-400 font-bold">★</span>}
-                          <span>{p.name}</span>
-                        </div>
-                      ))}
-                      {joinRoomPlayers.filter(p => p.team === team).length === 0 && (
-                        <div className="text-blue-500 italic">No players yet</div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
             <div>
               <Label className="text-blue-200">Choose Team</Label>
               <div className="grid grid-cols-2 gap-2 mt-1">
                 <button
                   type="button"
                   onClick={() => setJoinTeam(1)}
-                  className={`p-3 rounded-lg border-2 transition-all font-semibold ${joinTeam === 1 ? "border-red-500 bg-red-900/50 text-white" : "border-blue-700 bg-blue-900/30 text-blue-300 hover:border-red-700"}`}
+                  className={`p-3 rounded-lg border-2 transition-all text-left ${
+                    joinTeam === 1
+                      ? "border-red-500 bg-red-900/50 text-white"
+                      : "border-blue-700 bg-blue-900/30 text-blue-300 hover:border-red-700"
+                  }`}
                 >
-                  Team 1
+                  <div className="font-semibold">Team 1</div>
+                  <div className="mt-2 space-y-1 text-xs">
+                    {joinRoomPlayers
+                      ? joinRoomPlayers.filter(p => p.team === 1).map(p => (
+                        <div key={p.id} className="flex items-center gap-1">
+                          {p.isHost && <span className="text-yellow-400 font-bold">★</span>}
+                          <span className={joinTeam === 1 ? "text-white" : "text-blue-200"}>{p.name}</span>
+                        </div>
+                      ))
+                      : <div className="text-blue-400 italic">Loading…</div>}
+                    {joinRoomPlayers && joinRoomPlayers.filter(p => p.team === 1).length === 0 && (
+                      <div className="text-blue-400 italic">No players yet</div>
+                    )}
+                  </div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setJoinTeam(2)}
-                  className={`p-3 rounded-lg border-2 transition-all font-semibold ${joinTeam === 2 ? "border-blue-400 bg-blue-700/50 text-white" : "border-blue-700 bg-blue-900/30 text-blue-300 hover:border-blue-500"}`}
+                  className={`p-3 rounded-lg border-2 transition-all text-left ${
+                    joinTeam === 2
+                      ? "border-blue-400 bg-blue-700/50 text-white"
+                      : "border-blue-700 bg-blue-900/30 text-blue-300 hover:border-blue-500"
+                  }`}
                 >
-                  Team 2
+                  <div className="font-semibold">Team 2</div>
+                  <div className="mt-2 space-y-1 text-xs">
+                    {joinRoomPlayers
+                      ? joinRoomPlayers.filter(p => p.team === 2).map(p => (
+                        <div key={p.id} className="flex items-center gap-1">
+                          {p.isHost && <span className="text-yellow-400 font-bold">★</span>}
+                          <span className={joinTeam === 2 ? "text-white" : "text-blue-200"}>{p.name}</span>
+                        </div>
+                      ))
+                      : <div className="text-blue-400 italic">Loading…</div>}
+                    {joinRoomPlayers && joinRoomPlayers.filter(p => p.team === 2).length === 0 && (
+                      <div className="text-blue-400 italic">No players yet</div>
+                    )}
+                  </div>
                 </button>
               </div>
             </div>
