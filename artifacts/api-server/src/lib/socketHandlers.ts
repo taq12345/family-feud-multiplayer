@@ -455,17 +455,15 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       // ignore
     }
     if (state.players.size === 0) {
-      if (state.status !== "waiting") {
-        // Game had started — schedule deletion after 15 minutes of emptiness
-        await scheduleRoomDeletion(roomId);
-      } else {
-        // Still in lobby — delete immediately
-        gameStates.delete(roomId);
-        try {
-          await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
-        } catch (err) {
-          // ignore
-        }
+      // Always delete empty rooms immediately
+      cancelRoomDeletion(roomId);
+      clearFaceoffTimer(roomId);
+      clearAnswerTimer(roomId);
+      gameStates.delete(roomId);
+      try {
+        await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
+      } catch (err) {
+        // ignore
       }
     } else {
       // If host left, pick a new host at random
