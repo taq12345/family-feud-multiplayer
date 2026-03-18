@@ -62,6 +62,7 @@ export function useGameSocket(
     onRoundOver?: (data: { winningTeam: 1 | 2; points: number; team1Score: number; team2Score: number }) => void;
     onRoomDeleted?: (data: { roomId: string }) => void;
     onJoinRejected?: (data: { reason: string }) => void;
+    onHostChanged?: (data: { hostName: string }) => void;
   }
 ) {
   const callbacksRef = useRef(callbacks);
@@ -85,6 +86,7 @@ export function useGameSocket(
       round_over: (data: { winningTeam: 1 | 2; points: number; team1Score: number; team2Score: number }) => callbacksRef.current.onRoundOver?.(data),
       room_deleted: (data: { roomId: string }) => callbacksRef.current.onRoomDeleted?.(data),
       join_rejected: (data: { reason: string }) => callbacksRef.current.onJoinRejected?.(data),
+      host_changed: (data: { hostName: string }) => callbacksRef.current.onHostChanged?.(data),
     };
 
     Object.entries(handlers).forEach(([event, handler]) => {

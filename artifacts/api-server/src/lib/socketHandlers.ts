@@ -445,6 +445,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
   }
   const state = gameStates.get(roomId);
   if (state) {
+    const departing = state.players.get(socket.id);
     state.players.delete(socket.id);
     try {
       await db.update(roomsTable)
@@ -467,6 +468,24 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
         }
       }
     } else {
+      // If host left, pick a new host at random
+      if (departing?.isHost) {
+        const remaining = Array.from(state.players.values());
+        const nextHost = remaining[Math.floor(Math.random() * remaining.length)];
+        // Ensure only one host
+        remaining.forEach(p => { p.isHost = p.id === nextHost.id; });
+
+        try {
+          await db.update(roomsTable)
+            .set({ hostName: nextHost.name })
+            .where(eq(roomsTable.id, roomId));
+        } catch {
+          // ignore
+        }
+
+        io.to(roomId).emit("host_changed", { hostName: nextHost.name });
+      }
+
       if (playerName) io.to(roomId).emit("player_left", { playerName });
       io.to(roomId).emit("game_state", serializeGameState(state));
     }

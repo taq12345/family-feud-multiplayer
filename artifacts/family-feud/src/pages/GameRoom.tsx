@@ -123,6 +123,9 @@ export default function GameRoom() {
         showNotification(`Rejected: ${data.reason}`);
         setTimeout(() => setLocation("/"), 1200);
       },
+      onHostChanged: (data) => {
+        showNotification(`👑 ${data.hostName} is now the host`);
+      },
     }
   );
 
