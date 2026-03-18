@@ -108,10 +108,16 @@ export default function GameRoom() {
         showNotification(`🔔 ${data.playerName} buzzed in!`);
         setTimeout(() => setBuzzedPlayer(null), 8000);
       },
-      onAnswerCorrect: (data) => showNotification(`✅ ${data.playerName}: "${gameState?.currentQuestion?.answers[data.answerIndex]?.text}" — ${data.points} pts`),
+      onAnswerCorrect: (data) => {
+        showNotification(`✅ ${data.playerName}: "${gameState?.currentQuestion?.answers[data.answerIndex]?.text}" — ${data.points} pts`);
+        setBuzzedPlayer(null);
+        setFaceoffCountdown(null);
+      },
       onAnswerWrong: (data) => {
         showNotification(`❌ ${data.playerName}: "${data.answer}" — Wrong answer!`);
         setWrongAnswers(prev => [...prev.slice(-9), { playerName: data.playerName, answer: data.answer }]);
+        setBuzzedPlayer(null);
+        setFaceoffCountdown(null);
       },
       onStrike: (data) => showNotification(`❌ STRIKE ${data.strikes}/3!`),
       onStealChance: (data) => showNotification(`🎯 Team ${data.team} gets a steal chance!`),
@@ -219,6 +225,9 @@ export default function GameRoom() {
     e.preventDefault();
     if (!answerInput.trim()) return;
     if (gameState?.status === "faceoff") {
+      // Stop local face-off timer immediately after guessing
+      setFaceoffCountdown(null);
+      setBuzzedPlayer(null);
       faceoffAnswer(answerInput);
     } else {
       submitAnswer(answerInput);

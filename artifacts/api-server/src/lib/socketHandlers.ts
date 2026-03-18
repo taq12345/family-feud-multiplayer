@@ -75,6 +75,13 @@ function startFaceoffTimer(io: SocketServer, roomId: string) {
       answer: "(no answer in time)",
     });
     state.buzzedPlayerId = null;
+    // After a wrong face-off attempt, give the other team the next exclusive buzz.
+    // If the other team also misses, unlock so both can buzz again.
+    if (state.faceoffLockTeam === null) {
+      state.faceoffLockTeam = player.team === 1 ? 2 : 1;
+    } else {
+      state.faceoffLockTeam = null;
+    }
     io.to(roomId).emit("game_state", serializeGameState(state));
   }, FACE_OFF_ANSWER_MS);
   faceoffTimers.set(roomId, timer);
@@ -205,6 +212,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.playingTeam = null;
       state.faceoffWinner = null;
       state.buzzedPlayerId = null;
+      state.faceoffLockTeam = null;
 
       await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
@@ -217,6 +225,7 @@ export function setupSocketHandlers(io: SocketServer) {
       if (state.buzzedPlayerId) return;
       const player = state.players.get(socket.id);
       if (!player) return;
+      if (state.faceoffLockTeam && player.team !== state.faceoffLockTeam) return;
 
       state.buzzedPlayerId = socket.id;
       io.to(roomId).emit("buzzed_in", { playerName: player.name, team: player.team });
@@ -239,6 +248,7 @@ export function setupSocketHandlers(io: SocketServer) {
       if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
         clearFaceoffTimer(roomId);
         state.buzzedPlayerId = null;
+        state.faceoffLockTeam = null;
         state.revealedAnswers.add(matchIndex);
         state.faceoffWinner = player.team;
         state.playingTeam = player.team;
@@ -257,6 +267,11 @@ export function setupSocketHandlers(io: SocketServer) {
         io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
         clearFaceoffTimer(roomId);
         state.buzzedPlayerId = null;
+        if (state.faceoffLockTeam === null) {
+          state.faceoffLockTeam = player.team === 1 ? 2 : 1;
+        } else {
+          state.faceoffLockTeam = null;
+        }
         io.to(roomId).emit("game_state", serializeGameState(state));
       }
     });
@@ -391,6 +406,8 @@ export function setupSocketHandlers(io: SocketServer) {
       state.roundPoints = 0;
       state.playingTeam = null;
       state.faceoffWinner = null;
+      state.buzzedPlayerId = null;
+      state.faceoffLockTeam = null;
 
       await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
