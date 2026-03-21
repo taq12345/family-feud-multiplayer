@@ -133,6 +133,17 @@ function stemmedTokens(text: string): Set<string> {
 }
 
 /**
+ * Split an answer text on "/" into individual alternatives.
+ * "Life/Fossils" → ["Life", "Fossils"]
+ * "Food/Mars Bars" → ["Food", "Mars Bars"]
+ * "Beer" → ["Beer"]  (no slash — single-element array)
+ */
+function splitVariants(text: string): string[] {
+  const parts = text.split("/").map(s => s.trim()).filter(Boolean);
+  return parts.length > 1 ? parts : [text];
+}
+
+/**
  * Check if two answers match via stemming.
  * Requires stemmed token SETS to be equal — same tokens modulo morphology.
  * This handles tense/plural variants (dance/dancing, dog/dogs) but correctly
@@ -209,8 +220,6 @@ export async function findMatchIndex(
   const normSubmitted = normalize(submitted);
   if (!normSubmitted) return -1;
 
-  const normCanonicals = answers.map(a => normalize(a.text));
-
   // === Fast pass (layers 1 and 2) ===
   for (let i = 0; i < answers.length; i++) {
     if (revealedAnswers.has(i)) continue;
@@ -222,16 +231,22 @@ export async function findMatchIndex(
       continue;
     }
 
-    // Layer 1: exact normalized equality
-    if (normSubmitted === normCanonicals[i]) {
-      cacheSet(key, true);
-      return i;
-    }
+    // Treat "/" as OR — check each variant of the canonical answer independently
+    const variants = splitVariants(answers[i].text);
+    for (const variant of variants) {
+      const normVariant = normalize(variant);
 
-    // Layer 2: stemmed token-set equality
-    if (stemmedMatch(normSubmitted, normCanonicals[i])) {
-      cacheSet(key, true);
-      return i;
+      // Layer 1: exact normalized equality
+      if (normSubmitted === normVariant) {
+        cacheSet(key, true);
+        return i;
+      }
+
+      // Layer 2: stemmed token-set equality
+      if (stemmedMatch(normSubmitted, normVariant)) {
+        cacheSet(key, true);
+        return i;
+      }
     }
   }
 
@@ -247,14 +262,20 @@ export async function findMatchIndex(
 
   if (aiCandidates.length === 0) return -1;
 
-  // Fire all AI checks simultaneously; results is indexed by aiCandidates position
+  // Fire all AI checks simultaneously; for slash-variant answers check each part
+  // independently — answer matches if ANY variant matches (e.g. "Life/Fossils"
+  // means "Life" OR "Fossils", so "people" can match "Life" → accept)
   const results = await Promise.all(
-    aiCandidates.map(({ index, key }) =>
-      aiSemanticMatch(submitted.trim(), answers[index].text, question).then(result => {
+    aiCandidates.map(({ index, key }) => {
+      const variants = splitVariants(answers[index].text);
+      return Promise.all(
+        variants.map(variant => aiSemanticMatch(submitted.trim(), variant, question))
+      ).then(variantResults => {
+        const result = variantResults.some(r => r);
         cacheSet(key, result);
         return { index, result };
-      })
-    )
+      });
+    })
   );
 
   // Return first (lowest-index) match
