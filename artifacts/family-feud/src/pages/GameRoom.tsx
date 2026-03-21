@@ -135,6 +135,7 @@ export default function GameRoom() {
   const [wrongAnswers, setWrongAnswers] = useState<Array<{ playerName: string; answer: string }>>([]);
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
   const [unreadChats, setUnreadChats] = useState(0);
+  const [verifyingAnswer, setVerifyingAnswer] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const showNotification = useCallback((msg: string) => {
@@ -161,11 +162,13 @@ export default function GameRoom() {
         setTimeout(() => setBuzzedPlayer(null), 8000);
       },
       onAnswerCorrect: (data) => {
+        setVerifyingAnswer(false);
         showNotification(`✅ ${data.playerName}: "${gameState?.currentQuestion?.answers[data.answerIndex]?.text}" — ${data.points} pts`);
         setBuzzedPlayer(null);
         setFaceoffCountdown(null);
       },
       onAnswerWrong: (data) => {
+        setVerifyingAnswer(false);
         showNotification(`❌ ${data.playerName}: "${data.answer}" — Wrong answer!`);
         setWrongAnswers(prev => [...prev.slice(-9), { playerName: data.playerName, answer: data.answer }]);
         setBuzzedPlayer(null);
@@ -266,6 +269,7 @@ export default function GameRoom() {
   function handleAnswer(e: React.FormEvent) {
     e.preventDefault();
     if (!answerInput.trim()) return;
+    setVerifyingAnswer(true);
     if (gameState?.status === "faceoff") {
       setFaceoffCountdown(null);
       setBuzzedPlayer(null);
@@ -305,6 +309,25 @@ export default function GameRoom() {
 
   return (
     <div className="h-svh overflow-hidden bg-[#070d1f] text-white flex flex-col">
+      {/* Answer verification overlay */}
+      {verifyingAnswer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4 px-8 py-7 rounded-2xl bg-white/[0.05] border border-white/10 backdrop-blur-xl shadow-[0_0_40px_rgba(251,191,36,0.15)]">
+            <div className="relative w-14 h-14">
+              <div className="absolute inset-0 rounded-full border-2 border-amber-400/20" />
+              <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-amber-400 animate-spin" />
+              <div className="absolute inset-2 rounded-full bg-amber-400/10 flex items-center justify-center">
+                <span className="text-lg">🎯</span>
+              </div>
+            </div>
+            <div className="text-center">
+              <p className="text-white font-semibold text-base">Checking your answer…</p>
+              <p className="text-slate-400 text-xs mt-1">Consulting the judges</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-32 -left-32 w-80 h-80 bg-amber-500/8 rounded-full blur-3xl" />
