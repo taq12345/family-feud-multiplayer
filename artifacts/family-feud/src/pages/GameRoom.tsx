@@ -175,14 +175,14 @@ export default function GameRoom() {
         // If no strike event arrives within 150ms (faceoff / failed steal), show simple toast
         setTimeout(() => {
           if (pendingWrongRef.current) {
-            showNotification(`❌ "${pendingWrongRef.current.answer}" — Wrong!`);
+            showNotification(`❌ ${pendingWrongRef.current.playerName}: "${pendingWrongRef.current.answer}" — Wrong!`);
             pendingWrongRef.current = null;
           }
         }, 150);
       },
       onStrike: (data) => {
         if (pendingWrongRef.current) {
-          showNotification(`❌ "${pendingWrongRef.current.answer}" — Strike ${data.strikes}/3!`);
+          showNotification(`❌ ${pendingWrongRef.current.playerName}: "${pendingWrongRef.current.answer}" — Strike ${data.strikes}/3!`);
           pendingWrongRef.current = null;
         } else {
           showNotification(`⚡ Strike ${data.strikes}/3!`);
