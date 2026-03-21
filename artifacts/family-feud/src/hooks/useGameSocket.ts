@@ -55,7 +55,7 @@ export function useGameSocket(
     onPlayerJoined?: (data: { playerName: string; team: 1 | 2 }) => void;
     onPlayerLeft?: (data: { playerName: string }) => void;
     onBuzzedIn?: (data: { playerName: string; team: 1 | 2 }) => void;
-    onAnswerCorrect?: (data: { playerName: string; team: 1 | 2; answerIndex: number; points: number }) => void;
+    onAnswerCorrect?: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; points: number }) => void;
     onAnswerWrong?: (data: { playerName: string; team: 1 | 2; answer: string }) => void;
     onStrike?: (data: { strikes: number }) => void;
     onStealChance?: (data: { team: 1 | 2 }) => void;

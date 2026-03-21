@@ -271,6 +271,7 @@ export function setupSocketHandlers(io: SocketServer) {
             playerName: player.name,
             team: player.team,
             answerIndex: matchIndex,
+            answerText: state.currentQuestion.answers[matchIndex].text,
             points: state.currentQuestion.answers[matchIndex].points,
           });
           io.to(roomId).emit("game_state", serializeGameState(state));
@@ -323,6 +324,7 @@ export function setupSocketHandlers(io: SocketServer) {
             playerName: player.name,
             team: player.team,
             answerIndex: matchIndex,
+            answerText: state.currentQuestion.answers[matchIndex].text,
             points: pts,
           });
 

@@ -163,7 +163,7 @@ export default function GameRoom() {
       },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
-        showNotification(`✅ ${data.playerName}: "${gameState?.currentQuestion?.answers[data.answerIndex]?.text}" — ${data.points} pts`);
+        showNotification(`✅ ${data.playerName}: "${data.answerText}" — ${data.points} pts`);
         setBuzzedPlayer(null);
         setFaceoffCountdown(null);
       },
@@ -373,10 +373,12 @@ export default function GameRoom() {
         </div>
       </header>
 
-      {/* Notification banner */}
+      {/* Notification toast — fixed overlay, never shifts layout */}
       {notification && (
-        <div className="relative z-20 bg-gradient-to-r from-amber-500 to-amber-400 text-black text-center py-2 px-4 font-bold text-sm animate-in slide-in-from-top-2 duration-200 shrink-0">
-          {notification}
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none animate-in slide-in-from-top-3 fade-in duration-200">
+          <div className="flex items-center gap-2.5 bg-[#0d1525]/90 backdrop-blur-xl border border-white/12 text-white text-sm font-semibold px-4 py-2.5 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] max-w-sm text-center whitespace-nowrap">
+            {notification}
+          </div>
         </div>
       )}
 
