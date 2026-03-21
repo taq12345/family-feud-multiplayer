@@ -445,6 +445,10 @@ export function setupSocketHandlers(io: SocketServer) {
       const player = state.players.get(socket.id);
       if (!player?.isHost) return;
 
+      for (const [sid, p] of state.players.entries()) {
+        const key = p.name.trim().toLowerCase();
+        if (activeNicknames.get(key) === sid) activeNicknames.delete(key);
+      }
       gameStates.delete(roomId);
       try {
         await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
