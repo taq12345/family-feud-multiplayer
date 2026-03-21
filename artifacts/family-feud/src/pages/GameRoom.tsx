@@ -67,6 +67,40 @@ function AnswerBoard({ question, answers }: {
   );
 }
 
+function TeamRoster({ players, team1Name, team2Name, myName }: {
+  players: Array<{ name: string; team: 1 | 2; isHost: boolean }>;
+  team1Name: string; team2Name: string; myName: string | null;
+}) {
+  const t1 = players.filter(p => p.team === 1);
+  const t2 = players.filter(p => p.team === 2);
+  return (
+    <div className="grid grid-cols-2 gap-2 mb-3">
+      {([1, 2] as const).map(team => {
+        const members = team === 1 ? t1 : t2;
+        const name = team === 1 ? team1Name : team2Name;
+        const color = team === 1
+          ? { border: "border-rose-500/20", label: "text-rose-400", dot: "bg-rose-400", you: "bg-rose-500/20 border-rose-500/30 text-rose-300" }
+          : { border: "border-blue-500/20", label: "text-blue-400", dot: "bg-blue-400", you: "bg-blue-500/20 border-blue-500/30 text-blue-300" };
+        return (
+          <div key={team} className={`rounded-xl bg-white/[0.02] border ${color.border} p-2`}>
+            <div className={`text-[9px] font-bold uppercase tracking-widest ${color.label} mb-1.5 truncate`}>{name}</div>
+            <div className="space-y-1">
+              {members.length === 0 && <div className="text-[10px] text-slate-600 italic">No players</div>}
+              {members.map(p => (
+                <div key={p.name} className={`flex items-center gap-1.5 text-[11px] rounded-md px-1.5 py-0.5 ${p.name === myName ? `border ${color.you}` : "text-slate-300"}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${p.name === myName ? "opacity-100" : "opacity-40"}`} />
+                  <span className="truncate font-medium">{p.name}</span>
+                  {p.isHost && <span className="ml-auto text-amber-400 text-[9px]">👑</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function ScoreBoard({ team1Name, team2Name, team1Score, team2Score, playingTeam, roundPoints }: {
   team1Name: string; team2Name: string; team1Score: number; team2Score: number;
   playingTeam: 1 | 2 | null; roundPoints: number;
@@ -413,6 +447,15 @@ export default function GameRoom() {
             playingTeam={gameState.playingTeam}
             roundPoints={gameState.roundPoints}
           />
+
+          {gameState.status !== "waiting" && (
+            <TeamRoster
+              players={gameState.players}
+              team1Name={gameState.team1Name}
+              team2Name={gameState.team2Name}
+              myName={playerName}
+            />
+          )}
 
           {/* Strikes */}
           {(gameState.status === "playing" || gameState.status === "stealing") && (
