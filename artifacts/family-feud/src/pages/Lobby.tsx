@@ -265,16 +265,6 @@ export default function Lobby() {
                   <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm text-amber-300/80">
                     Hosting as <span className="font-bold text-amber-400">{nickname}</span> · Max 10 players per room
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-slate-300 text-sm font-medium">Team 1 Name</Label>
-                      <Input value={form.team1Name} onChange={e => setForm(f => ({ ...f, team1Name: e.target.value }))} className="mt-1 bg-white/5 border-white/10 text-white focus:border-amber-500/50" />
-                    </div>
-                    <div>
-                      <Label className="text-slate-300 text-sm font-medium">Team 2 Name</Label>
-                      <Input value={form.team2Name} onChange={e => setForm(f => ({ ...f, team2Name: e.target.value }))} className="mt-1 bg-white/5 border-white/10 text-white focus:border-amber-500/50" />
-                    </div>
-                  </div>
                   <div>
                     <Label className="text-slate-300 text-sm font-medium">Number of Rounds</Label>
                     <Input
