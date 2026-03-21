@@ -132,11 +132,11 @@ export default function GameRoom() {
   const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [wrongAnswers, setWrongAnswers] = useState<Array<{ playerName: string; answer: string }>>([]);
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
   const [unreadChats, setUnreadChats] = useState(0);
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const pendingWrongRef = useRef<{ answer: string; playerName: string } | null>(null);
 
   const showNotification = useCallback((msg: string) => {
     setNotification(msg);
@@ -169,12 +169,25 @@ export default function GameRoom() {
       },
       onAnswerWrong: (data) => {
         setVerifyingAnswer(false);
-        showNotification(`❌ ${data.playerName}: "${data.answer}" — Wrong answer!`);
-        setWrongAnswers(prev => [...prev.slice(-9), { playerName: data.playerName, answer: data.answer }]);
         setBuzzedPlayer(null);
         setFaceoffCountdown(null);
+        pendingWrongRef.current = { answer: data.answer, playerName: data.playerName };
+        // If no strike event arrives within 150ms (faceoff / failed steal), show simple toast
+        setTimeout(() => {
+          if (pendingWrongRef.current) {
+            showNotification(`❌ "${pendingWrongRef.current.answer}" — Wrong!`);
+            pendingWrongRef.current = null;
+          }
+        }, 150);
       },
-      onStrike: (data) => showNotification(`❌ STRIKE ${data.strikes}/3!`),
+      onStrike: (data) => {
+        if (pendingWrongRef.current) {
+          showNotification(`❌ "${pendingWrongRef.current.answer}" — Strike ${data.strikes}/3!`);
+          pendingWrongRef.current = null;
+        } else {
+          showNotification(`⚡ Strike ${data.strikes}/3!`);
+        }
+      },
       onStealChance: (data) => showNotification(`🎯 Team ${data.team} gets a steal chance!`),
       onRoundOver: (data) => showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`),
       onRoomDeleted: () => {
@@ -195,9 +208,6 @@ export default function GameRoom() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
-  useEffect(() => {
-    setWrongAnswers([]);
-  }, [gameState?.currentRound, gameState?.status === "faceoff"]);
 
   // Local 8s countdown for face-off answer window
   useEffect(() => {
@@ -417,22 +427,6 @@ export default function GameRoom() {
               question={gameState.currentQuestion.question}
               answers={gameState.currentQuestion.answers}
             />
-          )}
-
-          {/* Wrong answers log */}
-          {wrongAnswers.length > 0 && (
-            <div className="rounded-xl bg-red-500/8 border border-red-500/20 p-3">
-              <div className="text-[10px] text-red-400/70 font-bold uppercase tracking-widest mb-2">Wrong Answers</div>
-              <div className="space-y-1">
-                {wrongAnswers.map((w, i) => (
-                  <div key={i} className="flex items-center gap-2 text-xs">
-                    <span className="text-red-500">✗</span>
-                    <span className="text-slate-400 font-semibold">{w.playerName}:</span>
-                    <span className="text-slate-300">{w.answer}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           )}
 
           {/* Game controls */}
