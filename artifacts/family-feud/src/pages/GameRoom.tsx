@@ -233,7 +233,11 @@ export default function GameRoom() {
         setTimeout(() => setLocation("/"), 1200);
       },
       onHostChanged: (data) => {
-        showNotification(`👑 ${data.hostName} is now the host`);
+        if (data.hostName === playerName) {
+          showNotification(`👑 You are now the host!`);
+        } else {
+          showNotification(`👑 ${data.hostName} is now the host`);
+        }
       },
     }
   );
