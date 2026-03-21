@@ -9,6 +9,8 @@ const gameStates = new Map<string, GameState>();
 const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const faceoffTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
+// Per-room mutex: prevents concurrent async answer processing for the same room
+const answerProcessing = new Map<string, boolean>();
 
 // nickname (lowercase) → socket.id – tracks every connected player across all rooms
 const activeNicknames = new Map<string, string>();
@@ -240,49 +242,57 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player) return;
       if (state.buzzedPlayerId !== socket.id) return;
 
-      // Clear the timer immediately so it cannot fire and mutate state while AI is pending
-      clearFaceoffTimer(roomId);
+      // Mutex: reject if another answer is already being processed for this room
+      if (answerProcessing.get(roomId)) return;
+      answerProcessing.set(roomId, true);
 
-      const question = state.currentQuestion.question;
-      const answers = state.currentQuestion.answers;
-      let matchIndex = -1;
-      for (let i = 0; i < answers.length; i++) {
-        if (state.revealedAnswers.has(i)) continue;
-        if (await isAnswerMatch(answer, answers[i].text, question)) {
-          matchIndex = i;
-          break;
+      try {
+        // Clear the timer immediately so it cannot fire and mutate state while AI is pending
+        clearFaceoffTimer(roomId);
+
+        const question = state.currentQuestion.question;
+        const answers = state.currentQuestion.answers;
+        let matchIndex = -1;
+        for (let i = 0; i < answers.length; i++) {
+          if (state.revealedAnswers.has(i)) continue;
+          if (await isAnswerMatch(answer, answers[i].text, question)) {
+            matchIndex = i;
+            break;
+          }
         }
-      }
 
-      // Re-validate state after async work: another event could have changed status
-      if (state.status !== "faceoff" || state.buzzedPlayerId !== socket.id) return;
+        // Re-validate state after async work: another event could have changed status
+        if (state.status !== "faceoff" || state.buzzedPlayerId !== socket.id) return;
 
-      if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
-        state.buzzedPlayerId = null;
-        state.faceoffLockTeam = null;
-        state.revealedAnswers.add(matchIndex);
-        state.faceoffWinner = player.team;
-        state.playingTeam = player.team;
-        state.roundPoints += state.currentQuestion.answers[matchIndex].points;
-        state.status = "playing";
-
-        io.to(roomId).emit("answer_correct", {
-          playerName: player.name,
-          team: player.team,
-          answerIndex: matchIndex,
-          points: state.currentQuestion.answers[matchIndex].points,
-        });
-        io.to(roomId).emit("game_state", serializeGameState(state));
-        startAnswerTimer(io, state, roomId);
-      } else {
-        io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-        state.buzzedPlayerId = null;
-        if (state.faceoffLockTeam === null) {
-          state.faceoffLockTeam = player.team === 1 ? 2 : 1;
-        } else {
+        if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
+          state.buzzedPlayerId = null;
           state.faceoffLockTeam = null;
+          state.revealedAnswers.add(matchIndex);
+          state.faceoffWinner = player.team;
+          state.playingTeam = player.team;
+          state.roundPoints += state.currentQuestion.answers[matchIndex].points;
+          state.status = "playing";
+
+          io.to(roomId).emit("answer_correct", {
+            playerName: player.name,
+            team: player.team,
+            answerIndex: matchIndex,
+            points: state.currentQuestion.answers[matchIndex].points,
+          });
+          io.to(roomId).emit("game_state", serializeGameState(state));
+          startAnswerTimer(io, state, roomId);
+        } else {
+          io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+          state.buzzedPlayerId = null;
+          if (state.faceoffLockTeam === null) {
+            state.faceoffLockTeam = player.team === 1 ? 2 : 1;
+          } else {
+            state.faceoffLockTeam = null;
+          }
+          io.to(roomId).emit("game_state", serializeGameState(state));
         }
-        io.to(roomId).emit("game_state", serializeGameState(state));
+      } finally {
+        answerProcessing.delete(roomId);
       }
     });
 
@@ -294,66 +304,74 @@ export function setupSocketHandlers(io: SocketServer) {
       if (state.status === "playing" && player.team !== state.playingTeam) return;
       if (state.status === "stealing" && player.team === state.playingTeam) return;
 
+      // Mutex: reject if another answer is already being processed for this room
+      if (answerProcessing.get(roomId)) return;
+      answerProcessing.set(roomId, true);
+
       clearAnswerTimer(roomId);
 
-      const statusBeforeAwait = state.status;
-      const question = state.currentQuestion.question;
-      const answers = state.currentQuestion.answers;
-      let matchIndex = -1;
-      for (let i = 0; i < answers.length; i++) {
-        if (state.revealedAnswers.has(i)) continue;
-        if (await isAnswerMatch(answer, answers[i].text, question)) {
-          matchIndex = i;
-          break;
+      try {
+        const statusBeforeAwait = state.status;
+        const question = state.currentQuestion.question;
+        const answers = state.currentQuestion.answers;
+        let matchIndex = -1;
+        for (let i = 0; i < answers.length; i++) {
+          if (state.revealedAnswers.has(i)) continue;
+          if (await isAnswerMatch(answer, answers[i].text, question)) {
+            matchIndex = i;
+            break;
+          }
         }
-      }
 
-      // Re-validate state after async work — reject if status changed or answer was already revealed
-      if (state.status !== statusBeforeAwait) return;
-      if (matchIndex !== -1 && state.revealedAnswers.has(matchIndex)) return;
+        // Re-validate state after async work — reject if status changed or answer was already revealed
+        if (state.status !== statusBeforeAwait) return;
+        if (matchIndex !== -1 && state.revealedAnswers.has(matchIndex)) return;
 
-      if (matchIndex !== -1) {
-        state.revealedAnswers.add(matchIndex);
-        const pts = state.currentQuestion.answers[matchIndex].points;
-        state.roundPoints += pts;
+        if (matchIndex !== -1) {
+          state.revealedAnswers.add(matchIndex);
+          const pts = state.currentQuestion.answers[matchIndex].points;
+          state.roundPoints += pts;
 
-        io.to(roomId).emit("answer_correct", {
-          playerName: player.name,
-          team: player.team,
-          answerIndex: matchIndex,
-          points: pts,
-        });
+          io.to(roomId).emit("answer_correct", {
+            playerName: player.name,
+            team: player.team,
+            answerIndex: matchIndex,
+            points: pts,
+          });
 
-        // Check if all answers revealed
-        const allRevealed = state.currentQuestion.answers.every((_, i) => state.revealedAnswers.has(i));
-        if (allRevealed || state.status === "stealing") {
-          await endRound(io, state, roomId, player.team);
-        } else {
-          io.to(roomId).emit("game_state", serializeGameState(state));
-          startAnswerTimer(io, state, roomId);
-        }
-      } else {
-        if (state.status === "playing") {
-          io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-          state.strikes++;
-          io.to(roomId).emit("strike", { strikes: state.strikes });
-
-          if (state.strikes >= 3) {
-            state.status = "stealing";
-            state.strikes = 0;
-            const stealingTeam = state.playingTeam === 1 ? 2 : 1;
-            io.to(roomId).emit("steal_chance", { team: stealingTeam });
-            io.to(roomId).emit("game_state", serializeGameState(state));
-            startAnswerTimer(io, state, roomId);
+          // Check if all answers revealed
+          const allRevealed = state.currentQuestion.answers.every((_, i) => state.revealedAnswers.has(i));
+          if (allRevealed || state.status === "stealing") {
+            await endRound(io, state, roomId, player.team);
           } else {
             io.to(roomId).emit("game_state", serializeGameState(state));
             startAnswerTimer(io, state, roomId);
           }
-        } else if (state.status === "stealing") {
-          io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-          // Failed steal — playing team gets points
-          await endRound(io, state, roomId, state.playingTeam!);
+        } else {
+          if (state.status === "playing") {
+            io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            state.strikes++;
+            io.to(roomId).emit("strike", { strikes: state.strikes });
+
+            if (state.strikes >= 3) {
+              state.status = "stealing";
+              state.strikes = 0;
+              const stealingTeam = state.playingTeam === 1 ? 2 : 1;
+              io.to(roomId).emit("steal_chance", { team: stealingTeam });
+              io.to(roomId).emit("game_state", serializeGameState(state));
+              startAnswerTimer(io, state, roomId);
+            } else {
+              io.to(roomId).emit("game_state", serializeGameState(state));
+              startAnswerTimer(io, state, roomId);
+            }
+          } else if (state.status === "stealing") {
+            io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            // Failed steal — playing team gets points
+            await endRound(io, state, roomId, state.playingTeam!);
+          }
         }
+      } finally {
+        answerProcessing.delete(roomId);
       }
     });
 
