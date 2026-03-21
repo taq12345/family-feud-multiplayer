@@ -112,28 +112,27 @@ function stemmedTokens(text: string): Set<string> {
   );
 }
 
-/** Check if stemmed token sets overlap sufficiently */
+/**
+ * Check if two answers match via stemming.
+ * Requires stemmed token SETS to be equal — same tokens modulo morphology.
+ * This handles tense/plural variants (dance/dancing, dog/dogs) but correctly
+ * rejects partial matches ("butter" vs "peanut butter", "ice" vs "ice cream").
+ */
 function stemmedMatch(submitted: string, canonical: string): boolean {
   const submittedStems = stemmedTokens(submitted);
   const canonicalStems = stemmedTokens(canonical);
 
   if (submittedStems.size === 0 || canonicalStems.size === 0) return false;
 
-  // All submitted stems must appear in canonical stems, or vice-versa
-  // (handles single-word and multi-word overlap)
-  const submittedArr = [...submittedStems];
-  const canonicalArr = [...canonicalStems];
+  // Token counts must match — partial subsets never qualify
+  if (submittedStems.size !== canonicalStems.size) return false;
 
-  // Single-word answers: exact stemmed match
-  if (submittedStems.size === 1 && canonicalStems.size === 1) {
-    return submittedArr[0] === canonicalArr[0];
+  // Every submitted stem must appear in the canonical stems (and vice versa,
+  // since sizes are equal, this implies set equality)
+  for (const s of submittedStems) {
+    if (!canonicalStems.has(s)) return false;
   }
-
-  // Multi-word: count overlapping stems
-  const overlap = submittedArr.filter(s => canonicalStems.has(s)).length;
-  const minSize = Math.min(submittedStems.size, canonicalStems.size);
-  // Require at least 50% overlap, minimum 1 token
-  return overlap > 0 && overlap >= Math.ceil(minSize * 0.5);
+  return true;
 }
 
 /** Ask the AI model whether submitted and canonical mean the same thing in context */
