@@ -356,10 +356,10 @@ export default function GameRoom() {
           {isHost && (
             <button
               onClick={() => setDeleteConfirmOpen(true)}
-              title="Delete Room"
-              className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all text-xs font-medium"
             >
               <LogOut className="w-3.5 h-3.5" />
+              Delete Room
             </button>
           )}
           <button
