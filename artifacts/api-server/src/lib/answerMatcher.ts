@@ -5,11 +5,19 @@ const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY ?? "placeholder",
 });
 
-// In-memory cache: "canonical|||submitted" -> boolean
+// In-memory cache: "canonical|||submitted" -> boolean (max 1000 entries, FIFO eviction)
+const CACHE_MAX = 1000;
 const matchCache = new Map<string, boolean>();
 
 function cacheKey(canonical: string, submitted: string): string {
   return `${canonical.toLowerCase()}|||${submitted.toLowerCase()}`;
+}
+
+function cacheSet(key: string, value: boolean): void {
+  if (matchCache.size >= CACHE_MAX) {
+    matchCache.delete(matchCache.keys().next().value!);
+  }
+  matchCache.set(key, value);
 }
 
 /** Strip punctuation/symbols, lowercase, collapse whitespace */
@@ -183,25 +191,25 @@ export async function isAnswerMatch(
   // Guard: empty or whitespace-only input is never a match
   const normSubmitted = normalize(submitted);
   if (!normSubmitted) {
-    matchCache.set(key, false);
+    cacheSet(key, false);
     return false;
   }
 
   // Layer 1: strict normalized equality (handles punctuation, apostrophes, casing)
   const normCanonical = normalize(canonical);
   if (normSubmitted === normCanonical) {
-    matchCache.set(key, true);
+    cacheSet(key, true);
     return true;
   }
 
-  // Layer 2: stemming
+  // Layer 2: stemming (token-set equality, no partial subsets)
   if (stemmedMatch(normSubmitted, normCanonical)) {
-    matchCache.set(key, true);
+    cacheSet(key, true);
     return true;
   }
 
   // Layer 3: AI semantic match
   const aiResult = await aiSemanticMatch(submitted.trim(), canonical, question);
-  matchCache.set(key, aiResult);
+  cacheSet(key, aiResult);
   return aiResult;
 }
