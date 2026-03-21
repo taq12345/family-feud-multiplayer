@@ -271,7 +271,7 @@ export default function GameRoom() {
       setRoundCountdown(null);
       return undefined;
     }
-  }, [gameState?.status, canAnswer]);
+  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, canAnswer]);
 
   function handleLeave() {
     leaveRoom();
