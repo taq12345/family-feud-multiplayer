@@ -27,11 +27,16 @@ function cacheSet(key: string, value: boolean): void {
   matchCache.set(key, value);
 }
 
-/** Strip punctuation/symbols, lowercase, collapse whitespace */
+/**
+ * Normalize: lowercase, replace punctuation/symbols with spaces (so hyphens/slashes
+ * separate tokens rather than merging them), then collapse whitespace.
+ * Examples: "Scooby-Doo" → "scooby doo", "McDonald's" → "mcdonalds" (apostrophe removed)
+ */
 function normalize(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/['''`]/g, "")       // remove apostrophes/curly quotes (don't→dont, McDonald's→mcdonalds)
+    .replace(/[^a-z0-9\s]/g, " ") // replace other punctuation with space (hyphen, slash, etc.)
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -92,7 +97,7 @@ function stem(word: string): string {
   else if (w.length > 4 && w.endsWith("ly")) {
     w = w.slice(0, -2);
   }
-  // -er (runner→runner becomes handled earlier; dancer→danc+er)
+  // -er (dancer→danc; double-consonant already handled by -ing/-ed path)
   else if (w.length > 4 && w.endsWith("er")) {
     w = w.slice(0, -2);
   }
@@ -133,16 +138,16 @@ function stemmedTokens(text: string): Set<string> {
  * This handles tense/plural variants (dance/dancing, dog/dogs) but correctly
  * rejects partial matches ("butter" vs "peanut butter", "ice" vs "ice cream").
  */
-function stemmedMatch(submitted: string, canonical: string): boolean {
-  const submittedStems = stemmedTokens(submitted);
-  const canonicalStems = stemmedTokens(canonical);
+function stemmedMatch(normSubmitted: string, normCanonical: string): boolean {
+  const submittedStems = stemmedTokens(normSubmitted);
+  const canonicalStems = stemmedTokens(normCanonical);
 
   if (submittedStems.size === 0 || canonicalStems.size === 0) return false;
 
   // Token counts must match — partial subsets never qualify
   if (submittedStems.size !== canonicalStems.size) return false;
 
-  // Every submitted stem must appear in the canonical stems (and vice versa,
+  // Every submitted stem must appear in canonical stems (and vice versa,
   // since sizes are equal, this implies set equality)
   for (const s of submittedStems) {
     if (!canonicalStems.has(s)) return false;
@@ -150,7 +155,7 @@ function stemmedMatch(submitted: string, canonical: string): boolean {
   return true;
 }
 
-/** Ask the AI model whether submitted and canonical mean the same thing in context */
+/** Ask AI whether submitted and canonical mean the same thing in context */
 async function aiSemanticMatch(submitted: string, canonical: string, question: string): Promise<boolean> {
   const AI_TIMEOUT_MS = 5000;
   try {
@@ -182,41 +187,80 @@ async function aiSemanticMatch(submitted: string, canonical: string, question: s
 }
 
 /**
- * Three-layer answer matcher:
- *   1. Normalize → exact match (handles punctuation, apostrophes, casing)
- *   2. Stem → token overlap match (handles verb forms, plurals)
- *   3. AI semantic judge → synonym / conceptual match (handles grooving=dancing, fridge=refrigerator)
+ * Find the index of the matching answer in the given array, or -1 if none match.
+ * Already-revealed answers are skipped.
+ *
+ * Strategy (bounded latency):
+ *   1. Fast pass: normalize + stem all candidates (synchronous) — O(n) no I/O
+ *   2. If a layer-1/2 match is found, return immediately
+ *   3. Otherwise, fire ALL remaining AI checks in PARALLEL (single round-trip)
+ *      and return the first match (lowest index wins).
+ *
+ * This ensures worst-case latency is one AI round-trip (≤5s), regardless of
+ * how many answers the question has.
  */
-export async function isAnswerMatch(
+export async function findMatchIndex(
   submitted: string,
-  canonical: string,
-  question: string
-): Promise<boolean> {
-  const key = cacheKey(canonical, submitted);
-  if (matchCache.has(key)) return matchCache.get(key)!;
-
+  answers: Array<{ text: string; points: number }>,
+  question: string,
+  revealedAnswers: Set<number>
+): Promise<number> {
   // Guard: empty or whitespace-only input is never a match
   const normSubmitted = normalize(submitted);
-  if (!normSubmitted) {
-    cacheSet(key, false);
-    return false;
+  if (!normSubmitted) return -1;
+
+  const normCanonicals = answers.map(a => normalize(a.text));
+
+  // === Fast pass (layers 1 and 2) ===
+  for (let i = 0; i < answers.length; i++) {
+    if (revealedAnswers.has(i)) continue;
+    const key = cacheKey(answers[i].text, submitted);
+
+    // Layer 0: cache hit
+    if (matchCache.has(key)) {
+      if (matchCache.get(key)) return i;
+      continue;
+    }
+
+    // Layer 1: exact normalized equality
+    if (normSubmitted === normCanonicals[i]) {
+      cacheSet(key, true);
+      return i;
+    }
+
+    // Layer 2: stemmed token-set equality
+    if (stemmedMatch(normSubmitted, normCanonicals[i])) {
+      cacheSet(key, true);
+      return i;
+    }
   }
 
-  // Layer 1: strict normalized equality (handles punctuation, apostrophes, casing)
-  const normCanonical = normalize(canonical);
-  if (normSubmitted === normCanonical) {
-    cacheSet(key, true);
-    return true;
+  // === Slow pass (layer 3: AI — all in parallel) ===
+  const aiCandidates: Array<{ index: number; key: string }> = [];
+  for (let i = 0; i < answers.length; i++) {
+    if (revealedAnswers.has(i)) continue;
+    const key = cacheKey(answers[i].text, submitted);
+    if (!matchCache.has(key)) {
+      aiCandidates.push({ index: i, key });
+    }
   }
 
-  // Layer 2: stemming (token-set equality, no partial subsets)
-  if (stemmedMatch(normSubmitted, normCanonical)) {
-    cacheSet(key, true);
-    return true;
-  }
+  if (aiCandidates.length === 0) return -1;
 
-  // Layer 3: AI semantic match
-  const aiResult = await aiSemanticMatch(submitted.trim(), canonical, question);
-  cacheSet(key, aiResult);
-  return aiResult;
+  // Fire all AI checks simultaneously; results is indexed by aiCandidates position
+  const results = await Promise.all(
+    aiCandidates.map(({ index, key }) =>
+      aiSemanticMatch(submitted.trim(), answers[index].text, question).then(result => {
+        cacheSet(key, result);
+        return { index, result };
+      })
+    )
+  );
+
+  // Return first (lowest-index) match
+  results.sort((a, b) => a.index - b.index);
+  for (const { index, result } of results) {
+    if (result) return index;
+  }
+  return -1;
 }

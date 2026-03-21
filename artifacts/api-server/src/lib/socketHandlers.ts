@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState } from "./gameState.js";
-import { isAnswerMatch } from "./answerMatcher.js";
+import { findMatchIndex } from "./answerMatcher.js";
 
 const gameStates = new Map<string, GameState>();
 const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -252,14 +252,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
         const question = state.currentQuestion.question;
         const answers = state.currentQuestion.answers;
-        let matchIndex = -1;
-        for (let i = 0; i < answers.length; i++) {
-          if (state.revealedAnswers.has(i)) continue;
-          if (await isAnswerMatch(answer, answers[i].text, question)) {
-            matchIndex = i;
-            break;
-          }
-        }
+        const matchIndex = await findMatchIndex(answer, answers, question, state.revealedAnswers);
 
         // Re-validate state after async work: another event could have changed status
         if (state.status !== "faceoff" || state.buzzedPlayerId !== socket.id) return;
@@ -314,14 +307,7 @@ export function setupSocketHandlers(io: SocketServer) {
         const statusBeforeAwait = state.status;
         const question = state.currentQuestion.question;
         const answers = state.currentQuestion.answers;
-        let matchIndex = -1;
-        for (let i = 0; i < answers.length; i++) {
-          if (state.revealedAnswers.has(i)) continue;
-          if (await isAnswerMatch(answer, answers[i].text, question)) {
-            matchIndex = i;
-            break;
-          }
-        }
+        const matchIndex = await findMatchIndex(answer, answers, question, state.revealedAnswers);
 
         // Re-validate state after async work — reject if status changed or answer was already revealed
         if (state.status !== statusBeforeAwait) return;
