@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil } from "lucide-react";
 
 interface Room {
   id: string;
@@ -82,6 +82,11 @@ export default function Lobby() {
   const [joinRoomPlayers, setJoinRoomPlayers] = useState<Array<{ id: string; name: string; team: 1 | 2; isHost: boolean }> | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInGame, setIsInGame] = useState(false);
+  const [changeNicknameOpen, setChangeNicknameOpen] = useState(false);
+  const [changeNicknameInput, setChangeNicknameInput] = useState("");
+  const [changeNicknameError, setChangeNicknameError] = useState<string | null>(null);
+  const [changeNicknameLoading, setChangeNicknameLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -107,6 +112,15 @@ export default function Lobby() {
 
   useEffect(() => {
     if (nickname) localStorage.setItem("playerName", nickname);
+  }, [nickname]);
+
+  // Check whether the current nickname is active in a game room.
+  // On the lobby page the user has no socket open, so "taken" → they're in a game elsewhere.
+  useEffect(() => {
+    if (!nickname) { setIsInGame(false); return; }
+    let cancelled = false;
+    checkNickname(nickname).then(taken => { if (!cancelled) setIsInGame(taken); });
+    return () => { cancelled = true; };
   }, [nickname]);
 
   async function handleCreate(e: React.FormEvent) {
@@ -136,6 +150,24 @@ export default function Lobby() {
       const res = await fetch(`/api/rooms/${roomId}/players`);
       if (res.ok) setJoinRoomPlayers(await res.json());
     } catch { /* ignore */ }
+  }
+
+  async function handleChangeNickname() {
+    if (!changeNicknameInput.trim()) return;
+    const trimmed = changeNicknameInput.trim();
+    setChangeNicknameError(null);
+    setChangeNicknameLoading(true);
+    try {
+      const taken = await checkNickname(trimmed);
+      if (taken) { setChangeNicknameError(`"${trimmed}" is already in use. Pick another.`); return; }
+      setNickname(trimmed);
+      localStorage.setItem("playerName", trimmed);
+      setIsInGame(false);
+      setChangeNicknameOpen(false);
+      setChangeNicknameInput("");
+    } finally {
+      setChangeNicknameLoading(false);
+    }
   }
 
   async function confirmJoin() {
@@ -174,12 +206,26 @@ export default function Lobby() {
 
           <div className="flex items-center gap-2">
             {nickname && (
-              <div className="hidden xs:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mr-1">
+              <div className="hidden xs:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="text-xs text-slate-300">
                   Playing as <span className="font-semibold text-amber-400">{nickname}</span>
                 </span>
               </div>
+            )}
+            {nickname && (
+              <button
+                onClick={() => {
+                  setChangeNicknameInput("");
+                  setChangeNicknameError(null);
+                  setChangeNicknameOpen(true);
+                }}
+                disabled={isInGame}
+                title={isInGame ? "Leave your current game before changing your nickname" : "Change nickname"}
+                className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/5 disabled:hover:text-slate-400"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
             )}
             <button
               onClick={loadRooms}
@@ -401,6 +447,43 @@ export default function Lobby() {
               disabled={!nickname.trim()}
             >
               Join Game →
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Nickname dialog */}
+      <Dialog open={changeNicknameOpen} onOpenChange={v => { setChangeNicknameOpen(v); if (!v) { setChangeNicknameError(null); setChangeNicknameInput(""); } }}>
+        <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
+              Change Nickname
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <p className="text-sm text-slate-400">
+              Currently playing as <span className="font-semibold text-amber-400">{nickname}</span>. Enter a new name below.
+            </p>
+            <div>
+              <Label className="text-slate-300 text-sm font-medium">New Nickname</Label>
+              <Input
+                autoFocus
+                placeholder="Enter new nickname"
+                value={changeNicknameInput}
+                onChange={e => setChangeNicknameInput(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter") handleChangeNickname(); }}
+                className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20 h-11"
+              />
+            </div>
+            {changeNicknameError && (
+              <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{changeNicknameError}</p>
+            )}
+            <Button
+              className="w-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
+              disabled={!changeNicknameInput.trim() || changeNicknameLoading}
+              onClick={handleChangeNickname}
+            >
+              {changeNicknameLoading ? "Checking…" : "Save Nickname"}
             </Button>
           </div>
         </DialogContent>
