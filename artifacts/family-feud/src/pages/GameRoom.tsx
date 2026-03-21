@@ -686,14 +686,18 @@ export default function GameRoom() {
             {chatMessages.length === 0 && (
               <p className="text-slate-600 text-xs text-center mt-6">No messages yet. Say hello!</p>
             )}
-            {chatMessages.map((msg, i) => (
-              <div key={i} className="text-xs leading-relaxed">
-                <span className={`font-bold ${msg.playerName === playerName ? "text-amber-400" : "text-slate-400"}`}>
-                  {msg.playerName}
-                </span>
-                <span className="text-slate-300 ml-1">{msg.message}</span>
-              </div>
-            ))}
+            {chatMessages.map((msg, i) => {
+              const senderTeam = gameState?.players.find(p => p.name === msg.playerName)?.team;
+              const nameColor = senderTeam === 1 ? "text-rose-400" : senderTeam === 2 ? "text-blue-400" : "text-slate-400";
+              return (
+                <div key={i} className="text-xs leading-relaxed">
+                  <span className={`font-bold ${nameColor}`}>
+                    {msg.playerName}
+                  </span>
+                  <span className="text-slate-300 ml-1">{msg.message}</span>
+                </div>
+              );
+            })}
             <div ref={chatEndRef} />
           </div>
           <form onSubmit={handleSendChat} className="p-2.5 border-t border-white/5 flex gap-2 shrink-0">
