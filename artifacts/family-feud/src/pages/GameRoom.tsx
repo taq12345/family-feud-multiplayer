@@ -311,7 +311,7 @@ export default function GameRoom() {
     <div className="h-svh overflow-hidden bg-[#070d1f] text-white flex flex-col">
       {/* Answer verification overlay */}
       {verifyingAnswer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="flex flex-col items-center gap-4 px-8 py-7 rounded-2xl bg-white/[0.05] border border-white/10 backdrop-blur-xl shadow-[0_0_40px_rgba(251,191,36,0.15)]">
             <div className="relative w-14 h-14">
               <div className="absolute inset-0 rounded-full border-2 border-amber-400/20" />
