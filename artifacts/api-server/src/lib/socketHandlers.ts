@@ -238,8 +238,10 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!state || state.status !== "faceoff" || !state.currentQuestion) return;
       const player = state.players.get(socket.id);
       if (!player) return;
-
       if (state.buzzedPlayerId !== socket.id) return;
+
+      // Clear the timer immediately so it cannot fire and mutate state while AI is pending
+      clearFaceoffTimer(roomId);
 
       const question = state.currentQuestion.question;
       const answers = state.currentQuestion.answers;
@@ -252,8 +254,10 @@ export function setupSocketHandlers(io: SocketServer) {
         }
       }
 
+      // Re-validate state after async work: another event could have changed status
+      if (state.status !== "faceoff" || state.buzzedPlayerId !== socket.id) return;
+
       if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
-        clearFaceoffTimer(roomId);
         state.buzzedPlayerId = null;
         state.faceoffLockTeam = null;
         state.revealedAnswers.add(matchIndex);
@@ -272,7 +276,6 @@ export function setupSocketHandlers(io: SocketServer) {
         startAnswerTimer(io, state, roomId);
       } else {
         io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-        clearFaceoffTimer(roomId);
         state.buzzedPlayerId = null;
         if (state.faceoffLockTeam === null) {
           state.faceoffLockTeam = player.team === 1 ? 2 : 1;
@@ -293,6 +296,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
       clearAnswerTimer(roomId);
 
+      const statusBeforeAwait = state.status;
       const question = state.currentQuestion.question;
       const answers = state.currentQuestion.answers;
       let matchIndex = -1;
@@ -303,6 +307,9 @@ export function setupSocketHandlers(io: SocketServer) {
           break;
         }
       }
+
+      // Re-validate state after async work
+      if (state.status !== statusBeforeAwait) return;
 
       if (matchIndex !== -1) {
         state.revealedAnswers.add(matchIndex);
