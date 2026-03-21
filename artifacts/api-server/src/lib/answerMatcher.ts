@@ -123,15 +123,16 @@ export async function isAnswerMatch(
   const key = cacheKey(canonical, submitted);
   if (matchCache.has(key)) return matchCache.get(key)!;
 
-  // Layer 1: normalization
+  // Guard: empty or whitespace-only input is never a match
   const normSubmitted = normalize(submitted);
+  if (!normSubmitted) {
+    matchCache.set(key, false);
+    return false;
+  }
+
+  // Layer 1: strict normalized equality (handles punctuation, apostrophes, casing)
   const normCanonical = normalize(canonical);
   if (normSubmitted === normCanonical) {
-    matchCache.set(key, true);
-    return true;
-  }
-  // Also check if normalized submitted is contained within normalized canonical or vice versa
-  if (normCanonical.includes(normSubmitted) || normSubmitted.includes(normCanonical)) {
     matchCache.set(key, true);
     return true;
   }
