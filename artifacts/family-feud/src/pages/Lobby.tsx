@@ -1,24 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
-import { useListRooms, useCreateRoom } from "@workspace/api-client-react";
-import { Room } from "@workspace/api-client-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
-import { Users, Plus, RefreshCw, Tv2, Trophy } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock } from "lucide-react";
+
+interface Room {
+  id: string;
+  name: string;
+  hostName: string;
+  status: string;
+  playerCount: number;
+  maxPlayers: number;
+  team1Name: string;
+  team2Name: string;
+  team1Score: number;
+  team2Score: number;
+  currentRound: number;
+  totalRounds: number;
+}
 
 function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    waiting: "bg-green-600 text-white",
-    playing: "bg-yellow-500 text-black",
-    finished: "bg-gray-500 text-white",
+  const config: Record<string, { label: string; cls: string }> = {
+    waiting: { label: "Open", cls: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
+    playing: { label: "Live", cls: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
+    finished: { label: "Ended", cls: "bg-slate-500/20 text-slate-400 border-slate-500/30" },
   };
+  const c = config[status] ?? config.finished;
   return (
-    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${colors[status] ?? "bg-gray-500 text-white"}`}>
-      {status.charAt(0).toUpperCase() + status.slice(1)}
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold border ${c.cls}`}>
+      {status === "playing" && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />}
+      {c.label}
     </span>
   );
 }
@@ -34,6 +47,26 @@ async function checkNickname(name: string): Promise<boolean> {
   }
 }
 
+async function fetchRooms(): Promise<Room[]> {
+  const res = await fetch("/api/rooms");
+  if (!res.ok) throw new Error("Failed to fetch rooms");
+  return res.json();
+}
+
+async function createRoomApi(body: {
+  name: string; hostName: string; team1Name: string;
+  team2Name: string; maxPlayers: number; totalRounds: number;
+}): Promise<Room> {
+  const res = await fetch("/api/rooms", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? "Failed to create room");
+  return data;
+}
+
 export default function Lobby() {
   const [, setLocation] = useLocation();
   const [nickname, setNickname] = useState(() => localStorage.getItem("playerName") ?? "");
@@ -41,61 +74,58 @@ export default function Lobby() {
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [createLoading, setCreateLoading] = useState(false);
   const [joinTeam, setJoinTeam] = useState<1 | 2>(1);
   const [joinRoomId, setJoinRoomId] = useState<string | null>(null);
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);
   const [joinError, setJoinError] = useState<string | null>(null);
   const [joinRoomPlayers, setJoinRoomPlayers] = useState<Array<{ id: string; name: string; team: 1 | 2; isHost: boolean }> | null>(null);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [form, setForm] = useState({
     name: "",
-    hostName: localStorage.getItem("playerName") ?? "",
     team1Name: "Team 1",
     team2Name: "Team 2",
-    maxPlayers: 10,
     totalRounds: 5,
   });
 
-  const { data: rooms, isLoading, refetch } = useListRooms({
-    query: { refetchInterval: 5000 },
-  });
-
-  const createRoom = useCreateRoom();
-
-  useEffect(() => {
-    if (nickname) {
-      localStorage.setItem("playerName", nickname);
-      setForm(f => ({ ...f, hostName: nickname }));
+  const loadRooms = useCallback(async () => {
+    try {
+      const data = await fetchRooms();
+      setRooms(data);
+    } catch { /* ignore */ } finally {
+      setIsLoading(false);
     }
-  }, [nickname]);
+  }, []);
 
   useEffect(() => {
-    const id = setInterval(() => refetch(), 5000);
+    loadRooms();
+    const id = setInterval(loadRooms, 5000);
     return () => clearInterval(id);
-  }, [refetch]);
+  }, [loadRooms]);
+
+  useEffect(() => {
+    if (nickname) localStorage.setItem("playerName", nickname);
+  }, [nickname]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !nickname) return;
     setCreateError(null);
-
-    const taken = await checkNickname(nickname);
-    if (taken) {
-      setCreateError(`Nickname "${nickname}" is already in use. Change it first.`);
-      return;
+    setCreateLoading(true);
+    try {
+      const taken = await checkNickname(nickname);
+      if (taken) { setCreateError(`Nickname "${nickname}" is already in use. Change it first.`); return; }
+      const room = await createRoomApi({ ...form, hostName: nickname, maxPlayers: 10 });
+      localStorage.setItem("playerName", nickname);
+      setCreateOpen(false);
+      setLocation(`/room/${room.id}?name=${encodeURIComponent(nickname)}&team=1`);
+    } catch (err) {
+      setCreateError((err as Error).message ?? "Failed to create room.");
+    } finally {
+      setCreateLoading(false);
     }
-
-    createRoom.mutate({ data: { ...form, hostName: nickname, maxPlayers: 10 } }, {
-      onSuccess: (room) => {
-        localStorage.setItem("playerName", nickname);
-        setCreateOpen(false);
-        setLocation(`/room/${room.id}?name=${encodeURIComponent(nickname)}&team=1`);
-      },
-      onError: (err: unknown) => {
-        const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
-        setCreateError(msg ?? "Failed to create room.");
-      },
-    });
   }
 
   async function handleJoin(roomId: string) {
@@ -104,311 +134,326 @@ export default function Lobby() {
     setJoinRoomPlayers(null);
     try {
       const res = await fetch(`/api/rooms/${roomId}/players`);
-      if (res.ok) {
-        const data = await res.json();
-        setJoinRoomPlayers(data);
-      }
-    } catch {
-      // ignore fetch errors, dialog will still allow joining
-    }
+      if (res.ok) setJoinRoomPlayers(await res.json());
+    } catch { /* ignore */ }
   }
 
   async function confirmJoin() {
     if (!joinRoomId || !nickname) return;
     setJoinError(null);
-
     const taken = await checkNickname(nickname);
-    if (taken) {
-      setJoinError(`Nickname "${nickname}" is already in use. Change it first.`);
-      return;
-    }
-
+    if (taken) { setJoinError(`Nickname "${nickname}" is already in use. Change it first.`); return; }
     localStorage.setItem("playerName", nickname);
     setJoinDialogOpen(false);
     setLocation(`/room/${joinRoomId}?name=${encodeURIComponent(nickname)}&team=${joinTeam}`);
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 text-white">
+    <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
+      {/* Decorative background orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 left-1/3 w-72 h-72 bg-purple-600/8 rounded-full blur-3xl" />
+      </div>
+
       {/* Header */}
-      <div className="bg-blue-950 border-b border-blue-800 shadow-lg">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Tv2 className="w-7 h-7 sm:w-8 sm:h-8 text-yellow-400" />
+      <header className="relative z-10 border-b border-white/5 bg-black/30 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+              <Tv2 className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+            </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-yellow-400 tracking-wide uppercase">Family Feud</h1>
-              <p className="text-blue-300 text-xs hidden sm:block">Online Multiplayer</p>
+              <h1 className="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
+                Family Feud
+              </h1>
+              <p className="text-[10px] sm:text-xs text-slate-500 hidden sm:block font-medium tracking-wider uppercase">Online Multiplayer</p>
             </div>
           </div>
+
           <div className="flex items-center gap-2">
             {nickname && (
-              <span className="text-xs sm:text-sm text-blue-300 hidden xs:inline mr-1 sm:mr-2">
-                Playing as <span className="font-semibold text-yellow-400">{nickname}</span>
-              </span>
+              <div className="hidden xs:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mr-1">
+                <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="text-xs text-slate-300">
+                  Playing as <span className="font-semibold text-amber-400">{nickname}</span>
+                </span>
+              </div>
             )}
-            <Button variant="outline" size="sm" onClick={() => refetch()} className="border-blue-600 text-blue-200 hover:bg-blue-800 px-2 sm:px-3">
-              <RefreshCw className="w-4 h-4 sm:mr-1" />
-              <span className="hidden sm:inline">Refresh</span>
-            </Button>
+            <button
+              onClick={loadRooms}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              title="Refresh"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
             <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
-                <Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold">
-                  <Plus className="w-4 h-4 mr-1" /> Create Room
+                <Button className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all border-0 px-3 sm:px-4">
+                  <Plus className="w-4 h-4 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Create Room</span>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-md">
+              <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-md shadow-2xl">
                 <DialogHeader>
-                  <DialogTitle className="text-yellow-400 text-xl">Create a Game Room</DialogTitle>
+                  <DialogTitle className="text-xl font-bold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
+                    Create a Game Room
+                  </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleCreate} className="space-y-4">
+                <form onSubmit={handleCreate} className="space-y-4 mt-2">
                   <div>
-                    <Label className="text-blue-200">Room Name</Label>
+                    <Label className="text-slate-300 text-sm font-medium">Room Name</Label>
                     <Input
                       placeholder="e.g. Family Game Night"
                       value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
+                      className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20"
                       required
                     />
                   </div>
-                  <div className="text-sm text-blue-300">
-                    You will host this game as{" "}
-                    <span className="font-semibold text-yellow-400">{nickname}</span>. Max players are fixed at{" "}
-                    <span className="font-semibold">10</span> per room.
+                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm text-amber-300/80">
+                    Hosting as <span className="font-bold text-amber-400">{nickname}</span> · Max 10 players per room
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label className="text-blue-200">Team 1 Name</Label>
-                      <Input
-                        value={form.team1Name}
-                        onChange={e => setForm(f => ({ ...f, team1Name: e.target.value }))}
-                        className="bg-blue-900 border-blue-700 text-white"
-                      />
+                      <Label className="text-slate-300 text-sm font-medium">Team 1 Name</Label>
+                      <Input value={form.team1Name} onChange={e => setForm(f => ({ ...f, team1Name: e.target.value }))} className="mt-1 bg-white/5 border-white/10 text-white focus:border-amber-500/50" />
                     </div>
                     <div>
-                      <Label className="text-blue-200">Team 2 Name</Label>
-                      <Input
-                        value={form.team2Name}
-                        onChange={e => setForm(f => ({ ...f, team2Name: e.target.value }))}
-                        className="bg-blue-900 border-blue-700 text-white"
-                      />
+                      <Label className="text-slate-300 text-sm font-medium">Team 2 Name</Label>
+                      <Input value={form.team2Name} onChange={e => setForm(f => ({ ...f, team2Name: e.target.value }))} className="mt-1 bg-white/5 border-white/10 text-white focus:border-amber-500/50" />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-blue-200">Rounds</Label>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={10}
-                        value={form.totalRounds}
-                        onChange={e => setForm(f => ({ ...f, totalRounds: parseInt(e.target.value) || 5 }))}
-                        className="bg-blue-900 border-blue-700 text-white"
-                      />
-                    </div>
+                  <div>
+                    <Label className="text-slate-300 text-sm font-medium">Number of Rounds</Label>
+                    <Input
+                      type="number" min={1} max={10}
+                      value={form.totalRounds}
+                      onChange={e => setForm(f => ({ ...f, totalRounds: parseInt(e.target.value) || 5 }))}
+                      className="mt-1 bg-white/5 border-white/10 text-white focus:border-amber-500/50"
+                    />
                   </div>
-                  {createError && (
-                    <p className="text-red-400 text-sm font-semibold">{createError}</p>
-                  )}
-                  <Button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold" disabled={createRoom.isPending}>
-                    {createRoom.isPending ? "Creating..." : "Create Room"}
+                  {createError && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{createError}</p>}
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold h-11 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all border-0"
+                    disabled={createLoading}
+                  >
+                    <Zap className="w-4 h-4 mr-2" />
+                    {createLoading ? "Creating…" : "Create Room"}
                   </Button>
                 </form>
               </DialogContent>
             </Dialog>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Main content */}
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-5 sm:py-8">
-        <div className="mb-6 flex items-center gap-2">
-          <Users className="w-5 h-5 text-blue-300" />
-          <h2 className="text-lg font-bold text-blue-100">Available Rooms</h2>
-          {rooms && <span className="text-blue-400 text-sm">({rooms.length} rooms)</span>}
+      <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Users className="w-5 h-5 text-slate-400" />
+            <h2 className="text-base font-semibold text-slate-200">Available Rooms</h2>
+            <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-400 font-medium">
+              {rooms.length}
+            </span>
+          </div>
         </div>
 
         {isLoading ? (
-          <div className="text-center text-blue-300 py-16">Loading rooms...</div>
-        ) : !Array.isArray(rooms) || !rooms.length ? (
-          <div className="text-center py-16 bg-blue-900/40 rounded-2xl border border-blue-800">
-            <Tv2 className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-            <p className="text-blue-300 text-lg">No rooms available</p>
-            <p className="text-blue-400 text-sm mt-1">Be the first to create one!</p>
-            <Button onClick={() => setCreateOpen(true)} className="mt-4 bg-yellow-500 hover:bg-yellow-400 text-black font-bold">
-              <Plus className="w-4 h-4 mr-1" /> Create Room
+          <div className="flex flex-col items-center justify-center py-24 gap-4">
+            <div className="w-10 h-10 rounded-full border-2 border-amber-400/30 border-t-amber-400 animate-spin" />
+            <p className="text-slate-500 text-sm">Loading rooms…</p>
+          </div>
+        ) : rooms.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-4 rounded-3xl bg-white/[0.02] border border-white/5">
+            <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+              <Tv2 className="w-8 h-8 text-slate-600" />
+            </div>
+            <div className="text-center">
+              <p className="text-slate-300 font-semibold">No rooms yet</p>
+              <p className="text-slate-500 text-sm mt-1">Be the first to create one!</p>
+            </div>
+            <Button
+              onClick={() => setCreateOpen(true)}
+              className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.3)] border-0"
+            >
+              <Plus className="w-4 h-4 mr-2" /> Create Room
             </Button>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {rooms.map((room: Room) => (
-              <Card key={room.id} className="bg-blue-900/60 border-blue-700 hover:bg-blue-900/80 transition-all hover:border-yellow-500/50 cursor-pointer group">
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-white text-lg">{room.name}</CardTitle>
-                    <StatusBadge status={room.status} />
-                  </div>
-                  <CardDescription className="text-blue-300">Host: {room.hostName}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="text-sm text-blue-300 flex items-center gap-1">
-                      <Users className="w-3 h-3" />
-                      {room.playerCount}/{room.maxPlayers} players
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {rooms.map((room: Room) => {
+              const isFull = room.playerCount >= room.maxPlayers;
+              const isFinished = room.status === "finished";
+              const canJoin = !isFull && !isFinished;
+              return (
+                <div
+                  key={room.id}
+                  className="group relative rounded-2xl bg-white/[0.03] border border-white/8 hover:border-amber-500/30 hover:bg-white/[0.05] transition-all duration-300 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                  <div className="relative p-4 sm:p-5">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h3 className="font-bold text-white text-base leading-tight truncate">{room.name}</h3>
+                      <StatusBadge status={room.status} />
                     </div>
-                    <div className="text-sm text-blue-300">
-                      Round {room.currentRound}/{room.totalRounds}
-                    </div>
-                  </div>
+                    <p className="text-xs text-slate-500 mb-4">Host: <span className="text-slate-400">{room.hostName}</span></p>
 
-                  {/* Teams */}
-                  <div className="flex gap-2 mb-3">
-                    <div className="flex-1 bg-red-900/50 border border-red-700 rounded-lg p-2 text-center">
-                      <div className="text-xs text-red-300">{room.team1Name}</div>
-                      <div className="text-lg font-bold text-white flex items-center justify-center gap-1">
-                        <Trophy className="w-3 h-3 text-yellow-400" />{room.team1Score}
+                    <div className="grid grid-cols-3 gap-2 mb-4">
+                      <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-2.5 text-center">
+                        <p className="text-[10px] text-rose-400 font-medium truncate">{room.team1Name}</p>
+                        <p className="text-xl font-extrabold text-white mt-0.5">{room.team1Score}</p>
+                      </div>
+                      <div className="rounded-xl bg-white/5 border border-white/10 p-2.5 text-center flex items-center justify-center">
+                        <span className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">vs</span>
+                      </div>
+                      <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-2.5 text-center">
+                        <p className="text-[10px] text-blue-400 font-medium truncate">{room.team2Name}</p>
+                        <p className="text-xl font-extrabold text-white mt-0.5">{room.team2Score}</p>
                       </div>
                     </div>
-                    <div className="flex items-center text-blue-400 text-xs font-bold">VS</div>
-                    <div className="flex-1 bg-blue-800/60 border border-blue-600 rounded-lg p-2 text-center">
-                      <div className="text-xs text-blue-300">{room.team2Name}</div>
-                      <div className="text-lg font-bold text-white flex items-center justify-center gap-1">
-                        <Trophy className="w-3 h-3 text-yellow-400" />{room.team2Score}
+
+                    <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
+                      <div className="flex items-center gap-1">
+                        <Users className="w-3 h-3" />
+                        {room.playerCount}/{room.maxPlayers}
+                        {isFull && <Lock className="w-3 h-3 text-slate-600 ml-1" />}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Trophy className="w-3 h-3" />
+                        Round {room.currentRound}/{room.totalRounds}
                       </div>
                     </div>
-                  </div>
 
-                  <Button
-                    className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold"
-                    disabled={room.status === "finished" || room.playerCount >= room.maxPlayers}
-                    onClick={() => handleJoin(room.id)}
-                  >
-                    {room.status === "finished" ? "Finished" : room.playerCount >= room.maxPlayers ? "Full" : "Join Game"}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                    <Button
+                      className={`w-full font-bold border-0 transition-all ${
+                        canJoin
+                          ? "bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black shadow-[0_0_15px_rgba(251,191,36,0.25)] hover:shadow-[0_0_25px_rgba(251,191,36,0.4)]"
+                          : "bg-white/5 text-slate-500 cursor-not-allowed"
+                      }`}
+                      disabled={!canJoin}
+                      onClick={() => handleJoin(room.id)}
+                    >
+                      {isFinished ? "Game Ended" : isFull ? "Room Full" : "Join Game →"}
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
-      </div>
+      </main>
 
       {/* Join dialog */}
       <Dialog open={joinDialogOpen} onOpenChange={v => { setJoinDialogOpen(v); if (!v) setJoinError(null); }}>
-        <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
+        <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="text-yellow-400">Join Game</DialogTitle>
+            <DialogTitle className="text-lg font-bold text-white">Join Game</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 mt-1">
+            <p className="text-sm text-slate-400">
+              Joining as <span className="font-semibold text-amber-400">{nickname}</span>
+            </p>
             <div>
-              <p className="text-sm text-blue-300">
-                You are joining as{" "}
-                <span className="font-semibold text-yellow-400">{nickname}</span>.
-              </p>
-            </div>
-            <div>
-              <Label className="text-blue-200">Choose Team</Label>
-              <div className="grid grid-cols-2 gap-2 mt-1">
-                <button
-                  type="button"
-                  onClick={() => setJoinTeam(1)}
-                  className={`p-3 rounded-lg border-2 transition-all text-left ${
-                    joinTeam === 1
-                      ? "border-red-500 bg-red-900/50 text-white"
-                      : "border-blue-700 bg-blue-900/30 text-blue-300 hover:border-red-700"
-                  }`}
-                >
-                  <div className="font-semibold">Team 1</div>
-                  <div className="mt-2 space-y-1 text-xs">
-                    {joinRoomPlayers
-                      ? joinRoomPlayers.filter(p => p.team === 1).map(p => (
-                        <div key={p.id} className="flex items-center gap-1">
-                          {p.isHost && <span className="text-yellow-400 font-bold">★</span>}
-                          <span className={joinTeam === 1 ? "text-white" : "text-blue-200"}>{p.name}</span>
-                        </div>
-                      ))
-                      : <div className="text-blue-400 italic">Loading…</div>}
-                    {joinRoomPlayers && joinRoomPlayers.filter(p => p.team === 1).length === 0 && (
-                      <div className="text-blue-400 italic">No players yet</div>
-                    )}
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setJoinTeam(2)}
-                  className={`p-3 rounded-lg border-2 transition-all text-left ${
-                    joinTeam === 2
-                      ? "border-blue-400 bg-blue-700/50 text-white"
-                      : "border-blue-700 bg-blue-900/30 text-blue-300 hover:border-blue-500"
-                  }`}
-                >
-                  <div className="font-semibold">Team 2</div>
-                  <div className="mt-2 space-y-1 text-xs">
-                    {joinRoomPlayers
-                      ? joinRoomPlayers.filter(p => p.team === 2).map(p => (
-                        <div key={p.id} className="flex items-center gap-1">
-                          {p.isHost && <span className="text-yellow-400 font-bold">★</span>}
-                          <span className={joinTeam === 2 ? "text-white" : "text-blue-200"}>{p.name}</span>
-                        </div>
-                      ))
-                      : <div className="text-blue-400 italic">Loading…</div>}
-                    {joinRoomPlayers && joinRoomPlayers.filter(p => p.team === 2).length === 0 && (
-                      <div className="text-blue-400 italic">No players yet</div>
-                    )}
-                  </div>
-                </button>
+              <Label className="text-slate-300 text-sm font-medium mb-2 block">Choose Team</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {[1, 2].map(t => {
+                  const isSelected = joinTeam === t;
+                  const teamPlayers = joinRoomPlayers?.filter(p => p.team === t) ?? [];
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setJoinTeam(t as 1 | 2)}
+                      className={`p-3 rounded-xl border-2 transition-all text-left ${
+                        isSelected && t === 1 ? "border-rose-500 bg-rose-500/15" :
+                        isSelected && t === 2 ? "border-blue-500 bg-blue-500/15" :
+                        "border-white/10 bg-white/[0.03] hover:border-white/20"
+                      }`}
+                    >
+                      <div className={`text-xs font-bold mb-2 ${t === 1 ? "text-rose-400" : "text-blue-400"}`}>
+                        Team {t}
+                      </div>
+                      <div className="space-y-1 min-h-[28px]">
+                        {!joinRoomPlayers ? (
+                          <div className="text-[11px] text-slate-500 italic">Loading…</div>
+                        ) : teamPlayers.length === 0 ? (
+                          <div className="text-[11px] text-slate-500 italic">No players yet</div>
+                        ) : teamPlayers.map(p => (
+                          <div key={p.id} className="flex items-center gap-1 text-[11px]">
+                            {p.isHost && <span className="text-amber-400">★</span>}
+                            <span className="text-slate-300">{p.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-            {joinError && (
-              <p className="text-red-400 text-sm font-semibold">{joinError}</p>
-            )}
-            <Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold" onClick={confirmJoin} disabled={!nickname.trim()}>
-              Join Game
+            {joinError && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{joinError}</p>}
+            <Button
+              className="w-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
+              onClick={confirmJoin}
+              disabled={!nickname.trim()}
+            >
+              Join Game →
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Nickname dialog shown on first visit */}
+      {/* Nickname dialog */}
       <Dialog open={nicknameDialogOpen} onOpenChange={() => {}}>
-        <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
+        <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="text-yellow-400">Choose a Nickname</DialogTitle>
+            <DialogTitle className="text-xl font-bold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
+              Choose a Nickname
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-blue-300">
-              Pick the name you want to use in all games. You can change it later by refreshing the page.
-            </p>
+          <div className="space-y-4 mt-2">
+            <p className="text-sm text-slate-400">Pick the name you'll use in all games.</p>
             <div>
-              <Label className="text-blue-200">Nickname</Label>
+              <Label className="text-slate-300 text-sm font-medium">Nickname</Label>
               <Input
                 autoFocus
                 placeholder="Enter your nickname"
                 value={nickname}
                 onChange={e => setNickname(e.target.value)}
-                className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
+                onKeyDown={async e => {
+                  if (e.key === "Enter") {
+                    if (!nickname.trim()) return;
+                    const trimmed = nickname.trim();
+                    setNicknameError(null);
+                    const taken = await checkNickname(trimmed);
+                    if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
+                    setNickname(trimmed);
+                    localStorage.setItem("playerName", trimmed);
+                    setNicknameDialogOpen(false);
+                  }
+                }}
+                className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20 h-11"
               />
             </div>
-            {nicknameError && (
-              <p className="text-red-400 text-sm font-semibold">{nicknameError}</p>
-            )}
+            {nicknameError && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{nicknameError}</p>}
             <Button
-              className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold"
+              className="w-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
               disabled={!nickname.trim()}
               onClick={async () => {
                 if (!nickname.trim()) return;
                 const trimmed = nickname.trim();
                 setNicknameError(null);
                 const taken = await checkNickname(trimmed);
-                if (taken) {
-                  setNicknameError(`"${trimmed}" is already taken. Pick a different nickname.`);
-                  return;
-                }
+                if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
                 setNicknameDialogOpen(false);
               }}
             >
-              Save
+              Let's Play →
             </Button>
           </div>
         </DialogContent>

@@ -3,16 +3,22 @@ import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
 import { Send, Tv2, AlertTriangle, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
 function StrikeDisplay({ strikes }: { strikes: number }) {
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="flex gap-3 justify-center">
       {[0, 1, 2].map(i => (
-        <div key={i} className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-xl transition-all duration-300 ${i < strikes ? "bg-red-600 border-red-500 text-white scale-110" : "bg-blue-900 border-blue-700 text-blue-600"}`}>
+        <div
+          key={i}
+          className={`w-11 h-11 rounded-full flex items-center justify-center font-black text-2xl transition-all duration-300 ${
+            i < strikes
+              ? "bg-red-500/20 border-2 border-red-500 text-red-400 scale-110 shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+              : "bg-white/5 border-2 border-white/10 text-transparent"
+          }`}
+        >
           {i < strikes ? "✗" : ""}
         </div>
       ))}
@@ -20,19 +26,39 @@ function StrikeDisplay({ strikes }: { strikes: number }) {
   );
 }
 
-function AnswerBoard({ question, answers }: { question: string; answers: Array<{ text: string | null; points: number | null; revealed: boolean; index: number }> }) {
+function AnswerBoard({ question, answers }: {
+  question: string;
+  answers: Array<{ text: string | null; points: number | null; revealed: boolean; index: number }>;
+}) {
   return (
-    <div className="bg-blue-950 rounded-2xl p-4 border-2 border-yellow-500/40 shadow-xl">
-      <div className="text-center mb-4 text-yellow-300 font-bold text-lg px-2 leading-tight">{question}</div>
-      <div className="grid gap-2">
+    <div className="rounded-2xl bg-white/[0.03] border border-amber-500/25 shadow-[0_0_30px_rgba(251,191,36,0.08)] overflow-hidden">
+      <div className="bg-gradient-to-r from-amber-500/15 to-amber-600/10 border-b border-amber-500/20 px-4 py-3 text-center">
+        <p className="text-amber-300 font-bold text-base sm:text-lg leading-snug">{question}</p>
+      </div>
+      <div className="p-3 grid gap-1.5">
         {answers.map((a, i) => (
-          <div key={i} className={`flex items-center justify-between p-3 rounded-xl border transition-all duration-500 ${a.revealed ? "bg-blue-700 border-blue-500 shadow-glow" : "bg-blue-900 border-blue-800"}`}>
+          <div
+            key={i}
+            className={`flex items-center justify-between px-3 py-2.5 rounded-xl border transition-all duration-500 ${
+              a.revealed
+                ? "bg-blue-500/20 border-blue-400/40 shadow-[0_0_12px_rgba(96,165,250,0.2)]"
+                : "bg-white/[0.03] border-white/8"
+            }`}
+          >
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-full bg-yellow-500 text-black text-sm font-bold flex items-center justify-center">{i + 1}</div>
-              <span className="font-semibold text-white">{a.revealed ? a.text : "???????????"}</span>
+              <div className={`w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center shrink-0 transition-all ${
+                a.revealed
+                  ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_8px_rgba(251,191,36,0.4)]"
+                  : "bg-white/10 text-slate-500"
+              }`}>
+                {i + 1}
+              </div>
+              <span className={`font-semibold text-sm ${a.revealed ? "text-white" : "text-slate-600"}`}>
+                {a.revealed ? a.text : "— — — — —"}
+              </span>
             </div>
-            <div className={`text-lg font-bold ${a.revealed ? "text-yellow-400" : "text-blue-700"}`}>
-              {a.revealed ? a.points : ""}
+            <div className={`text-base font-bold ${a.revealed ? "text-amber-400" : "text-transparent"}`}>
+              {a.revealed ? a.points : "0"}
             </div>
           </div>
         ))}
@@ -42,24 +68,45 @@ function AnswerBoard({ question, answers }: { question: string; answers: Array<{
 }
 
 function ScoreBoard({ team1Name, team2Name, team1Score, team2Score, playingTeam, roundPoints }: {
-  team1Name: string; team2Name: string; team1Score: number; team2Score: number; playingTeam: 1 | 2 | null; roundPoints: number;
+  team1Name: string; team2Name: string; team1Score: number; team2Score: number;
+  playingTeam: 1 | 2 | null; roundPoints: number;
 }) {
   return (
     <div className="grid grid-cols-3 gap-2 mb-4">
-      <div className={`rounded-xl p-3 text-center border-2 transition-all ${playingTeam === 1 ? "bg-red-800 border-red-500 shadow-lg" : "bg-red-950 border-red-900"}`}>
-        <div className="text-xs text-red-300 font-semibold truncate">{team1Name}</div>
-        <div className="text-2xl font-extrabold text-white">{team1Score}</div>
-        {playingTeam === 1 && <div className="text-xs text-yellow-400 font-bold">PLAYING</div>}
+      <div className={`rounded-2xl p-3 text-center border transition-all duration-300 ${
+        playingTeam === 1
+          ? "bg-rose-500/20 border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.2)]"
+          : "bg-white/[0.03] border-white/8"
+      }`}>
+        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-1">{team1Name}</div>
+        <div className="text-3xl font-black text-white">{team1Score}</div>
+        {playingTeam === 1 && (
+          <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30">
+            <span className="w-1 h-1 rounded-full bg-rose-400 animate-pulse" />
+            <span className="text-[9px] text-rose-400 font-bold uppercase tracking-wider">Playing</span>
+          </div>
+        )}
       </div>
-      <div className="rounded-xl p-3 text-center bg-yellow-900/40 border-2 border-yellow-600">
-        <div className="text-xs text-yellow-300 font-semibold">POT</div>
-        <div className="text-2xl font-extrabold text-yellow-400">{roundPoints}</div>
-        <div className="text-xs text-yellow-600">pts</div>
+
+      <div className="rounded-2xl p-3 text-center bg-amber-500/10 border border-amber-500/25 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
+        <div className="text-[10px] text-amber-500/70 font-semibold uppercase tracking-wide mb-1">Pot</div>
+        <div className="text-3xl font-black text-amber-400">{roundPoints}</div>
+        <div className="text-[10px] text-amber-600 mt-1">pts</div>
       </div>
-      <div className={`rounded-xl p-3 text-center border-2 transition-all ${playingTeam === 2 ? "bg-blue-700 border-blue-400 shadow-lg" : "bg-blue-950 border-blue-900"}`}>
-        <div className="text-xs text-blue-300 font-semibold truncate">{team2Name}</div>
-        <div className="text-2xl font-extrabold text-white">{team2Score}</div>
-        {playingTeam === 2 && <div className="text-xs text-yellow-400 font-bold">PLAYING</div>}
+
+      <div className={`rounded-2xl p-3 text-center border transition-all duration-300 ${
+        playingTeam === 2
+          ? "bg-blue-500/20 border-blue-400/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+          : "bg-white/[0.03] border-white/8"
+      }`}>
+        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-1">{team2Name}</div>
+        <div className="text-3xl font-black text-white">{team2Score}</div>
+        {playingTeam === 2 && (
+          <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30">
+            <span className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" />
+            <span className="text-[9px] text-blue-400 font-bold uppercase tracking-wider">Playing</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -145,7 +192,6 @@ export default function GameRoom() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
-  // Clear wrong-answer log at the start of each new round
   useEffect(() => {
     setWrongAnswers([]);
   }, [gameState?.currentRound, gameState?.status === "faceoff"]);
@@ -157,16 +203,14 @@ export default function GameRoom() {
       const interval = setInterval(() => {
         setFaceoffCountdown(prev => {
           if (prev === null) return null;
-          if (prev <= 1) {
-            clearInterval(interval);
-            return 0;
-          }
+          if (prev <= 1) { clearInterval(interval); return 0; }
           return prev - 1;
         });
       }, 1000);
       return () => clearInterval(interval);
     } else {
       setFaceoffCountdown(null);
+      return undefined;
     }
   }, [gameState?.status, buzzedPlayer, playerName]);
 
@@ -183,34 +227,27 @@ export default function GameRoom() {
   const team2Count = gameState?.players.filter(p => p.team === 2).length ?? 0;
   const canStartGame = team1Count > 0 && team2Count > 0;
   const startGameTooltip = !canStartGame
-    ? team1Count === 0 && team2Count === 0
-      ? "Both teams need at least 1 player."
-      : team1Count === 0
-        ? "Team 1 needs at least 1 player."
-        : "Team 2 needs at least 1 player."
+    ? team1Count === 0 && team2Count === 0 ? "Both teams need at least 1 player."
+      : team1Count === 0 ? "Team 1 needs at least 1 player."
+      : "Team 2 needs at least 1 player."
     : "";
 
   // Local 15s countdown for normal/steal answers
   useEffect(() => {
-    const active =
-      gameState &&
-      (gameState.status === "playing" || gameState.status === "stealing") &&
-      canAnswer;
+    const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && canAnswer;
     if (active) {
       setRoundCountdown(15);
       const interval = setInterval(() => {
         setRoundCountdown(prev => {
           if (prev === null) return null;
-          if (prev <= 1) {
-            clearInterval(interval);
-            return 0;
-          }
+          if (prev <= 1) { clearInterval(interval); return 0; }
           return prev - 1;
         });
       }, 1000);
       return () => clearInterval(interval);
     } else {
       setRoundCountdown(null);
+      return undefined;
     }
   }, [gameState?.status, canAnswer]);
 
@@ -230,7 +267,6 @@ export default function GameRoom() {
     e.preventDefault();
     if (!answerInput.trim()) return;
     if (gameState?.status === "faceoff") {
-      // Stop local face-off timer immediately after guessing
       setFaceoffCountdown(null);
       setBuzzedPlayer(null);
       faceoffAnswer(answerInput);
@@ -243,71 +279,95 @@ export default function GameRoom() {
 
   if (!gameState) {
     return (
-      <div className="min-h-screen bg-blue-950 flex items-center justify-center">
-        <div className="text-white text-xl animate-pulse">Connecting to game...</div>
+      <div className="h-svh bg-[#070d1f] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full border-2 border-amber-400/30 border-t-amber-400 animate-spin" />
+          <p className="text-slate-400 text-sm">Connecting to game…</p>
+        </div>
       </div>
     );
   }
 
+  const statusLabel =
+    gameState.status === "waiting" ? "Waiting to start" :
+    gameState.status === "faceoff" ? "FACE-OFF!" :
+    gameState.status === "playing" ? `${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} is playing` :
+    gameState.status === "stealing" ? "STEAL CHANCE!" :
+    gameState.status === "between_rounds" ? "Round Over" :
+    gameState.status === "finished" ? "GAME OVER" : gameState.status;
+
+  const statusColor =
+    gameState.status === "faceoff" ? "text-emerald-400" :
+    gameState.status === "playing" ? "text-amber-400" :
+    gameState.status === "stealing" ? "text-orange-400" :
+    gameState.status === "between_rounds" ? "text-purple-400" :
+    gameState.status === "finished" ? "text-amber-400" : "text-slate-400";
+
   return (
-    <div className="h-svh overflow-hidden bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 text-white flex flex-col">
+    <div className="h-svh overflow-hidden bg-[#070d1f] text-white flex flex-col">
+      {/* Background orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-32 -left-32 w-80 h-80 bg-amber-500/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-600/8 rounded-full blur-3xl" />
+      </div>
+
       {/* Header */}
-      <div className="bg-blue-950 border-b border-blue-800 px-3 py-2 flex items-center justify-between gap-2">
+      <header className="relative z-10 border-b border-white/5 bg-black/40 backdrop-blur-xl px-3 py-2 flex items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
-          <Tv2 className="w-5 h-5 text-yellow-400 shrink-0" />
-          <span className="font-bold text-yellow-400 text-base leading-none hidden xs:inline">Family Feud</span>
-          <Badge className="bg-blue-800 text-blue-200 text-xs hidden sm:inline-flex">Room: {roomId}</Badge>
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_12px_rgba(251,191,36,0.4)] shrink-0">
+            <Tv2 className="w-4 h-4 text-black" />
+          </div>
+          <span className="font-extrabold text-sm tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent hidden xs:inline uppercase">
+            Family Feud
+          </span>
+          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-400 font-mono">
+            {roomId}
+          </span>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
-          <Users className="w-4 h-4 text-blue-300" />
-          <span className="text-sm text-blue-300 mr-1">{gameState.players.length}</span>
-          {isHost && <Crown className="w-4 h-4 text-yellow-400" />}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="hidden xs:flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/10 mr-1">
+            <Users className="w-3 h-3 text-slate-400" />
+            <span className="text-xs text-slate-400">{gameState.players.length}</span>
+            {isHost && <Crown className="w-3 h-3 text-amber-400 ml-0.5" />}
+          </div>
           {isHost && (
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={() => setDeleteConfirmOpen(true)}
-              className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600 px-2"
               title="Delete Room"
+              className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline ml-1">Delete Room</span>
-            </Button>
+            </button>
           )}
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={() => setLeaveConfirmOpen(true)}
-            className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600 px-2"
             title="Leave Room"
+            className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all text-xs font-semibold"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline ml-1">Leave</span>
-          </Button>
+            <span className="hidden sm:inline">Leave</span>
+          </button>
         </div>
-      </div>
+      </header>
 
       {/* Notification banner */}
       {notification && (
-        <div className="bg-yellow-500 text-black text-center py-2 px-4 font-bold text-sm animate-in slide-in-from-top z-50">
+        <div className="relative z-20 bg-gradient-to-r from-amber-500 to-amber-400 text-black text-center py-2 px-4 font-bold text-sm animate-in slide-in-from-top-2 duration-200 shrink-0">
           {notification}
         </div>
       )}
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative z-10">
         {/* Main game area */}
-        <div className={`flex-1 overflow-y-auto p-3 md:p-4 ${mobileTab === "chat" ? "hidden md:block" : "block"}`}>
-          {/* Round info */}
-          <div className="text-center mb-3 text-blue-300 text-sm">
-            Round {gameState.currentRound} of {gameState.totalRounds} •{" "}
-            <span className={`font-bold ${gameState.status === "faceoff" ? "text-green-400" : gameState.status === "playing" ? "text-yellow-400" : gameState.status === "stealing" ? "text-orange-400" : gameState.status === "between_rounds" ? "text-purple-400" : "text-blue-300"}`}>
-              {gameState.status === "waiting" ? "Waiting to start" :
-               gameState.status === "faceoff" ? "FACE-OFF!" :
-               gameState.status === "playing" ? `${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} is playing` :
-               gameState.status === "stealing" ? "STEAL CHANCE!" :
-               gameState.status === "between_rounds" ? "Round Over" :
-               gameState.status === "finished" ? "GAME OVER" : gameState.status}
+        <div className={`flex-1 overflow-y-auto p-3 md:p-4 space-y-3 ${mobileTab === "chat" ? "hidden md:block" : "block"}`}>
+
+          {/* Round info bar */}
+          <div className="flex items-center justify-center gap-3 py-1">
+            <span className="text-xs text-slate-500 font-medium">
+              Round {gameState.currentRound}/{gameState.totalRounds}
             </span>
+            <span className="w-1 h-1 rounded-full bg-slate-700" />
+            <span className={`text-xs font-bold uppercase tracking-wide ${statusColor}`}>{statusLabel}</span>
           </div>
 
           <ScoreBoard
@@ -321,7 +381,7 @@ export default function GameRoom() {
 
           {/* Strikes */}
           {(gameState.status === "playing" || gameState.status === "stealing") && (
-            <div className="mb-4">
+            <div className="py-1">
               <StrikeDisplay strikes={gameState.strikes} />
             </div>
           )}
@@ -334,16 +394,16 @@ export default function GameRoom() {
             />
           )}
 
-          {/* Wrong answers this round – visible to all */}
+          {/* Wrong answers log */}
           {wrongAnswers.length > 0 && (
-            <div className="mt-3 bg-red-950/60 border border-red-800 rounded-xl p-3">
-              <div className="text-xs text-red-400 font-bold uppercase tracking-wide mb-2">Wrong Answers This Round</div>
+            <div className="rounded-xl bg-red-500/8 border border-red-500/20 p-3">
+              <div className="text-[10px] text-red-400/70 font-bold uppercase tracking-widest mb-2">Wrong Answers</div>
               <div className="space-y-1">
                 {wrongAnswers.map((w, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm">
-                    <span className="text-red-400 font-bold">✗</span>
-                    <span className="text-red-300 font-semibold">{w.playerName}:</span>
-                    <span className="text-white">{w.answer}</span>
+                  <div key={i} className="flex items-center gap-2 text-xs">
+                    <span className="text-red-500">✗</span>
+                    <span className="text-slate-400 font-semibold">{w.playerName}:</span>
+                    <span className="text-slate-300">{w.answer}</span>
                   </div>
                 ))}
               </div>
@@ -351,303 +411,311 @@ export default function GameRoom() {
           )}
 
           {/* Game controls */}
-          <div className="mt-4 space-y-3">
+          <div className="space-y-2">
+
             {/* Waiting to start */}
             {gameState.status === "waiting" && (
-              <div className="text-center bg-blue-900/50 rounded-xl p-6 border border-blue-700">
-                <p className="text-blue-300 mb-4">
-                  {isHost ? "You are the host. Start the game when everyone is ready!" : "Waiting for the host to start the game..."}
+              <div className="rounded-2xl bg-white/[0.03] border border-white/8 p-5">
+                <p className="text-slate-400 text-sm text-center mb-4">
+                  {isHost ? "You're the host — start the game when everyone is ready!" : "Waiting for the host to start…"}
                 </p>
-                <div className="mb-4">
-                  <h3 className="text-yellow-400 font-bold mb-2">Players</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[1, 2].map(t => (
-                      <div key={t} className={`rounded-lg p-2 border ${t === 1 ? "bg-red-950 border-red-800" : "bg-blue-950 border-blue-800"}`}>
-                        <div className={`text-xs font-bold mb-1 ${t === 1 ? "text-red-400" : "text-blue-400"}`}>
-                          {t === 1 ? gameState.team1Name : gameState.team2Name}
-                        </div>
-                        {gameState.players.filter(p => p.team === t).map(p => (
-                          <div key={p.id} className="text-xs text-white flex items-center gap-1">
-                            {p.isHost && <Crown className="w-3 h-3 text-yellow-400" />}
-                            {p.name}
-                          </div>
-                        ))}
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {[1, 2].map(t => (
+                    <div key={t} className={`rounded-xl p-3 border ${t === 1 ? "bg-rose-500/10 border-rose-500/20" : "bg-blue-500/10 border-blue-500/20"}`}>
+                      <div className={`text-xs font-bold mb-2 uppercase tracking-wide ${t === 1 ? "text-rose-400" : "text-blue-400"}`}>
+                        {t === 1 ? gameState.team1Name : gameState.team2Name}
                       </div>
-                    ))}
-                  </div>
+                      {gameState.players.filter(p => p.team === t).map(p => (
+                        <div key={p.id} className="flex items-center gap-1 text-xs text-slate-300 mb-0.5">
+                          {p.isHost && <Crown className="w-3 h-3 text-amber-400 shrink-0" />}
+                          {p.name}
+                        </div>
+                      ))}
+                      {gameState.players.filter(p => p.team === t).length === 0 && (
+                        <div className="text-xs text-slate-600 italic">No players yet</div>
+                      )}
+                    </div>
+                  ))}
                 </div>
                 {isHost && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="inline-flex">
+                      <span className="flex justify-center">
                         <Button
                           onClick={startGame}
                           disabled={!canStartGame}
-                          className="bg-yellow-500 hover:bg-yellow-400 disabled:bg-yellow-500/40 disabled:text-black/60 disabled:pointer-events-none text-black font-bold px-8"
+                          className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 disabled:opacity-40 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
                         >
                           <Zap className="w-4 h-4 mr-2" /> Start Game!
                         </Button>
                       </span>
                     </TooltipTrigger>
-                    {!canStartGame && (
-                      <TooltipContent side="top">
-                        {startGameTooltip}
-                      </TooltipContent>
-                    )}
+                    {!canStartGame && <TooltipContent side="top">{startGameTooltip}</TooltipContent>}
                   </Tooltip>
                 )}
               </div>
             )}
 
-            {/* Face-off phase */}
+            {/* Face-off */}
             {gameState.status === "faceoff" && (
               <div className="space-y-2">
                 {buzzedPlayer ? (
-                  <div className="text-center text-yellow-400 font-bold mb-2">
-                    {buzzedPlayer} buzzed in!
-                    {buzzedPlayer === playerName && faceoffCountdown !== null && (
-                      <span className="ml-2 text-xs text-yellow-200">
-                        ({faceoffCountdown}s to answer)
-                      </span>
-                    )}
+                  <div className="rounded-xl bg-amber-500/10 border border-amber-500/25 p-3 text-center">
+                    <p className="text-amber-400 font-bold">
+                      🔔 {buzzedPlayer} buzzed in!
+                      {buzzedPlayer === playerName && faceoffCountdown !== null && (
+                        <span className="ml-2 text-xs text-amber-300/70">({faceoffCountdown}s)</span>
+                      )}
+                    </p>
                   </div>
                 ) : (
-                  <Button onClick={buzzIn} className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xl py-6">
+                  <button
+                    onClick={buzzIn}
+                    className="w-full py-5 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-black text-2xl tracking-tight shadow-[0_0_30px_rgba(251,191,36,0.4)] hover:shadow-[0_0_45px_rgba(251,191,36,0.6)] transition-all active:scale-95"
+                  >
                     🔔 BUZZ IN!
-                  </Button>
+                  </button>
                 )}
                 {(buzzedPlayer === playerName || canFaceoff) && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
-                      placeholder="Give your answer..."
+                      placeholder="Give your answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400 h-11"
+                      className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 h-11"
                       autoFocus
                     />
-                    <Button type="submit" className="bg-green-600 hover:bg-green-500 font-bold h-11 px-4">Answer</Button>
+                    <Button type="submit" className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
+                      Answer
+                    </Button>
                   </form>
                 )}
               </div>
             )}
 
-            {/* Playing phase */}
+            {/* Playing */}
             {gameState.status === "playing" && (
               <div className="space-y-2">
                 {canAnswer && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
-                      placeholder="Your answer..."
+                      placeholder="Your answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400 h-11"
+                      className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50 h-11"
                       autoFocus
                     />
-                    <Button type="submit" className="bg-green-600 hover:bg-green-500 font-bold h-11 px-4">Answer</Button>
+                    <Button type="submit" className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
+                      Answer
+                    </Button>
                   </form>
                 )}
                 {canAnswer && roundCountdown !== null && (
-                  <div className="text-center text-xs text-yellow-300">
-                    You have {roundCountdown}s to answer.
-                  </div>
+                  <p className="text-center text-xs text-amber-400/70">{roundCountdown}s remaining</p>
                 )}
                 {!canAnswer && (
-                  <div className="text-center text-blue-400 bg-blue-900/40 rounded-lg py-3 text-sm">
-                    {isMyTeamPlaying ? "Your turn! Give your answer above" : `Waiting for ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} to answer...`}
+                  <div className="rounded-xl bg-white/[0.03] border border-white/8 py-3 px-4 text-center text-sm text-slate-500">
+                    {isMyTeamPlaying
+                      ? "Your team is answering…"
+                      : `Waiting for ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name}…`}
                   </div>
                 )}
                 {isHost && (
-                  <Button variant="outline" onClick={passToOpponent} className="w-full border-orange-700 text-orange-400 hover:bg-orange-900/20">
-                    <AlertTriangle className="w-4 h-4 mr-2" /> Add Strike / Pass to Opponent
-                  </Button>
+                  <button
+                    onClick={passToOpponent}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500/10 border border-orange-500/25 text-orange-400 text-sm font-semibold hover:bg-orange-500/15 transition-all"
+                  >
+                    <AlertTriangle className="w-4 h-4" /> Add Strike / Pass to Opponent
+                  </button>
                 )}
               </div>
             )}
 
-            {/* Steal phase */}
+            {/* Stealing */}
             {gameState.status === "stealing" && (
               <div className="space-y-2">
-                <div className="text-center bg-orange-900/50 border border-orange-700 rounded-xl p-3">
-                  <p className="text-orange-400 font-bold text-lg">🎯 STEAL CHANCE!</p>
-                  <p className="text-orange-200 text-sm">{gameState.playingTeam !== team ? "Your team can steal the points!" : "Other team gets a steal chance!"}</p>
+                <div className="rounded-xl bg-orange-500/10 border border-orange-500/25 p-4 text-center">
+                  <p className="text-orange-400 font-black text-xl">🎯 STEAL CHANCE!</p>
+                  <p className="text-orange-300/70 text-sm mt-1">
+                    {gameState.playingTeam !== team ? "Your team can steal the points!" : "Other team gets a steal chance!"}
+                  </p>
                 </div>
                 {isMyTeamStealing && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
-                      placeholder="Your steal answer..."
+                      placeholder="Your steal answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="bg-orange-900/30 border-orange-700 text-white placeholder:text-orange-400 h-11"
+                      className="flex-1 bg-orange-500/10 border-orange-500/25 text-white placeholder:text-orange-400/50 focus:border-orange-500/50 h-11"
                       autoFocus
                     />
-                    <Button type="submit" className="bg-orange-600 hover:bg-orange-500 font-bold h-11 px-4">Steal!</Button>
+                    <Button type="submit" className="bg-orange-500 hover:bg-orange-400 text-black font-bold h-11 px-4 border-0">
+                      Steal!
+                    </Button>
                   </form>
                 )}
                 {isMyTeamStealing && roundCountdown !== null && (
-                  <div className="text-center text-xs text-orange-200 mt-1">
-                    You have {roundCountdown}s to steal.
-                  </div>
+                  <p className="text-center text-xs text-orange-400/70">{roundCountdown}s remaining</p>
                 )}
               </div>
             )}
 
             {/* Between rounds */}
             {gameState.status === "between_rounds" && (
-              <div className="text-center bg-blue-900/50 rounded-xl p-6 border border-blue-700">
-                <Trophy className="w-12 h-12 text-yellow-400 mx-auto mb-2" />
-                <p className="text-yellow-400 font-bold text-lg mb-4">Round Complete!</p>
-                {isHost && (
-                  <Button onClick={nextRound} className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8">
-                    {gameState.currentRound >= gameState.totalRounds ? "See Final Scores" : "Next Round →"}
+              <div className="rounded-2xl bg-white/[0.03] border border-white/8 p-6 text-center">
+                <Trophy className="w-12 h-12 text-amber-400 mx-auto mb-2 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
+                <p className="text-white font-bold text-lg mb-4">Round Complete!</p>
+                {isHost ? (
+                  <Button
+                    onClick={nextRound}
+                    className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
+                  >
+                    {gameState.currentRound >= gameState.totalRounds ? "See Final Scores →" : "Next Round →"}
                   </Button>
+                ) : (
+                  <p className="text-slate-500 text-sm">Waiting for host to continue…</p>
                 )}
-                {!isHost && <p className="text-blue-300 text-sm">Waiting for host to start next round...</p>}
               </div>
             )}
 
             {/* Game over */}
             {gameState.status === "finished" && (
-              <div className="text-center bg-blue-900/50 rounded-xl p-6 border border-yellow-500">
-                <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-3" />
-                <h2 className="text-2xl font-extrabold text-yellow-400 mb-2">GAME OVER!</h2>
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="bg-red-950 border border-red-800 rounded-xl p-4">
-                    <div className="text-red-300 font-bold">{gameState.team1Name}</div>
-                    <div className="text-3xl font-extrabold text-white">{gameState.team1Score}</div>
+              <div className="rounded-2xl bg-white/[0.03] border border-amber-500/25 p-6 text-center">
+                <Trophy className="w-16 h-16 text-amber-400 mx-auto mb-3 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]" />
+                <h2 className="text-2xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-4">GAME OVER!</h2>
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4">
+                    <div className="text-xs text-rose-400 font-semibold mb-1">{gameState.team1Name}</div>
+                    <div className="text-4xl font-black text-white">{gameState.team1Score}</div>
                   </div>
-                  <div className="bg-blue-950 border border-blue-800 rounded-xl p-4">
-                    <div className="text-blue-300 font-bold">{gameState.team2Name}</div>
-                    <div className="text-3xl font-extrabold text-white">{gameState.team2Score}</div>
+                  <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
+                    <div className="text-xs text-blue-400 font-semibold mb-1">{gameState.team2Name}</div>
+                    <div className="text-4xl font-black text-white">{gameState.team2Score}</div>
                   </div>
                 </div>
-                <p className="text-yellow-300 font-bold text-xl mb-4">
-                  🏆 {gameState.team1Score > gameState.team2Score ? gameState.team1Name : gameState.team1Score < gameState.team2Score ? gameState.team2Name : "TIE"} Wins!
+                <p className="text-amber-400 font-bold text-lg mb-4">
+                  🏆 {gameState.team1Score > gameState.team2Score ? gameState.team1Name
+                    : gameState.team1Score < gameState.team2Score ? gameState.team2Name
+                    : "It's a tie"} {gameState.team1Score !== gameState.team2Score ? "wins!" : "!"}
                 </p>
-                <Button onClick={() => setLocation("/")} className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold">
+                <Button
+                  onClick={() => setLocation("/")}
+                  className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                >
                   Back to Lobby
                 </Button>
               </div>
             )}
+
           </div>
         </div>
 
         {/* Chat panel */}
-        <div className={`${mobileTab === "chat" ? "flex" : "hidden"} md:flex w-full md:w-72 border-l border-blue-800 flex-col bg-blue-950/80`}>
-          <div className="px-3 py-2 border-b border-blue-800 flex items-center gap-2">
-            <MessageCircle className="w-4 h-4 text-blue-400" />
-            <span className="text-blue-200 font-semibold text-sm">Live Chat</span>
+        <div className={`${mobileTab === "chat" ? "flex" : "hidden"} md:flex w-full md:w-64 lg:w-72 border-l border-white/5 flex-col bg-black/30 backdrop-blur-sm`}>
+          <div className="px-3 py-2.5 border-b border-white/5 flex items-center gap-2 shrink-0">
+            <MessageCircle className="w-3.5 h-3.5 text-slate-500" />
+            <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Live Chat</span>
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {chatMessages.length === 0 && (
-              <p className="text-blue-600 text-xs text-center mt-4">No messages yet. Say hello!</p>
+              <p className="text-slate-600 text-xs text-center mt-6">No messages yet. Say hello!</p>
             )}
             {chatMessages.map((msg, i) => (
-              <div key={i} className="text-sm">
-                <span className={`font-bold ${msg.playerName === playerName ? "text-yellow-400" : "text-blue-300"}`}>
-                  {msg.playerName}:
+              <div key={i} className="text-xs leading-relaxed">
+                <span className={`font-bold ${msg.playerName === playerName ? "text-amber-400" : "text-slate-400"}`}>
+                  {msg.playerName}
                 </span>
-                <span className="text-white ml-1">{msg.message}</span>
+                <span className="text-slate-300 ml-1">{msg.message}</span>
               </div>
             ))}
             <div ref={chatEndRef} />
           </div>
-          <form onSubmit={handleSendChat} className="p-3 border-t border-blue-800 flex gap-2">
+          <form onSubmit={handleSendChat} className="p-2.5 border-t border-white/5 flex gap-2 shrink-0">
             <Input
-              placeholder="Message..."
+              placeholder="Message…"
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
-              className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-500 text-sm h-10 md:h-8"
+              className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-600 text-xs h-9 focus:border-amber-500/40"
             />
-            <Button type="submit" size="sm" className="bg-blue-700 hover:bg-blue-600 h-10 w-10 md:h-8 md:w-8 p-0">
-              <Send className="w-4 h-4 md:w-3 md:h-3" />
+            <Button type="submit" className="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 h-9 w-9 p-0 shrink-0">
+              <Send className="w-3.5 h-3.5" />
             </Button>
           </form>
         </div>
       </div>
 
       {/* Mobile bottom tab bar */}
-      <div className="md:hidden flex border-t border-blue-800 bg-blue-950 shrink-0">
+      <div className="md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10">
         <button
           onClick={() => setMobileTab("game")}
-          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-semibold transition-colors ${mobileTab === "game" ? "text-yellow-400 border-t-2 border-yellow-400" : "text-blue-400 border-t-2 border-transparent"}`}
+          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs font-semibold transition-colors border-t-2 ${
+            mobileTab === "game" ? "text-amber-400 border-amber-400" : "text-slate-500 border-transparent"
+          }`}
         >
           <Gamepad2 className="w-5 h-5" />
           Game
         </button>
         <button
           onClick={() => { setMobileTab("chat"); setUnreadChats(0); }}
-          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-semibold transition-colors relative ${mobileTab === "chat" ? "text-yellow-400 border-t-2 border-yellow-400" : "text-blue-400 border-t-2 border-transparent"}`}
+          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs font-semibold transition-colors relative border-t-2 ${
+            mobileTab === "chat" ? "text-amber-400 border-amber-400" : "text-slate-500 border-transparent"
+          }`}
         >
           <MessageCircle className="w-5 h-5" />
           Chat
           {unreadChats > 0 && (
-            <span className="absolute top-1.5 right-[calc(50%-14px)] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+            <span className="absolute top-2 right-[calc(50%-14px)] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
               {unreadChats > 9 ? "9+" : unreadChats}
             </span>
           )}
         </button>
       </div>
 
-      {/* Leave confirmation dialog */}
-      <Dialog open={leaveConfirmOpen} onOpenChange={setLeaveConfirmOpen}>
-        <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="text-red-400 flex items-center gap-2">
-              <LogOut className="w-5 h-5" /> Leave Room?
-            </DialogTitle>
-            <DialogDescription className="text-blue-300">
-              Are you sure you want to leave? Your spot will be freed up for others.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex gap-3 mt-2">
-            <Button
-              variant="outline"
-              className="flex-1 border-blue-700 text-blue-300 hover:bg-blue-900/40"
-              onClick={() => setLeaveConfirmOpen(false)}
-            >
-              Stay
-            </Button>
-            <Button
-              className="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold"
-              onClick={handleLeave}
-            >
-              <LogOut className="w-4 h-4 mr-1" /> Leave
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete room confirmation dialog (host only) */}
-      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-blue-950 border-blue-700 text-white max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="text-red-400 flex items-center gap-2">
-              <LogOut className="w-5 h-5" /> Delete Room?
-            </DialogTitle>
-            <DialogDescription className="text-blue-300">
-              This will remove the room for all players and send everyone back to the lobby.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex gap-3 mt-2">
-            <Button
-              variant="outline"
-              className="flex-1 border-blue-700 text-blue-300 hover:bg-blue-900/40"
-              onClick={() => setDeleteConfirmOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold"
-              onClick={() => {
-                deleteRoom();
-                setDeleteConfirmOpen(false);
-              }}
-            >
-              Delete
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Dialogs */}
+      {[
+        {
+          open: leaveConfirmOpen,
+          onOpenChange: setLeaveConfirmOpen,
+          title: "Leave Room?",
+          desc: "Are you sure you want to leave? Your spot will be freed up for others.",
+          confirmLabel: "Leave",
+          onConfirm: handleLeave,
+        },
+        {
+          open: deleteConfirmOpen,
+          onOpenChange: setDeleteConfirmOpen,
+          title: "Delete Room?",
+          desc: "This will remove the room for all players and send everyone back to the lobby.",
+          confirmLabel: "Delete",
+          onConfirm: () => { deleteRoom(); setDeleteConfirmOpen(false); },
+        },
+      ].map(({ open, onOpenChange, title, desc, confirmLabel, onConfirm }) => (
+        <Dialog key={title} open={open} onOpenChange={onOpenChange}>
+          <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-red-400 font-bold flex items-center gap-2">
+                <LogOut className="w-4 h-4" /> {title}
+              </DialogTitle>
+              <DialogDescription className="text-slate-400">{desc}</DialogDescription>
+            </DialogHeader>
+            <div className="flex gap-3 mt-2">
+              <Button
+                variant="outline"
+                className="flex-1 border-white/10 text-slate-300 hover:bg-white/5"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-400 font-bold"
+                onClick={onConfirm}
+              >
+                {confirmLabel}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      ))}
     </div>
   );
 }
