@@ -214,18 +214,22 @@ export default function Lobby() {
               </div>
             )}
             {nickname && (
-              <button
-                onClick={() => {
-                  setChangeNicknameInput("");
-                  setChangeNicknameError(null);
-                  setChangeNicknameOpen(true);
-                }}
-                disabled={isInGame}
+              <span
                 title={isInGame ? "Leave your current game before changing your nickname" : "Change nickname"}
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/5 disabled:hover:text-slate-400"
+                className="inline-flex"
               >
-                <Pencil className="w-4 h-4" />
-              </button>
+                <button
+                  onClick={() => {
+                    setChangeNicknameInput("");
+                    setChangeNicknameError(null);
+                    setChangeNicknameOpen(true);
+                  }}
+                  disabled={isInGame}
+                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/5 disabled:hover:text-slate-400 pointer-events-auto"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+              </span>
             )}
             <button
               onClick={loadRooms}
