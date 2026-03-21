@@ -31,6 +31,7 @@ async function scheduleRoomDeletion(roomId: string) {
     emptyRoomTimers.delete(roomId);
     gameStates.delete(roomId);
     try {
+      await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
       await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
       console.log(`Deleted empty room ${roomId} after inactivity`);
     } catch (err) {
@@ -446,6 +447,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
       gameStates.delete(roomId);
       try {
+        await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
         await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
       } catch {
         // ignore DB errors
@@ -502,6 +504,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       clearAnswerTimer(roomId);
       gameStates.delete(roomId);
       try {
+        await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
         await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
       } catch (err) {
         // ignore
