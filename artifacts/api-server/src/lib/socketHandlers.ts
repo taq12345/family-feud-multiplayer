@@ -308,8 +308,9 @@ export function setupSocketHandlers(io: SocketServer) {
         }
       }
 
-      // Re-validate state after async work
+      // Re-validate state after async work — reject if status changed or answer was already revealed
       if (state.status !== statusBeforeAwait) return;
+      if (matchIndex !== -1 && state.revealedAnswers.has(matchIndex)) return;
 
       if (matchIndex !== -1) {
         state.revealedAnswers.add(matchIndex);
