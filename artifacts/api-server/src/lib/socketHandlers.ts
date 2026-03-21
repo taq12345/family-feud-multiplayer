@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState } from "./gameState.js";
+import { isAnswerMatch } from "./answerMatcher.js";
 
 const gameStates = new Map<string, GameState>();
 const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -240,10 +241,16 @@ export function setupSocketHandlers(io: SocketServer) {
 
       if (state.buzzedPlayerId !== socket.id) return;
 
-      const normalizedAnswer = answer.trim().toLowerCase();
-      const matchIndex = state.currentQuestion.answers.findIndex(
-        a => a.text.toLowerCase().includes(normalizedAnswer) || normalizedAnswer.includes(a.text.toLowerCase().split(" ")[0])
-      );
+      const question = state.currentQuestion.question;
+      const answers = state.currentQuestion.answers;
+      let matchIndex = -1;
+      for (let i = 0; i < answers.length; i++) {
+        if (state.revealedAnswers.has(i)) continue;
+        if (await isAnswerMatch(answer, answers[i].text, question)) {
+          matchIndex = i;
+          break;
+        }
+      }
 
       if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
         clearFaceoffTimer(roomId);
@@ -286,11 +293,16 @@ export function setupSocketHandlers(io: SocketServer) {
 
       clearAnswerTimer(roomId);
 
-      const normalizedAnswer = answer.trim().toLowerCase();
-      const matchIndex = state.currentQuestion.answers.findIndex(
-        (a, i) => !state.revealedAnswers.has(i) &&
-          (a.text.toLowerCase().includes(normalizedAnswer) || normalizedAnswer.includes(a.text.toLowerCase().split(" ")[0]))
-      );
+      const question = state.currentQuestion.question;
+      const answers = state.currentQuestion.answers;
+      let matchIndex = -1;
+      for (let i = 0; i < answers.length; i++) {
+        if (state.revealedAnswers.has(i)) continue;
+        if (await isAnswerMatch(answer, answers[i].text, question)) {
+          matchIndex = i;
+          break;
+        }
+      }
 
       if (matchIndex !== -1) {
         state.revealedAnswers.add(matchIndex);
