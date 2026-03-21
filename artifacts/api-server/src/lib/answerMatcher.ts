@@ -137,8 +137,9 @@ function stemmedMatch(submitted: string, canonical: string): boolean {
 
 /** Ask the AI model whether submitted and canonical mean the same thing in context */
 async function aiSemanticMatch(submitted: string, canonical: string, question: string): Promise<boolean> {
+  const AI_TIMEOUT_MS = 5000;
   try {
-    const response = await openai.chat.completions.create({
+    const aiCall = openai.chat.completions.create({
       model: "gpt-5-nano",
       messages: [
         {
@@ -153,10 +154,14 @@ async function aiSemanticMatch(submitted: string, canonical: string, question: s
       ],
       max_completion_tokens: 1000,
     });
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("AI match timeout")), AI_TIMEOUT_MS)
+    );
+    const response = await Promise.race([aiCall, timeout]);
     const verdict = response.choices[0]?.message?.content?.trim().toUpperCase() ?? "";
     return verdict.startsWith("YES");
   } catch (err) {
-    console.error("[answerMatcher] AI call failed:", err);
+    console.error("[answerMatcher] AI call failed or timed out:", err);
     return false;
   }
 }
