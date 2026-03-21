@@ -21,32 +21,85 @@ function normalize(text: string): string {
     .trim();
 }
 
-/** Minimal Porter-style stemmer for English */
+const VOWELS = new Set(["a", "e", "i", "o", "u"]);
+function isConsonant(c: string): boolean {
+  return c >= "a" && c <= "z" && !VOWELS.has(c);
+}
+
+/** Strip a doubled final consonant (e.g. "runn" → "run", "stopp" → "stop") */
+function stripDoubledConsonant(w: string): string {
+  if (w.length < 2) return w;
+  const last = w[w.length - 1];
+  const prev = w[w.length - 2];
+  if (isConsonant(last) && last === prev) return w.slice(0, -1);
+  return w;
+}
+
+/**
+ * Lightweight English stemmer.
+ * Handles: -ing, -ed (with doubled-consonant unwinding), -ies, -ness, -ment,
+ *           -able/-ible, -ly, -er, -es, -s, trailing silent-e.
+ * All suffixes reduce to the same base so tense/number variants match:
+ *   dance / danced / dancing → "danc"
+ *   run   / ran    / running → "run"
+ *   groove / grooving        → "groov"
+ */
 function stem(word: string): string {
   let w = word.toLowerCase();
-  // Step 1: common suffixes
-  if (w.length > 6 && w.endsWith("ational")) return w.slice(0, -7) + "ate";
+
+  // -ing: strip and undo doubled consonant (running→runn→run, dancing→danc)
   if (w.length > 4 && w.endsWith("ing")) {
     const base = w.slice(0, -3);
-    if (base.length >= 2) return base.endsWith(base[base.length - 1]) && base.length > 3 ? base.slice(0, -1) : base;
+    if (base.length >= 2) {
+      w = stripDoubledConsonant(base);
+    }
   }
-  if (w.length > 4 && w.endsWith("ies")) return w.slice(0, -3) + "i";
-  if (w.length > 4 && w.endsWith("ing")) return w.slice(0, -3);
-  if (w.length > 4 && w.endsWith("ness")) return w.slice(0, -4);
-  if (w.length > 4 && w.endsWith("ment")) return w.slice(0, -4);
-  if (w.length > 4 && w.endsWith("tion")) return w.slice(0, -4) + "t";
-  if (w.length > 4 && w.endsWith("able")) return w.slice(0, -4);
-  if (w.length > 4 && w.endsWith("ible")) return w.slice(0, -4);
-  if (w.length > 3 && w.endsWith("ing")) return w.slice(0, -3);
-  if (w.length > 3 && w.endsWith("ely")) return w.slice(0, -2);
-  if (w.length > 3 && w.endsWith("ed")) {
+  // -ed: strip and undo doubled consonant (stopped→stopp→stop, danced→danc)
+  else if (w.length > 3 && w.endsWith("ed")) {
     const base = w.slice(0, -2);
-    if (base.length >= 2) return base.endsWith(base[base.length - 1]) && base.length > 3 ? base.slice(0, -1) : base;
+    if (base.length >= 2) {
+      w = stripDoubledConsonant(base);
+    }
   }
-  if (w.length > 3 && w.endsWith("er")) return w.slice(0, -2);
-  if (w.length > 3 && w.endsWith("ly")) return w.slice(0, -2);
-  if (w.length > 2 && w.endsWith("es") && !["goes", "does", "toes", "foes"].includes(w)) return w.slice(0, -2);
-  if (w.length > 2 && w.endsWith("s") && !w.endsWith("ss") && !["his", "hers", "its", "was", "has", "is", "as", "us"].includes(w)) return w.slice(0, -1);
+  // -ies → -i (parties→parti)
+  else if (w.length > 4 && w.endsWith("ies")) {
+    w = w.slice(0, -3) + "i";
+  }
+  // -ness, -ment (happiness→happi, government→govern)
+  else if (w.length > 6 && (w.endsWith("ness") || w.endsWith("ment"))) {
+    w = w.slice(0, -4);
+  }
+  // -able, -ible (comfortable→comfort, possible→possibl)
+  else if (w.length > 6 && (w.endsWith("able") || w.endsWith("ible"))) {
+    w = w.slice(0, -4);
+  }
+  // -ly (quickly→quick, slowly→slow)
+  else if (w.length > 4 && w.endsWith("ly")) {
+    w = w.slice(0, -2);
+  }
+  // -er (runner→runner becomes handled earlier; dancer→danc+er)
+  else if (w.length > 4 && w.endsWith("er")) {
+    w = w.slice(0, -2);
+  }
+  // -es (watches→watch, buses→bus; preserve goes/does/toes/foes)
+  else if (w.length > 3 && w.endsWith("es") && !["goes", "does", "toes", "foes"].includes(w)) {
+    w = w.slice(0, -2);
+  }
+  // -s (dogs→dog, cars→car; preserve common words)
+  else if (
+    w.length > 3 &&
+    w.endsWith("s") &&
+    !w.endsWith("ss") &&
+    !["his", "hers", "its", "was", "has", "is", "as", "us"].includes(w)
+  ) {
+    w = w.slice(0, -1);
+  }
+
+  // Strip trailing silent 'e' (dance→danc, groove→groov, drive→driv)
+  if (w.length > 3 && w.endsWith("e")) {
+    w = w.slice(0, -1);
+  }
+
   return w;
 }
 
