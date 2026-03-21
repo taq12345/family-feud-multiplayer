@@ -35,7 +35,6 @@ export interface GameStateData {
   roundPoints: number;
   strikes: number;
   playingTeam: 1 | 2 | null;
-  faceoffWinner: 1 | 2 | null;
   faceoffTurn: 1 | 2 | null;
   faceoffDesignatedPlayerName: string | null;
 }

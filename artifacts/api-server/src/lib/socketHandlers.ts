@@ -480,6 +480,19 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
         scheduleRoomDeletion(roomId);
       }
     } else {
+      // If departing player was the designated faceoff guesser, reassign immediately
+      if (state.status === "faceoff" && departing && state.faceoffDesignatedPlayerId === departing.id) {
+        state.faceoffUsedPlayerIds.delete(departing.id);
+        let newDesignated = pickDesignatedPlayer(state, departing.team);
+        if (!newDesignated) {
+          // No one left on same team — flip to other team
+          const otherTeam: 1 | 2 = departing.team === 1 ? 2 : 1;
+          state.faceoffTurn = otherTeam;
+          newDesignated = pickDesignatedPlayer(state, otherTeam);
+        }
+        state.faceoffDesignatedPlayerId = newDesignated;
+      }
+
       // If host left, pick a new host at random
       if (departing?.isHost) {
         const remaining = Array.from(state.players.values());

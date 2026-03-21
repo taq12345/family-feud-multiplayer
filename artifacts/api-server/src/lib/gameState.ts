@@ -96,7 +96,6 @@ export function serializeGameState(state: GameState) {
     roundPoints: state.roundPoints,
     strikes: state.strikes,
     playingTeam: state.playingTeam,
-    faceoffWinner: state.faceoffWinner,
     faceoffTurn: state.faceoffTurn,
     faceoffDesignatedPlayerName: designatedPlayer?.name ?? null,
   };
