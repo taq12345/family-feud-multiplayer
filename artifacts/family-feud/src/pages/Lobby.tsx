@@ -132,22 +132,23 @@ export default function Lobby() {
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 text-white">
       {/* Header */}
       <div className="bg-blue-950 border-b border-blue-800 shadow-lg">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Tv2 className="w-8 h-8 text-yellow-400" />
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Tv2 className="w-7 h-7 sm:w-8 sm:h-8 text-yellow-400" />
             <div>
-              <h1 className="text-2xl font-extrabold text-yellow-400 tracking-wide uppercase">Family Feud</h1>
-              <p className="text-blue-300 text-xs">Online Multiplayer</p>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-yellow-400 tracking-wide uppercase">Family Feud</h1>
+              <p className="text-blue-300 text-xs hidden sm:block">Online Multiplayer</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {nickname && (
-              <span className="text-sm text-blue-300 mr-2">
+              <span className="text-xs sm:text-sm text-blue-300 hidden xs:inline mr-1 sm:mr-2">
                 Playing as <span className="font-semibold text-yellow-400">{nickname}</span>
               </span>
             )}
-            <Button variant="outline" size="sm" onClick={() => refetch()} className="border-blue-600 text-blue-200 hover:bg-blue-800">
-              <RefreshCw className="w-4 h-4 mr-1" /> Refresh
+            <Button variant="outline" size="sm" onClick={() => refetch()} className="border-blue-600 text-blue-200 hover:bg-blue-800 px-2 sm:px-3">
+              <RefreshCw className="w-4 h-4 sm:mr-1" />
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
             <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
@@ -220,7 +221,7 @@ export default function Lobby() {
       </div>
 
       {/* Main content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-5 sm:py-8">
         <div className="mb-6 flex items-center gap-2">
           <Users className="w-5 h-5 text-blue-300" />
           <h2 className="text-lg font-bold text-blue-100">Available Rooms</h2>

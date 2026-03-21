@@ -4,7 +4,7 @@ import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
-import { ArrowLeft, Send, Tv2, AlertTriangle, Trophy, Zap, Users, Crown, LogOut } from "lucide-react";
+import { Send, Tv2, AlertTriangle, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
@@ -86,6 +86,8 @@ export default function GameRoom() {
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [wrongAnswers, setWrongAnswers] = useState<Array<{ playerName: string; answer: string }>>([]);
+  const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
+  const [unreadChats, setUnreadChats] = useState(0);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const showNotification = useCallback((msg: string) => {
@@ -99,7 +101,10 @@ export default function GameRoom() {
     team,
     {
       onGameState: setGameState,
-      onChatMessage: (msg) => setChatMessages(prev => [...prev.slice(-99), msg]),
+      onChatMessage: (msg) => {
+        setChatMessages(prev => [...prev.slice(-99), msg]);
+        setUnreadChats(prev => mobileTab === "game" ? prev + 1 : 0);
+      },
       onChatHistory: (msgs) => setChatMessages(msgs),
       onPlayerJoined: (data) => showNotification(`${data.playerName} joined Team ${data.team}`),
       onPlayerLeft: (data) => showNotification(`${data.playerName} left the room`),
@@ -245,38 +250,40 @@ export default function GameRoom() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 text-white flex flex-col">
+    <div className="h-svh overflow-hidden bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 text-white flex flex-col">
       {/* Header */}
-      <div className="bg-blue-950 border-b border-blue-800 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Tv2 className="w-6 h-6 text-yellow-400" />
-          <span className="font-bold text-yellow-400 text-lg">Family Feud</span>
-          <Badge className="bg-blue-800 text-blue-200 text-xs">Room: {roomId}</Badge>
+      <div className="bg-blue-950 border-b border-blue-800 px-3 py-2 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <Tv2 className="w-5 h-5 text-yellow-400 shrink-0" />
+          <span className="font-bold text-yellow-400 text-base leading-none hidden xs:inline">Family Feud</span>
+          <Badge className="bg-blue-800 text-blue-200 text-xs hidden sm:inline-flex">Room: {roomId}</Badge>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 shrink-0">
           <Users className="w-4 h-4 text-blue-300" />
-          <span className="text-sm text-blue-300">{gameState.players.length} players</span>
-          {isHost && <Crown className="w-4 h-4 text-yellow-400" title="You are the host" />}
-          <div className="flex items-center gap-2 ml-2">
-            {isHost && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setDeleteConfirmOpen(true)}
-                className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600"
-              >
-                <LogOut className="w-3.5 h-3.5 mr-1" /> Delete Room
-              </Button>
-            )}
+          <span className="text-sm text-blue-300 mr-1">{gameState.players.length}</span>
+          {isHost && <Crown className="w-4 h-4 text-yellow-400" />}
+          {isHost && (
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setLeaveConfirmOpen(true)}
-              className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600"
+              onClick={() => setDeleteConfirmOpen(true)}
+              className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600 px-2"
+              title="Delete Room"
             >
-              <LogOut className="w-3.5 h-3.5 mr-1" /> Leave
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline ml-1">Delete Room</span>
             </Button>
-          </div>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setLeaveConfirmOpen(true)}
+            className="border-red-800 text-red-400 hover:bg-red-900/40 hover:text-red-300 hover:border-red-600 px-2"
+            title="Leave Room"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline ml-1">Leave</span>
+          </Button>
         </div>
       </div>
 
@@ -289,7 +296,7 @@ export default function GameRoom() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Main game area */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className={`flex-1 overflow-y-auto p-3 md:p-4 ${mobileTab === "chat" ? "hidden md:block" : "block"}`}>
           {/* Round info */}
           <div className="text-center mb-3 text-blue-300 text-sm">
             Round {gameState.currentRound} of {gameState.totalRounds} •{" "}
@@ -415,10 +422,10 @@ export default function GameRoom() {
                       placeholder="Give your answer..."
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
+                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400 h-11"
                       autoFocus
                     />
-                    <Button type="submit" className="bg-green-600 hover:bg-green-500 font-bold">Answer</Button>
+                    <Button type="submit" className="bg-green-600 hover:bg-green-500 font-bold h-11 px-4">Answer</Button>
                   </form>
                 )}
               </div>
@@ -433,10 +440,10 @@ export default function GameRoom() {
                       placeholder="Your answer..."
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400"
+                      className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-400 h-11"
                       autoFocus
                     />
-                    <Button type="submit" className="bg-green-600 hover:bg-green-500 font-bold">Answer</Button>
+                    <Button type="submit" className="bg-green-600 hover:bg-green-500 font-bold h-11 px-4">Answer</Button>
                   </form>
                 )}
                 {canAnswer && roundCountdown !== null && (
@@ -470,10 +477,10 @@ export default function GameRoom() {
                       placeholder="Your steal answer..."
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="bg-orange-900/30 border-orange-700 text-white placeholder:text-orange-400"
+                      className="bg-orange-900/30 border-orange-700 text-white placeholder:text-orange-400 h-11"
                       autoFocus
                     />
-                    <Button type="submit" className="bg-orange-600 hover:bg-orange-500 font-bold">Steal!</Button>
+                    <Button type="submit" className="bg-orange-600 hover:bg-orange-500 font-bold h-11 px-4">Steal!</Button>
                   </form>
                 )}
                 {isMyTeamStealing && roundCountdown !== null && (
@@ -525,9 +532,9 @@ export default function GameRoom() {
         </div>
 
         {/* Chat panel */}
-        <div className="w-72 border-l border-blue-800 flex flex-col bg-blue-950/80">
+        <div className={`${mobileTab === "chat" ? "flex" : "hidden"} md:flex w-full md:w-72 border-l border-blue-800 flex-col bg-blue-950/80`}>
           <div className="px-3 py-2 border-b border-blue-800 flex items-center gap-2">
-            <Send className="w-4 h-4 text-blue-400" />
+            <MessageCircle className="w-4 h-4 text-blue-400" />
             <span className="text-blue-200 font-semibold text-sm">Live Chat</span>
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
@@ -549,13 +556,36 @@ export default function GameRoom() {
               placeholder="Message..."
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
-              className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-500 text-sm h-8"
+              className="bg-blue-900 border-blue-700 text-white placeholder:text-blue-500 text-sm h-10 md:h-8"
             />
-            <Button type="submit" size="sm" className="bg-blue-700 hover:bg-blue-600 h-8 w-8 p-0">
-              <Send className="w-3 h-3" />
+            <Button type="submit" size="sm" className="bg-blue-700 hover:bg-blue-600 h-10 w-10 md:h-8 md:w-8 p-0">
+              <Send className="w-4 h-4 md:w-3 md:h-3" />
             </Button>
           </form>
         </div>
+      </div>
+
+      {/* Mobile bottom tab bar */}
+      <div className="md:hidden flex border-t border-blue-800 bg-blue-950 shrink-0">
+        <button
+          onClick={() => setMobileTab("game")}
+          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-semibold transition-colors ${mobileTab === "game" ? "text-yellow-400 border-t-2 border-yellow-400" : "text-blue-400 border-t-2 border-transparent"}`}
+        >
+          <Gamepad2 className="w-5 h-5" />
+          Game
+        </button>
+        <button
+          onClick={() => { setMobileTab("chat"); setUnreadChats(0); }}
+          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-semibold transition-colors relative ${mobileTab === "chat" ? "text-yellow-400 border-t-2 border-yellow-400" : "text-blue-400 border-t-2 border-transparent"}`}
+        >
+          <MessageCircle className="w-5 h-5" />
+          Chat
+          {unreadChats > 0 && (
+            <span className="absolute top-1.5 right-[calc(50%-14px)] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              {unreadChats > 9 ? "9+" : unreadChats}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* Leave confirmation dialog */}
