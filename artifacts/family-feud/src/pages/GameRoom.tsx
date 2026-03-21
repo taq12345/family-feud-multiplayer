@@ -161,6 +161,7 @@ export default function GameRoom() {
   const [chatInput, setChatInput] = useState("");
   const [answerInput, setAnswerInput] = useState("");
   const [notification, setNotification] = useState<string | null>(null);
+  const [faceoffCountdown, setFaceoffCountdown] = useState<number | null>(null);
   const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -228,6 +229,9 @@ export default function GameRoom() {
           showNotification(`👑 ${data.hostName} is now the host`);
         }
       },
+      onFaceoffNoWinner: () => {
+        showNotification("⏱ No winner in the face-off — moving to next round!");
+      },
     }
   );
 
@@ -235,6 +239,23 @@ export default function GameRoom() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
+  // 15s faceoff countdown — restarts whenever the designated player changes
+  useEffect(() => {
+    if (gameState?.status === "faceoff" && gameState?.faceoffDesignatedPlayerName) {
+      setFaceoffCountdown(15);
+      const interval = setInterval(() => {
+        setFaceoffCountdown(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) { clearInterval(interval); return 0; }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setFaceoffCountdown(null);
+      return undefined;
+    }
+  }, [gameState?.status, gameState?.faceoffDesignatedPlayerName]);
 
   const myPlayer = gameState?.players.find(p => p.name === playerName);
   const isHost = myPlayer?.isHost ?? false;
@@ -290,6 +311,7 @@ export default function GameRoom() {
     if (!answerInput.trim()) return;
     setVerifyingAnswer(true);
     if (isMyTurnToFaceoff) {
+      setFaceoffCountdown(null);
       faceoffAnswer(answerInput);
     } else {
       submitAnswer(answerInput);
@@ -505,6 +527,9 @@ export default function GameRoom() {
                       🎯 {gameState.faceoffDesignatedPlayerName === playerName
                         ? "Your turn to guess!"
                         : `${gameState.faceoffDesignatedPlayerName}'s turn to guess`}
+                      {faceoffCountdown !== null && (
+                        <span className="ml-2 text-xs opacity-70">({faceoffCountdown}s)</span>
+                      )}
                     </p>
                   </div>
                 ) : null}

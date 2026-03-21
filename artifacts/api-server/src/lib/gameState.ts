@@ -26,6 +26,7 @@ export interface GameState {
   faceoffTurn: 1 | 2 | null;
   faceoffDesignatedPlayerId: string | null;
   faceoffUsedPlayerIds: Set<string>;
+  faceoffAttempts: number;
   questions: SurveyQuestion[];
   usedQuestionIds: Set<number>;
 }
@@ -57,6 +58,7 @@ export function createGameState(roomId: string, team1Name: string, team2Name: st
     faceoffTurn: null,
     faceoffDesignatedPlayerId: null,
     faceoffUsedPlayerIds: new Set(),
+    faceoffAttempts: 0,
     questions: allQuestions,
     usedQuestionIds: new Set(),
   };

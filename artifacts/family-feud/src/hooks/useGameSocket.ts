@@ -63,6 +63,7 @@ export function useGameSocket(
     onRoomDeleted?: (data: { roomId: string }) => void;
     onJoinRejected?: (data: { reason: string }) => void;
     onHostChanged?: (data: { hostName: string }) => void;
+    onFaceoffNoWinner?: () => void;
   }
 ) {
   const callbacksRef = useRef(callbacks);
@@ -86,6 +87,7 @@ export function useGameSocket(
       room_deleted: (data: { roomId: string }) => callbacksRef.current.onRoomDeleted?.(data),
       join_rejected: (data: { reason: string }) => callbacksRef.current.onJoinRejected?.(data),
       host_changed: (data: { hostName: string }) => callbacksRef.current.onHostChanged?.(data),
+      faceoff_no_winner: () => callbacksRef.current.onFaceoffNoWinner?.(),
     };
 
     Object.entries(handlers).forEach(([event, handler]) => {

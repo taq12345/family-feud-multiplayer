@@ -8,6 +8,7 @@ import { findMatchIndex } from "./answerMatcher.js";
 const gameStates = new Map<string, GameState>();
 const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const faceoffAnswerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Per-room mutex: prevents concurrent async answer processing for the same room
 const answerProcessing = new Map<string, boolean>();
 
@@ -21,6 +22,7 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
 }
 
 const EMPTY_ROOM_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const FACEOFF_ANSWER_MS = 15 * 1000; // 15 seconds per faceoff guess
 const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
 
 async function scheduleRoomDeletion(roomId: string) {
@@ -55,6 +57,55 @@ function clearAnswerTimer(roomId: string) {
   }
 }
 
+function clearFaceoffAnswerTimer(roomId: string) {
+  const existing = faceoffAnswerTimers.get(roomId);
+  if (existing) {
+    clearTimeout(existing);
+    faceoffAnswerTimers.delete(roomId);
+  }
+}
+
+async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: string) {
+  clearFaceoffAnswerTimer(roomId);
+  state.faceoffDesignatedPlayerId = null;
+  state.faceoffTurn = null;
+  state.status = "between_rounds";
+  io.to(roomId).emit("faceoff_no_winner", {});
+  io.to(roomId).emit("game_state", serializeGameState(state));
+}
+
+function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
+  clearFaceoffAnswerTimer(roomId);
+  const timer = setTimeout(async () => {
+    faceoffAnswerTimers.delete(roomId);
+    const state = gameStates.get(roomId);
+    if (!state || state.status !== "faceoff" || !state.faceoffDesignatedPlayerId) return;
+    const player = state.players.get(state.faceoffDesignatedPlayerId);
+    if (!player) return;
+
+    io.to(roomId).emit("answer_wrong", {
+      playerName: player.name,
+      team: player.team,
+      answer: "(no answer in time)",
+    });
+
+    state.faceoffUsedPlayerIds.add(player.id);
+    state.faceoffAttempts++;
+
+    if (state.faceoffAttempts >= 8) {
+      await skipFaceoffRound(io, state, roomId);
+      return;
+    }
+
+    const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
+    state.faceoffTurn = nextTeam;
+    state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
+    io.to(roomId).emit("game_state", serializeGameState(state));
+    startFaceoffAnswerTimer(io, roomId);
+  }, FACEOFF_ANSWER_MS);
+  faceoffAnswerTimers.set(roomId, timer);
+}
+
 function pickDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
   const teamPlayers = Array.from(state.players.values()).filter(p => p.team === team);
   const eligible = teamPlayers.filter(p => !state.faceoffUsedPlayerIds.has(p.id));
@@ -67,6 +118,7 @@ function pickDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
 function initFaceoff(state: GameState, startingTeam: 1 | 2) {
   state.faceoffTurn = startingTeam;
   state.faceoffUsedPlayerIds = new Set();
+  state.faceoffAttempts = 0;
   state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, startingTeam);
 }
 
@@ -195,6 +247,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.playingTeam = null;
       state.faceoffWinner = null;
       initFaceoff(state, 1);
+      startFaceoffAnswerTimer(io, roomId);
 
       await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
@@ -213,6 +266,9 @@ export function setupSocketHandlers(io: SocketServer) {
       answerProcessing.set(roomId, true);
 
       try {
+        // Clear the per-player faceoff timer immediately so it cannot fire during the async AI call
+        clearFaceoffAnswerTimer(roomId);
+
         const question = state.currentQuestion.question;
         const answers = state.currentQuestion.answers;
         const matchIndex = await findMatchIndex(answer, answers, question, state.revealedAnswers);
@@ -240,12 +296,18 @@ export function setupSocketHandlers(io: SocketServer) {
           startAnswerTimer(io, state, roomId);
         } else {
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-          // Mark this player as used and pass to the other team
           state.faceoffUsedPlayerIds.add(socket.id);
-          const nextTeam = player.team === 1 ? 2 : 1;
-          state.faceoffTurn = nextTeam;
-          state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
-          io.to(roomId).emit("game_state", serializeGameState(state));
+          state.faceoffAttempts++;
+
+          if (state.faceoffAttempts >= 8) {
+            await skipFaceoffRound(io, state, roomId);
+          } else {
+            const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
+            state.faceoffTurn = nextTeam;
+            state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
+            io.to(roomId).emit("game_state", serializeGameState(state));
+            startFaceoffAnswerTimer(io, roomId);
+          }
         }
       } finally {
         answerProcessing.delete(roomId);
@@ -395,6 +457,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.playingTeam = null;
       state.faceoffWinner = null;
       initFaceoff(state, state.currentRound % 2 === 1 ? 1 : 2);
+      startFaceoffAnswerTimer(io, roomId);
 
       await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
@@ -464,6 +527,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       // ignore
     }
     if (state.players.size === 0) {
+      clearFaceoffAnswerTimer(roomId);
       clearAnswerTimer(roomId);
       if (state.status === "waiting" || state.status === "finished") {
         // No game in progress — delete immediately
@@ -482,6 +546,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
     } else {
       // If departing player was the designated faceoff guesser, reassign immediately
       if (state.status === "faceoff" && departing && state.faceoffDesignatedPlayerId === departing.id) {
+        clearFaceoffAnswerTimer(roomId);
         state.faceoffUsedPlayerIds.delete(departing.id);
         let newDesignated = pickDesignatedPlayer(state, departing.team);
         if (!newDesignated) {
@@ -491,6 +556,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
           newDesignated = pickDesignatedPlayer(state, otherTeam);
         }
         state.faceoffDesignatedPlayerId = newDesignated;
+        if (newDesignated) startFaceoffAnswerTimer(io, roomId);
       }
 
       // If host left, pick a new host at random
