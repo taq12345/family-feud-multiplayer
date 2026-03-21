@@ -7,7 +7,6 @@ import { findMatchIndex } from "./answerMatcher.js";
 
 const gameStates = new Map<string, GameState>();
 const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
-const faceoffTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Per-room mutex: prevents concurrent async answer processing for the same room
 const answerProcessing = new Map<string, boolean>();
@@ -22,7 +21,6 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
 }
 
 const EMPTY_ROOM_TTL_MS = 15 * 60 * 1000; // 15 minutes
-const FACE_OFF_ANSWER_MS = 8 * 1000; // 8 seconds after buzz-in
 const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
 
 async function scheduleRoomDeletion(roomId: string) {
@@ -49,14 +47,6 @@ function cancelRoomDeletion(roomId: string) {
   }
 }
 
-function clearFaceoffTimer(roomId: string) {
-  const existing = faceoffTimers.get(roomId);
-  if (existing) {
-    clearTimeout(existing);
-    faceoffTimers.delete(roomId);
-  }
-}
-
 function clearAnswerTimer(roomId: string) {
   const existing = answerTimers.get(roomId);
   if (existing) {
@@ -65,30 +55,19 @@ function clearAnswerTimer(roomId: string) {
   }
 }
 
-function startFaceoffTimer(io: SocketServer, roomId: string) {
-  clearFaceoffTimer(roomId);
-  const timer = setTimeout(() => {
-    const state = gameStates.get(roomId);
-    if (!state || state.status !== "faceoff" || !state.buzzedPlayerId) return;
-    const player = state.players.get(state.buzzedPlayerId);
-    if (!player) return;
+function pickDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
+  const teamPlayers = Array.from(state.players.values()).filter(p => p.team === team);
+  const eligible = teamPlayers.filter(p => !state.faceoffUsedPlayerIds.has(p.id));
+  if (eligible.length > 0) return eligible[0].id;
+  // All used — reset used IDs for this team and try again
+  for (const p of teamPlayers) state.faceoffUsedPlayerIds.delete(p.id);
+  return teamPlayers[0]?.id ?? null;
+}
 
-    io.to(roomId).emit("answer_wrong", {
-      playerName: player.name,
-      team: player.team,
-      answer: "(no answer in time)",
-    });
-    state.buzzedPlayerId = null;
-    // After a wrong face-off attempt, give the other team the next exclusive buzz.
-    // If the other team also misses, unlock so both can buzz again.
-    if (state.faceoffLockTeam === null) {
-      state.faceoffLockTeam = player.team === 1 ? 2 : 1;
-    } else {
-      state.faceoffLockTeam = null;
-    }
-    io.to(roomId).emit("game_state", serializeGameState(state));
-  }, FACE_OFF_ANSWER_MS);
-  faceoffTimers.set(roomId, timer);
+function initFaceoff(state: GameState, startingTeam: 1 | 2) {
+  state.faceoffTurn = startingTeam;
+  state.faceoffUsedPlayerIds = new Set();
+  state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, startingTeam);
 }
 
 function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
@@ -215,52 +194,35 @@ export function setupSocketHandlers(io: SocketServer) {
       state.roundPoints = 0;
       state.playingTeam = null;
       state.faceoffWinner = null;
-      state.buzzedPlayerId = null;
-      state.faceoffLockTeam = null;
+      initFaceoff(state, 1);
 
       await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
       io.to(roomId).emit("game_state", serializeGameState(state));
     });
 
-    socket.on("buzz_in", ({ roomId }: { roomId: string }) => {
-      const state = gameStates.get(roomId);
-      if (!state || state.status !== "faceoff") return;
-      if (state.buzzedPlayerId) return;
-      const player = state.players.get(socket.id);
-      if (!player) return;
-      if (state.faceoffLockTeam && player.team !== state.faceoffLockTeam) return;
-
-      state.buzzedPlayerId = socket.id;
-      io.to(roomId).emit("buzzed_in", { playerName: player.name, team: player.team });
-      startFaceoffTimer(io, roomId);
-    });
-
     socket.on("faceoff_answer", async ({ roomId, answer }: { roomId: string; answer: string }) => {
       const state = gameStates.get(roomId);
       if (!state || state.status !== "faceoff" || !state.currentQuestion) return;
+      if (state.faceoffDesignatedPlayerId !== socket.id) return;
       const player = state.players.get(socket.id);
       if (!player) return;
-      if (state.buzzedPlayerId !== socket.id) return;
 
       // Mutex: reject if another answer is already being processed for this room
       if (answerProcessing.get(roomId)) return;
       answerProcessing.set(roomId, true);
 
       try {
-        // Clear the timer immediately so it cannot fire and mutate state while AI is pending
-        clearFaceoffTimer(roomId);
-
         const question = state.currentQuestion.question;
         const answers = state.currentQuestion.answers;
         const matchIndex = await findMatchIndex(answer, answers, question, state.revealedAnswers);
 
         // Re-validate state after async work: another event could have changed status
-        if (state.status !== "faceoff" || state.buzzedPlayerId !== socket.id) return;
+        if (state.status !== "faceoff" || state.faceoffDesignatedPlayerId !== socket.id) return;
 
         if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
-          state.buzzedPlayerId = null;
-          state.faceoffLockTeam = null;
+          state.faceoffDesignatedPlayerId = null;
+          state.faceoffTurn = null;
           state.revealedAnswers.add(matchIndex);
           state.faceoffWinner = player.team;
           state.playingTeam = player.team;
@@ -278,12 +240,11 @@ export function setupSocketHandlers(io: SocketServer) {
           startAnswerTimer(io, state, roomId);
         } else {
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-          state.buzzedPlayerId = null;
-          if (state.faceoffLockTeam === null) {
-            state.faceoffLockTeam = player.team === 1 ? 2 : 1;
-          } else {
-            state.faceoffLockTeam = null;
-          }
+          // Mark this player as used and pass to the other team
+          state.faceoffUsedPlayerIds.add(socket.id);
+          const nextTeam = player.team === 1 ? 2 : 1;
+          state.faceoffTurn = nextTeam;
+          state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
           io.to(roomId).emit("game_state", serializeGameState(state));
         }
       } finally {
@@ -433,8 +394,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.roundPoints = 0;
       state.playingTeam = null;
       state.faceoffWinner = null;
-      state.buzzedPlayerId = null;
-      state.faceoffLockTeam = null;
+      initFaceoff(state, state.currentRound % 2 === 1 ? 1 : 2);
 
       await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
@@ -504,7 +464,6 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       // ignore
     }
     if (state.players.size === 0) {
-      clearFaceoffTimer(roomId);
       clearAnswerTimer(roomId);
       if (state.status === "waiting" || state.status === "finished") {
         // No game in progress — delete immediately

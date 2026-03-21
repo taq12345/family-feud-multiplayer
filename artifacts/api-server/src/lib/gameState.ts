@@ -23,8 +23,9 @@ export interface GameState {
   strikes: number;
   playingTeam: 1 | 2 | null;
   faceoffWinner: 1 | 2 | null;
-  buzzedPlayerId: string | null;
-  faceoffLockTeam: 1 | 2 | null;
+  faceoffTurn: 1 | 2 | null;
+  faceoffDesignatedPlayerId: string | null;
+  faceoffUsedPlayerIds: Set<string>;
   questions: SurveyQuestion[];
   usedQuestionIds: Set<number>;
 }
@@ -53,8 +54,9 @@ export function createGameState(roomId: string, team1Name: string, team2Name: st
     strikes: 0,
     playingTeam: null,
     faceoffWinner: null,
-    buzzedPlayerId: null,
-    faceoffLockTeam: null,
+    faceoffTurn: null,
+    faceoffDesignatedPlayerId: null,
+    faceoffUsedPlayerIds: new Set(),
     questions: allQuestions,
     usedQuestionIds: new Set(),
   };
@@ -65,6 +67,10 @@ export function getNextQuestion(state: GameState): SurveyQuestion | null {
 }
 
 export function serializeGameState(state: GameState) {
+  const designatedPlayer = state.faceoffDesignatedPlayerId
+    ? state.players.get(state.faceoffDesignatedPlayerId)
+    : null;
+
   return {
     roomId: state.roomId,
     players: Array.from(state.players.values()),
@@ -91,5 +97,7 @@ export function serializeGameState(state: GameState) {
     strikes: state.strikes,
     playingTeam: state.playingTeam,
     faceoffWinner: state.faceoffWinner,
+    faceoffTurn: state.faceoffTurn,
+    faceoffDesignatedPlayerName: designatedPlayer?.name ?? null,
   };
 }

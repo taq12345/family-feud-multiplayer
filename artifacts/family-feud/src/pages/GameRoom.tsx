@@ -161,8 +161,6 @@ export default function GameRoom() {
   const [chatInput, setChatInput] = useState("");
   const [answerInput, setAnswerInput] = useState("");
   const [notification, setNotification] = useState<string | null>(null);
-  const [buzzedPlayer, setBuzzedPlayer] = useState<string | null>(null);
-  const [faceoffCountdown, setFaceoffCountdown] = useState<number | null>(null);
   const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -177,7 +175,7 @@ export default function GameRoom() {
     setTimeout(() => setNotification(null), 3000);
   }, []);
 
-  const { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -190,21 +188,12 @@ export default function GameRoom() {
       onChatHistory: (msgs) => setChatMessages(msgs),
       onPlayerJoined: (data) => showNotification(`${data.playerName} joined Team ${data.team}`),
       onPlayerLeft: (data) => showNotification(`${data.playerName} left the room`),
-      onBuzzedIn: (data) => {
-        setBuzzedPlayer(data.playerName);
-        showNotification(`🔔 ${data.playerName} buzzed in!`);
-        setTimeout(() => setBuzzedPlayer(null), 8000);
-      },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
         showNotification(`✅ ${data.playerName}: "${data.answerText}" — ${data.points} pts`);
-        setBuzzedPlayer(null);
-        setFaceoffCountdown(null);
       },
       onAnswerWrong: (data) => {
         setVerifyingAnswer(false);
-        setBuzzedPlayer(null);
-        setFaceoffCountdown(null);
         pendingWrongRef.current = { answer: data.answer, playerName: data.playerName };
         // If no strike event arrives within 150ms (faceoff / failed steal), show simple toast
         setTimeout(() => {
@@ -247,32 +236,14 @@ export default function GameRoom() {
   }, [chatMessages]);
 
 
-  // Local 8s countdown for face-off answer window
-  useEffect(() => {
-    if (gameState?.status === "faceoff" && buzzedPlayer && buzzedPlayer === playerName) {
-      setFaceoffCountdown(8);
-      const interval = setInterval(() => {
-        setFaceoffCountdown(prev => {
-          if (prev === null) return null;
-          if (prev <= 1) { clearInterval(interval); return 0; }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(interval);
-    } else {
-      setFaceoffCountdown(null);
-      return undefined;
-    }
-  }, [gameState?.status, buzzedPlayer, playerName]);
-
   const myPlayer = gameState?.players.find(p => p.name === playerName);
   const isHost = myPlayer?.isHost ?? false;
   const isMyTeamPlaying = gameState?.playingTeam === team;
   const isMyTeamStealing = gameState?.status === "stealing" && gameState?.playingTeam !== team;
   const canAnswer = (gameState?.status === "playing" && isMyTeamPlaying) ||
     (gameState?.status === "stealing" && isMyTeamStealing);
-  const canBuzz = gameState?.status === "faceoff";
-  const canFaceoff = gameState?.status === "faceoff" && buzzedPlayer === playerName;
+  const isMyTurnToFaceoff = gameState?.status === "faceoff" &&
+    gameState?.faceoffDesignatedPlayerName === playerName;
 
   const team1Count = gameState?.players.filter(p => p.team === 1).length ?? 0;
   const team2Count = gameState?.players.filter(p => p.team === 2).length ?? 0;
@@ -318,9 +289,7 @@ export default function GameRoom() {
     e.preventDefault();
     if (!answerInput.trim()) return;
     setVerifyingAnswer(true);
-    if (gameState?.status === "faceoff") {
-      setFaceoffCountdown(null);
-      setBuzzedPlayer(null);
+    if (isMyTurnToFaceoff) {
       faceoffAnswer(answerInput);
     } else {
       submitAnswer(answerInput);
@@ -524,25 +493,24 @@ export default function GameRoom() {
 
             {/* Face-off */}
             {gameState.status === "faceoff" && (
-              <div className="space-y-2">
-                {buzzedPlayer ? (
-                  <div className="rounded-xl bg-amber-500/10 border border-amber-500/25 p-3 text-center">
-                    <p className="text-amber-400 font-bold">
-                      🔔 {buzzedPlayer} buzzed in!
-                      {buzzedPlayer === playerName && faceoffCountdown !== null && (
-                        <span className="ml-2 text-xs text-amber-300/70">({faceoffCountdown}s)</span>
-                      )}
+              <div className="space-y-3">
+                {/* Who is guessing banner */}
+                {gameState.faceoffDesignatedPlayerName ? (
+                  <div className={`rounded-xl border p-3 text-center ${
+                    gameState.faceoffTurn === 1
+                      ? "bg-rose-500/10 border-rose-500/25"
+                      : "bg-blue-500/10 border-blue-500/25"
+                  }`}>
+                    <p className={`font-bold text-sm ${gameState.faceoffTurn === 1 ? "text-rose-400" : "text-blue-400"}`}>
+                      🎯 {gameState.faceoffDesignatedPlayerName === playerName
+                        ? "Your turn to guess!"
+                        : `${gameState.faceoffDesignatedPlayerName}'s turn to guess`}
                     </p>
                   </div>
-                ) : (
-                  <button
-                    onClick={buzzIn}
-                    className="w-full py-5 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-black text-2xl tracking-tight shadow-[0_0_30px_rgba(251,191,36,0.4)] hover:shadow-[0_0_45px_rgba(251,191,36,0.6)] transition-all active:scale-95"
-                  >
-                    🔔 BUZZ IN!
-                  </button>
-                )}
-                {(buzzedPlayer === playerName || canFaceoff) && (
+                ) : null}
+
+                {/* Input: only for the designated player */}
+                {isMyTurnToFaceoff && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
                       placeholder="Give your answer…"
@@ -550,11 +518,21 @@ export default function GameRoom() {
                       onChange={e => setAnswerInput(e.target.value)}
                       className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 h-11"
                       autoFocus
+                      disabled={verifyingAnswer}
                     />
-                    <Button type="submit" className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
-                      Answer
+                    <Button type="submit" disabled={verifyingAnswer} className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
+                      {verifyingAnswer ? "…" : "Answer"}
                     </Button>
                   </form>
+                )}
+
+                {/* Waiting message for others */}
+                {!isMyTurnToFaceoff && gameState.faceoffDesignatedPlayerName && (
+                  <p className="text-center text-slate-500 text-xs">
+                    {gameState.faceoffTurn === team
+                      ? `Waiting for ${gameState.faceoffDesignatedPlayerName} to answer for your team…`
+                      : `Waiting for the other team to answer…`}
+                  </p>
                 )}
               </div>
             )}

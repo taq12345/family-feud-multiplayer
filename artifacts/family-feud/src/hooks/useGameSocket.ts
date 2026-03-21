@@ -36,6 +36,8 @@ export interface GameStateData {
   strikes: number;
   playingTeam: 1 | 2 | null;
   faceoffWinner: 1 | 2 | null;
+  faceoffTurn: 1 | 2 | null;
+  faceoffDesignatedPlayerName: string | null;
 }
 
 export interface ChatMsg {
@@ -54,7 +56,6 @@ export function useGameSocket(
     onChatHistory?: (msgs: ChatMsg[]) => void;
     onPlayerJoined?: (data: { playerName: string; team: 1 | 2 }) => void;
     onPlayerLeft?: (data: { playerName: string }) => void;
-    onBuzzedIn?: (data: { playerName: string; team: 1 | 2 }) => void;
     onAnswerCorrect?: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; points: number }) => void;
     onAnswerWrong?: (data: { playerName: string; team: 1 | 2; answer: string }) => void;
     onStrike?: (data: { strikes: number }) => void;
@@ -78,7 +79,6 @@ export function useGameSocket(
       chat_history: (msgs: ChatMsg[]) => callbacksRef.current.onChatHistory?.(msgs),
       player_joined: (data: { playerName: string; team: 1 | 2 }) => callbacksRef.current.onPlayerJoined?.(data),
       player_left: (data: { playerName: string }) => callbacksRef.current.onPlayerLeft?.(data),
-      buzzed_in: (data: { playerName: string; team: 1 | 2 }) => callbacksRef.current.onBuzzedIn?.(data),
       answer_correct: (data: { playerName: string; team: 1 | 2; answerIndex: number; points: number }) => callbacksRef.current.onAnswerCorrect?.(data),
       answer_wrong: (data: { playerName: string; team: 1 | 2; answer: string }) => callbacksRef.current.onAnswerWrong?.(data),
       strike: (data: { strikes: number }) => callbacksRef.current.onStrike?.(data),
@@ -105,11 +105,6 @@ export function useGameSocket(
   const startGame = useCallback(() => {
     if (!roomId) return;
     getSocket().emit("start_game", { roomId });
-  }, [roomId]);
-
-  const buzzIn = useCallback(() => {
-    if (!roomId) return;
-    getSocket().emit("buzz_in", { roomId });
   }, [roomId]);
 
   const faceoffAnswer = useCallback((answer: string) => {
@@ -147,5 +142,5 @@ export function useGameSocket(
     getSocket().emit("delete_room", { roomId });
   }, [roomId]);
 
-  return { startGame, buzzIn, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom };
+  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom };
 }
