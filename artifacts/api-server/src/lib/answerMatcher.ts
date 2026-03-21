@@ -1,8 +1,15 @@
 import OpenAI from "openai";
 
+if (!process.env.AI_INTEGRATIONS_OPENAI_BASE_URL || !process.env.AI_INTEGRATIONS_OPENAI_API_KEY) {
+  console.warn(
+    "[answerMatcher] WARNING: AI_INTEGRATIONS_OPENAI_BASE_URL or AI_INTEGRATIONS_OPENAI_API_KEY is not set. " +
+    "Layer-3 semantic matching will be disabled (all AI calls will fail-closed to false)."
+  );
+}
+
 const openai = new OpenAI({
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY ?? "placeholder",
+  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL ?? "http://localhost",
+  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY ?? "unconfigured",
 });
 
 // In-memory cache: "canonical|||submitted" -> boolean (max 1000 entries, FIFO eviction)
