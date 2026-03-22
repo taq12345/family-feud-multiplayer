@@ -178,7 +178,7 @@ export default function GameRoom() {
     setTimeout(() => setNotification(null), 3000);
   }, []);
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -722,12 +722,17 @@ export default function GameRoom() {
                     : gameState.team1Score < gameState.team2Score ? gameState.team2Name
                     : "It's a tie"} {gameState.team1Score !== gameState.team2Score ? "wins!" : "!"}
                 </p>
-                <Button
-                  onClick={handleLeave}
-                  className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)]"
-                >
-                  Back to Lobby
-                </Button>
+                {isHost ? (
+                  <Button
+                    onClick={restartGame}
+                    disabled={!canStartGame}
+                    className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Play Again
+                  </Button>
+                ) : (
+                  <p className="text-slate-500 text-sm">Waiting for host to start a new game…</p>
+                )}
               </div>
             )}
 

@@ -1,4 +1,5 @@
 import { surveyQuestions, SurveyQuestion } from "../data/questions.js";
+export { surveyQuestions };
 
 export interface Player {
   id: string;

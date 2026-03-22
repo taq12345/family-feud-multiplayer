@@ -2,7 +2,7 @@ import { Server as SocketServer, Socket } from "socket.io";
 import { db } from "@workspace/db";
 import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
-import { GameState, createGameState, getNextQuestion, serializeGameState } from "./gameState.js";
+import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
 import { findMatchIndex } from "./answerMatcher.js";
 
 const gameStates = new Map<string, GameState>();
@@ -348,6 +348,58 @@ export function setupSocketHandlers(io: SocketServer) {
       state.roundPoints = 0;
       state.playingTeam = null;
       state.faceoffWinner = null;
+      initFaceoff(state, 1);
+      startFaceoffAnswerTimer(io, roomId);
+
+      await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
+
+      io.to(roomId).emit("game_state", serializeGameState(state));
+    });
+
+    socket.on("restart_game", async ({ roomId }: { roomId: string }) => {
+      const state = gameStates.get(roomId);
+      if (!state) return;
+      const player = state.players.get(socket.id);
+      if (!player?.isHost) return;
+      if (state.status !== "finished") return;
+
+      const team1Players = Array.from(state.players.values()).filter(p => p.team === 1);
+      const team2Players = Array.from(state.players.values()).filter(p => p.team === 2);
+      if (team1Players.length === 0 || team2Players.length === 0) return;
+
+      // Reshuffle questions for a fresh game
+      const allQuestions = [...surveyQuestions];
+      for (let i = allQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+      }
+      state.questions = allQuestions;
+      state.usedQuestionIds = new Set();
+
+      // Reset scores and round counters
+      state.team1Score = 0;
+      state.team2Score = 0;
+      state.roundPoints = 0;
+      state.strikes = 0;
+      state.revealedAnswers = new Set();
+      state.playingTeam = null;
+      state.faceoffWinner = null;
+      state.faceoffTurn = null;
+      state.faceoffDesignatedPlayerId = null;
+      state.faceoffUsedPlayerIds = new Set();
+      state.faceoffAttempts = 0;
+      state.playingDesignatedPlayerId = null;
+      state.playingUsedPlayerIds = new Set();
+
+      await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
+
+      const question = getNextQuestion(state);
+      if (!question) return;
+
+      state.usedQuestionIds.add(question.id);
+      state.currentQuestion = question;
+      state.currentRound = 1;
+      state.status = "faceoff";
       initFaceoff(state, 1);
       startFaceoffAnswerTimer(io, roomId);
 

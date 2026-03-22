@@ -153,5 +153,10 @@ export function useGameSocket(
     getSocket().emit("delete_room", { roomId });
   }, [roomId]);
 
-  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom };
+  const restartGame = useCallback(() => {
+    if (!roomId) return;
+    getSocket().emit("restart_game", { roomId });
+  }, [roomId]);
+
+  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame };
 }
