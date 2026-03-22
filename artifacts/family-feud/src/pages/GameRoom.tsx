@@ -169,6 +169,7 @@ export default function GameRoom() {
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
   const [unreadChats, setUnreadChats] = useState(0);
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
+  const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const pendingWrongRef = useRef<{ answer: string; playerName: string } | null>(null);
 
@@ -193,6 +194,10 @@ export default function GameRoom() {
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
         showNotification(`✅ ${data.playerName}: "${data.answerText}" — ${data.points} pts`);
+        // Capture correct steal for the between-rounds summary
+        if (gameState?.status === "stealing") {
+          setStealAttempt({ playerName: data.playerName, answer: data.answerText, correct: true });
+        }
       },
       onAnswerWrong: (data) => {
         setVerifyingAnswer(false);
@@ -204,6 +209,10 @@ export default function GameRoom() {
             pendingWrongRef.current = null;
           }
         }, 150);
+        // Capture failed steal for the between-rounds summary
+        if (gameState?.status === "stealing") {
+          setStealAttempt({ playerName: data.playerName, answer: data.answer, correct: false });
+        }
       },
       onStrike: (data) => {
         if (pendingWrongRef.current) {
@@ -243,6 +252,11 @@ export default function GameRoom() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
+
+  // Clear steal attempt summary when a new round's faceoff begins
+  useEffect(() => {
+    if (gameState?.status === "faceoff") setStealAttempt(null);
+  }, [gameState?.status]);
 
   // 15s faceoff countdown — visible to ALL players; restarts whenever the designated player changes
   useEffect(() => {
@@ -664,6 +678,17 @@ export default function GameRoom() {
               <div className="rounded-2xl bg-white/[0.03] border border-white/8 p-6 text-center">
                 <Trophy className="w-12 h-12 text-amber-400 mx-auto mb-2 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
                 <p className="text-white font-bold text-lg mb-4">Round Complete!</p>
+                {stealAttempt && (
+                  <div className={`rounded-xl border px-4 py-3 mb-4 text-sm ${
+                    stealAttempt.correct
+                      ? "bg-emerald-500/10 border-emerald-500/25 text-emerald-300"
+                      : "bg-red-500/10 border-red-500/25 text-red-300"
+                  }`}>
+                    <span className="font-semibold">Steal attempt</span> by {stealAttempt.playerName}:{" "}
+                    <span className="italic">"{stealAttempt.answer}"</span>{" "}
+                    — {stealAttempt.correct ? "✅ Correct!" : "❌ Wrong!"}
+                  </div>
+                )}
                 {isHost ? (
                   <Button
                     onClick={nextRound}
