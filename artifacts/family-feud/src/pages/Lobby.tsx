@@ -420,7 +420,7 @@ export default function Lobby() {
                       disabled={!canJoin}
                       onClick={() => handleJoin(room.id)}
                     >
-                      {isFinished ? "Game Ended" : isFull ? "Room Full" : "Join Game →"}
+                      {isFull ? "Room Full" : "Join Game →"}
                     </Button>
                   </div>
                 </div>
