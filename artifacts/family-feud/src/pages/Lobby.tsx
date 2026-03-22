@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X } from "lucide-react";
 
 interface Room {
   id: string;
@@ -87,6 +87,16 @@ export default function Lobby() {
   const [changeNicknameInput, setChangeNicknameInput] = useState("");
   const [changeNicknameError, setChangeNicknameError] = useState<string | null>(null);
   const [changeNicknameLoading, setChangeNicknameLoading] = useState(false);
+
+  const [kickedMessage, setKickedMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const msg = sessionStorage.getItem("kickedMessage");
+    if (msg) {
+      setKickedMessage(msg);
+      sessionStorage.removeItem("kickedMessage");
+    }
+  }, []);
 
   const [form, setForm] = useState({
     name: "",
@@ -188,6 +198,23 @@ export default function Lobby() {
         <div className="absolute top-1/3 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 left-1/3 w-72 h-72 bg-purple-600/8 rounded-full blur-3xl" />
       </div>
+
+      {/* Kicked-due-to-inactivity banner */}
+      {kickedMessage && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top-3 fade-in duration-200 w-[calc(100vw-2rem)] max-w-md">
+          <div className="flex items-center gap-3 bg-[#0d1525]/95 backdrop-blur-xl border border-amber-500/30 text-white text-sm font-medium px-4 py-3 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+            <span className="text-amber-400 shrink-0">⏱</span>
+            <span className="flex-1">{kickedMessage}</span>
+            <button
+              onClick={() => setKickedMessage(null)}
+              className="shrink-0 text-slate-400 hover:text-white transition-colors"
+              aria-label="Dismiss"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <header className="relative z-10 border-b border-white/5 bg-black/30 backdrop-blur-xl">

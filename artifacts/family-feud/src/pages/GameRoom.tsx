@@ -232,6 +232,10 @@ export default function GameRoom() {
       onFaceoffNoWinner: () => {
         showNotification("⏱ No winner in the face-off — moving to next round!");
       },
+      onKickedInactive: (data) => {
+        sessionStorage.setItem("kickedMessage", `You were removed due to being idle for ${data.idleMinutes} minute${data.idleMinutes === 1 ? "" : "s"}.`);
+        setLocation("/");
+      },
     }
   );
 

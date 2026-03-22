@@ -196,8 +196,16 @@ export function setupSocketHandlers(io: SocketServer) {
 
       const state = gameStates.get(roomId);
 
-      // Detect reconnection: same player name already holds a slot in this room
+      // Check if this player was previously kicked due to inactivity
       const nameKey = playerName.trim().toLowerCase();
+      if (kickedPlayers.has(nameKey)) {
+        const idleMinutes = kickedPlayers.get(nameKey)!;
+        kickedPlayers.delete(nameKey);
+        socket.emit("kicked_inactive", { idleMinutes });
+        return;
+      }
+
+      // Detect reconnection: same player name already holds a slot in this room
       const existingSocketId = activeNicknames.get(nameKey);
       const existingPlayer = existingSocketId && state ? state.players.get(existingSocketId) : null;
       const isReconnect = !!existingPlayer && existingPlayer.name === playerName;
