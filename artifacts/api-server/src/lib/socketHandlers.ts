@@ -104,6 +104,11 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
     const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
     state.faceoffTurn = nextTeam;
     state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
+    if (!state.faceoffDesignatedPlayerId) {
+      // Next team has no players — skip the faceoff instead of freezing
+      await skipFaceoffRound(io, state, roomId);
+      return;
+    }
     io.to(roomId).emit("game_state", serializeGameState(state));
     startFaceoffAnswerTimer(io, roomId);
   }, FACEOFF_ANSWER_MS);
@@ -184,6 +189,11 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
         current.strikes = 0;
         const stealingTeam = current.playingTeam === 1 ? 2 : 1;
         initStealTurn(current, stealingTeam);
+        if (!current.playingDesignatedPlayerId) {
+          // Steal team is empty — playing team wins immediately
+          await endRound(io, current, roomId, current.playingTeam as 1 | 2);
+          return;
+        }
         io.to(roomId).emit("steal_chance", { team: stealingTeam });
         io.to(roomId).emit("game_state", serializeGameState(current));
         startAnswerTimer(io, current, roomId);
@@ -683,6 +693,46 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       clearAnswerTimer(roomId);
       await deleteRoomNow(roomId);
     } else {
+      // Shared helper: reassign host if needed, then emit player_left
+      const emitLeaveEvents = async () => {
+        if (departing?.isHost) {
+          const remaining = Array.from(state.players.values());
+          const nextHost = remaining[Math.floor(Math.random() * remaining.length)];
+          remaining.forEach(p => { p.isHost = p.id === nextHost.id; });
+          try {
+            await db.update(roomsTable)
+              .set({ hostName: nextHost.name })
+              .where(eq(roomsTable.id, roomId));
+          } catch { /* ignore */ }
+          io.to(roomId).emit("host_changed", { hostName: nextHost.name });
+        }
+        if (playerName) io.to(roomId).emit("player_left", { playerName });
+      };
+
+      // Check if a team is now empty
+      const team1Count = Array.from(state.players.values()).filter(p => p.team === 1).length;
+      const team2Count = Array.from(state.players.values()).filter(p => p.team === 2).length;
+      const emptyTeam: 1 | 2 | null = team1Count === 0 ? 1 : team2Count === 0 ? 2 : null;
+
+      if (emptyTeam !== null && (state.status === "faceoff" || state.status === "playing" || state.status === "stealing")) {
+        const remainingTeam: 1 | 2 = emptyTeam === 1 ? 2 : 1;
+        await emitLeaveEvents();
+
+        if (state.status === "faceoff") {
+          clearFaceoffAnswerTimer(roomId);
+          // No contest possible — skip faceoff (skipFaceoffRound emits game_state)
+          await skipFaceoffRound(io, state, roomId);
+          return;
+        }
+
+        // playing or stealing — award round to the remaining team immediately
+        clearAnswerTimer(roomId);
+        await endRound(io, state, roomId, remainingTeam);
+        return;
+      }
+
+      // Both teams still have players — run normal reassignment logic
+
       // If departing player was the designated faceoff guesser, reassign immediately
       if (state.status === "faceoff" && departing && state.faceoffDesignatedPlayerId === departing.id) {
         clearFaceoffAnswerTimer(roomId);
@@ -723,17 +773,12 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       if (departing?.isHost) {
         const remaining = Array.from(state.players.values());
         const nextHost = remaining[Math.floor(Math.random() * remaining.length)];
-        // Ensure only one host
         remaining.forEach(p => { p.isHost = p.id === nextHost.id; });
-
         try {
           await db.update(roomsTable)
             .set({ hostName: nextHost.name })
             .where(eq(roomsTable.id, roomId));
-        } catch {
-          // ignore
-        }
-
+        } catch { /* ignore */ }
         io.to(roomId).emit("host_changed", { hostName: nextHost.name });
       }
 
