@@ -276,6 +276,14 @@ export function setupSocketHandlers(io: SocketServer) {
         existingPlayer.id = socket.id;
         state.players.set(socket.id, existingPlayer);
 
+        // Keep designation fields in sync with the new socket ID
+        if (state.faceoffDesignatedPlayerId === existingSocketId) {
+          state.faceoffDesignatedPlayerId = socket.id;
+        }
+        if (state.playingDesignatedPlayerId === existingSocketId) {
+          state.playingDesignatedPlayerId = socket.id;
+        }
+
         console.log(`${playerName} reconnected to ${roomId} (${existingSocketId} → ${socket.id})`);
 
         // Re-sync state to the reconnecting socket only
