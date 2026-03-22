@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
+import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
@@ -302,6 +303,17 @@ export default function GameRoom() {
     leaveRoom();
     setLocation("/");
   }
+
+  // Catch-all: always notify the server when leaving the game room page,
+  // regardless of how navigation happens (button click, browser back, redirect, etc.)
+  useEffect(() => {
+    const currentRoomId = roomId;
+    return () => {
+      if (currentRoomId) {
+        getSocket().emit("leave_room", { roomId: currentRoomId });
+      }
+    };
+  }, [roomId]);
 
   function handleSendChat(e: React.FormEvent) {
     e.preventDefault();
@@ -664,7 +676,7 @@ export default function GameRoom() {
                     : "It's a tie"} {gameState.team1Score !== gameState.team2Score ? "wins!" : "!"}
                 </p>
                 <Button
-                  onClick={() => setLocation("/")}
+                  onClick={handleLeave}
                   className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)]"
                 >
                   Back to Lobby
