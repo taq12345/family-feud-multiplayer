@@ -244,7 +244,7 @@ export default function GameRoom() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
-  // 15s faceoff countdown — restarts whenever the designated player changes
+  // 15s faceoff countdown — visible to ALL players; restarts whenever the designated player changes
   useEffect(() => {
     if (gameState?.status === "faceoff" && gameState?.faceoffDesignatedPlayerName) {
       setFaceoffCountdown(15);
@@ -266,8 +266,10 @@ export default function GameRoom() {
   const isHost = myPlayer?.isHost ?? false;
   const isMyTeamPlaying = gameState?.playingTeam === team;
   const isMyTeamStealing = gameState?.status === "stealing" && gameState?.playingTeam !== team;
-  const canAnswer = (gameState?.status === "playing" && isMyTeamPlaying) ||
-    (gameState?.status === "stealing" && isMyTeamStealing);
+  const isMyTurnToPlay = (gameState?.status === "playing" && isMyTeamPlaying &&
+      gameState?.playingDesignatedPlayerName === playerName) ||
+    (gameState?.status === "stealing" && isMyTeamStealing &&
+      gameState?.playingDesignatedPlayerName === playerName);
   const isMyTurnToFaceoff = gameState?.status === "faceoff" &&
     gameState?.faceoffDesignatedPlayerName === playerName;
 
@@ -280,9 +282,9 @@ export default function GameRoom() {
       : "Team 2 needs at least 1 player."
     : "";
 
-  // Local 15s countdown for normal/steal answers
+  // Local 15s countdown for normal/steal answers — only for the designated player; restarts on rotation
   useEffect(() => {
-    const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && canAnswer;
+    const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && isMyTurnToPlay;
     if (active) {
       setRoundCountdown(15);
       const interval = setInterval(() => {
@@ -297,7 +299,7 @@ export default function GameRoom() {
       setRoundCountdown(null);
       return undefined;
     }
-  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, canAnswer]);
+  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName, isMyTurnToPlay]);
 
   function handleLeave() {
     leaveRoom();
@@ -581,7 +583,21 @@ export default function GameRoom() {
             {/* Playing */}
             {gameState.status === "playing" && (
               <div className="space-y-2">
-                {canAnswer && (
+                {/* Who's turn banner */}
+                {gameState.playingDesignatedPlayerName && (
+                  <div className={`rounded-xl border p-3 text-center ${
+                    gameState.playingTeam === 1
+                      ? "bg-rose-500/10 border-rose-500/25"
+                      : "bg-blue-500/10 border-blue-500/25"
+                  }`}>
+                    <p className={`font-bold text-sm ${gameState.playingTeam === 1 ? "text-rose-400" : "text-blue-400"}`}>
+                      🎯 {gameState.playingDesignatedPlayerName === playerName
+                        ? "Your turn to answer!"
+                        : `${gameState.playingDesignatedPlayerName}'s turn to answer`}
+                    </p>
+                  </div>
+                )}
+                {isMyTurnToPlay && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
                       placeholder="Your answer…"
@@ -589,19 +605,20 @@ export default function GameRoom() {
                       onChange={e => setAnswerInput(e.target.value)}
                       className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50 h-11"
                       autoFocus
+                      disabled={verifyingAnswer}
                     />
-                    <Button type="submit" className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
-                      Answer
+                    <Button type="submit" disabled={verifyingAnswer} className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
+                      {verifyingAnswer ? "…" : "Answer"}
                     </Button>
                   </form>
                 )}
-                {canAnswer && roundCountdown !== null && (
+                {isMyTurnToPlay && roundCountdown !== null && (
                   <p className="text-center text-xs text-amber-400/70">{roundCountdown}s remaining</p>
                 )}
-                {!canAnswer && (
+                {!isMyTurnToPlay && (
                   <div className="rounded-xl bg-white/[0.03] border border-white/8 py-3 px-4 text-center text-sm text-slate-500">
                     {isMyTeamPlaying
-                      ? "Your team is answering…"
+                      ? `Waiting for ${gameState.playingDesignatedPlayerName ?? "teammate"} to answer…`
                       : `Waiting for ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name}…`}
                   </div>
                 )}
@@ -614,10 +631,14 @@ export default function GameRoom() {
                 <div className="rounded-xl bg-orange-500/10 border border-orange-500/25 p-4 text-center">
                   <p className="text-orange-400 font-black text-xl">🎯 STEAL CHANCE!</p>
                   <p className="text-orange-300/70 text-sm mt-1">
-                    {gameState.playingTeam !== team ? "Your team can steal the points!" : "Other team gets a steal chance!"}
+                    {isMyTeamStealing
+                      ? gameState.playingDesignatedPlayerName === playerName
+                        ? "It's your steal attempt!"
+                        : `${gameState.playingDesignatedPlayerName ?? "teammate"} gets the steal attempt`
+                      : "Other team gets a steal chance!"}
                   </p>
                 </div>
-                {isMyTeamStealing && (
+                {isMyTurnToPlay && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
                       placeholder="Your steal answer…"
@@ -625,13 +646,14 @@ export default function GameRoom() {
                       onChange={e => setAnswerInput(e.target.value)}
                       className="flex-1 bg-orange-500/10 border-orange-500/25 text-white placeholder:text-orange-400/50 focus:border-orange-500/50 h-11"
                       autoFocus
+                      disabled={verifyingAnswer}
                     />
-                    <Button type="submit" className="bg-orange-500 hover:bg-orange-400 text-black font-bold h-11 px-4 border-0">
-                      Steal!
+                    <Button type="submit" disabled={verifyingAnswer} className="bg-orange-500 hover:bg-orange-400 text-black font-bold h-11 px-4 border-0">
+                      {verifyingAnswer ? "…" : "Steal!"}
                     </Button>
                   </form>
                 )}
-                {isMyTeamStealing && roundCountdown !== null && (
+                {isMyTurnToPlay && roundCountdown !== null && (
                   <p className="text-center text-xs text-orange-400/70">{roundCountdown}s remaining</p>
                 )}
               </div>

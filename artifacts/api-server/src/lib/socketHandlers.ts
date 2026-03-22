@@ -137,24 +137,56 @@ function initFaceoff(state: GameState, startingTeam: 1 | 2) {
   state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, startingTeam);
 }
 
+function pickPlayingDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
+  const teamPlayers = Array.from(state.players.values()).filter(p => p.team === team);
+  const eligible = teamPlayers.filter(p => !state.playingUsedPlayerIds.has(p.id));
+  if (eligible.length > 0) return eligible[0].id;
+  // All used — reset rotation and try again
+  state.playingUsedPlayerIds = new Set();
+  return teamPlayers[0]?.id ?? null;
+}
+
+function initPlayingTurn(state: GameState, team: 1 | 2) {
+  state.playingUsedPlayerIds = new Set();
+  state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, team);
+}
+
+function rotatePlayingDesignatedPlayer(state: GameState) {
+  if (!state.playingDesignatedPlayerId) return;
+  const currentPlayer = state.players.get(state.playingDesignatedPlayerId);
+  if (!currentPlayer) return;
+  state.playingUsedPlayerIds.add(state.playingDesignatedPlayerId);
+  state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, currentPlayer.team);
+}
+
+function initStealTurn(state: GameState, stealTeam: 1 | 2) {
+  // Steal is one shot — pick the first available player from the stealing team
+  const stealPlayers = Array.from(state.players.values()).filter(p => p.team === stealTeam);
+  state.playingUsedPlayerIds = new Set();
+  state.playingDesignatedPlayerId = stealPlayers[0]?.id ?? null;
+}
+
 function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
   clearAnswerTimer(roomId);
   const timer = setTimeout(async () => {
     const current = gameStates.get(roomId);
     if (!current || (current.status !== "playing" && current.status !== "stealing") || !current.currentQuestion) return;
 
-    const activeTeam = current.status === "playing" ? current.playingTeam : current.playingTeam === 1 ? 2 : 1;
-    const player = Array.from(current.players.values()).find(p => p.team === activeTeam) ?? null;
+    // Use the designated player for the "no answer" attribution
+    const designatedPlayer = current.playingDesignatedPlayerId
+      ? current.players.get(current.playingDesignatedPlayerId) ?? null
+      : null;
 
-    if (player) {
+    if (designatedPlayer) {
       io.to(roomId).emit("answer_wrong", {
-        playerName: player.name,
-        team: player.team,
+        playerName: designatedPlayer.name,
+        team: designatedPlayer.team,
         answer: "(no answer in time)",
       });
     }
 
     if (current.status === "playing") {
+      rotatePlayingDesignatedPlayer(current);
       current.strikes++;
       io.to(roomId).emit("strike", { strikes: current.strikes });
 
@@ -162,6 +194,7 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
         current.status = "stealing";
         current.strikes = 0;
         const stealingTeam = current.playingTeam === 1 ? 2 : 1;
+        initStealTurn(current, stealingTeam);
         io.to(roomId).emit("steal_chance", { team: stealingTeam });
         io.to(roomId).emit("game_state", serializeGameState(current));
         startAnswerTimer(io, current, roomId);
@@ -341,6 +374,7 @@ export function setupSocketHandlers(io: SocketServer) {
           state.playingTeam = player.team;
           state.roundPoints += state.currentQuestion.answers[matchIndex].points;
           state.status = "playing";
+          initPlayingTurn(state, player.team);
 
           io.to(roomId).emit("answer_correct", {
             playerName: player.name,
@@ -378,6 +412,8 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player) return;
       if (state.status === "playing" && player.team !== state.playingTeam) return;
       if (state.status === "stealing" && player.team === state.playingTeam) return;
+      // Only the designated player may answer
+      if (state.playingDesignatedPlayerId !== socket.id) return;
 
       // Mutex: reject if another answer is already being processed for this room
       if (answerProcessing.get(roomId)) return;
@@ -413,12 +449,15 @@ export function setupSocketHandlers(io: SocketServer) {
           if (allRevealed || state.status === "stealing") {
             await endRound(io, state, roomId, player.team);
           } else {
+            // Rotate to next player on the playing team for the next answer
+            rotatePlayingDesignatedPlayer(state);
             io.to(roomId).emit("game_state", serializeGameState(state));
             startAnswerTimer(io, state, roomId);
           }
         } else {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            rotatePlayingDesignatedPlayer(state);
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
 
@@ -426,6 +465,7 @@ export function setupSocketHandlers(io: SocketServer) {
               state.status = "stealing";
               state.strikes = 0;
               const stealingTeam = state.playingTeam === 1 ? 2 : 1;
+              initStealTurn(state, stealingTeam);
               io.to(roomId).emit("steal_chance", { team: stealingTeam });
               io.to(roomId).emit("game_state", serializeGameState(state));
               startAnswerTimer(io, state, roomId);
@@ -615,6 +655,27 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
         }
         state.faceoffDesignatedPlayerId = newDesignated;
         if (newDesignated) startFaceoffAnswerTimer(io, roomId);
+      }
+
+      // If departing player was the designated playing/stealing guesser, reassign immediately
+      if ((state.status === "playing" || state.status === "stealing") &&
+          departing && state.playingDesignatedPlayerId === departing.id) {
+        clearAnswerTimer(roomId);
+        state.playingUsedPlayerIds.delete(departing.id);
+        const activeTeam = state.status === "playing"
+          ? (state.playingTeam as 1 | 2)
+          : (state.playingTeam === 1 ? 2 : 1) as 1 | 2;
+        const teamPlayers = Array.from(state.players.values()).filter(p => p.team === activeTeam);
+        if (teamPlayers.length > 0) {
+          state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, activeTeam);
+          startAnswerTimer(io, state, roomId);
+        } else {
+          // No one left on the active team — end the round
+          const winner = activeTeam === state.playingTeam
+            ? (state.playingTeam === 1 ? 2 : 1) as 1 | 2
+            : (state.playingTeam as 1 | 2);
+          endRound(io, state, roomId, winner).catch(() => {});
+        }
       }
 
       // If host left, pick a new host at random
