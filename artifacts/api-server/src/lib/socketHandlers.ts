@@ -6,7 +6,6 @@ import { GameState, createGameState, getNextQuestion, serializeGameState, survey
 import { findMatchIndex } from "./answerMatcher.js";
 
 const gameStates = new Map<string, GameState>();
-const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const faceoffAnswerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Per-player disconnect grace timers (keyed by socket.id of the disconnected socket)
@@ -27,32 +26,18 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
   return existing !== excludeSocketId;
 }
 
-const EMPTY_ROOM_TTL_MS = 15 * 60 * 1000; // 15 minutes
 const PLAYER_DISCONNECT_GRACE_MS = 30 * 60 * 1000; // 30 minutes per-player reconnect window
 const FACEOFF_ANSWER_MS = 15 * 1000; // 15 seconds per faceoff guess
 const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
 
-async function scheduleRoomDeletion(roomId: string) {
-  cancelRoomDeletion(roomId);
-  const timer = setTimeout(async () => {
-    emptyRoomTimers.delete(roomId);
-    gameStates.delete(roomId);
-    try {
-      await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
-      await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
-      console.log(`Deleted empty room ${roomId} after inactivity`);
-    } catch (err) {
-      console.error(`Failed to delete room ${roomId}:`, err);
-    }
-  }, EMPTY_ROOM_TTL_MS);
-  emptyRoomTimers.set(roomId, timer);
-}
-
-function cancelRoomDeletion(roomId: string) {
-  const existing = emptyRoomTimers.get(roomId);
-  if (existing) {
-    clearTimeout(existing);
-    emptyRoomTimers.delete(roomId);
+async function deleteRoomNow(roomId: string) {
+  gameStates.delete(roomId);
+  try {
+    await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
+    await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
+    console.log(`Deleted empty room ${roomId}`);
+  } catch (err) {
+    console.error(`Failed to delete room ${roomId}:`, err);
   }
 }
 
@@ -263,9 +248,6 @@ export function setupSocketHandlers(io: SocketServer) {
       socket.data.playerName = playerName;
       socket.data.team = team;
 
-      // Cancel any pending room deletion (someone is back)
-      cancelRoomDeletion(roomId);
-
       if (isReconnect && existingSocketId && state && existingPlayer) {
         // ── Reconnection path ────────────────────────────────────────────
         // Cancel the per-player grace timer so they aren't removed later
@@ -361,7 +343,7 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!state) return;
       const player = state.players.get(socket.id);
       if (!player?.isHost) return;
-      if (state.status !== "finished") return;
+      if (state.status !== "between_rounds" || state.currentRound < state.totalRounds) return;
 
       const team1Players = Array.from(state.players.values()).filter(p => p.team === 1);
       const team2Players = Array.from(state.players.values()).filter(p => p.team === 2);
@@ -576,16 +558,14 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player?.isHost) return;
 
       if (state.currentRound >= state.totalRounds) {
-        state.status = "finished";
-        await db.update(roomsTable).set({ status: "finished" }).where(eq(roomsTable.id, roomId));
+        // All rounds done — stay on between_rounds so host can start a new game
         io.to(roomId).emit("game_state", serializeGameState(state));
         return;
       }
 
       const question = getNextQuestion(state);
       if (!question) {
-        state.status = "finished";
-        await db.update(roomsTable).set({ status: "finished" }).where(eq(roomsTable.id, roomId));
+        // No more questions — stay on between_rounds so host can start a new game
         io.to(roomId).emit("game_state", serializeGameState(state));
         return;
       }
@@ -618,7 +598,6 @@ export function setupSocketHandlers(io: SocketServer) {
         const key = p.name.trim().toLowerCase();
         if (activeNicknames.get(key) === sid) activeNicknames.delete(key);
       }
-      cancelRoomDeletion(roomId);
       gameStates.delete(roomId);
       try {
         await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
@@ -702,9 +681,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
     if (state.players.size === 0) {
       clearFaceoffAnswerTimer(roomId);
       clearAnswerTimer(roomId);
-      // Room is now empty — schedule deletion regardless of game status.
-      // This gives the last player a 15-minute window to reconnect before the room is cleaned up.
-      scheduleRoomDeletion(roomId);
+      await deleteRoomNow(roomId);
     } else {
       // If departing player was the designated faceoff guesser, reassign immediately
       if (state.status === "faceoff" && departing && state.faceoffDesignatedPlayerId === departing.id) {

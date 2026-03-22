@@ -674,67 +674,69 @@ export default function GameRoom() {
             )}
 
             {/* Between rounds */}
-            {gameState.status === "between_rounds" && (
-              <div className="rounded-2xl bg-white/[0.03] border border-white/8 p-6 text-center">
-                <Trophy className="w-12 h-12 text-amber-400 mx-auto mb-2 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
-                <p className="text-white font-bold text-lg mb-4">Round Complete!</p>
-                {stealAttempt && (
-                  <div className={`rounded-xl border px-4 py-3 mb-4 text-sm ${
-                    stealAttempt.correct
-                      ? "bg-emerald-500/10 border-emerald-500/25 text-emerald-300"
-                      : "bg-red-500/10 border-red-500/25 text-red-300"
-                  }`}>
-                    <span className="font-semibold">Steal attempt</span> by {stealAttempt.playerName}:{" "}
-                    <span className="italic">"{stealAttempt.answer}"</span>{" "}
-                    — {stealAttempt.correct ? "✅ Correct!" : "❌ Wrong!"}
-                  </div>
-                )}
-                {isHost ? (
-                  <Button
-                    onClick={nextRound}
-                    className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
-                  >
-                    {gameState.currentRound >= gameState.totalRounds ? "See Final Scores →" : "Next Round →"}
-                  </Button>
-                ) : (
-                  <p className="text-slate-500 text-sm">Waiting for host to continue…</p>
-                )}
-              </div>
-            )}
-
-            {/* Game over */}
-            {gameState.status === "finished" && (
-              <div className="rounded-2xl bg-white/[0.03] border border-amber-500/25 p-6 text-center">
-                <Trophy className="w-16 h-16 text-amber-400 mx-auto mb-3 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]" />
-                <h2 className="text-2xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-4">GAME OVER!</h2>
-                <div className="grid grid-cols-2 gap-3 mb-5">
-                  <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4">
-                    <div className="text-xs text-rose-400 font-semibold mb-1">{gameState.team1Name}</div>
-                    <div className="text-4xl font-black text-white">{gameState.team1Score}</div>
-                  </div>
-                  <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
-                    <div className="text-xs text-blue-400 font-semibold mb-1">{gameState.team2Name}</div>
-                    <div className="text-4xl font-black text-white">{gameState.team2Score}</div>
-                  </div>
+            {gameState.status === "between_rounds" && (() => {
+              const isGameOver = gameState.currentRound >= gameState.totalRounds;
+              return (
+                <div className={`rounded-2xl p-6 text-center ${isGameOver ? "bg-white/[0.03] border border-amber-500/25" : "bg-white/[0.03] border border-white/8"}`}>
+                  <Trophy className={`mx-auto mb-2 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] ${isGameOver ? "w-16 h-16 text-amber-400 mb-3 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]" : "w-12 h-12 text-amber-400"}`} />
+                  {isGameOver ? (
+                    <>
+                      <h2 className="text-2xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-4">GAME OVER!</h2>
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4">
+                          <div className="text-xs text-rose-400 font-semibold mb-1">{gameState.team1Name}</div>
+                          <div className="text-4xl font-black text-white">{gameState.team1Score}</div>
+                        </div>
+                        <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
+                          <div className="text-xs text-blue-400 font-semibold mb-1">{gameState.team2Name}</div>
+                          <div className="text-4xl font-black text-white">{gameState.team2Score}</div>
+                        </div>
+                      </div>
+                      <p className="text-amber-400 font-bold text-lg mb-4">
+                        🏆 {gameState.team1Score > gameState.team2Score ? gameState.team1Name
+                          : gameState.team1Score < gameState.team2Score ? gameState.team2Name
+                          : "It's a tie"}{gameState.team1Score !== gameState.team2Score ? " wins!" : "!"}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-white font-bold text-lg mb-4">Round Complete!</p>
+                  )}
+                  {stealAttempt && (
+                    <div className={`rounded-xl border px-4 py-3 mb-4 text-sm ${
+                      stealAttempt.correct
+                        ? "bg-emerald-500/10 border-emerald-500/25 text-emerald-300"
+                        : "bg-red-500/10 border-red-500/25 text-red-300"
+                    }`}>
+                      <span className="font-semibold">Steal attempt</span> by {stealAttempt.playerName}:{" "}
+                      <span className="italic">"{stealAttempt.answer}"</span>{" "}
+                      — {stealAttempt.correct ? "✅ Correct!" : "❌ Wrong!"}
+                    </div>
+                  )}
+                  {isHost ? (
+                    isGameOver ? (
+                      <Button
+                        onClick={restartGame}
+                        disabled={!canStartGame}
+                        className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Play Again
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={nextRound}
+                        className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
+                      >
+                        Next Round →
+                      </Button>
+                    )
+                  ) : (
+                    <p className="text-slate-500 text-sm">
+                      {isGameOver ? "Waiting for host to start a new game…" : "Waiting for host to continue…"}
+                    </p>
+                  )}
                 </div>
-                <p className="text-amber-400 font-bold text-lg mb-4">
-                  🏆 {gameState.team1Score > gameState.team2Score ? gameState.team1Name
-                    : gameState.team1Score < gameState.team2Score ? gameState.team2Name
-                    : "It's a tie"} {gameState.team1Score !== gameState.team2Score ? "wins!" : "!"}
-                </p>
-                {isHost ? (
-                  <Button
-                    onClick={restartGame}
-                    disabled={!canStartGame}
-                    className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Play Again
-                  </Button>
-                ) : (
-                  <p className="text-slate-500 text-sm">Waiting for host to start a new game…</p>
-                )}
-              </div>
-            )}
+              );
+            })()}
 
           </div>
         </div>

@@ -25,9 +25,8 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; cls: string }> = {
     waiting: { label: "Open", cls: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
     playing: { label: "Live", cls: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-    finished: { label: "Ended", cls: "bg-slate-500/20 text-slate-400 border-slate-500/30" },
   };
-  const c = config[status] ?? config.finished;
+  const c = config[status] ?? config.playing;
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold border ${c.cls}`}>
       {status === "playing" && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />}
@@ -372,8 +371,7 @@ export default function Lobby() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {rooms.map((room: Room) => {
               const isFull = room.playerCount >= room.maxPlayers;
-              const isFinished = room.status === "finished";
-              const canJoin = !isFull && !isFinished;
+              const canJoin = !isFull;
               return (
                 <div
                   key={room.id}
