@@ -84,6 +84,10 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
   clearFaceoffAnswerTimer(roomId);
   state.faceoffDesignatedPlayerId = null;
   state.faceoffTurn = null;
+  // Reveal all answers so players can see what they missed
+  if (state.currentQuestion) {
+    state.revealedAnswers = new Set(state.currentQuestion.answers.map((_, idx) => idx));
+  }
   state.status = "between_rounds";
   io.to(roomId).emit("faceoff_no_winner", {});
   io.to(roomId).emit("game_state", serializeGameState(state));
