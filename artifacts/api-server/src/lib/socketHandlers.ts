@@ -11,6 +11,10 @@ const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const faceoffAnswerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Per-player disconnect grace timers (keyed by socket.id of the disconnected socket)
 const playerDisconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
+// Records when each socket disconnected (socket.id → timestamp ms)
+const playerDisconnectTimes = new Map<string, number>();
+// Players removed after grace timeout: name (lowercase) → idle minutes. Cleared on next join attempt.
+const kickedPlayers = new Map<string, number>();
 // Per-room mutex: prevents concurrent async answer processing for the same room
 const answerProcessing = new Map<string, boolean>();
 
@@ -561,10 +565,19 @@ export function setupSocketHandlers(io: SocketServer) {
       }
 
       // Start a 30-minute grace window — player keeps their slot while reconnecting
+      const disconnectedAt = Date.now();
+      playerDisconnectTimes.set(socket.id, disconnectedAt);
       console.log(`Socket ${socket.id} (${playerName}) disconnected from ${roomId} — grace timer started`);
       const timer = setTimeout(async () => {
         playerDisconnectTimers.delete(socket.id);
-        console.log(`Grace timer expired for ${playerName} in ${roomId} — removing player`);
+        // Record this player as kicked so the client sees the message on next reconnect
+        const idleMs = Date.now() - (playerDisconnectTimes.get(socket.id) ?? disconnectedAt);
+        playerDisconnectTimes.delete(socket.id);
+        const idleMinutes = Math.round(idleMs / 60_000);
+        if (playerName) {
+          kickedPlayers.set((playerName as string).trim().toLowerCase(), idleMinutes);
+        }
+        console.log(`Grace timer expired for ${playerName} in ${roomId} (idle ~${idleMinutes}m) — removing player`);
         await handlePlayerLeave(io, socket, roomId);
       }, PLAYER_DISCONNECT_GRACE_MS);
       playerDisconnectTimers.set(socket.id, timer);
