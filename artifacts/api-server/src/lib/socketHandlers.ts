@@ -444,24 +444,6 @@ export function setupSocketHandlers(io: SocketServer) {
       }
     });
 
-    socket.on("pass_turn", ({ roomId }: { roomId: string }) => {
-      const state = gameStates.get(roomId);
-      if (!state || state.status !== "playing") return;
-      const player = state.players.get(socket.id);
-      if (!player?.isHost) return;
-
-      state.strikes++;
-      io.to(roomId).emit("strike", { strikes: state.strikes });
-
-      if (state.strikes >= 3) {
-        state.status = "stealing";
-        state.strikes = 0;
-        const stealingTeam = state.playingTeam === 1 ? 2 : 1;
-        io.to(roomId).emit("steal_chance", { team: stealingTeam });
-        io.to(roomId).emit("game_state", serializeGameState(state));
-      }
-    });
-
     socket.on("send_chat", async ({ roomId, message }: { roomId: string; message: string }) => {
       if (!message?.trim()) return;
       const playerName = socket.data.playerName ?? "Anonymous";

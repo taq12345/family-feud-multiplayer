@@ -142,11 +142,6 @@ export function useGameSocket(
     getSocket().emit("next_round", { roomId });
   }, [roomId]);
 
-  const passToOpponent = useCallback(() => {
-    if (!roomId) return;
-    getSocket().emit("pass_turn", { roomId });
-  }, [roomId]);
-
   const leaveRoom = useCallback(() => {
     if (!roomId) return;
     getSocket().emit("leave_room", { roomId });
@@ -157,5 +152,5 @@ export function useGameSocket(
     getSocket().emit("delete_room", { roomId });
   }, [roomId]);
 
-  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom };
+  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom };
 }

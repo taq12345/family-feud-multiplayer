@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Send, Tv2, AlertTriangle, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
+import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
@@ -176,7 +176,7 @@ export default function GameRoom() {
     setTimeout(() => setNotification(null), 3000);
   }, []);
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, passToOpponent, leaveRoom, deleteRoom } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -592,14 +592,6 @@ export default function GameRoom() {
                       ? "Your team is answering…"
                       : `Waiting for ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name}…`}
                   </div>
-                )}
-                {isHost && (
-                  <button
-                    onClick={passToOpponent}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500/10 border border-orange-500/25 text-orange-400 text-sm font-semibold hover:bg-orange-500/15 transition-all"
-                  >
-                    <AlertTriangle className="w-4 h-4" /> Add Strike / Pass to Opponent
-                  </button>
                 )}
               </div>
             )}
