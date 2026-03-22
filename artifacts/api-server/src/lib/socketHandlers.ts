@@ -9,6 +9,8 @@ const gameStates = new Map<string, GameState>();
 const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const faceoffAnswerTimers = new Map<string, ReturnType<typeof setTimeout>>();
+// Per-player disconnect grace timers (keyed by socket.id of the disconnected socket)
+const playerDisconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Per-room mutex: prevents concurrent async answer processing for the same room
 const answerProcessing = new Map<string, boolean>();
 
@@ -22,6 +24,7 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
 }
 
 const EMPTY_ROOM_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const PLAYER_DISCONNECT_GRACE_MS = 30 * 60 * 1000; // 30 minutes per-player reconnect window
 const FACEOFF_ANSWER_MS = 15 * 1000; // 15 seconds per faceoff guess
 const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
 
@@ -46,6 +49,14 @@ function cancelRoomDeletion(roomId: string) {
   if (existing) {
     clearTimeout(existing);
     emptyRoomTimers.delete(roomId);
+  }
+}
+
+function clearPlayerDisconnectTimer(socketId: string) {
+  const existing = playerDisconnectTimers.get(socketId);
+  if (existing) {
+    clearTimeout(existing);
+    playerDisconnectTimers.delete(socketId);
   }
 }
 
@@ -166,21 +177,7 @@ export function setupSocketHandlers(io: SocketServer) {
     console.log("Client connected:", socket.id);
 
     socket.on("join_room", async ({ roomId, playerName, team }: { roomId: string; playerName: string; team: 1 | 2 }) => {
-      // Reject if another connected socket already owns this nickname
-      if (isNicknameTaken(playerName, socket.id)) {
-        socket.emit("join_rejected", { reason: `Nickname "${playerName}" is already in use by another player.` });
-        return;
-      }
-
-      // Register the nickname before doing anything else
-      activeNicknames.set(playerName.trim().toLowerCase(), socket.id);
-
-      socket.join(roomId);
-      socket.data.roomId = roomId;
-      socket.data.playerName = playerName;
-      socket.data.team = team;
-
-      // Get or create game state
+      // Load game state early — needed for reconnect detection
       if (!gameStates.has(roomId)) {
         try {
           const [room] = await db.select().from(roomsTable).where(eq(roomsTable.id, roomId));
@@ -193,12 +190,62 @@ export function setupSocketHandlers(io: SocketServer) {
         }
       }
 
-      // Cancel any pending deletion for this room (player is rejoining)
+      const state = gameStates.get(roomId);
+
+      // Detect reconnection: same player name already holds a slot in this room
+      const nameKey = playerName.trim().toLowerCase();
+      const existingSocketId = activeNicknames.get(nameKey);
+      const existingPlayer = existingSocketId && state ? state.players.get(existingSocketId) : null;
+      const isReconnect = !!existingPlayer && existingPlayer.name === playerName;
+
+      if (!isReconnect) {
+        // Normal join: reject if nickname is taken by a different active session
+        if (isNicknameTaken(playerName, socket.id)) {
+          socket.emit("join_rejected", { reason: `Nickname "${playerName}" is already in use by another player.` });
+          return;
+        }
+      }
+
+      // Point the nickname to the new socket
+      activeNicknames.set(nameKey, socket.id);
+
+      socket.join(roomId);
+      socket.data.roomId = roomId;
+      socket.data.playerName = playerName;
+      socket.data.team = team;
+
+      // Cancel any pending room deletion (someone is back)
       cancelRoomDeletion(roomId);
 
-      const state = gameStates.get(roomId);
+      if (isReconnect && existingSocketId && state && existingPlayer) {
+        // ── Reconnection path ────────────────────────────────────────────
+        // Cancel the per-player grace timer so they aren't removed later
+        clearPlayerDisconnectTimer(existingSocketId);
+
+        // Swap the old socket ID for the new one in the player map
+        state.players.delete(existingSocketId);
+        existingPlayer.id = socket.id;
+        state.players.set(socket.id, existingPlayer);
+
+        console.log(`${playerName} reconnected to ${roomId} (${existingSocketId} → ${socket.id})`);
+
+        // Re-sync state to the reconnecting socket only
+        const recent = await db.select().from(chatMessagesTable)
+          .where(eq(chatMessagesTable.roomId, roomId))
+          .limit(50);
+        socket.emit("chat_history", recent.map(m => ({
+          playerName: m.playerName,
+          message: m.message,
+          createdAt: m.createdAt.toISOString(),
+        })));
+        socket.emit("game_state", serializeGameState(state));
+        // Don't broadcast player_joined — from everyone else's perspective they never left
+        return;
+      }
+
+      // ── Normal (first-time) join path ────────────────────────────────
       if (state) {
-        const isHost = state.players.size === 0;
+        const isHost = !Array.from(state.players.values()).some(p => p.isHost);
         state.players.set(socket.id, {
           id: socket.id,
           name: playerName,
@@ -206,12 +253,10 @@ export function setupSocketHandlers(io: SocketServer) {
           isHost,
         });
 
-        // Update player count in DB
         await db.update(roomsTable)
           .set({ playerCount: state.players.size })
           .where(eq(roomsTable.id, roomId));
 
-        // Send recent chat history
         const recent = await db.select().from(chatMessagesTable)
           .where(eq(chatMessagesTable.roomId, roomId))
           .limit(50);
@@ -471,9 +516,11 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player?.isHost) return;
 
       for (const [sid, p] of state.players.entries()) {
+        clearPlayerDisconnectTimer(sid);
         const key = p.name.trim().toLowerCase();
         if (activeNicknames.get(key) === sid) activeNicknames.delete(key);
       }
+      cancelRoomDeletion(roomId);
       gameStates.delete(roomId);
       try {
         await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
@@ -486,22 +533,41 @@ export function setupSocketHandlers(io: SocketServer) {
     });
 
     socket.on("leave_room", async ({ roomId }: { roomId: string }) => {
+      clearPlayerDisconnectTimer(socket.id);
       await handlePlayerLeave(io, socket, roomId);
       socket.leave(roomId);
       socket.data.roomId = null;
     });
 
-    socket.on("disconnect", async () => {
+    socket.on("disconnect", () => {
       const { roomId, playerName } = socket.data;
       if (!roomId) {
-        // Player disconnected without ever joining a room – still clean up nickname
+        // Never joined a room — clean up nickname immediately
         if (playerName) {
           const key = (playerName as string).trim().toLowerCase();
           if (activeNicknames.get(key) === socket.id) activeNicknames.delete(key);
         }
         return;
       }
-      await handlePlayerLeave(io, socket, roomId);
+
+      const state = gameStates.get(roomId);
+      if (!state || !state.players.has(socket.id)) {
+        // Not tracked in state — clean up nickname immediately
+        if (playerName) {
+          const key = (playerName as string).trim().toLowerCase();
+          if (activeNicknames.get(key) === socket.id) activeNicknames.delete(key);
+        }
+        return;
+      }
+
+      // Start a 30-minute grace window — player keeps their slot while reconnecting
+      console.log(`Socket ${socket.id} (${playerName}) disconnected from ${roomId} — grace timer started`);
+      const timer = setTimeout(async () => {
+        playerDisconnectTimers.delete(socket.id);
+        console.log(`Grace timer expired for ${playerName} in ${roomId} — removing player`);
+        await handlePlayerLeave(io, socket, roomId);
+      }, PLAYER_DISCONNECT_GRACE_MS);
+      playerDisconnectTimers.set(socket.id, timer);
     });
   });
 }
@@ -529,20 +595,9 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
     if (state.players.size === 0) {
       clearFaceoffAnswerTimer(roomId);
       clearAnswerTimer(roomId);
-      if (state.status === "waiting" || state.status === "finished") {
-        // No game in progress — delete immediately
-        cancelRoomDeletion(roomId);
-        gameStates.delete(roomId);
-        try {
-          await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
-          await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
-        } catch (err) {
-          // ignore
-        }
-      } else {
-        // Game was active — keep state alive so players can reconnect
-        scheduleRoomDeletion(roomId);
-      }
+      // Room is now empty — schedule deletion regardless of game status.
+      // This gives the last player a 15-minute window to reconnect before the room is cleaned up.
+      scheduleRoomDeletion(roomId);
     } else {
       // If departing player was the designated faceoff guesser, reassign immediately
       if (state.status === "faceoff" && departing && state.faceoffDesignatedPlayerId === departing.id) {

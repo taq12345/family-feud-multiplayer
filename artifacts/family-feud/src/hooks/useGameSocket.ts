@@ -94,12 +94,24 @@ export function useGameSocket(
       socket.on(event, handler as (...args: unknown[]) => void);
     });
 
-    socket.emit("join_room", { roomId, playerName, team });
+    // Re-emit join_room on every connect (covers initial connect + automatic reconnects).
+    // The server detects whether this is a fresh join or a session restoration.
+    const handleConnect = () => {
+      socket.emit("join_room", { roomId, playerName, team });
+    };
+
+    socket.on("connect", handleConnect);
+
+    // If already connected, emit immediately
+    if (socket.connected) {
+      socket.emit("join_room", { roomId, playerName, team });
+    }
 
     return () => {
       Object.entries(handlers).forEach(([event, handler]) => {
         socket.off(event, handler as (...args: unknown[]) => void);
       });
+      socket.off("connect", handleConnect);
     };
   }, [roomId, playerName, team]);
 

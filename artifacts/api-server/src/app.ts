@@ -21,6 +21,8 @@ const io = new SocketServer(httpServer, {
     methods: ["GET", "POST"],
   },
   path: "/api/socket.io",
+  pingInterval: 25000,
+  pingTimeout: 60000,
 });
 
 setupSocketHandlers(io);
