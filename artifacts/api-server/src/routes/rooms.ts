@@ -51,7 +51,7 @@ router.post("/rooms", async (req, res) => {
       hostName,
       team1Name,
       team2Name,
-      maxPlayers: 10,
+      maxPlayers: Math.min(10, Math.max(2, Number(maxPlayers) || 10)),
       totalRounds: totalRounds ?? 5,
       status: "waiting",
       playerCount: 0,

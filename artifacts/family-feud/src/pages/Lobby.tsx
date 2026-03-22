@@ -103,6 +103,7 @@ export default function Lobby() {
     team1Name: "Team 1",
     team2Name: "Team 2",
     totalRounds: 5,
+    maxPlayers: 10,
   });
 
   const loadRooms = useCallback(async () => {
@@ -141,7 +142,7 @@ export default function Lobby() {
     try {
       const taken = await checkNickname(nickname);
       if (taken) { setCreateError(`Nickname "${nickname}" is already in use. Change it first.`); return; }
-      const room = await createRoomApi({ ...form, hostName: nickname, maxPlayers: 10 });
+      const room = await createRoomApi({ ...form, hostName: nickname });
       localStorage.setItem("playerName", nickname);
       setCreateOpen(false);
       setLocation(`/room/${room.id}?name=${encodeURIComponent(nickname)}&team=1`);
@@ -290,16 +291,33 @@ export default function Lobby() {
                     />
                   </div>
                   <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm text-amber-300/80">
-                    Hosting as <span className="font-bold text-amber-400">{nickname}</span> · Max 10 players per room
+                    Hosting as <span className="font-bold text-amber-400">{nickname}</span>
                   </div>
-                  <div>
-                    <Label className="text-slate-300 text-sm font-medium">Number of Rounds</Label>
-                    <Input
-                      type="number" min={1} max={10}
-                      value={form.totalRounds}
-                      onChange={e => setForm(f => ({ ...f, totalRounds: parseInt(e.target.value) || 5 }))}
-                      className="mt-1 bg-white/5 border-white/10 text-white focus:border-amber-500/50"
-                    />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-slate-300 text-sm font-medium">Number of Rounds</Label>
+                      <select
+                        value={form.totalRounds}
+                        onChange={e => setForm(f => ({ ...f, totalRounds: parseInt(e.target.value) }))}
+                        className="mt-1 w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-amber-500/50"
+                      >
+                        {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                          <option key={n} value={n} className="bg-[#0d1525]">{n} round{n !== 1 ? "s" : ""}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-slate-300 text-sm font-medium">Max Players</Label>
+                      <select
+                        value={form.maxPlayers}
+                        onChange={e => setForm(f => ({ ...f, maxPlayers: parseInt(e.target.value) }))}
+                        className="mt-1 w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-amber-500/50"
+                      >
+                        {[2,3,4,5,6,7,8,9,10].map(n => (
+                          <option key={n} value={n} className="bg-[#0d1525]">{n} players</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                   {createError && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{createError}</p>}
                   <Button
