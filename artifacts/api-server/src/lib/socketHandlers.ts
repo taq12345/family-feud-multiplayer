@@ -140,8 +140,9 @@ function pickPlayingDesignatedPlayer(state: GameState, team: 1 | 2): string | nu
   return teamPlayers[0]?.id ?? null;
 }
 
-function initPlayingTurn(state: GameState, team: 1 | 2) {
+function initPlayingTurn(state: GameState, team: 1 | 2, excludePlayerId?: string) {
   state.playingUsedPlayerIds = new Set();
+  if (excludePlayerId) state.playingUsedPlayerIds.add(excludePlayerId);
   state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, team);
 }
 
@@ -430,7 +431,7 @@ export function setupSocketHandlers(io: SocketServer) {
           state.playingTeam = player.team;
           state.roundPoints += state.currentQuestion.answers[matchIndex].points;
           state.status = "playing";
-          initPlayingTurn(state, player.team);
+          initPlayingTurn(state, player.team, player.id);
 
           io.to(roomId).emit("answer_correct", {
             playerName: player.name,
