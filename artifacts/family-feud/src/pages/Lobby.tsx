@@ -98,6 +98,17 @@ export default function Lobby() {
     }
   }, []);
 
+  // Auto-open join dialog when arriving via an invite link (?join=ROOM_ID)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const inviteRoomId = params.get("join");
+    if (inviteRoomId) {
+      window.history.replaceState({}, "", window.location.pathname);
+      handleJoin(inviteRoomId);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [form, setForm] = useState({
     name: "",
     team1Name: "Team 1",

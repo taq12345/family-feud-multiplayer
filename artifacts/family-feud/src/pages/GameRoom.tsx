@@ -5,7 +5,7 @@ import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
-import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
+import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
@@ -170,6 +170,7 @@ export default function GameRoom() {
   const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
   const [unreadChats, setUnreadChats] = useState(0);
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
@@ -458,6 +459,29 @@ export default function GameRoom() {
             <span className="text-xs text-slate-400">{gameState.players.length}</span>
             {isHost && <Crown className="w-3 h-3 text-amber-400 ml-0.5" />}
           </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => {
+                  playClickSound();
+                  const url = `${window.location.origin}${import.meta.env.BASE_URL}?join=${roomId}`;
+                  navigator.clipboard.writeText(url).then(() => {
+                    setShareCopied(true);
+                    setTimeout(() => setShareCopied(false), 2000);
+                  });
+                }}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all text-xs font-medium ${
+                  shareCopied
+                    ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
+                    : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {shareCopied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+                <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Invite"}</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Copy invite link</TooltipContent>
+          </Tooltip>
           {isHost && (
             <button
               onClick={() => { playClickSound(); setDeleteConfirmOpen(true); }}
