@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { playClickSound } from "../lib/sounds";
@@ -89,6 +89,8 @@ export default function Lobby() {
   const [changeNicknameLoading, setChangeNicknameLoading] = useState(false);
 
   const [kickedMessage, setKickedMessage] = useState<string | null>(null);
+  // Holds the room ID from an invite link so we can open the join dialog AFTER the user sets a nickname
+  const pendingInviteRoomId = useRef<string | null>(null);
 
   useEffect(() => {
     const msg = sessionStorage.getItem("kickedMessage");
@@ -102,9 +104,14 @@ export default function Lobby() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const inviteRoomId = params.get("join");
-    if (inviteRoomId) {
-      window.history.replaceState({}, "", window.location.pathname);
+    if (!inviteRoomId) return;
+    window.history.replaceState({}, "", window.location.pathname);
+    if (localStorage.getItem("playerName")) {
+      // Existing user — open join dialog immediately
       handleJoin(inviteRoomId);
+    } else {
+      // New user — wait until they set a nickname, then open join dialog
+      pendingInviteRoomId.current = inviteRoomId;
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -595,6 +602,10 @@ export default function Lobby() {
                     setNickname(trimmed);
                     localStorage.setItem("playerName", trimmed);
                     setNicknameDialogOpen(false);
+                    if (pendingInviteRoomId.current) {
+                      handleJoin(pendingInviteRoomId.current);
+                      pendingInviteRoomId.current = null;
+                    }
                   }
                 }}
                 className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20 h-11"
@@ -613,6 +624,10 @@ export default function Lobby() {
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
                 setNicknameDialogOpen(false);
+                if (pendingInviteRoomId.current) {
+                  handleJoin(pendingInviteRoomId.current);
+                  pendingInviteRoomId.current = null;
+                }
               }}
             >
               Let's Play →
