@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
-import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound } from "../lib/sounds";
+import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
@@ -204,8 +204,14 @@ export default function GameRoom() {
         setUnreadChats(prev => mobileTab === "game" ? prev + 1 : 0);
       },
       onChatHistory: (msgs) => setChatMessages(msgs),
-      onPlayerJoined: (data) => showNotification(`${data.playerName} joined Team ${data.team}`),
-      onPlayerLeft: (data) => showNotification(`${data.playerName} left the room`),
+      onPlayerJoined: (data) => {
+        playPlayerJoinSound();
+        showNotification(`${data.playerName} joined Team ${data.team}`);
+      },
+      onPlayerLeft: (data) => {
+        playPlayerLeaveSound();
+        showNotification(`${data.playerName} left the room`);
+      },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
         playCorrectSound();

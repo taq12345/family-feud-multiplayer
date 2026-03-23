@@ -52,6 +52,22 @@ export function playJoinSound(): void {
   playTone(ctx, "sine", 880, now + 0.27, 0.22, 0.20);
 }
 
+export function playPlayerJoinSound(): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  playTone(ctx, "sine", 523, now, 0.12, 0.18);
+  playTone(ctx, "sine", 784, now + 0.11, 0.16, 0.18);
+}
+
+export function playPlayerLeaveSound(): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  playTone(ctx, "sine", 784, now, 0.12, 0.15);
+  playTone(ctx, "sine", 440, now + 0.11, 0.18, 0.15, 330);
+}
+
 export function playBuzzerSound(): void {
   const ctx = getAudioContext();
   if (!ctx) return;
