@@ -8,6 +8,7 @@ import { findMatchIndex } from "./answerMatcher.js";
 const gameStates = new Map<string, GameState>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const faceoffAnswerTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const autoAdvanceTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Per-player disconnect grace timers (keyed by socket.id of the disconnected socket)
 const playerDisconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Records when each socket disconnected (socket.id → timestamp ms)
@@ -31,6 +32,7 @@ const FACEOFF_ANSWER_MS = 15 * 1000; // 15 seconds per faceoff guess
 const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
 
 async function deleteRoomNow(roomId: string) {
+  clearAutoAdvanceTimer(roomId);
   gameStates.delete(roomId);
   try {
     await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
@@ -63,6 +65,60 @@ function clearFaceoffAnswerTimer(roomId: string) {
     clearTimeout(existing);
     faceoffAnswerTimers.delete(roomId);
   }
+}
+
+function clearAutoAdvanceTimer(roomId: string) {
+  const existing = autoAdvanceTimers.get(roomId);
+  if (existing) {
+    clearTimeout(existing);
+    autoAdvanceTimers.delete(roomId);
+  }
+}
+
+const AUTO_ADVANCE_MS = 60 * 1000; // 60 seconds between rounds before auto-advancing
+
+async function advanceToNextRound(io: SocketServer, roomId: string) {
+  const state = gameStates.get(roomId);
+  if (!state || state.status !== "between_rounds") return;
+
+  // Don't advance if the game is over (last round done or out of questions)
+  if (state.currentRound >= state.totalRounds) return;
+
+  // Don't advance if a team is empty — the game would freeze at faceoff
+  const players = Array.from(state.players.values());
+  const team1Count = players.filter(p => p.team === 1).length;
+  const team2Count = players.filter(p => p.team === 2).length;
+  if (team1Count === 0 || team2Count === 0) return;
+
+  const question = getNextQuestion(state);
+  if (!question) return;
+
+  state.usedQuestionIds.add(question.id);
+  state.currentQuestion = question;
+  state.currentRound++;
+  state.status = "faceoff";
+  state.revealedAnswers = new Set();
+  state.strikes = 0;
+  state.roundPoints = 0;
+  state.playingTeam = null;
+  state.faceoffWinner = null;
+  initFaceoff(state, state.currentRound % 2 === 1 ? 1 : 2);
+  startFaceoffAnswerTimer(io, roomId);
+
+  try {
+    await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
+  } catch { /* ignore */ }
+
+  io.to(roomId).emit("game_state", serializeGameState(state));
+}
+
+function scheduleAutoAdvance(io: SocketServer, roomId: string) {
+  clearAutoAdvanceTimer(roomId);
+  const timer = setTimeout(async () => {
+    autoAdvanceTimers.delete(roomId);
+    await advanceToNextRound(io, roomId);
+  }, AUTO_ADVANCE_MS);
+  autoAdvanceTimers.set(roomId, timer);
 }
 
 async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: string) {
@@ -581,41 +637,9 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!state || state.status !== "between_rounds") return;
       const player = state.players.get(socket.id);
       if (!player?.isHost) return;
-
-      // Both teams must have at least one player before starting a new round
-      const players = Array.from(state.players.values());
-      const team1Count = players.filter(p => p.team === 1).length;
-      const team2Count = players.filter(p => p.team === 2).length;
-      if (team1Count === 0 || team2Count === 0) return;
-
-      if (state.currentRound >= state.totalRounds) {
-        // All rounds done — stay on between_rounds so host can start a new game
-        io.to(roomId).emit("game_state", serializeGameState(state));
-        return;
-      }
-
-      const question = getNextQuestion(state);
-      if (!question) {
-        // No more questions — stay on between_rounds so host can start a new game
-        io.to(roomId).emit("game_state", serializeGameState(state));
-        return;
-      }
-
-      state.usedQuestionIds.add(question.id);
-      state.currentQuestion = question;
-      state.currentRound++;
-      state.status = "faceoff";
-      state.revealedAnswers = new Set();
-      state.strikes = 0;
-      state.roundPoints = 0;
-      state.playingTeam = null;
-      state.faceoffWinner = null;
-      initFaceoff(state, state.currentRound % 2 === 1 ? 1 : 2);
-      startFaceoffAnswerTimer(io, roomId);
-
-      await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
-
-      io.to(roomId).emit("game_state", serializeGameState(state));
+      // Cancel the auto-advance timer — host is manually advancing
+      clearAutoAdvanceTimer(roomId);
+      await advanceToNextRound(io, roomId);
     });
 
     socket.on("delete_room", async ({ roomId }: { roomId: string }) => {
@@ -624,6 +648,7 @@ export function setupSocketHandlers(io: SocketServer) {
       const player = state.players.get(socket.id);
       if (!player?.isHost) return;
 
+      clearAutoAdvanceTimer(roomId);
       for (const [sid, p] of state.players.entries()) {
         clearPlayerDisconnectTimer(sid);
         const key = p.name.trim().toLowerCase();
@@ -847,6 +872,15 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
     team2Score: state.team2Score,
   });
   io.to(roomId).emit("game_state", serializeGameState(state));
+
+  // Auto-advance to next round if host doesn't click within 60 seconds.
+  // Only schedule if there are more rounds to play and both teams have players.
+  const players = Array.from(state.players.values());
+  const hasTeam1 = players.some(p => p.team === 1);
+  const hasTeam2 = players.some(p => p.team === 2);
+  if (state.currentRound < state.totalRounds && hasTeam1 && hasTeam2) {
+    scheduleAutoAdvance(io, roomId);
+  }
 }
 
 export function getRoomPlayers(roomId: string) {
