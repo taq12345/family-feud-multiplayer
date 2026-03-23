@@ -352,6 +352,21 @@ export default function Lobby() {
 
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
+        <div className="mb-6">
+          <a
+            href="https://www.patreon.com/cw/talhaqureshi"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => playClickSound()}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FF424D]/10 hover:bg-[#FF424D]/20 border border-[#FF424D]/30 hover:border-[#FF424D]/50 text-[#FF424D] font-semibold text-sm transition-all shadow-[0_0_16px_rgba(255,66,77,0.15)] hover:shadow-[0_0_24px_rgba(255,66,77,0.25)]"
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current shrink-0" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21M2 21.6h3.5V2.41H2V21.6z"/>
+            </svg>
+            Help out a friend :)
+          </a>
+        </div>
+
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <Users className="w-5 h-5 text-slate-400" />
