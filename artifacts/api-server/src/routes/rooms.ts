@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { roomsTable } from "@workspace/db/schema";
-import { getRoomPlayers, isNicknameTaken } from "../lib/socketHandlers.js";
+import { getRoomPlayers, isNicknameTaken, getPlayerSlot } from "../lib/socketHandlers.js";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { surveyQuestions } from "../data/questions.js";
@@ -119,6 +119,13 @@ router.get("/rooms/:roomId/players", async (req, res) => {
 router.get("/nicknames/:name/check", (req, res) => {
   const { name } = req.params;
   res.json({ taken: isNicknameTaken(name) });
+});
+
+router.get("/player-slots", (req, res) => {
+  const nickname = req.query.nickname as string | undefined;
+  if (!nickname?.trim()) return res.status(400).json({ error: "nickname required" });
+  const slot = getPlayerSlot(nickname);
+  res.json(slot ?? null);
 });
 
 router.get("/questions", (_req, res) => {

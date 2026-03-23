@@ -87,6 +87,7 @@ export default function Lobby() {
   const [changeNicknameInput, setChangeNicknameInput] = useState("");
   const [changeNicknameError, setChangeNicknameError] = useState<string | null>(null);
   const [changeNicknameLoading, setChangeNicknameLoading] = useState(false);
+  const [reconnectSlot, setReconnectSlot] = useState<{ roomId: string; team: 1 | 2 } | null>(null);
 
   const [kickedMessage, setKickedMessage] = useState<string | null>(null);
   // Holds the room ID from an invite link so we can open the join dialog AFTER the user sets a nickname
@@ -150,6 +151,24 @@ export default function Lobby() {
     let cancelled = false;
     checkNickname(nickname).then(taken => { if (!cancelled) setIsInGame(taken); });
     return () => { cancelled = true; };
+  }, [nickname]);
+
+  // Poll for an existing player slot so we can show "Reconnect" on the matching room card.
+  useEffect(() => {
+    if (!nickname) { setReconnectSlot(null); return; }
+    let cancelled = false;
+    async function checkSlot() {
+      try {
+        const res = await fetch(`/api/player-slots?nickname=${encodeURIComponent(nickname)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setReconnectSlot(data); // null or { roomId, team }
+        }
+      } catch { /* ignore */ }
+    }
+    checkSlot();
+    const id = setInterval(checkSlot, 5000);
+    return () => { cancelled = true; clearInterval(id); };
   }, [nickname]);
 
   async function handleCreate(e: React.FormEvent) {
@@ -420,11 +439,16 @@ export default function Lobby() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {rooms.map((room: Room) => {
               const isFull = room.playerCount >= room.maxPlayers;
-              const canJoin = !isFull;
+              const isReconnectRoom = reconnectSlot?.roomId === room.id;
+              const canJoin = !isFull || isReconnectRoom;
               return (
                 <div
                   key={room.id}
-                  className="group relative rounded-2xl bg-white/[0.03] border border-white/8 hover:border-amber-500/30 hover:bg-white/[0.05] transition-all duration-300 overflow-hidden"
+                  className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    isReconnectRoom
+                      ? "bg-emerald-500/5 border-emerald-500/30 hover:border-emerald-400/50 hover:bg-emerald-500/8"
+                      : "bg-white/[0.03] border-white/8 hover:border-amber-500/30 hover:bg-white/[0.05]"
+                  }`}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   <div className="relative p-4 sm:p-5">
@@ -452,7 +476,7 @@ export default function Lobby() {
                       <div className="flex items-center gap-1">
                         <Users className="w-3 h-3" />
                         {room.playerCount}/{room.maxPlayers}
-                        {isFull && <Lock className="w-3 h-3 text-slate-600 ml-1" />}
+                        {isFull && !isReconnectRoom && <Lock className="w-3 h-3 text-slate-600 ml-1" />}
                       </div>
                       <div className="flex items-center gap-1">
                         <Trophy className="w-3 h-3" />
@@ -460,17 +484,29 @@ export default function Lobby() {
                       </div>
                     </div>
 
-                    <Button
-                      className={`w-full font-bold border-0 transition-all ${
-                        canJoin
-                          ? "bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black shadow-[0_0_15px_rgba(251,191,36,0.25)] hover:shadow-[0_0_25px_rgba(251,191,36,0.4)]"
-                          : "bg-white/5 text-slate-500 cursor-not-allowed"
-                      }`}
-                      disabled={!canJoin}
-                      onClick={() => handleJoin(room.id)}
-                    >
-                      {isFull ? "Room Full" : "Join Game →"}
-                    </Button>
+                    {isReconnectRoom ? (
+                      <Button
+                        className="w-full font-bold border-0 transition-all bg-gradient-to-br from-emerald-400 to-emerald-600 hover:from-emerald-300 hover:to-emerald-500 text-black shadow-[0_0_15px_rgba(52,211,153,0.3)] hover:shadow-[0_0_25px_rgba(52,211,153,0.5)]"
+                        onClick={() => {
+                          playClickSound();
+                          setLocation(`/room/${room.id}?name=${encodeURIComponent(nickname)}&team=${reconnectSlot!.team}`);
+                        }}
+                      >
+                        ↩ Reconnect
+                      </Button>
+                    ) : (
+                      <Button
+                        className={`w-full font-bold border-0 transition-all ${
+                          canJoin
+                            ? "bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black shadow-[0_0_15px_rgba(251,191,36,0.25)] hover:shadow-[0_0_25px_rgba(251,191,36,0.4)]"
+                            : "bg-white/5 text-slate-500 cursor-not-allowed"
+                        }`}
+                        disabled={!canJoin}
+                        onClick={() => handleJoin(room.id)}
+                      >
+                        {isFull ? "Room Full" : "Join Game →"}
+                      </Button>
+                    )}
                   </div>
                 </div>
               );

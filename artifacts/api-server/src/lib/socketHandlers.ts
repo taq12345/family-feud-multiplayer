@@ -859,3 +859,15 @@ export function getRoomPlayers(roomId: string) {
     isHost: p.isHost,
   }));
 }
+
+export function getPlayerSlot(nickname: string): { roomId: string; team: 1 | 2 } | null {
+  const key = nickname.trim().toLowerCase();
+  for (const [roomId, state] of gameStates.entries()) {
+    for (const p of state.players.values()) {
+      if (p.name.trim().toLowerCase() === key) {
+        return { roomId, team: p.team };
+      }
+    }
+  }
+  return null;
+}
