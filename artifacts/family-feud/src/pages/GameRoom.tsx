@@ -168,6 +168,7 @@ export default function GameRoom() {
   const [notification, setNotification] = useState<string | null>(null);
   const [faceoffCountdown, setFaceoffCountdown] = useState<number | null>(null);
   const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
+  const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
@@ -346,6 +347,26 @@ export default function GameRoom() {
       return undefined;
     }
   }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName]);
+
+  // 60s auto-advance countdown shown during between_rounds (not on game over)
+  useEffect(() => {
+    if (!gameState) return;
+    const isGameOver = gameState.currentRound >= gameState.totalRounds;
+    if (gameState.status === "between_rounds" && !isGameOver) {
+      setAutoAdvanceCountdown(60);
+      const interval = setInterval(() => {
+        setAutoAdvanceCountdown(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) { clearInterval(interval); return 0; }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setAutoAdvanceCountdown(null);
+      return undefined;
+    }
+  }, [gameState?.status, gameState?.currentRound, gameState?.totalRounds]);
 
   function handleLeave() {
     leaveRoom();
@@ -802,7 +823,17 @@ export default function GameRoom() {
                       </p>
                     </>
                   ) : (
-                    <p className="text-white font-bold text-lg mb-4">Round Complete!</p>
+                    <>
+                      <p className="text-white font-bold text-lg mb-2">Round Complete!</p>
+                      {autoAdvanceCountdown !== null && (
+                        <p className="text-slate-500 text-xs mb-4">
+                          Next round starts automatically in{" "}
+                          <span className={`font-bold tabular-nums ${autoAdvanceCountdown <= 10 ? "text-amber-400" : "text-slate-400"}`}>
+                            {autoAdvanceCountdown}s
+                          </span>
+                        </p>
+                      )}
+                    </>
                   )}
                   {stealAttempt && (
                     <div className={`rounded-xl border px-4 py-3 mb-4 text-sm ${
