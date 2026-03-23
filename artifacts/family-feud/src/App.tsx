@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Lobby from "./pages/Lobby";
 import GameRoom from "./pages/GameRoom";
 import Rules from "./pages/Rules";
+import Feedback from "./pages/Feedback";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,6 +21,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Lobby} />
       <Route path="/rules" component={Rules} />
+      <Route path="/feedback" component={Feedback} />
       <Route path="/room/:roomId" component={GameRoom} />
       <Route>
         <div className="min-h-screen bg-blue-950 flex items-center justify-center text-white">
