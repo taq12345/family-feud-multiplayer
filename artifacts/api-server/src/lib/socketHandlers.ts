@@ -654,7 +654,13 @@ export function setupSocketHandlers(io: SocketServer) {
         return;
       }
 
-      // Start a 30-minute grace window — player keeps their slot while reconnecting
+      // Start a 30-minute grace window — player keeps their slot while reconnecting.
+      // Remove from activeNicknames immediately so the same player can re-enter via the lobby;
+      // the join_room reconnect logic (which uses gameStates) will restore their slot.
+      if (playerName) {
+        const key = (playerName as string).trim().toLowerCase();
+        if (activeNicknames.get(key) === socket.id) activeNicknames.delete(key);
+      }
       const disconnectedAt = Date.now();
       playerDisconnectTimes.set(socket.id, disconnectedAt);
       console.log(`Socket ${socket.id} (${playerName}) disconnected from ${roomId} — grace timer started`);
