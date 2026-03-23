@@ -633,6 +633,9 @@ export default function GameRoom() {
                       🎯 {gameState.playingDesignatedPlayerName === playerName
                         ? "Your turn to answer!"
                         : `${gameState.playingDesignatedPlayerName}'s turn to answer`}
+                      {roundCountdown !== null && (
+                        <span className="ml-2 text-xs opacity-70">({roundCountdown}s)</span>
+                      )}
                     </p>
                   </div>
                 )}
@@ -650,9 +653,6 @@ export default function GameRoom() {
                       {verifyingAnswer ? "…" : "Answer"}
                     </Button>
                   </form>
-                )}
-                {isMyTurnToPlay && roundCountdown !== null && (
-                  <p className="text-center text-xs text-amber-400/70">{roundCountdown}s remaining</p>
                 )}
                 {!isMyTurnToPlay && (
                   <div className="rounded-xl bg-white/[0.03] border border-white/8 py-3 px-4 text-center text-sm text-slate-500">
@@ -675,6 +675,9 @@ export default function GameRoom() {
                         ? "It's your steal attempt!"
                         : `${gameState.playingDesignatedPlayerName ?? "teammate"} gets the steal attempt`
                       : "Other team gets a steal chance!"}
+                    {roundCountdown !== null && (
+                      <span className="ml-2 text-xs opacity-70">({roundCountdown}s)</span>
+                    )}
                   </p>
                 </div>
                 {isMyTurnToPlay && (
@@ -691,9 +694,6 @@ export default function GameRoom() {
                       {verifyingAnswer ? "…" : "Steal!"}
                     </Button>
                   </form>
-                )}
-                {isMyTurnToPlay && roundCountdown !== null && (
-                  <p className="text-center text-xs text-orange-400/70">{roundCountdown}s remaining</p>
                 )}
               </div>
             )}
