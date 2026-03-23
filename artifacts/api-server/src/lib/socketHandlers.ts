@@ -567,6 +567,12 @@ export function setupSocketHandlers(io: SocketServer) {
       const player = state.players.get(socket.id);
       if (!player?.isHost) return;
 
+      // Both teams must have at least one player before starting a new round
+      const players = Array.from(state.players.values());
+      const team1Count = players.filter(p => p.team === 1).length;
+      const team2Count = players.filter(p => p.team === 2).length;
+      if (team1Count === 0 || team2Count === 0) return;
+
       if (state.currentRound >= state.totalRounds) {
         // All rounds done — stay on between_rounds so host can start a new game
         io.to(roomId).emit("game_state", serializeGameState(state));
