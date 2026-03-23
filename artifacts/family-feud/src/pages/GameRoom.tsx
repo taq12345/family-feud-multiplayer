@@ -591,20 +591,40 @@ export default function GameRoom() {
                   ))}
                 </div>
                 {isHost && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="flex justify-center">
-                        <Button
-                          onClick={startGame}
-                          disabled={!canStartGame}
-                          className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 disabled:opacity-40 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
-                        >
-                          <Zap className="w-4 h-4 mr-2" /> Start Game!
-                        </Button>
-                      </span>
-                    </TooltipTrigger>
-                    {!canStartGame && <TooltipContent side="top">{startGameTooltip}</TooltipContent>}
-                  </Tooltip>
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => {
+                        playClickSound();
+                        const url = `${window.location.origin}${import.meta.env.BASE_URL}?join=${roomId}`;
+                        navigator.clipboard.writeText(url).then(() => {
+                          setShareCopied(true);
+                          setTimeout(() => setShareCopied(false), 2000);
+                        });
+                      }}
+                      className={`flex items-center gap-2 px-5 h-11 rounded-lg border font-bold text-sm transition-all ${
+                        shareCopied
+                          ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400 shadow-[0_0_16px_rgba(52,211,153,0.2)]"
+                          : "bg-white/5 border-white/15 text-white hover:bg-white/10 hover:border-white/25"
+                      }`}
+                    >
+                      {shareCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                      {shareCopied ? "Link Copied!" : "Invite Players"}
+                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>
+                          <Button
+                            onClick={startGame}
+                            disabled={!canStartGame}
+                            className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 disabled:opacity-40 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
+                          >
+                            <Zap className="w-4 h-4 mr-2" /> Start Game!
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      {!canStartGame && <TooltipContent side="top">{startGameTooltip}</TooltipContent>}
+                    </Tooltip>
+                  </div>
                 )}
               </div>
             )}
