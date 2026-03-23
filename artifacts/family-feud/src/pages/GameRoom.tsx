@@ -677,11 +677,9 @@ export default function GameRoom() {
                 <div className="rounded-xl bg-orange-500/10 border border-orange-500/25 p-4 text-center">
                   <p className="text-orange-400 font-black text-xl">🎯 STEAL CHANCE!</p>
                   <p className="text-orange-300/70 text-sm mt-1">
-                    {isMyTeamStealing
-                      ? gameState.playingDesignatedPlayerName === playerName
-                        ? "It's your steal attempt!"
-                        : `${gameState.playingDesignatedPlayerName ?? "teammate"} gets the steal attempt`
-                      : "Other team gets a steal chance!"}
+                    {gameState.playingDesignatedPlayerName === playerName
+                      ? "It's your steal attempt!"
+                      : <><span className="text-orange-200 font-semibold">{gameState.playingDesignatedPlayerName ?? "teammate"}</span> gets the steal attempt</>}
                     {roundCountdown !== null && (
                       <span className="ml-2 text-xs opacity-70">({roundCountdown}s)</span>
                     )}
