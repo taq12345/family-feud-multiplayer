@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
-import { playClickSound } from "../lib/sounds";
+import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
@@ -173,6 +173,8 @@ export default function GameRoom() {
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const pendingWrongRef = useRef<{ answer: string; playerName: string } | null>(null);
+  const joinSoundPlayedRef = useRef(false);
+  const prevStatusRef = useRef<string | null>(null);
 
   const showNotification = useCallback((msg: string) => {
     setNotification(msg);
@@ -184,7 +186,13 @@ export default function GameRoom() {
     playerName,
     team,
     {
-      onGameState: setGameState,
+      onGameState: (state) => {
+        if (!joinSoundPlayedRef.current) {
+          joinSoundPlayedRef.current = true;
+          playJoinSound();
+        }
+        setGameState(state);
+      },
       onChatMessage: (msg) => {
         setChatMessages(prev => [...prev.slice(-99), msg]);
         setUnreadChats(prev => mobileTab === "game" ? prev + 1 : 0);
@@ -194,6 +202,7 @@ export default function GameRoom() {
       onPlayerLeft: (data) => showNotification(`${data.playerName} left the room`),
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
+        playCorrectSound();
         showNotification(`✅ ${data.playerName}: "${data.answerText}" — ${data.points} pts`);
         // Capture correct steal for the between-rounds summary
         if (gameState?.status === "stealing") {
@@ -202,6 +211,7 @@ export default function GameRoom() {
       },
       onAnswerWrong: (data) => {
         setVerifyingAnswer(false);
+        playBuzzerSound();
         pendingWrongRef.current = { answer: data.answer, playerName: data.playerName };
         // If no strike event arrives within 150ms (faceoff / failed steal), show simple toast
         setTimeout(() => {
@@ -224,7 +234,10 @@ export default function GameRoom() {
         }
       },
       onStealChance: (data) => showNotification(`🎯 Team ${data.team} gets a steal chance!`),
-      onRoundOver: (data) => showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`),
+      onRoundOver: (data) => {
+        playRoundEndSound();
+        showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`);
+      },
       onRoomDeleted: () => {
         showNotification("Room was deleted by host.");
         setTimeout(() => setLocation("/"), 800);
@@ -257,6 +270,15 @@ export default function GameRoom() {
   // Clear steal attempt summary when a new round's faceoff begins
   useEffect(() => {
     if (gameState?.status === "faceoff") setStealAttempt(null);
+  }, [gameState?.status]);
+
+  // Play round-start sound when status transitions TO faceoff (not on initial mount)
+  useEffect(() => {
+    const current = gameState?.status ?? null;
+    if (current === "faceoff" && prevStatusRef.current !== null && prevStatusRef.current !== "faceoff") {
+      playRoundStartSound();
+    }
+    prevStatusRef.current = current;
   }, [gameState?.status]);
 
   // 15s faceoff countdown — visible to ALL players; restarts whenever the designated player changes
