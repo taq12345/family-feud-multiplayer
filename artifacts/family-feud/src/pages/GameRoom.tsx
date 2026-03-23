@@ -180,6 +180,7 @@ export default function GameRoom() {
   const pendingWrongRef = useRef<{ answer: string; playerName: string } | null>(null);
   const joinSoundPlayedRef = useRef(false);
   const prevStatusRef = useRef<string | null>(null);
+  const answerInputRef = useRef<HTMLInputElement>(null);
 
   const showNotification = useCallback((msg: string) => {
     setNotification(msg);
@@ -367,6 +368,13 @@ export default function GameRoom() {
       return undefined;
     }
   }, [gameState?.status, gameState?.currentRound, gameState?.totalRounds]);
+
+  // Auto-focus the answer box whenever it becomes this player's turn
+  useEffect(() => {
+    if (isMyTurnToFaceoff || isMyTurnToPlay) {
+      setTimeout(() => answerInputRef.current?.focus(), 50);
+    }
+  }, [isMyTurnToFaceoff, isMyTurnToPlay]);
 
   function handleLeave() {
     leaveRoom();
@@ -685,6 +693,7 @@ export default function GameRoom() {
                 {isMyTurnToFaceoff && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
+                      ref={answerInputRef}
                       placeholder="Give your answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
@@ -743,6 +752,7 @@ export default function GameRoom() {
                 {isMyTurnToPlay && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
+                      ref={answerInputRef}
                       placeholder="Your answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
@@ -782,6 +792,7 @@ export default function GameRoom() {
                 {isMyTurnToPlay && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
+                      ref={answerInputRef}
                       placeholder="Your steal answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
