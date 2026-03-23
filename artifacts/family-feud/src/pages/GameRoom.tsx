@@ -33,22 +33,22 @@ function AnswerBoard({ question, answers }: {
   answers: Array<{ text: string | null; points: number | null; revealed: boolean; index: number }>;
 }) {
   return (
-    <div className="rounded-2xl bg-white/[0.03] border border-amber-500/25 shadow-[0_0_30px_rgba(251,191,36,0.08)] overflow-hidden">
-      <div className="bg-gradient-to-r from-amber-500/15 to-amber-600/10 border-b border-amber-500/20 px-4 py-3 text-center">
-        <p className="text-amber-300 font-bold text-base sm:text-lg leading-snug">{question}</p>
+    <div className="h-full flex flex-col rounded-2xl bg-white/[0.03] border border-amber-500/25 shadow-[0_0_30px_rgba(251,191,36,0.08)] overflow-hidden">
+      <div className="shrink-0 bg-gradient-to-r from-amber-500/15 to-amber-600/10 border-b border-amber-500/20 px-4 py-2 text-center">
+        <p className="text-amber-300 font-bold text-sm sm:text-base leading-snug">{question}</p>
       </div>
-      <div className="p-3 grid gap-1.5">
+      <div className="flex-1 min-h-0 overflow-y-auto p-2 grid gap-1 content-start">
         {answers.map((a, i) => (
           <div
             key={i}
-            className={`flex items-center justify-between px-3 py-2.5 rounded-xl border transition-all duration-500 ${
+            className={`flex items-center justify-between px-3 py-2 rounded-xl border transition-all duration-500 ${
               a.revealed
                 ? "bg-blue-500/20 border-blue-400/40 shadow-[0_0_12px_rgba(96,165,250,0.2)]"
                 : "bg-white/[0.03] border-white/8"
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center shrink-0 transition-all ${
+              <div className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center shrink-0 transition-all ${
                 a.revealed
                   ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_8px_rgba(251,191,36,0.4)]"
                   : "bg-white/10 text-slate-500"
@@ -59,7 +59,7 @@ function AnswerBoard({ question, answers }: {
                 {a.revealed ? a.text : "— — — — —"}
               </span>
             </div>
-            <div className={`text-base font-bold ${a.revealed ? "text-amber-400" : "text-transparent"}`}>
+            <div className={`text-sm font-bold ${a.revealed ? "text-amber-400" : "text-transparent"}`}>
               {a.revealed ? a.points : "0"}
             </div>
           </div>
@@ -76,7 +76,7 @@ function TeamRoster({ players, team1Name, team2Name, myName }: {
   const t1 = players.filter(p => p.team === 1);
   const t2 = players.filter(p => p.team === 2);
   return (
-    <div className="grid grid-cols-2 gap-2 mb-3">
+    <div className="grid grid-cols-2 gap-2 shrink-0">
       {([1, 2] as const).map(team => {
         const members = team === 1 ? t1 : t2;
         const name = team === 1 ? team1Name : team2Name;
@@ -108,7 +108,7 @@ function ScoreBoard({ team1Name, team2Name, team1Score, team2Score, playingTeam,
   playingTeam: 1 | 2 | null; roundPoints: number;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2 mb-4">
+    <div className="grid grid-cols-3 gap-2 shrink-0">
       <div className={`rounded-2xl p-3 text-center border transition-all duration-300 ${
         playingTeam === 1
           ? "bg-rose-500/20 border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.2)]"
@@ -478,10 +478,10 @@ export default function GameRoom() {
 
       <div className="flex flex-1 overflow-hidden relative z-10">
         {/* Main game area */}
-        <div className={`flex-1 overflow-y-auto p-3 md:p-4 space-y-3 ${mobileTab === "chat" ? "hidden md:block" : "block"}`}>
+        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 overflow-hidden ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
           {/* Round info bar */}
-          <div className="flex items-center justify-center gap-3 py-1">
+          <div className="shrink-0 flex items-center justify-center gap-3 py-0.5">
             <span className="text-xs text-slate-500 font-medium">
               Round {gameState.currentRound}/{gameState.totalRounds}
             </span>
@@ -509,21 +509,23 @@ export default function GameRoom() {
 
           {/* Strikes */}
           {(gameState.status === "playing" || gameState.status === "stealing") && (
-            <div className="py-1">
+            <div className="shrink-0">
               <StrikeDisplay strikes={gameState.strikes} />
             </div>
           )}
 
-          {/* Answer board */}
+          {/* Answer board — grows to fill remaining space */}
           {gameState.currentQuestion && (
-            <AnswerBoard
-              question={gameState.currentQuestion.question}
-              answers={gameState.currentQuestion.answers}
-            />
+            <div className="flex-1 min-h-0">
+              <AnswerBoard
+                question={gameState.currentQuestion.question}
+                answers={gameState.currentQuestion.answers}
+              />
+            </div>
           )}
 
           {/* Game controls */}
-          <div className="space-y-2">
+          <div className="shrink-0 space-y-2">
 
             {/* Waiting to start */}
             {gameState.status === "waiting" && (
