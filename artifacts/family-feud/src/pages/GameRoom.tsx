@@ -319,9 +319,9 @@ export default function GameRoom() {
       : "Team 2 needs at least 1 player."
     : "";
 
-  // Local 15s countdown for normal/steal answers — only for the designated player; restarts on rotation
+  // Local 15s countdown for normal/steal answers — runs for all players; restarts on rotation
   useEffect(() => {
-    const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && isMyTurnToPlay;
+    const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && gameState.playingDesignatedPlayerName !== null;
     if (active) {
       setRoundCountdown(15);
       const interval = setInterval(() => {
@@ -336,7 +336,7 @@ export default function GameRoom() {
       setRoundCountdown(null);
       return undefined;
     }
-  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName, isMyTurnToPlay]);
+  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName]);
 
   function handleLeave() {
     leaveRoom();
