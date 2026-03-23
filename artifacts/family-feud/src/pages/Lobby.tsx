@@ -613,7 +613,7 @@ export default function Lobby() {
 
       {/* Nickname dialog */}
       <Dialog open={nicknameDialogOpen} onOpenChange={() => {}}>
-        <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
+        <DialogContent hideCloseButton className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
               Choose a Nickname
