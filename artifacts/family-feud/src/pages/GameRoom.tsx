@@ -208,6 +208,11 @@ export default function GameRoom() {
         setVerifyingAnswer(false);
         playCorrectSound();
         showNotification(`✅ ${data.playerName}: "${data.answerText}" — ${data.points} pts`);
+        // If the correct answer ended a face-off, announce which team will play
+        if (gameState?.status === "faceoff") {
+          const winningTeamName = data.team === 1 ? gameState.team1Name : gameState.team2Name;
+          setTimeout(() => showNotification(`🎉 ${winningTeamName} got the top answer and will play the round!`), 600);
+        }
         // Capture correct steal for the between-rounds summary
         if (gameState?.status === "stealing") {
           setStealAttempt({ playerName: data.playerName, answer: data.answerText, correct: true });
@@ -632,6 +637,11 @@ export default function GameRoom() {
             {/* Face-off */}
             {gameState.status === "faceoff" && (
               <div className="space-y-3">
+                {/* Phase description */}
+                <div className="rounded-xl bg-amber-500/8 border border-amber-500/20 px-4 py-2.5 text-center">
+                  <p className="text-amber-400 font-bold text-xs uppercase tracking-wider mb-0.5">⚡ Face-Off</p>
+                  <p className="text-slate-400 text-xs">One player per team guesses. First to name a top survey answer wins the round for their team!</p>
+                </div>
                 {/* Who is guessing banner */}
                 {gameState.faceoffDesignatedPlayerName ? (
                   <div className={`rounded-xl border p-3 text-center ${
@@ -681,6 +691,17 @@ export default function GameRoom() {
             {/* Playing */}
             {gameState.status === "playing" && (
               <div className="space-y-2">
+                {/* Phase description */}
+                <div className={`rounded-xl border px-4 py-2.5 text-center ${
+                  gameState.playingTeam === 1
+                    ? "bg-rose-500/8 border-rose-500/20"
+                    : "bg-blue-500/8 border-blue-500/20"
+                }`}>
+                  <p className={`font-bold text-xs uppercase tracking-wider mb-0.5 ${gameState.playingTeam === 1 ? "text-rose-400" : "text-blue-400"}`}>
+                    🏆 {gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} is Playing
+                  </p>
+                  <p className="text-slate-400 text-xs">Name all the survey answers to score points. 3 wrong answers and the other team gets a steal!</p>
+                </div>
                 {/* Who's turn banner */}
                 {gameState.playingDesignatedPlayerName && (
                   <div className={`rounded-xl border p-3 text-center ${
