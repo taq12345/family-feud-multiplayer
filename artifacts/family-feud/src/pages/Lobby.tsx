@@ -354,7 +354,7 @@ export default function Lobby() {
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
         <div className="mb-6">
           <a
-            href="https://www.patreon.com/cw/talhaqureshi"
+            href="https://www.patreon.com/cw/talhaqureshi/membership"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => playClickSound()}
@@ -363,7 +363,7 @@ export default function Lobby() {
             <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current shrink-0" xmlns="http://www.w3.org/2000/svg">
               <path d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21M2 21.6h3.5V2.41H2V21.6z"/>
             </svg>
-            Help out a friend :)
+            Consider supporting :)
           </a>
         </div>
 
