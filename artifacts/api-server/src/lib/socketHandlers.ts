@@ -238,10 +238,24 @@ export function setupSocketHandlers(io: SocketServer) {
         return;
       }
 
-      // Detect reconnection: same player name already holds a slot in this room
-      const existingSocketId = activeNicknames.get(nameKey);
-      const existingPlayer = existingSocketId && state ? state.players.get(existingSocketId) : null;
-      const isReconnect = !!existingPlayer && existingPlayer.name === playerName;
+      // Detect reconnection: same player name already holds a slot in this room.
+      // First check activeNicknames (covers active sessions); if that's empty (cleared on
+      // disconnect), fall back to scanning state.players by name so we still recognise the
+      // returning player and avoid inserting a duplicate entry.
+      let existingSocketId = activeNicknames.get(nameKey) ?? null;
+      let existingPlayer = existingSocketId && state ? (state.players.get(existingSocketId) ?? null) : null;
+
+      if (!existingPlayer && state) {
+        for (const [sid, p] of state.players.entries()) {
+          if (p.name.trim().toLowerCase() === nameKey) {
+            existingPlayer = p;
+            existingSocketId = sid;
+            break;
+          }
+        }
+      }
+
+      const isReconnect = !!existingPlayer;
 
       if (!isReconnect) {
         // Normal join: reject if nickname is taken by a different active session
