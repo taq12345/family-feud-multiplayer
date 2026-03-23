@@ -5,7 +5,7 @@ import { playClickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen } from "lucide-react";
 
 interface Room {
   id: string;
@@ -226,7 +226,7 @@ export default function Lobby() {
             </div>
             <div>
               <h1 className="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
-                Family Feud
+                Friendly Feud
               </h1>
               <p className="text-[10px] sm:text-xs text-slate-500 hidden sm:block font-medium tracking-wider uppercase">Online Multiplayer</p>
             </div>
@@ -260,6 +260,13 @@ export default function Lobby() {
                 </button>
               </span>
             )}
+            <button
+              onClick={() => { playClickSound(); setLocation("/rules"); }}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              title="How to Play"
+            >
+              <BookOpen className="w-4 h-4" />
+            </button>
             <button
               onClick={() => { playClickSound(); loadRooms(); }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"

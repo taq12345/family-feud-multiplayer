@@ -438,13 +438,21 @@ export default function GameRoom() {
             <Tv2 className="w-4 h-4 text-black" />
           </div>
           <span className="font-extrabold text-sm tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent hidden xs:inline uppercase">
-            Family Feud
+            Friendly Feud
           </span>
           <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-400 font-mono">
             {roomId}
           </span>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
+          {playerName && (
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+              <span className="text-xs text-slate-300">
+                Playing as <span className="font-semibold text-amber-400">{playerName}</span>
+              </span>
+            </div>
+          )}
           <div className="hidden xs:flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/10 mr-1">
             <Users className="w-3 h-3 text-slate-400" />
             <span className="text-xs text-slate-400">{gameState.players.length}</span>
