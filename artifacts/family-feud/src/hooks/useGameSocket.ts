@@ -66,8 +66,6 @@ export function useGameSocket(
     onHostChanged?: (data: { hostName: string }) => void;
     onFaceoffNoWinner?: () => void;
     onKickedInactive?: (data: { idleMinutes: number }) => void;
-    onPlayerDisconnected?: (data: { playerName: string }) => void;
-    onPlayerReconnected?: (data: { playerName: string }) => void;
   }
 ) {
   const callbacksRef = useRef(callbacks);
@@ -93,8 +91,6 @@ export function useGameSocket(
       host_changed: (data: { hostName: string }) => callbacksRef.current.onHostChanged?.(data),
       faceoff_no_winner: () => callbacksRef.current.onFaceoffNoWinner?.(),
       kicked_inactive: (data: { idleMinutes: number }) => callbacksRef.current.onKickedInactive?.(data),
-      player_disconnected: (data: { playerName: string }) => callbacksRef.current.onPlayerDisconnected?.(data),
-      player_reconnected: (data: { playerName: string }) => callbacksRef.current.onPlayerReconnected?.(data),
     };
 
     Object.entries(handlers).forEach(([event, handler]) => {

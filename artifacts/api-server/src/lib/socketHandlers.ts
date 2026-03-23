@@ -26,7 +26,7 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
   return existing !== excludeSocketId;
 }
 
-const PLAYER_DISCONNECT_GRACE_MS = 2 * 60 * 1000; // 2 minutes per-player reconnect window
+const PLAYER_DISCONNECT_GRACE_MS = 30 * 60 * 1000; // 30 minutes per-player reconnect window
 const FACEOFF_ANSWER_MS = 15 * 1000; // 15 seconds per faceoff guess
 const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
 
@@ -289,8 +289,7 @@ export function setupSocketHandlers(io: SocketServer) {
           createdAt: m.createdAt.toISOString(),
         })));
         socket.emit("game_state", serializeGameState(state));
-        // Notify others that this player is back (clears disconnected indicator)
-        io.to(roomId).emit("player_reconnected", { playerName });
+        // Don't broadcast player_joined — from everyone else's perspective they never left
         return;
       }
 
@@ -655,15 +654,13 @@ export function setupSocketHandlers(io: SocketServer) {
         return;
       }
 
-      // Start a 2-minute grace window — player keeps their slot while reconnecting.
+      // Start a 30-minute grace window — player keeps their slot while reconnecting.
       // Remove from activeNicknames immediately so the same player can re-enter via the lobby;
       // the join_room reconnect logic (which uses gameStates) will restore their slot.
       if (playerName) {
         const key = (playerName as string).trim().toLowerCase();
         if (activeNicknames.get(key) === socket.id) activeNicknames.delete(key);
       }
-      // Notify room so clients can show a disconnected indicator
-      io.to(roomId).emit("player_disconnected", { playerName });
       const disconnectedAt = Date.now();
       playerDisconnectTimes.set(socket.id, disconnectedAt);
       console.log(`Socket ${socket.id} (${playerName}) disconnected from ${roomId} — grace timer started`);

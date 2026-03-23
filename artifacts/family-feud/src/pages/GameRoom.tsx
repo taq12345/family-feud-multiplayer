@@ -69,10 +69,9 @@ function AnswerBoard({ question, answers }: {
   );
 }
 
-function TeamRoster({ players, team1Name, team2Name, activePlayerName, disconnectedPlayers }: {
+function TeamRoster({ players, team1Name, team2Name, activePlayerName }: {
   players: Array<{ name: string; team: 1 | 2; isHost: boolean }>;
   team1Name: string; team2Name: string; activePlayerName: string | null;
-  disconnectedPlayers: Set<string>;
 }) {
   const t1 = players.filter(p => p.team === 1);
   const t2 = players.filter(p => p.team === 2);
@@ -91,18 +90,11 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, disconnec
               {members.length === 0 && <div className="text-[10px] text-slate-600 italic">No players</div>}
               {members.map(p => {
                 const isActive = p.name === activePlayerName;
-                const isDisconnected = disconnectedPlayers.has(p.name);
                 return (
-                  <div key={p.name} className={`flex items-center gap-1.5 text-[11px] rounded-md px-1.5 py-0.5 transition-opacity ${
-                    isDisconnected ? "opacity-40" : isActive ? `border ${color.active}` : "text-slate-300"
-                  }`}>
-                    {isDisconnected
-                      ? <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-slate-500 animate-pulse" />
-                      : <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-40"}`} />
-                    }
-                    <span className={`truncate font-medium ${isDisconnected ? "text-slate-500" : ""}`}>{p.name}</span>
-                    {isDisconnected && <span className="ml-auto text-[9px] text-slate-500 shrink-0">away</span>}
-                    {!isDisconnected && p.isHost && <span className="ml-auto text-amber-400 text-[9px]">👑</span>}
+                  <div key={p.name} className={`flex items-center gap-1.5 text-[11px] rounded-md px-1.5 py-0.5 ${isActive ? `border ${color.active}` : "text-slate-300"}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-40"}`} />
+                    <span className="truncate font-medium">{p.name}</span>
+                    {p.isHost && <span className="ml-auto text-amber-400 text-[9px]">👑</span>}
                   </div>
                 );
               })}
@@ -179,7 +171,6 @@ export default function GameRoom() {
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
-  const [disconnectedPlayers, setDisconnectedPlayers] = useState<Set<string>>(new Set());
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
   const [unreadChats, setUnreadChats] = useState(0);
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
@@ -211,22 +202,8 @@ export default function GameRoom() {
         setUnreadChats(prev => mobileTab === "game" ? prev + 1 : 0);
       },
       onChatHistory: (msgs) => setChatMessages(msgs),
-      onPlayerJoined: (data) => {
-        setDisconnectedPlayers(prev => { const next = new Set(prev); next.delete(data.playerName); return next; });
-        showNotification(`${data.playerName} joined Team ${data.team}`);
-      },
-      onPlayerLeft: (data) => {
-        setDisconnectedPlayers(prev => { const next = new Set(prev); next.delete(data.playerName); return next; });
-        showNotification(`${data.playerName} left the room`);
-      },
-      onPlayerDisconnected: (data) => {
-        setDisconnectedPlayers(prev => new Set([...prev, data.playerName]));
-        showNotification(`${data.playerName} disconnected — 2 min to reconnect`);
-      },
-      onPlayerReconnected: (data) => {
-        setDisconnectedPlayers(prev => { const next = new Set(prev); next.delete(data.playerName); return next; });
-        showNotification(`${data.playerName} reconnected!`);
-      },
+      onPlayerJoined: (data) => showNotification(`${data.playerName} joined Team ${data.team}`),
+      onPlayerLeft: (data) => showNotification(`${data.playerName} left the room`),
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
         playCorrectSound();
@@ -566,7 +543,6 @@ export default function GameRoom() {
                 (gameState.status === "playing" || gameState.status === "stealing") ? gameState.playingDesignatedPlayerName :
                 null
               }
-              disconnectedPlayers={disconnectedPlayers}
             />
           )}
 
