@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
+import { playClickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
@@ -206,7 +207,7 @@ export default function Lobby() {
             <span className="text-amber-400 shrink-0">⏱</span>
             <span className="flex-1">{kickedMessage}</span>
             <button
-              onClick={() => setKickedMessage(null)}
+              onClick={() => { playClickSound(); setKickedMessage(null); }}
               className="shrink-0 text-slate-400 hover:text-white transition-colors"
               aria-label="Dismiss"
             >
@@ -247,6 +248,7 @@ export default function Lobby() {
               >
                 <button
                   onClick={() => {
+                    playClickSound();
                     setChangeNicknameInput("");
                     setChangeNicknameError(null);
                     setChangeNicknameOpen(true);
@@ -259,7 +261,7 @@ export default function Lobby() {
               </span>
             )}
             <button
-              onClick={loadRooms}
+              onClick={() => { playClickSound(); loadRooms(); }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Refresh"
             >
@@ -450,7 +452,7 @@ export default function Lobby() {
                     <button
                       key={t}
                       type="button"
-                      onClick={() => setJoinTeam(t as 1 | 2)}
+                      onClick={() => { playClickSound(); setJoinTeam(t as 1 | 2); }}
                       className={`p-3 rounded-xl border-2 transition-all text-left ${
                         isSelected && t === 1 ? "border-rose-500 bg-rose-500/15" :
                         isSelected && t === 2 ? "border-blue-500 bg-blue-500/15" :

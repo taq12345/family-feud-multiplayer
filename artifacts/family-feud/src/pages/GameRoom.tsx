@@ -3,6 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
+import { playClickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
@@ -426,7 +427,7 @@ export default function GameRoom() {
           </div>
           {isHost && (
             <button
-              onClick={() => setDeleteConfirmOpen(true)}
+              onClick={() => { playClickSound(); setDeleteConfirmOpen(true); }}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all text-xs font-medium"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -434,7 +435,7 @@ export default function GameRoom() {
             </button>
           )}
           <button
-            onClick={() => setLeaveConfirmOpen(true)}
+            onClick={() => { playClickSound(); setLeaveConfirmOpen(true); }}
             title="Leave Room"
             className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all text-xs font-semibold"
           >
@@ -782,7 +783,7 @@ export default function GameRoom() {
       {/* Mobile bottom tab bar */}
       <div className="md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10">
         <button
-          onClick={() => setMobileTab("game")}
+          onClick={() => { playClickSound(); setMobileTab("game"); }}
           className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs font-semibold transition-colors border-t-2 ${
             mobileTab === "game" ? "text-amber-400 border-amber-400" : "text-slate-500 border-transparent"
           }`}
@@ -791,7 +792,7 @@ export default function GameRoom() {
           Game
         </button>
         <button
-          onClick={() => { setMobileTab("chat"); setUnreadChats(0); }}
+          onClick={() => { playClickSound(); setMobileTab("chat"); setUnreadChats(0); }}
           className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs font-semibold transition-colors relative border-t-2 ${
             mobileTab === "chat" ? "text-amber-400 border-amber-400" : "text-slate-500 border-transparent"
           }`}
