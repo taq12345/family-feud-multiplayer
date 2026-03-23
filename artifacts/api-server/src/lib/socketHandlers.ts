@@ -28,8 +28,8 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
 }
 
 const PLAYER_DISCONNECT_GRACE_MS = 30 * 60 * 1000; // 30 minutes per-player reconnect window
-const FACEOFF_ANSWER_MS = 15 * 1000; // 15 seconds per faceoff guess
-const ROUND_ANSWER_MS = 15 * 1000; // 15 seconds per guess
+const FACEOFF_ANSWER_MS = 25 * 1000; // 25 seconds per faceoff guess
+const ROUND_ANSWER_MS = 25 * 1000; // 25 seconds per guess
 
 async function deleteRoomNow(roomId: string) {
   clearAutoAdvanceTimer(roomId);

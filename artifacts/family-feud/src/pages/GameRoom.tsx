@@ -298,10 +298,10 @@ export default function GameRoom() {
     prevStatusRef.current = current;
   }, [gameState?.status]);
 
-  // 15s faceoff countdown — visible to ALL players; restarts whenever the designated player changes
+  // 25s faceoff countdown — visible to ALL players; restarts whenever the designated player changes
   useEffect(() => {
     if (gameState?.status === "faceoff" && gameState?.faceoffDesignatedPlayerName) {
-      setFaceoffCountdown(15);
+      setFaceoffCountdown(25);
       const interval = setInterval(() => {
         setFaceoffCountdown(prev => {
           if (prev === null) return null;
@@ -336,11 +336,11 @@ export default function GameRoom() {
       : "Team 2 needs at least 1 player."
     : "";
 
-  // Local 15s countdown for normal/steal answers — runs for all players; restarts on rotation
+  // Local 25s countdown for normal/steal answers — runs for all players; restarts on rotation
   useEffect(() => {
     const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && gameState.playingDesignatedPlayerName !== null;
     if (active) {
-      setRoundCountdown(15);
+      setRoundCountdown(25);
       const interval = setInterval(() => {
         setRoundCountdown(prev => {
           if (prev === null) return null;
