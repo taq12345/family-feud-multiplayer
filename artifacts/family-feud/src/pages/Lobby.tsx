@@ -194,9 +194,16 @@ export default function Lobby() {
     setJoinRoomId(roomId);
     setJoinDialogOpen(true);
     setJoinRoomPlayers(null);
+    setJoinTeam(1);
     try {
       const res = await fetch(`/api/rooms/${roomId}/players`);
-      if (res.ok) setJoinRoomPlayers(await res.json());
+      if (res.ok) {
+        const players: Array<{ id: string; name: string; team: 1 | 2; isHost: boolean }> = await res.json();
+        setJoinRoomPlayers(players);
+        const team1Count = players.filter(p => p.team === 1).length;
+        const team2Count = players.filter(p => p.team === 2).length;
+        setJoinTeam(team2Count < team1Count ? 2 : 1);
+      }
     } catch { /* ignore */ }
   }
 
