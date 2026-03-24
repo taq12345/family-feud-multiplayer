@@ -680,24 +680,6 @@ export default function GameRoom() {
             {/* Face-off */}
             {gameState.status === "faceoff" && (
               <div className="space-y-3">
-                {/* Who is guessing banner */}
-                {gameState.faceoffDesignatedPlayerName ? (
-                  <div className={`rounded-xl border p-3 text-center ${
-                    gameState.faceoffTurn === 1
-                      ? "bg-rose-500/10 border-rose-500/25"
-                      : "bg-blue-500/10 border-blue-500/25"
-                  }`}>
-                    <p className={`font-bold text-sm ${gameState.faceoffTurn === 1 ? "text-rose-400" : "text-blue-400"}`}>
-                      🎯 {gameState.faceoffDesignatedPlayerName === playerName
-                        ? "Your turn to guess!"
-                        : `${gameState.faceoffDesignatedPlayerName}'s turn to guess`}
-                      {faceoffCountdown !== null && (
-                        <span className="ml-2 text-xs opacity-70">({faceoffCountdown}s)</span>
-                      )}
-                    </p>
-                  </div>
-                ) : null}
-
                 {/* Input: only for the designated player */}
                 {isMyTurnToFaceoff && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
@@ -715,6 +697,24 @@ export default function GameRoom() {
                     </Button>
                   </form>
                 )}
+
+                {/* Who is guessing banner */}
+                {gameState.faceoffDesignatedPlayerName ? (
+                  <div className={`rounded-xl border p-3 text-center ${
+                    gameState.faceoffTurn === 1
+                      ? "bg-rose-500/10 border-rose-500/25"
+                      : "bg-blue-500/10 border-blue-500/25"
+                  }`}>
+                    <p className={`font-bold text-sm ${gameState.faceoffTurn === 1 ? "text-rose-400" : "text-blue-400"}`}>
+                      🎯 {gameState.faceoffDesignatedPlayerName === playerName
+                        ? "Your turn to guess!"
+                        : `${gameState.faceoffDesignatedPlayerName}'s turn to guess`}
+                      {faceoffCountdown !== null && (
+                        <span className="ml-2 text-xs opacity-70">({faceoffCountdown}s)</span>
+                      )}
+                    </p>
+                  </div>
+                ) : null}
 
                 {/* Waiting message for others */}
                 {!isMyTurnToFaceoff && gameState.faceoffDesignatedPlayerName && (
@@ -736,6 +736,22 @@ export default function GameRoom() {
             {/* Playing */}
             {gameState.status === "playing" && (
               <div className="space-y-2">
+                {isMyTurnToPlay && (
+                  <form onSubmit={handleAnswer} className="flex gap-2">
+                    <Input
+                      ref={answerInputRef}
+                      placeholder="Your answer…"
+                      value={answerInput}
+                      onChange={e => setAnswerInput(e.target.value)}
+                      className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50 h-11"
+                      autoFocus
+                      disabled={verifyingAnswer}
+                    />
+                    <Button type="submit" disabled={verifyingAnswer} className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
+                      {verifyingAnswer ? "…" : "Answer"}
+                    </Button>
+                  </form>
+                )}
                 {/* Who's turn banner */}
                 {gameState.playingDesignatedPlayerName && (
                   <div className={`rounded-xl border p-3 text-center ${
@@ -752,22 +768,6 @@ export default function GameRoom() {
                       )}
                     </p>
                   </div>
-                )}
-                {isMyTurnToPlay && (
-                  <form onSubmit={handleAnswer} className="flex gap-2">
-                    <Input
-                      ref={answerInputRef}
-                      placeholder="Your answer…"
-                      value={answerInput}
-                      onChange={e => setAnswerInput(e.target.value)}
-                      className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50 h-11"
-                      autoFocus
-                      disabled={verifyingAnswer}
-                    />
-                    <Button type="submit" disabled={verifyingAnswer} className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
-                      {verifyingAnswer ? "…" : "Answer"}
-                    </Button>
-                  </form>
                 )}
                 {!isMyTurnToPlay && (
                   <div className="rounded-xl bg-white/[0.03] border border-white/8 py-3 px-4 text-center text-sm text-slate-500">
