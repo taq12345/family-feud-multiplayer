@@ -94,6 +94,33 @@ export function playRoundStartSound(): void {
   });
 }
 
+export function playApplauseSound(): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  // Simulate applause with rapid noise bursts that swell then fade
+  for (let i = 0; i < 18; i++) {
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 0.06, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let s = 0; s < data.length; s++) data[s] = (Math.random() * 2 - 1) * 0.8;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const gain = ctx.createGain();
+    src.connect(gain);
+    gain.connect(ctx.destination);
+    const t = now + i * 0.11;
+    const envelope = i < 9 ? (i + 1) / 9 : (18 - i) / 9;
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.linearRampToValueAtTime(0.22 * envelope, t + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+    src.start(t);
+    src.stop(t + 0.1);
+  }
+  // Triumphant fanfare on top
+  const fanfare = [523, 659, 784, 1047];
+  fanfare.forEach((freq, i) => playTone(ctx, "sine", freq, now + i * 0.13, 0.25, 0.18));
+}
+
 export function playRoundEndSound(): void {
   const ctx = getAudioContext();
   if (!ctx) return;

@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
-import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound } from "../lib/sounds";
+import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
@@ -318,6 +318,7 @@ export default function GameRoom() {
 
   const myPlayer = gameState?.players.find(p => p.name === playerName);
   const isHost = myPlayer?.isHost ?? false;
+  const myTeam = myPlayer?.team ?? null;
   const isMyTeamPlaying = gameState?.playingTeam === team;
   const isMyTeamStealing = gameState?.status === "stealing" && gameState?.playingTeam !== team;
   const isMyTurnToPlay = (gameState?.status === "playing" && isMyTeamPlaying &&
@@ -354,6 +355,13 @@ export default function GameRoom() {
       return undefined;
     }
   }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName]);
+
+  // Play applause when game-over screen first appears
+  useEffect(() => {
+    if (!gameState) return;
+    const isGameOver = gameState.status === "between_rounds" && gameState.currentRound >= gameState.totalRounds;
+    if (isGameOver) playApplauseSound();
+  }, [gameState?.status, gameState?.currentRound, gameState?.totalRounds]);
 
   // 60s auto-advance countdown shown during between_rounds (not on game over)
   useEffect(() => {
@@ -820,26 +828,37 @@ export default function GameRoom() {
               return (
                 <div className={`rounded-2xl p-6 text-center ${isGameOver ? "bg-white/[0.03] border border-amber-500/25" : "bg-white/[0.03] border border-white/8"}`}>
                   <Trophy className={`mx-auto mb-2 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] ${isGameOver ? "w-16 h-16 text-amber-400 mb-3 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]" : "w-12 h-12 text-amber-400"}`} />
-                  {isGameOver ? (
-                    <>
-                      <h2 className="text-2xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-4">GAME OVER!</h2>
-                      <div className="grid grid-cols-2 gap-3 mb-4">
-                        <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4">
-                          <div className="text-xs text-rose-400 font-semibold mb-1">{gameState.team1Name}</div>
-                          <div className="text-4xl font-black text-white">{gameState.team1Score}</div>
+                  {isGameOver ? (() => {
+                    const winningTeam = gameState.team1Score > gameState.team2Score ? 1
+                      : gameState.team2Score > gameState.team1Score ? 2
+                      : null;
+                    const iWon = myTeam !== null && winningTeam === myTeam;
+                    const isTie = winningTeam === null;
+                    return (
+                      <>
+                        {iWon ? (
+                          <h2 className="text-3xl font-black bg-gradient-to-r from-emerald-300 to-green-400 bg-clip-text text-transparent mb-4">YOU WIN! 🏆</h2>
+                        ) : isTie ? (
+                          <h2 className="text-2xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-4">IT'S A TIE!</h2>
+                        ) : (
+                          <h2 className="text-2xl font-black bg-gradient-to-r from-slate-300 to-slate-400 bg-clip-text text-transparent mb-4">GAME OVER</h2>
+                        )}
+                        <div className="grid grid-cols-2 gap-3 mb-4">
+                          <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4">
+                            <div className="text-xs text-rose-400 font-semibold mb-1">{gameState.team1Name}</div>
+                            <div className="text-4xl font-black text-white">{gameState.team1Score}</div>
+                          </div>
+                          <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
+                            <div className="text-xs text-blue-400 font-semibold mb-1">{gameState.team2Name}</div>
+                            <div className="text-4xl font-black text-white">{gameState.team2Score}</div>
+                          </div>
                         </div>
-                        <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
-                          <div className="text-xs text-blue-400 font-semibold mb-1">{gameState.team2Name}</div>
-                          <div className="text-4xl font-black text-white">{gameState.team2Score}</div>
-                        </div>
-                      </div>
-                      <p className="text-amber-400 font-bold text-lg mb-4">
-                        🏆 {gameState.team1Score > gameState.team2Score ? gameState.team1Name
-                          : gameState.team1Score < gameState.team2Score ? gameState.team2Name
-                          : "It's a tie"}{gameState.team1Score !== gameState.team2Score ? " wins!" : "!"}
-                      </p>
-                    </>
-                  ) : (
+                        <p className="text-amber-400 font-bold text-lg mb-4">
+                          🏆 {winningTeam === 1 ? gameState.team1Name : winningTeam === 2 ? gameState.team2Name : "It's a tie"}{winningTeam !== null ? " wins!" : "!"}
+                        </p>
+                      </>
+                    );
+                  })() : (
                     <>
                       <p className="text-white font-bold text-lg mb-2">Round Complete!</p>
                       {autoAdvanceCountdown !== null && (
