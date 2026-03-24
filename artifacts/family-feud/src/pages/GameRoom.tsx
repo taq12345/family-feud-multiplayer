@@ -216,7 +216,15 @@ export default function GameRoom() {
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
         playCorrectSound();
-        showNotification(`✅ ${data.playerName}: "${data.answerText}" — ${data.points} pts`);
+        const displayed = data.playedAnswer || data.answerText;
+        showNotification(`✅ ${data.playerName}: "${displayed}" — ${data.points} pts`);
+        // Synthetic chat message (italic, green)
+        setChatMessages(prev => [...prev.slice(-99), {
+          playerName: data.playerName,
+          message: `correctly guessed "${displayed}"`,
+          createdAt: new Date().toISOString(),
+          type: "system-correct" as const,
+        }]);
         // If the correct answer ended a face-off, announce which team will play
         if (gameState?.status === "faceoff") {
           const winningTeamName = data.team === 1 ? gameState.team1Name : gameState.team2Name;
@@ -224,12 +232,19 @@ export default function GameRoom() {
         }
         // Capture correct steal for the between-rounds summary
         if (gameState?.status === "stealing") {
-          setStealAttempt({ playerName: data.playerName, answer: data.answerText, correct: true });
+          setStealAttempt({ playerName: data.playerName, answer: displayed, correct: true });
         }
       },
       onAnswerWrong: (data) => {
         setVerifyingAnswer(false);
         playBuzzerSound();
+        // Synthetic chat message (italic, red) — pushed immediately so it's always visible
+        setChatMessages(prev => [...prev.slice(-99), {
+          playerName: data.playerName,
+          message: `wrongly guessed "${data.answer}"`,
+          createdAt: new Date().toISOString(),
+          type: "system-wrong" as const,
+        }]);
         pendingWrongRef.current = { answer: data.answer, playerName: data.playerName };
         // If no strike event arrives within 150ms (faceoff / failed steal), show simple toast
         setTimeout(() => {
@@ -958,6 +973,22 @@ export default function GameRoom() {
             {chatMessages.map((msg, i) => {
               const senderTeam = gameState?.players.find(p => p.name === msg.playerName)?.team;
               const nameColor = senderTeam === 1 ? "text-rose-400" : senderTeam === 2 ? "text-blue-400" : "text-slate-400";
+              if (msg.type === "system-correct") {
+                return (
+                  <div key={i} className="text-xs leading-relaxed italic">
+                    <span className={`font-bold ${nameColor}`}>{msg.playerName}</span>
+                    <span className="text-emerald-400 ml-1">{msg.message}</span>
+                  </div>
+                );
+              }
+              if (msg.type === "system-wrong") {
+                return (
+                  <div key={i} className="text-xs leading-relaxed italic">
+                    <span className={`font-bold ${nameColor}`}>{msg.playerName}</span>
+                    <span className="text-red-400 ml-1">{msg.message}</span>
+                  </div>
+                );
+              }
               return (
                 <div key={i} className="text-xs leading-relaxed">
                   <span className={`font-bold ${nameColor}`}>

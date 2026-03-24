@@ -44,6 +44,7 @@ export interface ChatMsg {
   playerName: string;
   message: string;
   createdAt: string;
+  type?: "system-correct" | "system-wrong";
 }
 
 export function useGameSocket(
@@ -56,7 +57,7 @@ export function useGameSocket(
     onChatHistory?: (msgs: ChatMsg[]) => void;
     onPlayerJoined?: (data: { playerName: string; team: 1 | 2 }) => void;
     onPlayerLeft?: (data: { playerName: string }) => void;
-    onAnswerCorrect?: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; points: number }) => void;
+    onAnswerCorrect?: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; playedAnswer: string; points: number }) => void;
     onAnswerWrong?: (data: { playerName: string; team: 1 | 2; answer: string }) => void;
     onStrike?: (data: { strikes: number }) => void;
     onStealChance?: (data: { team: 1 | 2 }) => void;
