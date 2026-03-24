@@ -133,6 +133,14 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
   state.status = "between_rounds";
   io.to(roomId).emit("faceoff_no_winner", {});
   io.to(roomId).emit("game_state", serializeGameState(state));
+
+  // Schedule auto-advance just like endRound does
+  const players = Array.from(state.players.values());
+  const hasTeam1 = players.some(p => p.team === 1);
+  const hasTeam2 = players.some(p => p.team === 2);
+  if (state.currentRound < state.totalRounds && hasTeam1 && hasTeam2) {
+    scheduleAutoAdvance(io, roomId);
+  }
 }
 
 function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
