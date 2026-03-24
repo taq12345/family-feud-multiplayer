@@ -11,11 +11,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/toolti
 
 function StrikeDisplay({ strikes }: { strikes: number }) {
   return (
-    <div className="flex gap-3 justify-center">
+    <div className="flex gap-2 sm:gap-3 justify-center">
       {[0, 1, 2].map(i => (
         <div
           key={i}
-          className={`w-11 h-11 rounded-full flex items-center justify-center font-black text-2xl transition-all duration-300 ${
+          className={`w-8 h-8 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-black text-lg sm:text-2xl transition-all duration-300 ${
             i < strikes
               ? "bg-red-500/20 border-2 border-red-500 text-red-400 scale-110 shadow-[0_0_15px_rgba(239,68,68,0.4)]"
               : "bg-white/5 border-2 border-white/10 text-transparent"
@@ -112,13 +112,13 @@ function ScoreBoard({ team1Name, team2Name, team1Score, team2Score, playingTeam,
 }) {
   return (
     <div className="grid grid-cols-3 gap-2 shrink-0">
-      <div className={`rounded-2xl p-3 text-center border transition-all duration-300 ${
+      <div className={`rounded-xl sm:rounded-2xl p-2 sm:p-3 text-center border transition-all duration-300 ${
         playingTeam === 1
           ? "bg-rose-500/20 border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.2)]"
           : "bg-white/[0.03] border-white/8"
       }`}>
-        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-1">{team1Name}</div>
-        <div className="text-3xl font-black text-white">{team1Score}</div>
+        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-0.5 sm:mb-1">{team1Name}</div>
+        <div className="text-2xl sm:text-3xl font-black text-white leading-none">{team1Score}</div>
         {playingTeam === 1 && (
           <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30">
             <span className="w-1 h-1 rounded-full bg-rose-400 animate-pulse" />
@@ -127,19 +127,19 @@ function ScoreBoard({ team1Name, team2Name, team1Score, team2Score, playingTeam,
         )}
       </div>
 
-      <div className="rounded-2xl p-3 text-center bg-amber-500/10 border border-amber-500/25 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
-        <div className="text-[10px] text-amber-500/70 font-semibold uppercase tracking-wide mb-1">Pot</div>
-        <div className="text-3xl font-black text-amber-400">{roundPoints}</div>
-        <div className="text-[10px] text-amber-600 mt-1">pts</div>
+      <div className="rounded-xl sm:rounded-2xl p-2 sm:p-3 text-center bg-amber-500/10 border border-amber-500/25 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
+        <div className="text-[10px] text-amber-500/70 font-semibold uppercase tracking-wide mb-0.5 sm:mb-1">Pot</div>
+        <div className="text-2xl sm:text-3xl font-black text-amber-400 leading-none">{roundPoints}</div>
+        <div className="text-[10px] text-amber-600 mt-0.5 sm:mt-1">pts</div>
       </div>
 
-      <div className={`rounded-2xl p-3 text-center border transition-all duration-300 ${
+      <div className={`rounded-xl sm:rounded-2xl p-2 sm:p-3 text-center border transition-all duration-300 ${
         playingTeam === 2
           ? "bg-blue-500/20 border-blue-400/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
           : "bg-white/[0.03] border-white/8"
       }`}>
-        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-1">{team2Name}</div>
-        <div className="text-3xl font-black text-white">{team2Score}</div>
+        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-0.5 sm:mb-1">{team2Name}</div>
+        <div className="text-2xl sm:text-3xl font-black text-white leading-none">{team2Score}</div>
         {playingTeam === 2 && (
           <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30">
             <span className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" />
@@ -698,7 +698,7 @@ export default function GameRoom() {
 
             {/* Face-off */}
             {gameState.status === "faceoff" && (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {/* Input: only for the designated player */}
                 {isMyTurnToFaceoff && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
@@ -719,7 +719,7 @@ export default function GameRoom() {
 
                 {/* Who is guessing banner */}
                 {gameState.faceoffDesignatedPlayerName ? (
-                  <div className={`rounded-xl border p-3 text-center ${
+                  <div className={`rounded-xl border p-2 sm:p-3 text-center ${
                     gameState.faceoffTurn === 1
                       ? "bg-rose-500/10 border-rose-500/25"
                       : "bg-blue-500/10 border-blue-500/25"
@@ -730,7 +730,7 @@ export default function GameRoom() {
                         : `${gameState.faceoffDesignatedPlayerName}'s turn to guess`}
                     </p>
                     {faceoffCountdown !== null && (
-                      <p className={`text-4xl font-black tabular-nums mt-1 leading-none ${faceoffCountdown <= 5 ? "text-red-400" : faceoffCountdown <= 10 ? "text-amber-400" : "text-slate-300"}`}>
+                      <p className={`text-3xl sm:text-4xl font-black tabular-nums mt-1 leading-none ${faceoffCountdown <= 5 ? "text-red-400" : faceoffCountdown <= 10 ? "text-amber-400" : "text-slate-300"}`}>
                         {faceoffCountdown}<span className="text-sm font-normal opacity-50 ml-0.5">s</span>
                       </p>
                     )}
@@ -746,8 +746,8 @@ export default function GameRoom() {
                   </p>
                 )}
 
-                {/* Phase description */}
-                <div className="rounded-xl bg-amber-500/8 border border-amber-500/20 px-4 py-2.5 text-center">
+                {/* Phase description — hidden on small screens to save space */}
+                <div className="hidden sm:block rounded-xl bg-amber-500/8 border border-amber-500/20 px-4 py-2.5 text-center">
                   <p className="text-amber-400 font-bold text-xs uppercase tracking-wider mb-0.5">⚡ Face-Off</p>
                   <p className="text-slate-400 text-xs">One player per team guesses. First to name a top survey answer wins the round for their team!</p>
                 </div>
@@ -775,7 +775,7 @@ export default function GameRoom() {
                 )}
                 {/* Who's turn banner */}
                 {gameState.playingDesignatedPlayerName && (
-                  <div className={`rounded-xl border p-3 text-center ${
+                  <div className={`rounded-xl border p-2 sm:p-3 text-center ${
                     gameState.playingTeam === 1
                       ? "bg-rose-500/10 border-rose-500/25"
                       : "bg-blue-500/10 border-blue-500/25"
@@ -786,21 +786,21 @@ export default function GameRoom() {
                         : `${gameState.playingDesignatedPlayerName}'s turn to answer`}
                     </p>
                     {roundCountdown !== null && (
-                      <p className={`text-4xl font-black tabular-nums mt-1 leading-none ${roundCountdown <= 5 ? "text-red-400" : roundCountdown <= 10 ? "text-amber-400" : "text-slate-300"}`}>
+                      <p className={`text-3xl sm:text-4xl font-black tabular-nums mt-1 leading-none ${roundCountdown <= 5 ? "text-red-400" : roundCountdown <= 10 ? "text-amber-400" : "text-slate-300"}`}>
                         {roundCountdown}<span className="text-sm font-normal opacity-50 ml-0.5">s</span>
                       </p>
                     )}
                   </div>
                 )}
                 {!isMyTurnToPlay && (
-                  <div className="rounded-xl bg-white/[0.03] border border-white/8 py-3 px-4 text-center text-sm text-slate-500">
+                  <div className="rounded-xl bg-white/[0.03] border border-white/8 py-2 px-3 text-center text-xs sm:text-sm text-slate-500">
                     {isMyTeamPlaying
                       ? `Waiting for ${gameState.playingDesignatedPlayerName ?? "teammate"} to answer…`
                       : `Waiting for ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name}…`}
                   </div>
                 )}
-                {/* Phase description */}
-                <div className={`rounded-xl border px-4 py-2.5 text-center ${
+                {/* Phase description — hidden on small screens to save space */}
+                <div className={`hidden sm:block rounded-xl border px-4 py-2.5 text-center ${
                   gameState.playingTeam === 1
                     ? "bg-rose-500/8 border-rose-500/20"
                     : "bg-blue-500/8 border-blue-500/20"
@@ -816,15 +816,15 @@ export default function GameRoom() {
             {/* Stealing */}
             {gameState.status === "stealing" && (
               <div className="space-y-2">
-                <div className="rounded-xl bg-orange-500/10 border border-orange-500/25 p-4 text-center">
-                  <p className="text-orange-400 font-black text-xl">🎯 STEAL CHANCE!</p>
-                  <p className="text-orange-300/70 text-sm mt-1">
+                <div className="rounded-xl bg-orange-500/10 border border-orange-500/25 p-2 sm:p-4 text-center">
+                  <p className="text-orange-400 font-black text-lg sm:text-xl">🎯 STEAL CHANCE!</p>
+                  <p className="text-orange-300/70 text-sm mt-0.5">
                     {gameState.playingDesignatedPlayerName === playerName
                       ? "It's your steal attempt!"
                       : <><span className="text-orange-200 font-semibold">{gameState.playingDesignatedPlayerName ?? "teammate"}</span> gets the steal attempt</>}
                   </p>
                   {roundCountdown !== null && (
-                    <p className={`text-4xl font-black tabular-nums mt-2 leading-none ${roundCountdown <= 5 ? "text-red-400" : roundCountdown <= 10 ? "text-amber-400" : "text-orange-300"}`}>
+                    <p className={`text-3xl sm:text-4xl font-black tabular-nums mt-1 leading-none ${roundCountdown <= 5 ? "text-red-400" : roundCountdown <= 10 ? "text-amber-400" : "text-orange-300"}`}>
                       {roundCountdown}<span className="text-sm font-normal opacity-50 ml-0.5">s</span>
                     </p>
                   )}
