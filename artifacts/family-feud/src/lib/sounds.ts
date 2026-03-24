@@ -52,6 +52,13 @@ export function playJoinSound(): void {
   playTone(ctx, "sine", 880, now + 0.27, 0.22, 0.20);
 }
 
+export function playTickSound(): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  playTone(ctx, "square", 880, now, 0.06, 0.12, 820);
+}
+
 export function playPlayerJoinSound(): void {
   const ctx = getAudioContext();
   if (!ctx) return;

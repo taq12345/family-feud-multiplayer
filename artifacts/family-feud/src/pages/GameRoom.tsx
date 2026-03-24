@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
-import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound } from "../lib/sounds";
+import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
@@ -355,6 +355,14 @@ export default function GameRoom() {
       return undefined;
     }
   }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName]);
+
+  // Tick sound for the last 5 seconds of any active countdown
+  useEffect(() => {
+    const active = faceoffCountdown ?? roundCountdown;
+    if (active !== null && active <= 5 && active > 0) {
+      playTickSound();
+    }
+  }, [faceoffCountdown, roundCountdown]);
 
   // Play applause when game-over screen first appears
   useEffect(() => {
@@ -709,10 +717,12 @@ export default function GameRoom() {
                       🎯 {gameState.faceoffDesignatedPlayerName === playerName
                         ? "Your turn to guess!"
                         : `${gameState.faceoffDesignatedPlayerName}'s turn to guess`}
-                      {faceoffCountdown !== null && (
-                        <span className="ml-2 text-xs opacity-70">({faceoffCountdown}s)</span>
-                      )}
                     </p>
+                    {faceoffCountdown !== null && (
+                      <p className={`text-4xl font-black tabular-nums mt-1 leading-none ${faceoffCountdown <= 5 ? "text-red-400" : faceoffCountdown <= 10 ? "text-amber-400" : "text-slate-300"}`}>
+                        {faceoffCountdown}<span className="text-sm font-normal opacity-50 ml-0.5">s</span>
+                      </p>
+                    )}
                   </div>
                 ) : null}
 
@@ -763,10 +773,12 @@ export default function GameRoom() {
                       🎯 {gameState.playingDesignatedPlayerName === playerName
                         ? "Your turn to answer!"
                         : `${gameState.playingDesignatedPlayerName}'s turn to answer`}
-                      {roundCountdown !== null && (
-                        <span className="ml-2 text-xs opacity-70">({roundCountdown}s)</span>
-                      )}
                     </p>
+                    {roundCountdown !== null && (
+                      <p className={`text-4xl font-black tabular-nums mt-1 leading-none ${roundCountdown <= 5 ? "text-red-400" : roundCountdown <= 10 ? "text-amber-400" : "text-slate-300"}`}>
+                        {roundCountdown}<span className="text-sm font-normal opacity-50 ml-0.5">s</span>
+                      </p>
+                    )}
                   </div>
                 )}
                 {!isMyTurnToPlay && (
@@ -799,10 +811,12 @@ export default function GameRoom() {
                     {gameState.playingDesignatedPlayerName === playerName
                       ? "It's your steal attempt!"
                       : <><span className="text-orange-200 font-semibold">{gameState.playingDesignatedPlayerName ?? "teammate"}</span> gets the steal attempt</>}
-                    {roundCountdown !== null && (
-                      <span className="ml-2 text-xs opacity-70">({roundCountdown}s)</span>
-                    )}
                   </p>
+                  {roundCountdown !== null && (
+                    <p className={`text-4xl font-black tabular-nums mt-2 leading-none ${roundCountdown <= 5 ? "text-red-400" : roundCountdown <= 10 ? "text-amber-400" : "text-orange-300"}`}>
+                      {roundCountdown}<span className="text-sm font-normal opacity-50 ml-0.5">s</span>
+                    </p>
+                  )}
                 </div>
                 {isMyTurnToPlay && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
