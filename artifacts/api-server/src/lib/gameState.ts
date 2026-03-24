@@ -32,6 +32,7 @@ export interface GameState {
   playingUsedPlayerIds: Set<string>;
   questions: SurveyQuestion[];
   usedQuestionIds: Set<number>;
+  wrongAnswers: Set<string>;
 }
 
 export function createGameState(roomId: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
@@ -66,6 +67,7 @@ export function createGameState(roomId: string, team1Name: string, team2Name: st
     playingUsedPlayerIds: new Set(),
     questions: allQuestions,
     usedQuestionIds: new Set(),
+    wrongAnswers: new Set(),
   };
 }
 

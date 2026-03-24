@@ -95,6 +95,7 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
 
   state.usedQuestionIds.add(question.id);
   state.currentQuestion = question;
+  state.wrongAnswers = new Set();
   state.currentRound++;
   state.status = "faceoff";
   state.revealedAnswers = new Set();
@@ -404,6 +405,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
       state.usedQuestionIds.add(question.id);
       state.currentQuestion = question;
+      state.wrongAnswers = new Set();
       state.currentRound = 1;
       state.status = "faceoff";
       state.revealedAnswers = new Set();
@@ -467,6 +469,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
       state.usedQuestionIds.add(question.id);
       state.currentQuestion = question;
+      state.wrongAnswers = new Set();
       state.currentRound = 1;
       state.status = "faceoff";
       initFaceoff(state, 1);
@@ -491,6 +494,24 @@ export function setupSocketHandlers(io: SocketServer) {
       try {
         // Clear the per-player faceoff timer immediately so it cannot fire during the async AI call
         clearFaceoffAnswerTimer(roomId);
+
+        // Reject immediately if this answer was already marked wrong this round
+        const normAnswer = answer.trim().toLowerCase();
+        if (state.wrongAnswers.has(normAnswer)) {
+          io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+          state.faceoffUsedPlayerIds.add(socket.id);
+          state.faceoffAttempts++;
+          if (state.faceoffAttempts >= 8) {
+            await skipFaceoffRound(io, state, roomId);
+          } else {
+            const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
+            state.faceoffTurn = nextTeam;
+            state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
+            io.to(roomId).emit("game_state", serializeGameState(state));
+            startFaceoffAnswerTimer(io, roomId);
+          }
+          return;
+        }
 
         const question = state.currentQuestion.question;
         const answers = state.currentQuestion.answers;
@@ -519,6 +540,7 @@ export function setupSocketHandlers(io: SocketServer) {
           io.to(roomId).emit("game_state", serializeGameState(state));
           startAnswerTimer(io, state, roomId);
         } else {
+          state.wrongAnswers.add(normAnswer);
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
@@ -555,6 +577,33 @@ export function setupSocketHandlers(io: SocketServer) {
       clearAnswerTimer(roomId);
 
       try {
+        // Reject immediately if this answer was already marked wrong this round (no AI needed)
+        const normAnswer = answer.trim().toLowerCase();
+        if (state.wrongAnswers.has(normAnswer)) {
+          if (state.status === "playing") {
+            io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            rotatePlayingDesignatedPlayer(state);
+            state.strikes++;
+            io.to(roomId).emit("strike", { strikes: state.strikes });
+            if (state.strikes >= 3) {
+              state.status = "stealing";
+              state.strikes = 0;
+              const stealingTeam = state.playingTeam === 1 ? 2 : 1;
+              initStealTurn(state, stealingTeam);
+              io.to(roomId).emit("steal_chance", { team: stealingTeam });
+              io.to(roomId).emit("game_state", serializeGameState(state));
+              startAnswerTimer(io, state, roomId);
+            } else {
+              io.to(roomId).emit("game_state", serializeGameState(state));
+              startAnswerTimer(io, state, roomId);
+            }
+          } else if (state.status === "stealing") {
+            io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            await endRound(io, state, roomId, state.playingTeam!);
+          }
+          return;
+        }
+
         const statusBeforeAwait = state.status;
         const question = state.currentQuestion.question;
         const answers = state.currentQuestion.answers;
@@ -588,6 +637,7 @@ export function setupSocketHandlers(io: SocketServer) {
             startAnswerTimer(io, state, roomId);
           }
         } else {
+          state.wrongAnswers.add(normAnswer);
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
             rotatePlayingDesignatedPlayer(state);
