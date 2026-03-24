@@ -176,6 +176,7 @@ export default function GameRoom() {
   const [unreadChats, setUnreadChats] = useState(0);
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
+  const [currentStealGuess, setCurrentStealGuess] = useState<{ playerName: string; answer: string } | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const pendingWrongRef = useRef<{ answer: string; playerName: string } | null>(null);
   const joinSoundPlayedRef = useRef(false);
@@ -250,7 +251,11 @@ export default function GameRoom() {
           showNotification(`⚡ Strike ${data.strikes}/3!`);
         }
       },
-      onStealChance: (data) => showNotification(`🎯 Team ${data.team} gets a steal chance!`),
+      onStealChance: (data) => {
+        setCurrentStealGuess(null);
+        showNotification(`🎯 Team ${data.team} gets a steal chance!`);
+      },
+      onStealGuess: (data) => setCurrentStealGuess({ playerName: data.playerName, answer: data.answer }),
       onRoundOver: (data) => {
         playRoundEndSound();
         showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`);
@@ -284,9 +289,15 @@ export default function GameRoom() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
-  // Clear steal attempt summary when a new round's faceoff begins
+  // Clear steal attempt summary and live guess when a new round's faceoff begins
   useEffect(() => {
-    if (gameState?.status === "faceoff") setStealAttempt(null);
+    if (gameState?.status === "faceoff") {
+      setStealAttempt(null);
+      setCurrentStealGuess(null);
+    }
+    if (gameState?.status === "between_rounds") {
+      setCurrentStealGuess(null);
+    }
   }, [gameState?.status]);
 
   // Play round-start sound when status transitions TO faceoff (not on initial mount)
@@ -818,7 +829,14 @@ export default function GameRoom() {
                     </p>
                   )}
                 </div>
-                {isMyTurnToPlay && (
+                {currentStealGuess && (
+                  <div className="rounded-xl bg-orange-500/15 border border-orange-400/40 p-3 text-center animate-pulse-once">
+                    <p className="text-orange-300/70 text-xs uppercase tracking-widest mb-1">Steal guess submitted</p>
+                    <p className="text-orange-100 font-bold text-lg">"{currentStealGuess.answer}"</p>
+                    <p className="text-orange-400/70 text-xs mt-0.5">by {currentStealGuess.playerName}</p>
+                  </div>
+                )}
+                {isMyTurnToPlay && !currentStealGuess && (
                   <form onSubmit={handleAnswer} className="flex gap-2">
                     <Input
                       ref={answerInputRef}

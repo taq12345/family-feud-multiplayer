@@ -577,6 +577,11 @@ export function setupSocketHandlers(io: SocketServer) {
       clearAnswerTimer(roomId);
 
       try {
+        // Broadcast the steal guess to all players immediately (before AI processing)
+        if (state.status === "stealing") {
+          io.to(roomId).emit("steal_guess", { playerName: player.name, answer });
+        }
+
         // Reject immediately if this answer was already marked wrong this round (no AI needed)
         const normAnswer = answer.trim().toLowerCase();
         if (state.wrongAnswers.has(normAnswer)) {
