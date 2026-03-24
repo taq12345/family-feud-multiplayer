@@ -430,13 +430,19 @@ export function setupSocketHandlers(io: SocketServer) {
       const team2Players = Array.from(state.players.values()).filter(p => p.team === 2);
       if (team1Players.length === 0 || team2Players.length === 0) return;
 
-      // Reshuffle questions for a fresh game
-      const allQuestions = [...surveyQuestions];
-      for (let i = allQuestions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+      // Reshuffle questions, placing previously-used ones at the end so they don't repeat immediately
+      const previouslyUsed = new Set(state.usedQuestionIds);
+      const freshQuestions = surveyQuestions.filter(q => !previouslyUsed.has(q.id));
+      const staleQuestions = surveyQuestions.filter(q => previouslyUsed.has(q.id));
+      function shuffle<T>(arr: T[]): T[] {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
       }
-      state.questions = allQuestions;
+      state.questions = [...shuffle(freshQuestions), ...shuffle(staleQuestions)];
       state.usedQuestionIds = new Set();
 
       // Reset scores and round counters
