@@ -6,6 +6,7 @@ export interface Player {
   name: string;
   team: 1 | 2;
   isHost: boolean;
+  contributedPoints: number;
 }
 
 export interface GameState {

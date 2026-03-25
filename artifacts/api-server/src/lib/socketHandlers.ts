@@ -400,6 +400,7 @@ export function setupSocketHandlers(io: SocketServer) {
           name: trimmedPlayerName,
           team,
           isHost,
+          contributedPoints: 0,
         });
 
         await db.update(roomsTable)
@@ -490,6 +491,9 @@ export function setupSocketHandlers(io: SocketServer) {
       // Reset scores and round counters
       state.team1Score = 0;
       state.team2Score = 0;
+      state.players.forEach(existingPlayer => {
+        existingPlayer.contributedPoints = 0;
+      });
       state.roundPoints = 0;
       state.strikes = 0;
       state.revealedAnswers = new Set();
@@ -571,9 +575,11 @@ export function setupSocketHandlers(io: SocketServer) {
             state.correctSubmissionNorms.add(ns);
             state.wrongAnswers.add(ns); // block any re-guess of the same word
           }
+          const pts = state.currentQuestion.answers[matchIndex].points;
+          player.contributedPoints += pts;
           state.faceoffWinner = player.team;
           state.playingTeam = player.team;
-          state.roundPoints += state.currentQuestion.answers[matchIndex].points;
+          state.roundPoints += pts;
           state.status = "playing";
           initPlayingTurn(state, player.team, player.id);
 
@@ -583,7 +589,7 @@ export function setupSocketHandlers(io: SocketServer) {
             answerIndex: matchIndex,
             answerText: state.currentQuestion.answers[matchIndex].text,
             playedAnswer: answer,
-            points: state.currentQuestion.answers[matchIndex].points,
+            points: pts,
           });
           io.to(roomId).emit("game_state", serializeGameState(state));
           startAnswerTimer(io, state, roomId);
@@ -674,6 +680,7 @@ export function setupSocketHandlers(io: SocketServer) {
             state.wrongAnswers.add(ns); // block any re-guess of the same word
           }
           const pts = state.currentQuestion.answers[matchIndex].points;
+          player.contributedPoints += pts;
           state.roundPoints += pts;
 
           io.to(roomId).emit("answer_correct", {
@@ -1045,6 +1052,7 @@ export function getRoomPlayers(roomId: string) {
     name: p.name,
     team: p.team,
     isHost: p.isHost,
+    contributedPoints: p.contributedPoints,
   }));
 }
 

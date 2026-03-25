@@ -72,7 +72,7 @@ function AnswerBoard({ question, answers }: {
 }
 
 function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, myName, onKick }: {
-  players: Array<{ name: string; team: 1 | 2; isHost: boolean }>;
+  players: Array<{ name: string; team: 1 | 2; isHost: boolean; contributedPoints: number }>;
   team1Name: string; team2Name: string; activePlayerName: string | null;
   isHost: boolean; myName: string; onKick: (name: string) => void;
 }) {
@@ -97,6 +97,9 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
                   <div key={p.name} className={`inline-flex items-center gap-1 text-[10px] rounded-full px-1.5 py-0.5 border ${isActive ? color.active : "border-white/5 text-slate-400"}`}>
                     <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-30"}`} />
                     <span className="font-medium max-w-[60px] truncate">{p.name}</span>
+                    <span className={`rounded-full px-1 py-0.5 text-[9px] font-bold tabular-nums ${isActive ? "bg-black/20 text-white/90" : "bg-white/5 text-slate-300"}`}>
+                      {p.contributedPoints} pts
+                    </span>
                     {p.isHost && <span className="text-amber-400 text-[9px] leading-none shrink-0">👑</span>}
                     {isHost && p.name !== myName && !p.isHost && (
                       <button
@@ -522,6 +525,12 @@ export default function GameRoom() {
 
   const team1Count = gameState?.players.filter(p => p.team === 1).length ?? 0;
   const team2Count = gameState?.players.filter(p => p.team === 2).length ?? 0;
+  const mvpPlayers = useMemo<GameStateData["players"]>(() => {
+    if (!gameState?.players.length) return [];
+    const topScore = Math.max(...gameState.players.map(p => p.contributedPoints));
+    return gameState.players.filter(p => p.contributedPoints === topScore);
+  }, [gameState?.players]);
+  const mvpScore = mvpPlayers[0]?.contributedPoints ?? 0;
   const canStartGame = team1Count > 0 && team2Count > 0;
   const startGameTooltip = !canStartGame
     ? team1Count === 0 && team2Count === 0 ? "Both teams need at least 1 player."
@@ -1157,6 +1166,18 @@ export default function GameRoom() {
                         </div>
                       )}
                     </>
+                  )}
+                  {isGameOver && mvpPlayers.length > 0 && (
+                    <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 mb-3">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-amber-300/80 mb-1">MVP</p>
+                      <p className="text-amber-100 font-black text-lg">
+                        {mvpPlayers.map(p => p.name).join(", ")}
+                      </p>
+                      <p className="text-amber-300/80 text-xs mt-1">
+                        {mvpPlayers.length > 1 ? "Top contributors" : "Top contributor"} with {mvpScore} point{mvpScore === 1 ? "" : "s"} for{" "}
+                        {mvpPlayers.length > 1 ? "their teams" : "their team"}.
+                      </p>
+                    </div>
                   )}
                   {stealAttempt && (
                     <div className={`rounded-lg border px-3 py-1.5 mb-2 text-xs ${
