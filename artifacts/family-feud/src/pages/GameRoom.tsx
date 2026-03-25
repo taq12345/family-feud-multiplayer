@@ -986,7 +986,7 @@ export default function GameRoom() {
                 {/* Phase description — hidden on small screens to save space */}
                 <div className="hidden sm:block rounded-xl bg-amber-500/8 border border-amber-500/20 px-4 py-2.5 text-center">
                   <p className="text-amber-400 font-bold text-xs uppercase tracking-wider mb-0.5">⚡ Face-Off</p>
-                  <p className="text-slate-400 text-xs">One player per team guesses. First to name a top survey answer wins the round for their team!</p>
+                  <p className="text-slate-400 text-xs">One player per team guesses. The first correct survey answer wins control for that team and moves them into Playing.</p>
                 </div>
               </div>
             )}

@@ -107,7 +107,7 @@ export default function Rules() {
                 </h3>
                 <ul className="text-slate-300 text-sm space-y-2 leading-relaxed">
                   <li>One player from each team takes turns answering the round's question.</li>
-                  <li>The player who gives a correct top answer <strong>wins the Face-Off</strong> for their team.</li>
+                  <li>The player who gives any correct survey answer <strong>wins the Face-Off</strong> for their team.</li>
                   <li>Their team gets to keep that revealed answer and moves to the Playing phase.</li>
                   <li>Each player has <strong>15 seconds</strong> to answer. If time runs out, the turn passes to the other team.</li>
                   <li>If no one answers correctly after several turns, the round is skipped and the board is revealed.</li>
@@ -167,7 +167,7 @@ export default function Rules() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
-                { tip: "Go for the top answer first", detail: "Top-ranked answers are worth the most points. In the Face-Off, saying the #1 answer almost guarantees your team wins the round." },
+                { tip: "Start with the most common guess", detail: "Top-ranked answers are worth the most points, but in the Face-Off any correct survey answer wins control for your team." },
                 { tip: "Think like a crowd", detail: "These are survey answers — think about what most people would say, not just what's technically correct." },
                 { tip: "Use your team wisely", detail: "During the Playing phase, players rotate. Try to coordinate so players who know the topic answer at the right time." },
                 { tip: "Save a backup for the Steal", detail: "If you're on the stealing team, spend a moment thinking of the most common remaining answer before committing." },
