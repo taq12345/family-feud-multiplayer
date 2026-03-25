@@ -177,6 +177,7 @@ export default function GameRoom() {
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
   const [currentStealGuess, setCurrentStealGuess] = useState<{ playerName: string; answer: string } | null>(null);
+  const [lastRoundResult, setLastRoundResult] = useState<{ winningTeam: 1 | 2; points: number } | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const pendingWrongRef = useRef<{ answer: string; playerName: string } | null>(null);
   const joinSoundPlayedRef = useRef(false);
@@ -272,6 +273,7 @@ export default function GameRoom() {
       },
       onStealGuess: (data) => setCurrentStealGuess({ playerName: data.playerName, answer: data.answer }),
       onRoundOver: (data) => {
+        setLastRoundResult({ winningTeam: data.winningTeam, points: data.points });
         playRoundEndSound();
         showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`);
       },
@@ -309,6 +311,7 @@ export default function GameRoom() {
     if (gameState?.status === "faceoff") {
       setStealAttempt(null);
       setCurrentStealGuess(null);
+      setLastRoundResult(null);
     }
     if (gameState?.status === "between_rounds") {
       setCurrentStealGuess(null);
@@ -909,6 +912,22 @@ export default function GameRoom() {
                   })() : (
                     <>
                       <p className="text-white font-bold text-lg mb-2">Round Complete!</p>
+                      {myTeam !== null && lastRoundResult && (
+                        <div
+                          className={`rounded-xl border px-4 py-3 mb-3 text-sm ${
+                            myTeam === 1
+                              ? "bg-rose-500/10 border-rose-500/25 text-rose-300"
+                              : "bg-blue-500/10 border-blue-500/25 text-blue-300"
+                          }`}
+                        >
+                          <span className="font-semibold">{myTeam === 1 ? gameState.team1Name : gameState.team2Name}</span>{" "}
+                          got{" "}
+                          <span className="font-black">
+                            {lastRoundResult.winningTeam === myTeam ? lastRoundResult.points : 0}
+                          </span>{" "}
+                          point{(lastRoundResult.winningTeam === myTeam ? lastRoundResult.points : 0) === 1 ? "" : "s"} this round.
+                        </div>
+                      )}
                       {autoAdvanceCountdown !== null && (
                         <p className="text-slate-500 text-xs mb-4">
                           Next round starts automatically in{" "}
