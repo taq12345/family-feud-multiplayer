@@ -998,9 +998,7 @@ export default function GameRoom() {
                   </div>
                 )}
                 {!isMyTurnToPlay && isMyTeamPlaying && (
-                  <div className="rounded-xl bg-white/[0.03] border border-white/8 py-2 px-3 text-center text-xs sm:text-sm text-slate-500">
-                    Waiting for {gameState.playingDesignatedPlayerName ?? "teammate"} to answer…
-                  </div>
+                  {/* waiting banner removed */}
                 )}
                 {/* Phase description — hidden on small screens to save space */}
                 <div className={`hidden sm:block rounded-xl border px-4 py-2.5 text-center ${
