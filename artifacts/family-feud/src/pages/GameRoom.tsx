@@ -123,14 +123,14 @@ function ScoreBoard({ team1Name, team2Name, team1Score, team2Score, playingTeam,
   playingTeam: 1 | 2 | null; roundPoints: number;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2 shrink-0">
-      <div className={`rounded-xl sm:rounded-2xl p-2 sm:p-3 text-center border transition-all duration-300 ${
+    <div className="grid grid-cols-3 gap-1.5 sm:gap-2 shrink-0">
+      <div className={`rounded-xl sm:rounded-2xl px-2 py-1.5 sm:px-2.5 sm:py-2 text-center border transition-all duration-300 ${
         playingTeam === 1
           ? "bg-rose-500/20 border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.2)]"
           : "bg-white/[0.03] border-white/8"
       }`}>
-        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-0.5 sm:mb-1">{team1Name}</div>
-        <div className="text-2xl sm:text-3xl font-black text-white leading-none">{team1Score}</div>
+        <div className="text-[9px] sm:text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-0.5">{team1Name}</div>
+        <div className="text-xl sm:text-2xl font-black text-white leading-none">{team1Score}</div>
         {playingTeam === 1 && (
           <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30">
             <span className="w-1 h-1 rounded-full bg-rose-400 animate-pulse" />
@@ -139,19 +139,21 @@ function ScoreBoard({ team1Name, team2Name, team1Score, team2Score, playingTeam,
         )}
       </div>
 
-      <div className="rounded-xl sm:rounded-2xl p-2 sm:p-3 text-center bg-amber-500/10 border border-amber-500/25 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
-        <div className="text-[10px] text-amber-500/70 font-semibold uppercase tracking-wide mb-0.5 sm:mb-1">Pot</div>
-        <div className="text-2xl sm:text-3xl font-black text-amber-400 leading-none">{roundPoints}</div>
-        <div className="text-[10px] text-amber-600 mt-0.5 sm:mt-1">pts</div>
+      <div className="rounded-xl sm:rounded-2xl px-2 py-1.5 sm:px-2.5 sm:py-2 text-center bg-amber-500/10 border border-amber-500/25 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
+        <div className="text-[9px] sm:text-[10px] text-amber-500/70 font-semibold uppercase tracking-wide mb-0.5">Pot</div>
+        <div className="inline-flex items-baseline gap-1 justify-center">
+          <span className="text-xl sm:text-2xl font-black text-amber-400 leading-none">{roundPoints}</span>
+          <span className="text-[10px] sm:text-xs text-amber-600 font-semibold uppercase tracking-wide">pts</span>
+        </div>
       </div>
 
-      <div className={`rounded-xl sm:rounded-2xl p-2 sm:p-3 text-center border transition-all duration-300 ${
+      <div className={`rounded-xl sm:rounded-2xl px-2 py-1.5 sm:px-2.5 sm:py-2 text-center border transition-all duration-300 ${
         playingTeam === 2
           ? "bg-blue-500/20 border-blue-400/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
           : "bg-white/[0.03] border-white/8"
       }`}>
-        <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-0.5 sm:mb-1">{team2Name}</div>
-        <div className="text-2xl sm:text-3xl font-black text-white leading-none">{team2Score}</div>
+        <div className="text-[9px] sm:text-[10px] text-slate-400 font-semibold uppercase tracking-wide truncate mb-0.5">{team2Name}</div>
+        <div className="text-xl sm:text-2xl font-black text-white leading-none">{team2Score}</div>
         {playingTeam === 2 && (
           <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30">
             <span className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" />
