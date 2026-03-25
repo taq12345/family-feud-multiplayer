@@ -490,7 +490,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.playingDesignatedPlayerId = null;
       state.playingUsedPlayerIds = new Set();
 
-      await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
+      await db.update(roomsTable).set({ status: "playing", team1Score: 0, team2Score: 0 }).where(eq(roomsTable.id, roomId));
 
       const question = getNextQuestion(state);
       if (!question) return;
