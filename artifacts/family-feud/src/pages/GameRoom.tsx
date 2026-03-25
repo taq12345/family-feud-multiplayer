@@ -558,12 +558,29 @@ export default function GameRoom() {
     }
   }, [gameState?.status, gameState?.currentRound, gameState?.totalRounds]);
 
-  // Auto-focus the answer box whenever it becomes this player's turn
+  // Auto-focus + auto-select the answer box whenever it becomes this player's turn
   useEffect(() => {
-    if (isMyTurnToFaceoff || isMyTurnToPlay) {
-      setTimeout(() => answerInputRef.current?.focus(), 50);
-    }
-  }, [isMyTurnToFaceoff, isMyTurnToPlay]);
+    if (verifyingAnswer) return;
+    if (!(isMyTurnToFaceoff || isMyTurnToPlay)) return;
+
+    const t = setTimeout(() => {
+      const el = answerInputRef.current;
+      if (!el) return;
+
+      el.focus();
+
+      // Highlight the whole value so the user can immediately overwrite it.
+      const len = el.value?.length ?? 0;
+      if (typeof el.setSelectionRange === "function") {
+        el.setSelectionRange(0, len);
+      }
+      if (typeof el.select === "function") {
+        el.select();
+      }
+    }, 50);
+
+    return () => clearTimeout(t);
+  }, [isMyTurnToFaceoff, isMyTurnToPlay, verifyingAnswer]);
 
   function handleLeave() {
     didRequestLeaveRef.current = true;
