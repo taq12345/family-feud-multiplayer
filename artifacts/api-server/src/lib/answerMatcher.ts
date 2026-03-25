@@ -42,6 +42,11 @@ function normalize(text: string): string {
     .trim();
 }
 
+/** Same normalization as matching — used to detect repeat guesses without awaiting AI. */
+export function normalizeSubmittedAnswer(submitted: string): string {
+  return normalize(submitted);
+}
+
 const VOWELS = new Set(["a", "e", "i", "o", "u"]);
 function isConsonant(c: string): boolean {
   return c >= "a" && c <= "z" && !VOWELS.has(c);

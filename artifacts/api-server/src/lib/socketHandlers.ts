@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
-import { findMatchIndex } from "./answerMatcher.js";
+import { findMatchIndex, normalizeSubmittedAnswer } from "./answerMatcher.js";
 
 const gameStates = new Map<string, GameState>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -96,6 +96,7 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
   state.usedQuestionIds.add(question.id);
   state.currentQuestion = question;
   state.wrongAnswers = new Set();
+  state.correctSubmissionNorms = new Set();
   state.currentRound++;
   state.status = "faceoff";
   state.revealedAnswers = new Set();
@@ -416,6 +417,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.usedQuestionIds.add(question.id);
       state.currentQuestion = question;
       state.wrongAnswers = new Set();
+      state.correctSubmissionNorms = new Set();
       state.currentRound = 1;
       state.status = "faceoff";
       state.revealedAnswers = new Set();
@@ -480,6 +482,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.usedQuestionIds.add(question.id);
       state.currentQuestion = question;
       state.wrongAnswers = new Set();
+      state.correctSubmissionNorms = new Set();
       state.currentRound = 1;
       state.status = "faceoff";
       initFaceoff(state, 1);
@@ -505,8 +508,13 @@ export function setupSocketHandlers(io: SocketServer) {
         // Clear the per-player faceoff timer immediately so it cannot fire during the async AI call
         clearFaceoffAnswerTimer(roomId);
 
-        // Reject immediately if this answer was already marked wrong this round
+        // Reject immediately if this answer was already marked wrong this round, or repeats a
+        // submission that already scored (same normalized string as matcher — no AI wait).
         const normAnswer = answer.trim().toLowerCase();
+        const normSub = normalizeSubmittedAnswer(answer);
+        if (normSub && state.correctSubmissionNorms.has(normSub)) {
+          state.wrongAnswers.add(normAnswer);
+        }
         if (state.wrongAnswers.has(normAnswer)) {
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           state.faceoffUsedPlayerIds.add(socket.id);
@@ -534,6 +542,8 @@ export function setupSocketHandlers(io: SocketServer) {
           state.faceoffDesignatedPlayerId = null;
           state.faceoffTurn = null;
           state.revealedAnswers.add(matchIndex);
+          const ns = normalizeSubmittedAnswer(answer);
+          if (ns) state.correctSubmissionNorms.add(ns);
           state.faceoffWinner = player.team;
           state.playingTeam = player.team;
           state.roundPoints += state.currentQuestion.answers[matchIndex].points;
@@ -593,8 +603,12 @@ export function setupSocketHandlers(io: SocketServer) {
           io.to(roomId).emit("steal_guess", { playerName: player.name, answer });
         }
 
-        // Reject immediately if this answer was already marked wrong this round (no AI needed)
+        // Reject immediately if wrong this round, or repeat of a submission that already scored.
         const normAnswer = answer.trim().toLowerCase();
+        const normSub = normalizeSubmittedAnswer(answer);
+        if (normSub && state.correctSubmissionNorms.has(normSub)) {
+          state.wrongAnswers.add(normAnswer);
+        }
         if (state.wrongAnswers.has(normAnswer)) {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
@@ -631,6 +645,8 @@ export function setupSocketHandlers(io: SocketServer) {
 
         if (matchIndex !== -1) {
           state.revealedAnswers.add(matchIndex);
+          const ns = normalizeSubmittedAnswer(answer);
+          if (ns) state.correctSubmissionNorms.add(ns);
           const pts = state.currentQuestion.answers[matchIndex].points;
           state.roundPoints += pts;
 

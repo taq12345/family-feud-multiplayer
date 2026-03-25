@@ -33,6 +33,8 @@ export interface GameState {
   questions: SurveyQuestion[];
   usedQuestionIds: Set<number>;
   wrongAnswers: Set<string>;
+  /** Normalized submissions that already scored this question (repeat = wrong, sync). */
+  correctSubmissionNorms: Set<string>;
 }
 
 export function createGameState(roomId: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
@@ -68,6 +70,7 @@ export function createGameState(roomId: string, team1Name: string, team2Name: st
     questions: allQuestions,
     usedQuestionIds: new Set(),
     wrongAnswers: new Set(),
+    correctSubmissionNorms: new Set(),
   };
 }
 
