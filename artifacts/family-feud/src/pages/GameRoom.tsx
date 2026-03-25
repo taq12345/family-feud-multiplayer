@@ -39,7 +39,7 @@ function AnswerBoard({ question, answers }: {
       <div className="shrink-0 bg-gradient-to-r from-amber-500/15 to-amber-600/10 border-b border-amber-500/20 px-4 py-2 text-center">
         <p className="text-amber-300 font-bold text-sm sm:text-base leading-snug">{question}</p>
       </div>
-      <div className="flex-1 min-h-0 overflow-y-auto p-2 grid gap-1 content-start">
+      <div className="flex-1 min-h-0 overflow-y-auto p-2 grid grid-cols-1 sm:grid-cols-2 gap-1 content-start">
         {answers.map((a, i) => (
           <div
             key={i}
