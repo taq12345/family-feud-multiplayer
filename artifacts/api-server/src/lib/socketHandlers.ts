@@ -768,6 +768,38 @@ export function setupSocketHandlers(io: SocketServer) {
       io.to(roomId).emit("room_deleted", { roomId });
     });
 
+    socket.on("kick_player", async ({ roomId, playerName }: { roomId: string; playerName: string }) => {
+      const state = gameStates.get(roomId);
+      if (!state) return;
+
+      // Host-only
+      const kicker = state.players.get(socket.id);
+      if (!kicker?.isHost) return;
+
+      const targetName = playerName.trim();
+      if (!targetName) return;
+
+      const key = targetName.toLowerCase();
+      const match = Array.from(state.players.entries()).find(([, p]) => p.name.trim().toLowerCase() === key);
+      if (!match) return;
+
+      const [targetSocketId, departing] = match;
+      if (!departing) return;
+
+      const targetSocket = io.sockets.sockets.get(targetSocketId);
+      await handlePlayerLeaveBySocketId(io, roomId, targetSocketId, departing.name);
+
+      // Now stop further room broadcasts to the kicked socket.
+      if (targetSocket) {
+        targetSocket.leave(roomId);
+        // Used by the existing leave/disconnect handlers.
+        (targetSocket.data as { roomId?: string | null }).roomId = null;
+      }
+
+      // Tell the client to exit the room (same UX as leaving).
+      io.to(targetSocketId).emit("kicked_from_room", { kickedBy: kicker.name });
+    });
+
     socket.on("leave_room", async ({ roomId }: { roomId: string }) => {
       clearPlayerDisconnectTimer(socket.id);
       await handlePlayerLeave(io, socket, roomId);
@@ -824,18 +856,27 @@ export function setupSocketHandlers(io: SocketServer) {
 }
 
 async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: string) {
-  const playerName = socket.data.playerName;
+  return handlePlayerLeaveBySocketId(io, roomId, socket.id, socket.data.playerName);
+}
+
+async function handlePlayerLeaveBySocketId(
+  io: SocketServer,
+  roomId: string,
+  socketId: string,
+  playerName?: string
+) {
   if (playerName) {
-    // Only remove if this socket still owns the nickname
+    // Only remove if this socket still owns the nickname.
     const key = playerName.trim().toLowerCase();
-    if (activeNicknames.get(key) === socket.id) {
+    if (activeNicknames.get(key) === socketId) {
       activeNicknames.delete(key);
     }
   }
   const state = gameStates.get(roomId);
   if (state) {
-    const departing = state.players.get(socket.id);
-    state.players.delete(socket.id);
+    clearPlayerDisconnectTimer(socketId);
+    const departing = state.players.get(socketId);
+    state.players.delete(socketId);
     try {
       await db.update(roomsTable)
         .set({ playerCount: state.players.size })

@@ -71,9 +71,13 @@ function AnswerBoard({ question, answers }: {
   );
 }
 
-function TeamRoster({ players, team1Name, team2Name, activePlayerName }: {
+function TeamRoster({ players, team1Name, team2Name, activePlayerName, canKick, onKick }: {
   players: Array<{ name: string; team: 1 | 2; isHost: boolean }>;
-  team1Name: string; team2Name: string; activePlayerName: string | null;
+  team1Name: string;
+  team2Name: string;
+  activePlayerName: string | null;
+  canKick: boolean;
+  onKick: (targetPlayerName: string) => void;
 }) {
   const t1 = players.filter(p => p.team === 1);
   const t2 = players.filter(p => p.team === 2);
@@ -95,6 +99,21 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName }: {
                 return (
                   <div key={p.name} className={`flex items-center gap-1.5 text-[11px] rounded-md px-1.5 py-0.5 ${isActive ? `border ${color.active}` : "text-slate-300"}`}>
                     <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-40"}`} />
+                    {canKick && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => onKick(p.name)}
+                            aria-label={`Kick ${p.name}`}
+                            className="text-amber-300/70 hover:text-amber-200 transition-colors shrink-0"
+                          >
+                            <span className="text-base leading-none">🥾</span>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Kick</TooltipContent>
+                      </Tooltip>
+                    )}
                     <span className="truncate font-medium">{p.name}</span>
                     {p.isHost && (
                       <span className="ml-auto text-amber-400 text-[9px] whitespace-nowrap">
@@ -241,7 +260,7 @@ export default function GameRoom() {
     revealChain(queue);
   }
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -398,6 +417,11 @@ export default function GameRoom() {
       },
       onKickedInactive: (data) => {
         sessionStorage.setItem("kickedMessage", `You were removed due to being idle for ${data.idleMinutes} minute${data.idleMinutes === 1 ? "" : "s"}.`);
+        setLocation("/");
+      },
+      onKickedFromRoom: (data) => {
+        didRequestLeaveRef.current = true;
+        sessionStorage.setItem("kickedMessage", `You were kicked from the room by ${data.kickedBy ?? "the host"}.`);
         setLocation("/");
       },
     }
@@ -808,6 +832,8 @@ export default function GameRoom() {
                 (gameState.status === "playing" || gameState.status === "stealing") ? gameState.playingDesignatedPlayerName :
                 null
               }
+              canKick={isHost}
+              onKick={(target) => { playClickSound(); kickPlayer(target); }}
             />
           )}
 
@@ -846,6 +872,21 @@ export default function GameRoom() {
                       {gameState.players.filter(p => p.team === t).map(p => (
                         <div key={p.id} className="flex items-center gap-1 text-xs text-slate-300 mb-0.5">
                           {p.isHost && <Crown className="w-3 h-3 text-amber-400 shrink-0" />}
+                          {isHost && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={() => { playClickSound(); kickPlayer(p.name); }}
+                                  aria-label={`Kick ${p.name}`}
+                                  className="text-amber-300/70 hover:text-amber-200 transition-colors shrink-0"
+                                >
+                                  <span className="text-base leading-none">🥾</span>
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Kick</TooltipContent>
+                            </Tooltip>
+                          )}
                           {p.name}
                         </div>
                       ))}

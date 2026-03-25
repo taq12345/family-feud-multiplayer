@@ -80,6 +80,7 @@ export function useGameSocket(
     onHostChanged?: (data: { hostName: string }) => void;
     onFaceoffNoWinner?: (data: { canonicalAnswers: CanonicalAnswerSlot[] | null }) => void;
     onKickedInactive?: (data: { idleMinutes: number }) => void;
+    onKickedFromRoom?: (data: { kickedBy?: string }) => void;
     onStealGuess?: (data: { playerName: string; answer: string }) => void;
   }
 ) {
@@ -113,6 +114,7 @@ export function useGameSocket(
       faceoff_no_winner: (data: { canonicalAnswers: CanonicalAnswerSlot[] | null }) =>
         callbacksRef.current.onFaceoffNoWinner?.(data),
       kicked_inactive: (data: { idleMinutes: number }) => callbacksRef.current.onKickedInactive?.(data),
+      kicked_from_room: (data: { kickedBy?: string }) => callbacksRef.current.onKickedFromRoom?.(data),
       steal_guess: (data: { playerName: string; answer: string }) => callbacksRef.current.onStealGuess?.(data),
     };
 
@@ -181,5 +183,10 @@ export function useGameSocket(
     getSocket().emit("restart_game", { roomId });
   }, [roomId]);
 
-  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame };
+  const kickPlayer = useCallback((targetPlayerName: string) => {
+    if (!roomId) return;
+    getSocket().emit("kick_player", { roomId, playerName: targetPlayerName });
+  }, [roomId]);
+
+  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer };
 }
