@@ -373,8 +373,22 @@ export default function GameRoom() {
           [key]: nextContributionPoints,
         };
         setLocalContributionPoints(localContributionPointsRef.current);
+        lastRevealBaselineRef.current = new Set([...lastRevealBaselineRef.current, data.answerIndex]);
         setGameState(prev => prev ? {
           ...prev,
+          currentQuestion: prev.currentQuestion ? {
+            ...prev.currentQuestion,
+            answers: prev.currentQuestion.answers.map(answer =>
+              answer.index === data.answerIndex
+                ? {
+                    ...answer,
+                    text: data.answerText,
+                    points: data.points,
+                    revealed: true,
+                  }
+                : answer
+            ),
+          } : prev.currentQuestion,
           players: prev.players.map(player =>
             player.name === data.playerName
               ? {
