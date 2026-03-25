@@ -1094,9 +1094,6 @@ export default function GameRoom() {
                     )}
                   </div>
                 )}
-                {!isMyTurnToPlay && isMyTeamPlaying && (
-                  {/* waiting banner removed */}
-                )}
                 {/* Phase description — hidden on small screens to save space */}
                 <div className={`hidden sm:block rounded-xl border px-4 py-2.5 text-center ${
                   gameState.playingTeam === 1
