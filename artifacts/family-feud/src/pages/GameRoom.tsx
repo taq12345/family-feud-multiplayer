@@ -96,7 +96,11 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName }: {
                   <div key={p.name} className={`flex items-center gap-1.5 text-[11px] rounded-md px-1.5 py-0.5 ${isActive ? `border ${color.active}` : "text-slate-300"}`}>
                     <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-40"}`} />
                     <span className="truncate font-medium">{p.name}</span>
-                    {p.isHost && <span className="ml-auto text-amber-400 text-[9px]">👑</span>}
+                    {p.isHost && (
+                      <span className="ml-auto text-amber-400 text-[9px] whitespace-nowrap">
+                        👑 <span className="italic">Host</span>
+                      </span>
+                    )}
                   </div>
                 );
               })}
