@@ -1225,14 +1225,20 @@ export default function GameRoom() {
                   )}
                   {isGameOver && mvpPlayers.length > 0 && (
                     <div className="rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2 mb-2 sm:rounded-xl sm:px-4 sm:py-3 sm:mb-3">
-                      <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300/80 mb-0.5 sm:mb-1">MVP</p>
-                      <p className="text-amber-100 font-black text-sm sm:text-lg leading-tight">
-                        {mvpPlayers.map(p => p.name).join(", ")}
+                      <p className="sm:hidden text-[11px] text-amber-100 font-semibold leading-none whitespace-nowrap overflow-hidden text-ellipsis">
+                        <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-amber-300/80 mr-2">MVP</span>
+                        {mvpPlayers.map(p => p.name).join(", ")} • {mvpScore} pt{mvpScore === 1 ? "" : "s"}
                       </p>
-                      <p className="text-amber-300/80 text-[11px] sm:text-xs mt-0.5 sm:mt-1 leading-snug">
-                        {mvpPlayers.length > 1 ? "Top contributors" : "Top contributor"} with {mvpScore} point{mvpScore === 1 ? "" : "s"} for{" "}
-                        {mvpPlayers.length > 1 ? "their teams" : "their team"}.
-                      </p>
+                      <div className="hidden sm:block">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300/80 mb-1">MVP</p>
+                        <p className="text-amber-100 font-black text-lg leading-tight">
+                          {mvpPlayers.map(p => p.name).join(", ")}
+                        </p>
+                        <p className="text-amber-300/80 text-xs mt-1 leading-snug">
+                          {mvpPlayers.length > 1 ? "Top contributors" : "Top contributor"} with {mvpScore} point{mvpScore === 1 ? "" : "s"} for{" "}
+                          {mvpPlayers.length > 1 ? "their teams" : "their team"}.
+                        </p>
+                      </div>
                     </div>
                   )}
                   {stealAttempt && (
