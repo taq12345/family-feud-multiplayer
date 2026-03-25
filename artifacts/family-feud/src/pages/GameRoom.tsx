@@ -43,13 +43,13 @@ function AnswerBoard({ question, answers }: {
         {answers.map((a, i) => (
           <div
             key={i}
-            className={`flex items-start sm:items-center justify-between gap-2 px-3 py-2 rounded-xl border transition-all duration-500 ${
+            className={`grid grid-cols-[auto,minmax(0,1fr),auto] items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-500 ${
               a.revealed
                 ? "bg-blue-500/20 border-blue-400/40 shadow-[0_0_12px_rgba(96,165,250,0.2)]"
                 : "bg-white/[0.03] border-white/8"
             }`}
           >
-            <div className="flex min-w-0 flex-1 items-start sm:items-center gap-2 sm:gap-3">
+            <div className="contents">
               <div className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center shrink-0 transition-all ${
                 a.revealed
                   ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_8px_rgba(251,191,36,0.4)]"
@@ -61,7 +61,7 @@ function AnswerBoard({ question, answers }: {
                 {a.revealed ? a.text : "— — — — —"}
               </span>
             </div>
-            <div className={`shrink-0 self-start sm:self-center pt-0.5 sm:pt-0 text-sm font-bold ${a.revealed ? "text-amber-400" : "text-transparent"}`}>
+            <div className={`shrink-0 text-sm font-bold ${a.revealed ? "text-amber-400" : "text-transparent"}`}>
               {a.revealed ? a.points : "0"}
             </div>
           </div>
