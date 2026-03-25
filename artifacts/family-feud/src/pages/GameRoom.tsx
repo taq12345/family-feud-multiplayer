@@ -45,8 +45,8 @@ function AnswerBoard({ question, answers }: {
             key={i}
             className={`flex items-start sm:items-center justify-between gap-2 px-3 py-2 rounded-xl border transition-all duration-500 ${
               a.revealed
-                ? "min-h-[3.5rem] bg-blue-500/20 border-blue-400/40 shadow-[0_0_12px_rgba(96,165,250,0.2)] sm:min-h-0"
-                : "min-h-[2.75rem] bg-white/[0.03] border-white/8 sm:min-h-0"
+                ? "bg-blue-500/20 border-blue-400/40 shadow-[0_0_12px_rgba(96,165,250,0.2)]"
+                : "bg-white/[0.03] border-white/8"
             }`}
           >
             <div className="flex min-w-0 flex-1 items-start sm:items-center gap-2 sm:gap-3">
