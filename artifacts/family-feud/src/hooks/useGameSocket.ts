@@ -23,6 +23,7 @@ export interface CurrentQuestion {
 
 export interface GameStateData {
   roomId: string;
+  roomName: string;
   players: Player[];
   team1Score: number;
   team2Score: number;

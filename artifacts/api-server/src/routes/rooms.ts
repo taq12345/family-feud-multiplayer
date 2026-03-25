@@ -40,8 +40,8 @@ router.post("/rooms", async (req, res) => {
     return res.status(400).json({ error: "name, hostName, team1Name, team2Name are required" });
   }
 
-  if (trimmedRoomName.length > 16) {
-    return res.status(400).json({ error: "Room name must be 16 characters or fewer." });
+  if (trimmedRoomName.length > 32) {
+    return res.status(400).json({ error: "Room name must be 32 characters or fewer." });
   }
 
   if (trimmedHostName.length > 16) {

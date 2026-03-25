@@ -181,7 +181,7 @@ export default function Lobby() {
     const trimmedNickname = nickname.trim();
 
     if (!trimmedRoomName) return;
-    if (trimmedRoomName.length > 16) { setCreateError("Room name must be 16 characters or fewer."); return; }
+    if (trimmedRoomName.length > 32) { setCreateError("Room name must be 32 characters or fewer."); return; }
     if (!trimmedNickname) return;
     if (trimmedNickname.length > 16) { setCreateError("Nickname must be 16 characters or fewer."); return; }
 
@@ -363,7 +363,7 @@ export default function Lobby() {
                       placeholder="e.g. Family Game Night"
                       value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                      maxLength={16}
+                      maxLength={32}
                       className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20"
                       required
                     />

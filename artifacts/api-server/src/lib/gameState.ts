@@ -10,6 +10,7 @@ export interface Player {
 
 export interface GameState {
   roomId: string;
+  roomName: string;
   players: Map<string, Player>;
   team1Score: number;
   team2Score: number;
@@ -37,7 +38,7 @@ export interface GameState {
   correctSubmissionNorms: Set<string>;
 }
 
-export function createGameState(roomId: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
+export function createGameState(roomId: string, roomName: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
   const allQuestions = [...surveyQuestions];
   // Shuffle
   for (let i = allQuestions.length - 1; i > 0; i--) {
@@ -47,6 +48,7 @@ export function createGameState(roomId: string, team1Name: string, team2Name: st
 
   return {
     roomId,
+    roomName,
     players: new Map(),
     team1Score: 0,
     team2Score: 0,
@@ -89,6 +91,7 @@ export function serializeGameState(state: GameState) {
 
   return {
     roomId: state.roomId,
+    roomName: state.roomName,
     players: Array.from(state.players.values()),
     team1Score: state.team1Score,
     team2Score: state.team2Score,

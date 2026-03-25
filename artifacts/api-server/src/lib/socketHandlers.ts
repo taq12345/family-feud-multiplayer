@@ -293,7 +293,7 @@ export function setupSocketHandlers(io: SocketServer) {
         try {
           const [room] = await db.select().from(roomsTable).where(eq(roomsTable.id, roomId));
           if (room) {
-            const state = createGameState(roomId, room.team1Name, room.team2Name, room.totalRounds);
+            const state = createGameState(roomId, room.name, room.team1Name, room.team2Name, room.totalRounds);
             gameStates.set(roomId, state);
           }
         } catch (err) {
