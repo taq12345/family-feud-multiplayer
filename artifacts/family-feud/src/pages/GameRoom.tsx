@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
-import { useGameSocket, GameStateData, ChatMsg } from "../hooks/useGameSocket";
+import { useGameSocket, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
@@ -8,6 +8,8 @@ import { Input } from "../components/ui/input";
 import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
+
+const REVEAL_STAGGER_MS = 2000;
 
 function StrikeDisplay({ strikes }: { strikes: number }) {
   return (
@@ -178,6 +180,13 @@ export default function GameRoom() {
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
   const [currentStealGuess, setCurrentStealGuess] = useState<{ playerName: string; answer: string } | null>(null);
   const [lastRoundResult, setLastRoundResult] = useState<{ winningTeam: 1 | 2; points: number } | null>(null);
+  const [boardRevealStagger, setBoardRevealStagger] = useState<{
+    canonical: CanonicalAnswerSlot[];
+    visible: Set<number>;
+  } | null>(null);
+  const pendingCanonicalRef = useRef<CanonicalAnswerSlot[] | null>(null);
+  const lastRevealBaselineRef = useRef<Set<number>>(new Set());
+  const revealStaggerTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const pendingWrongRef = useRef<{ answer: string; playerName: string } | null>(null);
   const joinSoundPlayedRef = useRef(false);
@@ -188,6 +197,40 @@ export default function GameRoom() {
     setNotification(msg);
     setTimeout(() => setNotification(null), 3000);
   }, []);
+
+  function clearRevealStaggerTimers() {
+    revealStaggerTimersRef.current.forEach(clearTimeout);
+    revealStaggerTimersRef.current = [];
+  }
+
+  function startBoardRevealStagger(canonical: CanonicalAnswerSlot[], baseline: Set<number>) {
+    clearRevealStaggerTimers();
+    const queue = canonical.map(c => c.index).filter(i => !baseline.has(i)).sort((a, b) => a - b);
+    if (queue.length === 0) {
+      setBoardRevealStagger(null);
+      return;
+    }
+    setBoardRevealStagger({ canonical, visible: new Set(baseline) });
+
+    const revealChain = (remaining: number[]) => {
+      if (remaining.length === 0) {
+        setBoardRevealStagger(null);
+        return;
+      }
+      const t = setTimeout(() => {
+        const idx = remaining[0];
+        setBoardRevealStagger(prev => {
+          if (!prev) return null;
+          const next = new Set(prev.visible);
+          next.add(idx);
+          return { canonical: prev.canonical, visible: next };
+        });
+        revealChain(remaining.slice(1));
+      }, REVEAL_STAGGER_MS);
+      revealStaggerTimersRef.current.push(t);
+    };
+    revealChain(queue);
+  }
 
   const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame } = useGameSocket(
     roomId,
@@ -200,6 +243,22 @@ export default function GameRoom() {
           playJoinSound();
         }
         setGameState(state);
+
+        if (state.status === "between_rounds" && state.currentQuestion && pendingCanonicalRef.current) {
+          const canonical = pendingCanonicalRef.current;
+          pendingCanonicalRef.current = null;
+          const baseline = new Set(lastRevealBaselineRef.current);
+          startBoardRevealStagger(canonical, baseline);
+        } else if (
+          (state.status === "faceoff" || state.status === "playing" || state.status === "stealing") &&
+          state.currentQuestion
+        ) {
+          const s = new Set<number>();
+          state.currentQuestion.answers.forEach((a, i) => {
+            if (a.revealed) s.add(i);
+          });
+          lastRevealBaselineRef.current = s;
+        }
       },
       onChatMessage: (msg) => {
         setChatMessages(prev => [...prev.slice(-99), msg]);
@@ -276,6 +335,7 @@ export default function GameRoom() {
         setLastRoundResult({ winningTeam: data.winningTeam, points: data.points });
         playRoundEndSound();
         showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`);
+        pendingCanonicalRef.current = data.canonicalAnswers ?? null;
       },
       onRoomDeleted: () => {
         showNotification("Room was deleted by host.");
@@ -292,8 +352,9 @@ export default function GameRoom() {
           showNotification(`👑 ${data.hostName} is now the host`);
         }
       },
-      onFaceoffNoWinner: () => {
+      onFaceoffNoWinner: (data) => {
         showNotification("⏱ No winner in the face-off — moving to next round!");
+        pendingCanonicalRef.current = data.canonicalAnswers ?? null;
       },
       onKickedInactive: (data) => {
         sessionStorage.setItem("kickedMessage", `You were removed due to being idle for ${data.idleMinutes} minute${data.idleMinutes === 1 ? "" : "s"}.`);
@@ -315,6 +376,14 @@ export default function GameRoom() {
     }
     if (gameState?.status === "between_rounds") {
       setCurrentStealGuess(null);
+    }
+  }, [gameState?.status]);
+
+  // End client-side board stagger when leaving between-rounds
+  useEffect(() => {
+    if (gameState?.status !== "between_rounds") {
+      clearRevealStaggerTimers();
+      setBoardRevealStagger(null);
     }
   }, [gameState?.status]);
 
@@ -463,6 +532,20 @@ export default function GameRoom() {
     setAnswerInput("");
     setRoundCountdown(null);
   }
+
+  const answerBoardAnswers = useMemo(() => {
+    if (!gameState?.currentQuestion) return null;
+    if (gameState.status === "between_rounds" && boardRevealStagger) {
+      const { canonical, visible } = boardRevealStagger;
+      return canonical.map(c => ({
+        index: c.index,
+        text: visible.has(c.index) ? c.text : null,
+        points: visible.has(c.index) ? c.points : null,
+        revealed: visible.has(c.index),
+      }));
+    }
+    return gameState.currentQuestion.answers;
+  }, [gameState, boardRevealStagger]);
 
   if (!gameState) {
     return (
@@ -639,11 +722,11 @@ export default function GameRoom() {
           )}
 
           {/* Answer board — grows to fill remaining space */}
-          {gameState.currentQuestion && (
+          {gameState.currentQuestion && answerBoardAnswers && (
             <div className="flex-1 min-h-0">
               <AnswerBoard
                 question={gameState.currentQuestion.question}
-                answers={gameState.currentQuestion.answers}
+                answers={answerBoardAnswers}
               />
             </div>
           )}

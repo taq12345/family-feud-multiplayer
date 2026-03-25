@@ -9,8 +9,6 @@ const gameStates = new Map<string, GameState>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const faceoffAnswerTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const autoAdvanceTimers = new Map<string, ReturnType<typeof setTimeout>>();
-const revealSequenceTimers = new Map<string, ReturnType<typeof setTimeout>>();
-const REVEAL_ANSWER_DELAY_MS = 2000;
 // Per-player disconnect grace timers (keyed by socket.id of the disconnected socket)
 const playerDisconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
 // Records when each socket disconnected (socket.id → timestamp ms)
@@ -33,58 +31,8 @@ const PLAYER_DISCONNECT_GRACE_MS = 30 * 60 * 1000; // 30 minutes per-player reco
 const FACEOFF_ANSWER_MS = 25 * 1000; // 25 seconds per faceoff guess
 const ROUND_ANSWER_MS = 25 * 1000; // 25 seconds per guess
 
-function clearRevealSequenceTimer(roomId: string) {
-  const existing = revealSequenceTimers.get(roomId);
-  if (existing) {
-    clearTimeout(existing);
-    revealSequenceTimers.delete(roomId);
-  }
-}
-
-/** After a round ends, reveal remaining survey answers one at a time (2s apart, first after 2s). */
-function scheduleRevealRemainingAnswers(io: SocketServer, roomId: string) {
-  clearRevealSequenceTimer(roomId);
-  const state = gameStates.get(roomId);
-  if (!state || state.status !== "between_rounds" || !state.currentQuestion) return;
-  const pending = state.currentQuestion.answers
-    .map((_, i) => i)
-    .filter(i => !state.revealedAnswers.has(i));
-  if (pending.length === 0) return;
-
-  const revealNext = () => {
-    const current = gameStates.get(roomId);
-    if (!current || current.status !== "between_rounds" || !current.currentQuestion) {
-      revealSequenceTimers.delete(roomId);
-      return;
-    }
-    const still = current.currentQuestion.answers
-      .map((_, i) => i)
-      .filter(i => !current.revealedAnswers.has(i));
-    if (still.length === 0) {
-      revealSequenceTimers.delete(roomId);
-      return;
-    }
-    const idx = still[0];
-    current.revealedAnswers.add(idx);
-    io.to(roomId).emit("game_state", serializeGameState(current));
-    const remaining = current.currentQuestion.answers
-      .map((_, i) => i)
-      .filter(i => !current.revealedAnswers.has(i));
-    if (remaining.length > 0) {
-      const t = setTimeout(revealNext, REVEAL_ANSWER_DELAY_MS);
-      revealSequenceTimers.set(roomId, t);
-    } else {
-      revealSequenceTimers.delete(roomId);
-    }
-  };
-
-  const t = setTimeout(revealNext, REVEAL_ANSWER_DELAY_MS);
-  revealSequenceTimers.set(roomId, t);
-}
-
 async function deleteRoomNow(roomId: string) {
   clearAutoAdvanceTimer(roomId);
-  clearRevealSequenceTimer(roomId);
   gameStates.delete(roomId);
   try {
     await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
@@ -133,8 +81,6 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
   const state = gameStates.get(roomId);
   if (!state || state.status !== "between_rounds") return;
 
-  clearRevealSequenceTimer(roomId);
-
   // Don't advance if the game is over (last round done or out of questions)
   if (state.currentRound >= state.totalRounds) return;
 
@@ -180,10 +126,15 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
   clearFaceoffAnswerTimer(roomId);
   state.faceoffDesignatedPlayerId = null;
   state.faceoffTurn = null;
+  if (state.currentQuestion) {
+    state.revealedAnswers = new Set(state.currentQuestion.answers.map((_, idx) => idx));
+  }
   state.status = "between_rounds";
-  io.to(roomId).emit("faceoff_no_winner", {});
+  const canonicalAnswers = state.currentQuestion
+    ? state.currentQuestion.answers.map((a, i) => ({ index: i, text: a.text, points: a.points }))
+    : null;
+  io.to(roomId).emit("faceoff_no_winner", { canonicalAnswers });
   io.to(roomId).emit("game_state", serializeGameState(state));
-  scheduleRevealRemainingAnswers(io, roomId);
 
   // Schedule auto-advance just like endRound does
   const players = Array.from(state.players.values());
@@ -487,8 +438,6 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player?.isHost) return;
       if (state.status !== "between_rounds" || state.currentRound < state.totalRounds) return;
 
-      clearRevealSequenceTimer(roomId);
-
       const team1Players = Array.from(state.players.values()).filter(p => p.team === 1);
       const team2Players = Array.from(state.players.values()).filter(p => p.team === 2);
       if (team1Players.length === 0 || team2Players.length === 0) return;
@@ -773,7 +722,6 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player?.isHost) return;
 
       clearAutoAdvanceTimer(roomId);
-      clearRevealSequenceTimer(roomId);
       for (const [sid, p] of state.players.entries()) {
         clearPlayerDisconnectTimer(sid);
         const key = p.name.trim().toLowerCase();
@@ -974,6 +922,11 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
 
   state.status = "between_rounds";
 
+  // Full board in server state (reconnects / consistency). Client animates reveals using canonicalAnswers on round_over.
+  if (state.currentQuestion) {
+    state.revealedAnswers = new Set(state.currentQuestion.answers.map((_, idx) => idx));
+  }
+
   try {
     await db.update(roomsTable).set({
       team1Score: state.team1Score,
@@ -983,14 +936,18 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
     // ignore
   }
 
+  const canonicalAnswers = state.currentQuestion
+    ? state.currentQuestion.answers.map((a, i) => ({ index: i, text: a.text, points: a.points }))
+    : null;
+
   io.to(roomId).emit("round_over", {
     winningTeam,
     points: state.roundPoints,
     team1Score: state.team1Score,
     team2Score: state.team2Score,
+    canonicalAnswers,
   });
   io.to(roomId).emit("game_state", serializeGameState(state));
-  scheduleRevealRemainingAnswers(io, roomId);
 
   // Auto-advance to next round if host doesn't click within 60 seconds.
   // Only schedule if there are more rounds to play and both teams have players.

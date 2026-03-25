@@ -47,6 +47,12 @@ export interface ChatMsg {
   type?: "system-correct" | "system-wrong";
 }
 
+export interface CanonicalAnswerSlot {
+  index: number;
+  text: string;
+  points: number;
+}
+
 export function useGameSocket(
   roomId: string | null,
   playerName: string | null,
@@ -61,11 +67,17 @@ export function useGameSocket(
     onAnswerWrong?: (data: { playerName: string; team: 1 | 2; answer: string }) => void;
     onStrike?: (data: { strikes: number }) => void;
     onStealChance?: (data: { team: 1 | 2 }) => void;
-    onRoundOver?: (data: { winningTeam: 1 | 2; points: number; team1Score: number; team2Score: number }) => void;
+    onRoundOver?: (data: {
+      winningTeam: 1 | 2;
+      points: number;
+      team1Score: number;
+      team2Score: number;
+      canonicalAnswers: CanonicalAnswerSlot[] | null;
+    }) => void;
     onRoomDeleted?: (data: { roomId: string }) => void;
     onJoinRejected?: (data: { reason: string }) => void;
     onHostChanged?: (data: { hostName: string }) => void;
-    onFaceoffNoWinner?: () => void;
+    onFaceoffNoWinner?: (data: { canonicalAnswers: CanonicalAnswerSlot[] | null }) => void;
     onKickedInactive?: (data: { idleMinutes: number }) => void;
     onStealGuess?: (data: { playerName: string; answer: string }) => void;
   }
@@ -87,11 +99,18 @@ export function useGameSocket(
       answer_wrong: (data: { playerName: string; team: 1 | 2; answer: string }) => callbacksRef.current.onAnswerWrong?.(data),
       strike: (data: { strikes: number }) => callbacksRef.current.onStrike?.(data),
       steal_chance: (data: { team: 1 | 2 }) => callbacksRef.current.onStealChance?.(data),
-      round_over: (data: { winningTeam: 1 | 2; points: number; team1Score: number; team2Score: number }) => callbacksRef.current.onRoundOver?.(data),
+      round_over: (data: {
+        winningTeam: 1 | 2;
+        points: number;
+        team1Score: number;
+        team2Score: number;
+        canonicalAnswers: CanonicalAnswerSlot[] | null;
+      }) => callbacksRef.current.onRoundOver?.(data),
       room_deleted: (data: { roomId: string }) => callbacksRef.current.onRoomDeleted?.(data),
       join_rejected: (data: { reason: string }) => callbacksRef.current.onJoinRejected?.(data),
       host_changed: (data: { hostName: string }) => callbacksRef.current.onHostChanged?.(data),
-      faceoff_no_winner: () => callbacksRef.current.onFaceoffNoWinner?.(),
+      faceoff_no_winner: (data: { canonicalAnswers: CanonicalAnswerSlot[] | null }) =>
+        callbacksRef.current.onFaceoffNoWinner?.(data),
       kicked_inactive: (data: { idleMinutes: number }) => callbacksRef.current.onKickedInactive?.(data),
       steal_guess: (data: { playerName: string; answer: string }) => callbacksRef.current.onStealGuess?.(data),
     };
