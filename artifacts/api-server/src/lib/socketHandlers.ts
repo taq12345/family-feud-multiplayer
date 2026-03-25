@@ -590,6 +590,7 @@ export function setupSocketHandlers(io: SocketServer) {
             answerText: state.currentQuestion.answers[matchIndex].text,
             playedAnswer: answer,
             points: pts,
+            contributedPoints: player.contributedPoints,
           });
           io.to(roomId).emit("game_state", serializeGameState(state));
           startAnswerTimer(io, state, roomId);
@@ -690,6 +691,7 @@ export function setupSocketHandlers(io: SocketServer) {
             answerText: state.currentQuestion.answers[matchIndex].text,
             playedAnswer: answer,
             points: pts,
+            contributedPoints: player.contributedPoints,
           });
 
           // Check if all answers revealed

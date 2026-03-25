@@ -262,7 +262,13 @@ export default function GameRoom() {
           joinSoundPlayedRef.current = true;
           playJoinSound();
         }
-        setGameState(state);
+        setGameState({
+          ...state,
+          players: state.players.map(player => ({
+            ...player,
+            contributedPoints: player.contributedPoints ?? 0,
+          })),
+        });
 
         // Between-rounds board reveal: do not rely on round_over arriving before game_state —
         // build canonical answers from game_state when the ref is empty (socket order / reconnect).
@@ -339,6 +345,14 @@ export default function GameRoom() {
       },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
+        setGameState(prev => prev ? {
+          ...prev,
+          players: prev.players.map(player =>
+            player.name === data.playerName
+              ? { ...player, contributedPoints: data.contributedPoints ?? 0 }
+              : player
+          ),
+        } : prev);
         playCorrectSound();
         const displayed = data.playedAnswer || data.answerText;
         showNotification(`✅ ${data.playerName}: "${displayed}" — ${data.points} pts`);

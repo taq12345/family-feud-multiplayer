@@ -66,7 +66,7 @@ export function useGameSocket(
     onChatHistory?: (msgs: ChatMsg[]) => void;
     onPlayerJoined?: (data: { playerName: string; team: 1 | 2 }) => void;
     onPlayerLeft?: (data: { playerName: string }) => void;
-    onAnswerCorrect?: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; playedAnswer: string; points: number }) => void;
+    onAnswerCorrect?: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; playedAnswer: string; points: number; contributedPoints: number }) => void;
     onAnswerWrong?: (data: { playerName: string; team: 1 | 2; answer: string }) => void;
     onStrike?: (data: { strikes: number }) => void;
     onStealChance?: (data: { team: 1 | 2 }) => void;
@@ -100,7 +100,7 @@ export function useGameSocket(
       chat_history: (msgs: ChatMsg[]) => callbacksRef.current.onChatHistory?.(msgs),
       player_joined: (data: { playerName: string; team: 1 | 2 }) => callbacksRef.current.onPlayerJoined?.(data),
       player_left: (data: { playerName: string }) => callbacksRef.current.onPlayerLeft?.(data),
-      answer_correct: (data: { playerName: string; team: 1 | 2; answerIndex: number; points: number }) => callbacksRef.current.onAnswerCorrect?.(data),
+      answer_correct: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; playedAnswer: string; points: number; contributedPoints: number }) => callbacksRef.current.onAnswerCorrect?.(data),
       answer_wrong: (data: { playerName: string; team: 1 | 2; answer: string }) => callbacksRef.current.onAnswerWrong?.(data),
       strike: (data: { strikes: number }) => callbacksRef.current.onStrike?.(data),
       steal_chance: (data: { team: 1 | 2 }) => callbacksRef.current.onStealChance?.(data),
