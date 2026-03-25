@@ -1187,7 +1187,7 @@ export default function GameRoom() {
                     )
                   ) : (
                     <p className="text-slate-500 text-sm">
-                      {isGameOver ? "Waiting for host to start a new game…" : "Waiting for host to continue…"}
+                      {isGameOver ? "Waiting for host to start a new game…" : ""}
                     </p>
                   )}
                 </div>
