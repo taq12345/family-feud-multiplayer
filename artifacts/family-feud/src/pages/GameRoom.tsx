@@ -289,10 +289,28 @@ export default function GameRoom() {
       onPlayerJoined: (data) => {
         playPlayerJoinSound();
         showNotification(`${data.playerName} joined Team ${data.team}`);
+        setChatMessages(prev => [
+          ...prev.slice(-99),
+          {
+            playerName: data.playerName,
+            message: "has joined the room",
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        setUnreadChats(prev => (mobileTab === "game" ? prev + 1 : 0));
       },
       onPlayerLeft: (data) => {
         playPlayerLeaveSound();
         showNotification(`${data.playerName} left the room`);
+        setChatMessages(prev => [
+          ...prev.slice(-99),
+          {
+            playerName: data.playerName,
+            message: "has left the room",
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        setUnreadChats(prev => (mobileTab === "game" ? prev + 1 : 0));
       },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
