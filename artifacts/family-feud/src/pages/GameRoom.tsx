@@ -1127,7 +1127,7 @@ export default function GameRoom() {
                     );
                   })() : (
                     <>
-                      <p className="text-white font-bold text-lg mb-2">Round Complete!</p>
+                      <p className="text-white font-bold text-base mb-1">Round Complete!</p>
                       {autoAdvanceCountdown !== null && (
                         <p className="text-slate-500 text-xs mb-3">
                           Next round starts automatically in{" "}
@@ -1138,7 +1138,7 @@ export default function GameRoom() {
                       )}
                       {myTeam !== null && lastRoundResult && (
                         <div
-                          className={`rounded-xl border px-4 py-3 mb-3 text-sm ${
+                          className={`rounded-lg border px-3 py-1.5 mb-2 text-xs ${
                             myTeam === 1
                               ? "bg-rose-500/10 border-rose-500/25 text-rose-300"
                               : "bg-blue-500/10 border-blue-500/25 text-blue-300"
@@ -1155,7 +1155,7 @@ export default function GameRoom() {
                     </>
                   )}
                   {stealAttempt && (
-                    <div className={`rounded-xl border px-4 py-3 mb-4 text-sm ${
+                    <div className={`rounded-lg border px-3 py-1.5 mb-2 text-xs ${
                       stealAttempt.correct
                         ? "bg-emerald-500/10 border-emerald-500/25 text-emerald-300"
                         : "bg-red-500/10 border-red-500/25 text-red-300"
