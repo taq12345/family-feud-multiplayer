@@ -166,6 +166,7 @@ export default function GameRoom() {
   const playerName = searchParams.get("name") ?? localStorage.getItem("playerName") ?? "Guest";
   const teamParam = parseInt(searchParams.get("team") ?? "1");
   const team = (teamParam === 2 ? 2 : 1) as 1 | 2;
+  const roomNameFromQuery = searchParams.get("roomName")?.trim() ?? "";
 
   const [gameState, setGameState] = useState<GameStateData | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMsg[]>([]);
@@ -180,6 +181,7 @@ export default function GameRoom() {
   const [shareCopied, setShareCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
   const [unreadChats, setUnreadChats] = useState(0);
+  const [fallbackRoomName, setFallbackRoomName] = useState<string>(roomNameFromQuery);
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
   const [currentStealGuess, setCurrentStealGuess] = useState<{ playerName: string; answer: string } | null>(null);
@@ -385,6 +387,34 @@ export default function GameRoom() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
+
+  // Keep a resilient room-name fallback for cases where socket state arrives without roomName.
+  useEffect(() => {
+    const socketRoomName = gameState?.roomName?.trim();
+    if (socketRoomName) {
+      setFallbackRoomName(socketRoomName);
+      return;
+    }
+
+    if (!roomId) return;
+    let cancelled = false;
+    fetch(`/api/rooms/${roomId}`)
+      .then(async res => {
+        if (!res.ok) return null;
+        return res.json() as Promise<{ name?: string }>;
+      })
+      .then(data => {
+        const apiRoomName = data?.name?.trim();
+        if (!cancelled && apiRoomName) setFallbackRoomName(apiRoomName);
+      })
+      .catch(() => {
+        // Ignore; UI keeps existing fallback text.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [roomId, gameState?.roomName]);
 
   // Clear steal attempt summary and live guess when a new round's faceoff begins
   useEffect(() => {
@@ -593,6 +623,8 @@ export default function GameRoom() {
     gameState.status === "between_rounds" ? "text-purple-400" :
     gameState.status === "finished" ? "text-amber-400" : "text-slate-400";
 
+  const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
+
   return (
     <div className="h-svh overflow-hidden bg-[#070d1f] text-white flex flex-col">
       {/* Answer verification overlay */}
@@ -630,8 +662,8 @@ export default function GameRoom() {
             <span className="font-extrabold text-sm tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
               Friendly Feud
             </span>
-            <span className="text-[10px] text-slate-400 truncate max-w-[180px] sm:max-w-[280px]" title={gameState.roomName}>
-              {gameState.roomName || "Unnamed Room"}
+            <span className="text-[10px] text-slate-400 truncate max-w-[180px] sm:max-w-[280px]" title={displayRoomName}>
+              {displayRoomName}
             </span>
           </div>
           <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-400 font-mono">
