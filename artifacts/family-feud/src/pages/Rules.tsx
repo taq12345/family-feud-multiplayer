@@ -109,7 +109,7 @@ export default function Rules() {
                   <li>One player from each team takes turns answering the round's question.</li>
                   <li>The player who gives any correct survey answer <strong>wins the Face-Off</strong> for their team.</li>
                   <li>Their team gets to keep that revealed answer and moves to the Playing phase.</li>
-                  <li>Each player has <strong>15 seconds</strong> to answer. If time runs out, the turn passes to the other team.</li>
+                  <li>Each player has <strong>25 seconds</strong> to answer. If time runs out, the turn passes to the other team.</li>
                   <li>If no one answers correctly after several turns, the round is skipped and the board is revealed.</li>
                 </ul>
               </div>
@@ -125,7 +125,7 @@ export default function Rules() {
                   <li>A wrong answer earns a <strong className="text-red-400">Strike ✗</strong>.</li>
                   <li>Three strikes end the Playing phase and trigger a Steal chance.</li>
                   <li>If the team reveals all answers before 3 strikes, they bank all the points immediately.</li>
-                  <li>Each player has <strong>15 seconds</strong> per turn.</li>
+                  <li>Each player has <strong>25 seconds</strong> per turn.</li>
                 </ul>
               </div>
 
@@ -139,7 +139,7 @@ export default function Rules() {
                   <li>One designated player from the steal team must name any unrevealed answer.</li>
                   <li>If correct, that team <strong>steals all the points</strong> in the pot.</li>
                   <li>If wrong, the original playing team banks all the points instead.</li>
-                  <li>The steal player also has <strong>15 seconds</strong> to answer.</li>
+                  <li>The steal player also has <strong>25 seconds</strong> to answer.</li>
                 </ul>
               </div>
             </div>
@@ -198,7 +198,7 @@ export default function Rules() {
                 },
                 {
                   q: "Who controls when the next round starts?",
-                  a: "Only the host can advance to the next round after the between-round summary is shown.",
+                  a: "The host can advance to the next round manually after the between-round summary is shown. If the host doesn't act, the game auto-advances after 60 seconds.",
                 },
                 {
                   q: "Is there a chat during the game?",
