@@ -931,6 +931,14 @@ export default function GameRoom() {
                   })() : (
                     <>
                       <p className="text-white font-bold text-lg mb-2">Round Complete!</p>
+                      {autoAdvanceCountdown !== null && (
+                        <p className="text-slate-500 text-xs mb-3">
+                          Next round starts automatically in{" "}
+                          <span className={`font-bold tabular-nums ${autoAdvanceCountdown <= 10 ? "text-amber-400" : "text-slate-400"}`}>
+                            {autoAdvanceCountdown}s
+                          </span>
+                        </p>
+                      )}
                       {myTeam !== null && lastRoundResult && (
                         <div
                           className={`rounded-xl border px-4 py-3 mb-3 text-sm ${
@@ -946,14 +954,6 @@ export default function GameRoom() {
                           </span>{" "}
                           point{(lastRoundResult.winningTeam === myTeam ? lastRoundResult.points : 0) === 1 ? "" : "s"} this round.
                         </div>
-                      )}
-                      {autoAdvanceCountdown !== null && (
-                        <p className="text-slate-500 text-xs mb-4">
-                          Next round starts automatically in{" "}
-                          <span className={`font-bold tabular-nums ${autoAdvanceCountdown <= 10 ? "text-amber-400" : "text-slate-400"}`}>
-                            {autoAdvanceCountdown}s
-                          </span>
-                        </p>
                       )}
                     </>
                   )}
