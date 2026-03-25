@@ -139,8 +139,37 @@ function stemmedTokens(text: string): Set<string> {
  * "Beer" → ["Beer"]  (no slash — single-element array)
  */
 function splitVariants(text: string): string[] {
-  const parts = text.split("/").map(s => s.trim()).filter(Boolean);
+  // ASCII / plus common Unicode slash lookalikes (survey data / copy-paste)
+  const parts = text.split(/\s*[/／⁄∕]\s*/u).map(s => s.trim()).filter(Boolean);
   return parts.length > 1 ? parts : [text];
+}
+
+/**
+ * True if the guess matches an answer row that is already revealed (same rules as
+ * layer 1/2 matching, plus token fallback on the full normalized line).
+ * Used to reject repeats immediately without calling AI on other rows.
+ */
+function submissionMatchesAlreadyRevealedAnswer(normSubmitted: string, canonicalAnswerText: string): boolean {
+  const variants = splitVariants(canonicalAnswerText);
+  for (const variant of variants) {
+    const normVariant = normalize(variant);
+    if (normSubmitted === normVariant || stemmedMatch(normSubmitted, normVariant)) {
+      return true;
+    }
+  }
+
+  const normLine = normalize(canonicalAnswerText);
+  if (normSubmitted === normLine || stemmedMatch(normSubmitted, normLine)) {
+    return true;
+  }
+
+  const lineTokens = normLine.split(/\s+/).filter(Boolean);
+  const submittedTokens = normSubmitted.split(/\s+/).filter(Boolean);
+  if (submittedTokens.length === 1 && lineTokens.length > 1 && lineTokens.includes(submittedTokens[0]!)) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -225,12 +254,8 @@ export async function findMatchIndex(
   // and falls through to parallel AI checks on every unrevealed slot (slow).
   for (let i = 0; i < answers.length; i++) {
     if (!revealedAnswers.has(i)) continue;
-    const variants = splitVariants(answers[i].text);
-    for (const variant of variants) {
-      const normVariant = normalize(variant);
-      if (normSubmitted === normVariant || stemmedMatch(normSubmitted, normVariant)) {
-        return -1;
-      }
+    if (submissionMatchesAlreadyRevealedAnswer(normSubmitted, answers[i].text)) {
+      return -1;
     }
   }
 
