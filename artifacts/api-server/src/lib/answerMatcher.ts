@@ -34,6 +34,7 @@ function cacheSet(key: string, value: boolean): void {
  */
 function normalize(text: string): string {
   return text
+    .normalize("NFKC")
     .toLowerCase()
     .replace(/['''`]/g, "")       // remove apostrophes/curly quotes (don't→dont, McDonald's→mcdonalds)
     .replace(/[^a-z0-9\s]/g, " ") // replace other punctuation with space (hyphen, slash, etc.)
@@ -150,6 +151,7 @@ function splitVariants(text: string): string[] {
  * Used to reject repeats immediately without calling AI on other rows.
  */
 function submissionMatchesAlreadyRevealedAnswer(normSubmitted: string, canonicalAnswerText: string): boolean {
+  if (!canonicalAnswerText?.trim()) return false;
   const variants = splitVariants(canonicalAnswerText);
   for (const variant of variants) {
     const normVariant = normalize(variant);
@@ -169,6 +171,15 @@ function submissionMatchesAlreadyRevealedAnswer(normSubmitted: string, canonical
     return true;
   }
 
+  return false;
+}
+
+/** Coerce Set entries so duplicate checks never miss (e.g. string "3" vs number 3). */
+function revealedIncludesIndex(revealedAnswers: Set<number>, i: number): boolean {
+  if (revealedAnswers.has(i)) return true;
+  for (const v of revealedAnswers) {
+    if (Number(v) === i) return true;
+  }
   return false;
 }
 
@@ -252,16 +263,20 @@ export async function findMatchIndex(
   // Duplicate of an answer already on the board — wrong immediately (no AI).
   // Without this, repeating e.g. a face-off hit during playing skips that index
   // and falls through to parallel AI checks on every unrevealed slot (slow).
-  for (let i = 0; i < answers.length; i++) {
-    if (!revealedAnswers.has(i)) continue;
-    if (submissionMatchesAlreadyRevealedAnswer(normSubmitted, answers[i].text)) {
+  // Iterate the Set directly so we never miss an index due to key type quirks.
+  for (const raw of revealedAnswers) {
+    const i = typeof raw === "number" ? raw : Number(raw);
+    if (!Number.isInteger(i) || i < 0 || i >= answers.length) continue;
+    const rowText = answers[i]?.text;
+    if (rowText == null || rowText === "") continue;
+    if (submissionMatchesAlreadyRevealedAnswer(normSubmitted, rowText)) {
       return -1;
     }
   }
 
   // === Fast pass (layers 1 and 2) ===
   for (let i = 0; i < answers.length; i++) {
-    if (revealedAnswers.has(i)) continue;
+    if (revealedIncludesIndex(revealedAnswers, i)) continue;
     const key = cacheKey(answers[i].text, submitted);
 
     // Layer 0: cache hit
@@ -292,7 +307,7 @@ export async function findMatchIndex(
   // === Slow pass (layer 3: AI — all in parallel) ===
   const aiCandidates: Array<{ index: number; key: string }> = [];
   for (let i = 0; i < answers.length; i++) {
-    if (revealedAnswers.has(i)) continue;
+    if (revealedIncludesIndex(revealedAnswers, i)) continue;
     const key = cacheKey(answers[i].text, submitted);
     if (!matchCache.has(key)) {
       aiCandidates.push({ index: i, key });
