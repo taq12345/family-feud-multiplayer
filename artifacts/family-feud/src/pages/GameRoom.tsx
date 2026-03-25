@@ -824,11 +824,9 @@ export default function GameRoom() {
                     )}
                   </div>
                 )}
-                {!isMyTurnToPlay && (
+                {!isMyTurnToPlay && isMyTeamPlaying && (
                   <div className="rounded-xl bg-white/[0.03] border border-white/8 py-2 px-3 text-center text-xs sm:text-sm text-slate-500">
-                    {isMyTeamPlaying
-                      ? `Waiting for ${gameState.playingDesignatedPlayerName ?? "teammate"} to answer…`
-                      : `Waiting for ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name}…`}
+                    Waiting for {gameState.playingDesignatedPlayerName ?? "teammate"} to answer…
                   </div>
                 )}
                 {/* Phase description — hidden on small screens to save space */}
