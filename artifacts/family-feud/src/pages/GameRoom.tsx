@@ -1235,7 +1235,7 @@ export default function GameRoom() {
                       <p className="sm:hidden text-[11px] text-amber-100 font-semibold leading-none whitespace-nowrap overflow-hidden text-ellipsis">
                         <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-amber-300/80 mr-2">MVP</span>
                         {renderMvpNames("text-amber-200/70")}
-                        <span className="text-amber-100"> • {mvpScore} pt{mvpScore === 1 ? "" : "s"}</span>
+                        <span className="text-amber-100"> - {mvpScore} pt{mvpScore === 1 ? "" : "s"}</span>
                       </p>
                       <div className="hidden sm:block">
                         <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300/80 mb-1">MVP</p>
