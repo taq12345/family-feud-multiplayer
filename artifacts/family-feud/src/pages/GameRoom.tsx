@@ -191,6 +191,7 @@ export default function GameRoom() {
     visible: Set<number>;
   } | null>(null);
   const pendingCanonicalRef = useRef<CanonicalAnswerSlot[] | null>(null);
+  const didRequestLeaveRef = useRef(false);
   const betweenRoundsRevealInitRef = useRef(false);
   const lastRevealBaselineRef = useRef<Set<number>>(new Set());
   const revealStaggerTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -565,6 +566,7 @@ export default function GameRoom() {
   }, [isMyTurnToFaceoff, isMyTurnToPlay]);
 
   function handleLeave() {
+    didRequestLeaveRef.current = true;
     leaveRoom();
     setLocation("/");
   }
@@ -574,7 +576,7 @@ export default function GameRoom() {
   useEffect(() => {
     const currentRoomId = roomId;
     return () => {
-      if (currentRoomId) {
+      if (currentRoomId && !didRequestLeaveRef.current) {
         getSocket().emit("leave_room", { roomId: currentRoomId });
       }
     };
