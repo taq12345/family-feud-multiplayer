@@ -116,10 +116,14 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
 
 function scheduleAutoAdvance(io: SocketServer, roomId: string) {
   clearAutoAdvanceTimer(roomId);
+  const state = gameStates.get(roomId);
+  const startedAt = state?.betweenRoundsStartedAt ?? Date.now();
+  const elapsed = Date.now() - startedAt;
+  const remaining = Math.max(0, AUTO_ADVANCE_MS - elapsed);
   const timer = setTimeout(async () => {
     autoAdvanceTimers.delete(roomId);
     await advanceToNextRound(io, roomId);
-  }, AUTO_ADVANCE_MS);
+  }, remaining);
   autoAdvanceTimers.set(roomId, timer);
 }
 
@@ -131,17 +135,14 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
     state.revealedAnswers = new Set(state.currentQuestion.answers.map((_, idx) => idx));
   }
   state.status = "between_rounds";
+  state.betweenRoundsStartedAt = Date.now();
   const canonicalAnswers = state.currentQuestion
     ? state.currentQuestion.answers.map((a, i) => ({ index: i, text: a.text, points: a.points }))
     : null;
   io.to(roomId).emit("faceoff_no_winner", { canonicalAnswers });
   io.to(roomId).emit("game_state", serializeGameState(state));
 
-  // Schedule auto-advance just like endRound does
-  const players = Array.from(state.players.values());
-  const hasTeam1 = players.some(p => p.team === 1);
-  const hasTeam2 = players.some(p => p.team === 2);
-  if (state.currentRound < state.totalRounds && hasTeam1 && hasTeam2) {
+  if (state.currentRound < state.totalRounds) {
     scheduleAutoAdvance(io, roomId);
   }
 }
@@ -413,6 +414,17 @@ export function setupSocketHandlers(io: SocketServer) {
           message: m.message,
           createdAt: m.createdAt.toISOString(),
         })));
+
+        // If a player joins into a between_rounds room and their team was empty (which
+        // caused endRound to fire without scheduling auto-advance, or the timer already
+        // fired while the team was empty), reschedule so the game can unblock.
+        if (
+          state.status === "between_rounds" &&
+          state.currentRound < state.totalRounds &&
+          !autoAdvanceTimers.has(roomId)
+        ) {
+          scheduleAutoAdvance(io, roomId);
+        }
 
         io.to(roomId).emit("game_state", serializeGameState(state));
         io.to(roomId).emit("player_joined", { playerName: trimmedPlayerName, team });
@@ -987,6 +999,7 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
   }
 
   state.status = "between_rounds";
+  state.betweenRoundsStartedAt = Date.now();
 
   // Full board in server state (reconnects / consistency). Client animates reveals using canonicalAnswers on round_over.
   if (state.currentQuestion) {
@@ -1016,11 +1029,10 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
   io.to(roomId).emit("game_state", serializeGameState(state));
 
   // Auto-advance to next round if host doesn't click within 60 seconds.
-  // Only schedule if there are more rounds to play and both teams have players.
-  const players = Array.from(state.players.values());
-  const hasTeam1 = players.some(p => p.team === 1);
-  const hasTeam2 = players.some(p => p.team === 2);
-  if (state.currentRound < state.totalRounds && hasTeam1 && hasTeam2) {
+  // Always schedule when there are more rounds — advanceToNextRound guards against advancing
+  // into a faceoff when a team is empty, but the timer must exist so the round unblocks
+  // as soon as a player rejoins and fills the empty team.
+  if (state.currentRound < state.totalRounds) {
     scheduleAutoAdvance(io, roomId);
   }
 }

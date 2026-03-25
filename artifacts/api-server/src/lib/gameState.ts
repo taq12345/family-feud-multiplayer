@@ -36,6 +36,8 @@ export interface GameState {
   wrongAnswers: Set<string>;
   /** Normalized submissions that already scored this question (repeat = wrong, sync). */
   correctSubmissionNorms: Set<string>;
+  /** Unix ms when the game entered between_rounds for the current round (for accurate countdown on rejoin). */
+  betweenRoundsStartedAt: number | null;
 }
 
 export function createGameState(roomId: string, roomName: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
@@ -73,6 +75,7 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
     usedQuestionIds: new Set(),
     wrongAnswers: new Set(),
     correctSubmissionNorms: new Set(),
+    betweenRoundsStartedAt: null,
   };
 }
 
@@ -118,5 +121,6 @@ export function serializeGameState(state: GameState) {
     faceoffTurn: state.faceoffTurn,
     faceoffDesignatedPlayerName: designatedPlayer?.name ?? null,
     playingDesignatedPlayerName: playingDesignatedPlayer?.name ?? null,
+    betweenRoundsStartedAt: state.betweenRoundsStartedAt,
   };
 }

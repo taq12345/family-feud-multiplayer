@@ -39,6 +39,7 @@ export interface GameStateData {
   faceoffTurn: 1 | 2 | null;
   faceoffDesignatedPlayerName: string | null;
   playingDesignatedPlayerName: string | null;
+  betweenRoundsStartedAt: number | null;
 }
 
 export interface ChatMsg {
