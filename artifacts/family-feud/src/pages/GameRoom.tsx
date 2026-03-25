@@ -1106,8 +1106,8 @@ export default function GameRoom() {
             {gameState.status === "between_rounds" && (() => {
               const isGameOver = gameState.currentRound >= gameState.totalRounds;
               return (
-                <div className={`rounded-2xl p-6 text-center ${isGameOver ? "bg-white/[0.03] border border-amber-500/25" : "bg-white/[0.03] border border-white/8"}`}>
-                  <Trophy className={`mx-auto mb-2 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] ${isGameOver ? "w-16 h-16 text-amber-400 mb-3 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]" : "w-12 h-12 text-amber-400"}`} />
+                <div className={`rounded-2xl p-3 text-center ${isGameOver ? "bg-white/[0.03] border border-amber-500/25" : "bg-white/[0.03] border border-white/8"}`}>
+                  <Trophy className={`mx-auto mb-1 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] ${isGameOver ? "w-8 h-8 text-amber-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]" : "w-8 h-8 text-amber-400"}`} />
                   {isGameOver ? (() => {
                     const winningTeam = gameState.team1Score > gameState.team2Score ? 1
                       : gameState.team2Score > gameState.team1Score ? 2
@@ -1117,25 +1117,12 @@ export default function GameRoom() {
                     return (
                       <>
                         {iWon ? (
-                          <h2 className="text-3xl font-black bg-gradient-to-r from-emerald-300 to-green-400 bg-clip-text text-transparent mb-4">YOU WIN! 🏆</h2>
+                          <h2 className="text-xl font-black bg-gradient-to-r from-emerald-300 to-green-400 bg-clip-text text-transparent mb-2">YOU WIN! 🏆</h2>
                         ) : isTie ? (
-                          <h2 className="text-2xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-4">IT'S A TIE!</h2>
+                          <h2 className="text-xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-2">IT'S A TIE!</h2>
                         ) : (
-                          <h2 className="text-2xl font-black bg-gradient-to-r from-slate-300 to-slate-400 bg-clip-text text-transparent mb-4">GAME OVER</h2>
+                          <h2 className="text-xl font-black bg-gradient-to-r from-slate-300 to-slate-400 bg-clip-text text-transparent mb-2">GAME OVER</h2>
                         )}
-                        <div className="grid grid-cols-2 gap-3 mb-4">
-                          <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4">
-                            <div className="text-xs text-rose-400 font-semibold mb-1">{gameState.team1Name}</div>
-                            <div className="text-4xl font-black text-white">{gameState.team1Score}</div>
-                          </div>
-                          <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
-                            <div className="text-xs text-blue-400 font-semibold mb-1">{gameState.team2Name}</div>
-                            <div className="text-4xl font-black text-white">{gameState.team2Score}</div>
-                          </div>
-                        </div>
-                        <p className="text-amber-400 font-bold text-lg mb-4">
-                          🏆 {winningTeam === 1 ? gameState.team1Name : winningTeam === 2 ? gameState.team2Name : "It's a tie"}{winningTeam !== null ? " wins!" : "!"}
-                        </p>
                       </>
                     );
                   })() : (
