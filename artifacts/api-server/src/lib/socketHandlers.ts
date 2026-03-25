@@ -791,20 +791,22 @@ export function setupSocketHandlers(io: SocketServer) {
       // Cancel any disconnect grace timer for the target
       clearPlayerDisconnectTimer(targetSocketId);
 
-      // Notify the target — they'll receive this and navigate away
+      // Notify the kicked player — they'll navigate away
       io.to(targetSocketId).emit("kicked");
 
-      // Remove them exactly as if they left voluntarily.
-      // Build a minimal stand-in so handlePlayerLeave can do all the game-state bookkeeping.
+      // Remove them from the room without emitting player_left (we'll emit player_kicked instead)
       const targetSocket = io.sockets.sockets.get(targetSocketId) ?? ({
         id: targetSocketId,
         data: { playerName: targetName, roomId },
         leave: (_: string) => {},
       } as unknown as import("socket.io").Socket);
 
-      await handlePlayerLeave(io, targetSocket, roomId);
+      await handlePlayerLeave(io, targetSocket, roomId, { suppressPlayerLeft: true });
       targetSocket.leave(roomId);
       targetSocket.data.roomId = null;
+
+      // Emit a single, clearly-worded kick announcement to everyone still in the room
+      io.to(roomId).emit("player_kicked", { playerName: targetName, hostName: requester.name });
     });
 
     socket.on("disconnect", () => {
@@ -855,7 +857,7 @@ export function setupSocketHandlers(io: SocketServer) {
   });
 }
 
-async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: string) {
+async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: string, options?: { suppressPlayerLeft?: boolean }) {
   const playerName = socket.data.playerName;
   if (playerName) {
     // Only remove if this socket still owns the nickname
@@ -867,6 +869,8 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
   const state = gameStates.get(roomId);
   if (state) {
     const departing = state.players.get(socket.id);
+    // Guard: if already removed (e.g. kicked then leave_room fires), do nothing
+    if (!departing) return;
     state.players.delete(socket.id);
     try {
       await db.update(roomsTable)
@@ -893,7 +897,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
           } catch { /* ignore */ }
           io.to(roomId).emit("host_changed", { hostName: nextHost.name });
         }
-        if (playerName) io.to(roomId).emit("player_left", { playerName });
+        if (!options?.suppressPlayerLeft && playerName) io.to(roomId).emit("player_left", { playerName });
       };
 
       // Check if a team is now empty
@@ -969,7 +973,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
         io.to(roomId).emit("host_changed", { hostName: nextHost.name });
       }
 
-      if (playerName) io.to(roomId).emit("player_left", { playerName });
+      if (!options?.suppressPlayerLeft && playerName) io.to(roomId).emit("player_left", { playerName });
       io.to(roomId).emit("game_state", serializeGameState(state));
     }
   }

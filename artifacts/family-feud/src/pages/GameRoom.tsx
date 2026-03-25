@@ -323,6 +323,19 @@ export default function GameRoom() {
         ]);
         setUnreadChats(prev => (mobileTab === "game" ? prev + 1 : 0));
       },
+      onPlayerKicked: (data) => {
+        playPlayerLeaveSound();
+        showNotification(`${data.playerName} was kicked`);
+        setChatMessages(prev => [
+          ...prev.slice(-99),
+          {
+            playerName: data.playerName,
+            message: `was kicked by the host ${data.hostName}`,
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        setUnreadChats(prev => (mobileTab === "game" ? prev + 1 : 0));
+      },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
         playCorrectSound();

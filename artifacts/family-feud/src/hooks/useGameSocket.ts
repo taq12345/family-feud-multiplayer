@@ -82,6 +82,7 @@ export function useGameSocket(
     onKickedInactive?: (data: { idleMinutes: number }) => void;
     onStealGuess?: (data: { playerName: string; answer: string }) => void;
     onKicked?: () => void;
+    onPlayerKicked?: (data: { playerName: string; hostName: string }) => void;
   }
 ) {
   const callbacksRef = useRef(callbacks);
@@ -116,6 +117,7 @@ export function useGameSocket(
       kicked_inactive: (data: { idleMinutes: number }) => callbacksRef.current.onKickedInactive?.(data),
       steal_guess: (data: { playerName: string; answer: string }) => callbacksRef.current.onStealGuess?.(data),
       kicked: () => callbacksRef.current.onKicked?.(),
+      player_kicked: (data: { playerName: string; hostName: string }) => callbacksRef.current.onPlayerKicked?.(data),
     };
 
     Object.entries(handlers).forEach(([event, handler]) => {
