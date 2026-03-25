@@ -89,26 +89,22 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
         return (
           <div key={team} className={`rounded-xl bg-white/[0.02] border ${color.border} p-2`}>
             <div className={`text-[9px] font-bold uppercase tracking-widest ${color.label} mb-1.5 truncate`}>{name}</div>
-            <div className="space-y-1">
+            <div className="flex flex-wrap gap-1">
               {members.length === 0 && <div className="text-[10px] text-slate-600 italic">No players</div>}
               {members.map(p => {
                 const isActive = p.name === activePlayerName;
                 return (
-                  <div key={p.name} className={`flex items-center gap-1.5 text-[11px] rounded-md px-1.5 py-0.5 ${isActive ? `border ${color.active}` : "text-slate-300"}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-40"}`} />
-                    <span className="truncate font-medium">{p.name}</span>
-                    {p.isHost && (
-                      <span className="ml-auto text-amber-400 text-[9px] whitespace-nowrap">
-                        👑 <span className="italic">Host</span>
-                      </span>
-                    )}
+                  <div key={p.name} className={`inline-flex items-center gap-1 text-[10px] rounded-full px-1.5 py-0.5 border ${isActive ? color.active : "border-white/5 text-slate-400"}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-30"}`} />
+                    <span className="font-medium max-w-[60px] truncate">{p.name}</span>
+                    {p.isHost && <span className="text-amber-400 text-[9px] leading-none shrink-0">👑</span>}
                     {isHost && p.name !== myName && !p.isHost && (
                       <button
                         title="Kick"
                         onClick={() => onKick(p.name)}
-                        className="ml-auto px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/40 hover:text-red-300 transition-all shrink-0"
+                        className="text-red-500/60 hover:text-red-400 transition-colors shrink-0 leading-none"
                       >
-                        <UserX className="w-3 h-3" />
+                        <UserX className="w-2.5 h-2.5" />
                       </button>
                     )}
                   </div>
