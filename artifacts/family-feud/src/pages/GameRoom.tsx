@@ -626,12 +626,12 @@ export default function GameRoom() {
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_12px_rgba(251,191,36,0.4)] shrink-0">
             <Tv2 className="w-4 h-4 text-black" />
           </div>
-          <div className="min-w-0 hidden xs:flex flex-col">
+          <div className="min-w-0 flex flex-col">
             <span className="font-extrabold text-sm tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
               Friendly Feud
             </span>
             <span className="text-[10px] text-slate-400 truncate max-w-[180px] sm:max-w-[280px]" title={gameState.roomName}>
-              {gameState.roomName}
+              {gameState.roomName || "Unnamed Room"}
             </span>
           </div>
           <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-400 font-mono">
