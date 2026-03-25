@@ -220,6 +220,20 @@ export async function findMatchIndex(
   const normSubmitted = normalize(submitted);
   if (!normSubmitted) return -1;
 
+  // Duplicate of an answer already on the board — wrong immediately (no AI).
+  // Without this, repeating e.g. a face-off hit during playing skips that index
+  // and falls through to parallel AI checks on every unrevealed slot (slow).
+  for (let i = 0; i < answers.length; i++) {
+    if (!revealedAnswers.has(i)) continue;
+    const variants = splitVariants(answers[i].text);
+    for (const variant of variants) {
+      const normVariant = normalize(variant);
+      if (normSubmitted === normVariant || stemmedMatch(normSubmitted, normVariant)) {
+        return -1;
+      }
+    }
+  }
+
   // === Fast pass (layers 1 and 2) ===
   for (let i = 0; i < answers.length; i++) {
     if (revealedAnswers.has(i)) continue;
