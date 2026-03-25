@@ -775,6 +775,38 @@ export function setupSocketHandlers(io: SocketServer) {
       socket.data.roomId = null;
     });
 
+    socket.on("kick_player", async ({ roomId, targetName }: { roomId: string; targetName: string }) => {
+      const state = gameStates.get(roomId);
+      if (!state) return;
+      const requester = state.players.get(socket.id);
+      if (!requester?.isHost) return;
+
+      // Find the target player by name
+      let targetSocketId: string | null = null;
+      for (const [sid, p] of state.players.entries()) {
+        if (p.name === targetName) { targetSocketId = sid; break; }
+      }
+      if (!targetSocketId || targetSocketId === socket.id) return;
+
+      // Cancel any disconnect grace timer for the target
+      clearPlayerDisconnectTimer(targetSocketId);
+
+      // Notify the target — they'll receive this and navigate away
+      io.to(targetSocketId).emit("kicked");
+
+      // Remove them exactly as if they left voluntarily.
+      // Build a minimal stand-in so handlePlayerLeave can do all the game-state bookkeeping.
+      const targetSocket = io.sockets.sockets.get(targetSocketId) ?? ({
+        id: targetSocketId,
+        data: { playerName: targetName, roomId },
+        leave: (_: string) => {},
+      } as unknown as import("socket.io").Socket);
+
+      await handlePlayerLeave(io, targetSocket, roomId);
+      targetSocket.leave(roomId);
+      targetSocket.data.roomId = null;
+    });
+
     socket.on("disconnect", () => {
       const { roomId, playerName } = socket.data;
       if (!roomId) {

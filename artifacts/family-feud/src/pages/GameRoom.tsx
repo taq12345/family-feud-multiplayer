@@ -5,7 +5,7 @@ import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
-import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check } from "lucide-react";
+import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check, UserX } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
@@ -71,9 +71,10 @@ function AnswerBoard({ question, answers }: {
   );
 }
 
-function TeamRoster({ players, team1Name, team2Name, activePlayerName }: {
+function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, myName, onKick }: {
   players: Array<{ name: string; team: 1 | 2; isHost: boolean }>;
   team1Name: string; team2Name: string; activePlayerName: string | null;
+  isHost: boolean; myName: string; onKick: (name: string) => void;
 }) {
   const t1 = players.filter(p => p.team === 1);
   const t2 = players.filter(p => p.team === 2);
@@ -100,6 +101,15 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName }: {
                       <span className="ml-auto text-amber-400 text-[9px] whitespace-nowrap">
                         👑 <span className="italic">Host</span>
                       </span>
+                    )}
+                    {isHost && p.name !== myName && !p.isHost && (
+                      <button
+                        title="Kick"
+                        onClick={() => onKick(p.name)}
+                        className="ml-auto text-slate-600 hover:text-red-400 transition-colors shrink-0"
+                      >
+                        <UserX className="w-3 h-3" />
+                      </button>
                     )}
                   </div>
                 );
@@ -241,7 +251,7 @@ export default function GameRoom() {
     revealChain(queue);
   }
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -398,6 +408,10 @@ export default function GameRoom() {
       },
       onKickedInactive: (data) => {
         sessionStorage.setItem("kickedMessage", `You were removed due to being idle for ${data.idleMinutes} minute${data.idleMinutes === 1 ? "" : "s"}.`);
+        setLocation("/");
+      },
+      onKicked: () => {
+        sessionStorage.setItem("kickedMessage", "You were removed from the room by the host.");
         setLocation("/");
       },
     }
@@ -808,6 +822,9 @@ export default function GameRoom() {
                 (gameState.status === "playing" || gameState.status === "stealing") ? gameState.playingDesignatedPlayerName :
                 null
               }
+              isHost={isHost}
+              myName={playerName}
+              onKick={kickPlayer}
             />
           )}
 
@@ -846,7 +863,16 @@ export default function GameRoom() {
                       {gameState.players.filter(p => p.team === t).map(p => (
                         <div key={p.id} className="flex items-center gap-1 text-xs text-slate-300 mb-0.5">
                           {p.isHost && <Crown className="w-3 h-3 text-amber-400 shrink-0" />}
-                          {p.name}
+                          <span className="truncate">{p.name}</span>
+                          {isHost && p.name !== playerName && !p.isHost && (
+                            <button
+                              title="Kick"
+                              onClick={() => kickPlayer(p.name)}
+                              className="ml-auto text-slate-600 hover:text-red-400 transition-colors shrink-0"
+                            >
+                              <UserX className="w-3 h-3" />
+                            </button>
+                          )}
                         </div>
                       ))}
                       {gameState.players.filter(p => p.team === t).length === 0 && (
