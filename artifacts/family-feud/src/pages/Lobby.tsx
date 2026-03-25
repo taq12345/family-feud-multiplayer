@@ -69,7 +69,10 @@ async function createRoomApi(body: {
 
 export default function Lobby() {
   const [, setLocation] = useLocation();
-  const [nickname, setNickname] = useState(() => localStorage.getItem("playerName") ?? "");
+  const [nickname, setNickname] = useState(() => {
+    const stored = localStorage.getItem("playerName") ?? "";
+    return stored.length > 16 ? stored.slice(0, 16) : stored;
+  });
   const [nicknameDialogOpen, setNicknameDialogOpen] = useState(() => !localStorage.getItem("playerName"));
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
@@ -174,15 +177,24 @@ export default function Lobby() {
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !nickname) return;
+    const trimmedRoomName = form.name.trim();
+    const trimmedNickname = nickname.trim();
+
+    if (!trimmedRoomName) return;
+    if (trimmedRoomName.length > 16) { setCreateError("Room name must be 16 characters or fewer."); return; }
+    if (!trimmedNickname) return;
+    if (trimmedNickname.length > 16) { setCreateError("Nickname must be 16 characters or fewer."); return; }
+
     setCreateError(null);
     setCreateLoading(true);
     try {
-      const taken = await checkNickname(nickname);
-      if (taken) { setCreateError(`Nickname "${nickname}" is already in use. Change it first.`); return; }
-      const room = await createRoomApi({ ...form, hostName: nickname });
-      localStorage.setItem("playerName", nickname);
+      const taken = await checkNickname(trimmedNickname);
+      if (taken) { setCreateError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
+
+      const room = await createRoomApi({ ...form, name: trimmedRoomName, hostName: trimmedNickname });
+      localStorage.setItem("playerName", trimmedNickname);
       setCreateOpen(false);
-      setLocation(`/room/${room.id}?name=${encodeURIComponent(nickname)}&team=1`);
+      setLocation(`/room/${room.id}?name=${encodeURIComponent(trimmedNickname)}&team=1`);
     } catch (err) {
       setCreateError((err as Error).message ?? "Failed to create room.");
     } finally {
@@ -210,6 +222,7 @@ export default function Lobby() {
   async function handleChangeNickname() {
     if (!changeNicknameInput.trim()) return;
     const trimmed = changeNicknameInput.trim();
+    if (trimmed.length > 16) { setChangeNicknameError("Nickname must be 16 characters or fewer."); return; }
     setChangeNicknameError(null);
     setChangeNicknameLoading(true);
     try {
@@ -228,11 +241,16 @@ export default function Lobby() {
   async function confirmJoin() {
     if (!joinRoomId || !nickname) return;
     setJoinError(null);
-    const taken = await checkNickname(nickname);
-    if (taken) { setJoinError(`Nickname "${nickname}" is already in use. Change it first.`); return; }
-    localStorage.setItem("playerName", nickname);
+    const trimmedNickname = nickname.trim();
+    if (!trimmedNickname) return;
+    if (trimmedNickname.length > 16) { setJoinError("Nickname must be 16 characters or fewer."); return; }
+
+    const taken = await checkNickname(trimmedNickname);
+    if (taken) { setJoinError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
+
+    localStorage.setItem("playerName", trimmedNickname);
     setJoinDialogOpen(false);
-    setLocation(`/room/${joinRoomId}?name=${encodeURIComponent(nickname)}&team=${joinTeam}`);
+    setLocation(`/room/${joinRoomId}?name=${encodeURIComponent(trimmedNickname)}&team=${joinTeam}`);
   }
 
   return (
@@ -345,6 +363,7 @@ export default function Lobby() {
                       placeholder="e.g. Family Game Night"
                       value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                      maxLength={16}
                       className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20"
                       required
                     />
@@ -600,6 +619,7 @@ export default function Lobby() {
                 placeholder="Enter new nickname"
                 value={changeNicknameInput}
                 onChange={e => setChangeNicknameInput(e.target.value)}
+                maxLength={16}
                 onKeyDown={e => { if (e.key === "Enter") handleChangeNickname(); }}
                 className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20 h-11"
               />
@@ -609,7 +629,7 @@ export default function Lobby() {
             )}
             <Button
               className="w-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
-              disabled={!changeNicknameInput.trim() || changeNicknameLoading}
+              disabled={!changeNicknameInput.trim() || changeNicknameLoading || changeNicknameInput.trim().length > 16}
               onClick={handleChangeNickname}
             >
               {changeNicknameLoading ? "Checking…" : "Save Nickname"}
@@ -635,10 +655,12 @@ export default function Lobby() {
                 placeholder="Enter your nickname"
                 value={nickname}
                 onChange={e => setNickname(e.target.value)}
+                maxLength={16}
                 onKeyDown={async e => {
                   if (e.key === "Enter") {
                     if (!nickname.trim()) return;
                     const trimmed = nickname.trim();
+                    if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                     setNicknameError(null);
                     const taken = await checkNickname(trimmed);
                     if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
@@ -657,10 +679,11 @@ export default function Lobby() {
             {nicknameError && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{nicknameError}</p>}
             <Button
               className="w-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
-              disabled={!nickname.trim()}
+              disabled={!nickname.trim() || nickname.trim().length > 16}
               onClick={async () => {
                 if (!nickname.trim()) return;
                 const trimmed = nickname.trim();
+                if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                 setNicknameError(null);
                 const taken = await checkNickname(trimmed);
                 if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }

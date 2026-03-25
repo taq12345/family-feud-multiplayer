@@ -282,6 +282,12 @@ export function setupSocketHandlers(io: SocketServer) {
     console.log("Client connected:", socket.id);
 
     socket.on("join_room", async ({ roomId, playerName, team }: { roomId: string; playerName: string; team: 1 | 2 }) => {
+      const trimmedPlayerName = playerName.trim();
+      if (!trimmedPlayerName || trimmedPlayerName.length > 16) {
+        socket.emit("join_rejected", { reason: "Nickname must be 16 characters or fewer." });
+        return;
+      }
+
       // Load game state early — needed for reconnect detection
       if (!gameStates.has(roomId)) {
         try {
@@ -298,7 +304,7 @@ export function setupSocketHandlers(io: SocketServer) {
       const state = gameStates.get(roomId);
 
       // Check if this player was previously kicked due to inactivity
-      const nameKey = playerName.trim().toLowerCase();
+      const nameKey = trimmedPlayerName.toLowerCase();
       if (kickedPlayers.has(nameKey)) {
         const idleMinutes = kickedPlayers.get(nameKey)!;
         kickedPlayers.delete(nameKey);
@@ -327,8 +333,8 @@ export function setupSocketHandlers(io: SocketServer) {
 
       if (!isReconnect) {
         // Normal join: reject if nickname is taken by a different active session
-        if (isNicknameTaken(playerName, socket.id)) {
-          socket.emit("join_rejected", { reason: `Nickname "${playerName}" is already in use by another player.` });
+        if (isNicknameTaken(trimmedPlayerName, socket.id)) {
+          socket.emit("join_rejected", { reason: `Nickname "${trimmedPlayerName}" is already in use by another player.` });
           return;
         }
       }
@@ -338,7 +344,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
       socket.join(roomId);
       socket.data.roomId = roomId;
-      socket.data.playerName = playerName;
+      socket.data.playerName = trimmedPlayerName;
       socket.data.team = team;
 
       if (isReconnect && existingSocketId && state && existingPlayer) {
@@ -359,7 +365,7 @@ export function setupSocketHandlers(io: SocketServer) {
           state.playingDesignatedPlayerId = socket.id;
         }
 
-        console.log(`${playerName} reconnected to ${roomId} (${existingSocketId} → ${socket.id})`);
+        console.log(`${trimmedPlayerName} reconnected to ${roomId} (${existingSocketId} → ${socket.id})`);
 
         // Re-sync state to the reconnecting socket only
         const recent = await db.select().from(chatMessagesTable)
@@ -380,7 +386,7 @@ export function setupSocketHandlers(io: SocketServer) {
         const isHost = !Array.from(state.players.values()).some(p => p.isHost);
         state.players.set(socket.id, {
           id: socket.id,
-          name: playerName,
+          name: trimmedPlayerName,
           team,
           isHost,
         });
@@ -399,7 +405,7 @@ export function setupSocketHandlers(io: SocketServer) {
         })));
 
         io.to(roomId).emit("game_state", serializeGameState(state));
-        io.to(roomId).emit("player_joined", { playerName, team });
+        io.to(roomId).emit("player_joined", { playerName: trimmedPlayerName, team });
       }
     });
 

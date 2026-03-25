@@ -33,22 +33,33 @@ router.get("/rooms", async (_req, res) => {
 
 router.post("/rooms", async (req, res) => {
   const { name, hostName, team1Name, team2Name, maxPlayers, totalRounds } = req.body;
-  if (!name || !hostName || !team1Name || !team2Name) {
+  const trimmedRoomName = String(name ?? "").trim();
+  const trimmedHostName = String(hostName ?? "").trim();
+
+  if (!trimmedRoomName || !trimmedHostName || !team1Name || !team2Name) {
     return res.status(400).json({ error: "name, hostName, team1Name, team2Name are required" });
+  }
+
+  if (trimmedRoomName.length > 16) {
+    return res.status(400).json({ error: "Room name must be 16 characters or fewer." });
+  }
+
+  if (trimmedHostName.length > 16) {
+    return res.status(400).json({ error: "Nickname must be 16 characters or fewer." });
   }
 
   const id = nanoid(8);
   try {
     // Enforce at most one room per host
-    const existing = await db.select().from(roomsTable).where(eq(roomsTable.hostName, hostName));
+    const existing = await db.select().from(roomsTable).where(eq(roomsTable.hostName, trimmedHostName));
     if (existing.length > 0) {
       return res.status(400).json({ error: "You already have an active room." });
     }
 
     const [room] = await db.insert(roomsTable).values({
       id,
-      name,
-      hostName,
+      name: trimmedRoomName,
+      hostName: trimmedHostName,
       team1Name,
       team2Name,
       maxPlayers: Math.min(10, Math.max(2, Number(maxPlayers) || 10)),
