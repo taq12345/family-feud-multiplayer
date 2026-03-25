@@ -508,14 +508,10 @@ export function setupSocketHandlers(io: SocketServer) {
         // Clear the per-player faceoff timer immediately so it cannot fire during the async AI call
         clearFaceoffAnswerTimer(roomId);
 
-        // Reject immediately if this answer was already marked wrong this round, or repeats a
-        // submission that already scored (same normalized string as matcher — no AI wait).
-        const normAnswer = answer.trim().toLowerCase();
+        // Reject immediately if this answer was already used (wrong or correct) this round.
+        // Use the same full normalizer as the answer matcher so the key is always consistent.
         const normSub = normalizeSubmittedAnswer(answer);
-        if (normSub && state.correctSubmissionNorms.has(normSub)) {
-          state.wrongAnswers.add(normAnswer);
-        }
-        if (state.wrongAnswers.has(normAnswer)) {
+        if (normSub && state.wrongAnswers.has(normSub)) {
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
@@ -543,7 +539,10 @@ export function setupSocketHandlers(io: SocketServer) {
           state.faceoffTurn = null;
           state.revealedAnswers.add(matchIndex);
           const ns = normalizeSubmittedAnswer(answer);
-          if (ns) state.correctSubmissionNorms.add(ns);
+          if (ns) {
+            state.correctSubmissionNorms.add(ns);
+            state.wrongAnswers.add(ns); // block any re-guess of the same word
+          }
           state.faceoffWinner = player.team;
           state.playingTeam = player.team;
           state.roundPoints += state.currentQuestion.answers[matchIndex].points;
@@ -561,7 +560,7 @@ export function setupSocketHandlers(io: SocketServer) {
           io.to(roomId).emit("game_state", serializeGameState(state));
           startAnswerTimer(io, state, roomId);
         } else {
-          state.wrongAnswers.add(normAnswer);
+          if (normSub) state.wrongAnswers.add(normSub);
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
@@ -603,13 +602,9 @@ export function setupSocketHandlers(io: SocketServer) {
           io.to(roomId).emit("steal_guess", { playerName: player.name, answer });
         }
 
-        // Reject immediately if wrong this round, or repeat of a submission that already scored.
-        const normAnswer = answer.trim().toLowerCase();
+        // Reject immediately if this answer was already used (wrong or correct) this round.
         const normSub = normalizeSubmittedAnswer(answer);
-        if (normSub && state.correctSubmissionNorms.has(normSub)) {
-          state.wrongAnswers.add(normAnswer);
-        }
-        if (state.wrongAnswers.has(normAnswer)) {
+        if (normSub && state.wrongAnswers.has(normSub)) {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
             rotatePlayingDesignatedPlayer(state);
@@ -646,7 +641,10 @@ export function setupSocketHandlers(io: SocketServer) {
         if (matchIndex !== -1) {
           state.revealedAnswers.add(matchIndex);
           const ns = normalizeSubmittedAnswer(answer);
-          if (ns) state.correctSubmissionNorms.add(ns);
+          if (ns) {
+            state.correctSubmissionNorms.add(ns);
+            state.wrongAnswers.add(ns); // block any re-guess of the same word
+          }
           const pts = state.currentQuestion.answers[matchIndex].points;
           state.roundPoints += pts;
 
@@ -670,7 +668,7 @@ export function setupSocketHandlers(io: SocketServer) {
             startAnswerTimer(io, state, roomId);
           }
         } else {
-          state.wrongAnswers.add(normAnswer);
+          if (normSub) state.wrongAnswers.add(normSub);
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
             rotatePlayingDesignatedPlayer(state);
