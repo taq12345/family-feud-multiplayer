@@ -184,6 +184,7 @@ export default function GameRoom() {
   const [chatInput, setChatInput] = useState("");
   const [answerInput, setAnswerInput] = useState("");
   const [notification, setNotification] = useState<string | null>(null);
+  const [localContributionPoints, setLocalContributionPoints] = useState<Record<string, number>>({});
   const [faceoffCountdown, setFaceoffCountdown] = useState<number | null>(null);
   const [roundCountdown, setRoundCountdown] = useState<number | null>(null);
   const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<number | null>(null);
@@ -211,6 +212,12 @@ export default function GameRoom() {
   const joinSoundPlayedRef = useRef(false);
   const prevStatusRef = useRef<string | null>(null);
   const answerInputRef = useRef<HTMLInputElement>(null);
+  const localContributionPointsRef = useRef<Record<string, number>>({});
+
+  const getPlayerContribution = useCallback((player: { name: string; contributedPoints?: number }) => {
+    const key = player.name.trim().toLowerCase();
+    return Math.max(player.contributedPoints ?? 0, localContributionPointsRef.current[key] ?? 0);
+  }, []);
 
   const showNotification = useCallback((msg: string) => {
     setNotification(msg);
@@ -262,11 +269,25 @@ export default function GameRoom() {
           joinSoundPlayedRef.current = true;
           playJoinSound();
         }
+        const shouldResetLocalContributions =
+          state.team1Score === 0 &&
+          state.team2Score === 0 &&
+          state.roundPoints === 0 &&
+          state.currentRound <= 1 &&
+          (state.status === "waiting" || state.status === "faceoff");
+
+        if (shouldResetLocalContributions && Object.keys(localContributionPointsRef.current).length > 0) {
+          localContributionPointsRef.current = {};
+          setLocalContributionPoints({});
+        }
+
         setGameState({
           ...state,
           players: state.players.map(player => ({
             ...player,
-            contributedPoints: player.contributedPoints ?? 0,
+            contributedPoints: shouldResetLocalContributions
+              ? 0
+              : getPlayerContribution(player),
           })),
         });
 
@@ -345,11 +366,21 @@ export default function GameRoom() {
       },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
+        const key = data.playerName.trim().toLowerCase();
+        const nextContributionPoints = (localContributionPointsRef.current[key] ?? 0) + data.points;
+        localContributionPointsRef.current = {
+          ...localContributionPointsRef.current,
+          [key]: nextContributionPoints,
+        };
+        setLocalContributionPoints(localContributionPointsRef.current);
         setGameState(prev => prev ? {
           ...prev,
           players: prev.players.map(player =>
             player.name === data.playerName
-              ? { ...player, contributedPoints: data.contributedPoints ?? 0 }
+              ? {
+                  ...player,
+                  contributedPoints: Math.max(player.contributedPoints ?? 0, data.contributedPoints ?? 0, nextContributionPoints),
+                }
               : player
           ),
         } : prev);
@@ -543,7 +574,7 @@ export default function GameRoom() {
     if (!gameState?.players.length) return [];
     const topScore = Math.max(...gameState.players.map(p => p.contributedPoints ?? 0));
     return gameState.players.filter(p => (p.contributedPoints ?? 0) === topScore);
-  }, [gameState?.players]);
+  }, [gameState?.players, localContributionPoints]);
   const mvpScore = mvpPlayers[0]?.contributedPoints ?? 0;
   const canStartGame = team1Count > 0 && team2Count > 0;
   const startGameTooltip = !canStartGame
