@@ -662,12 +662,15 @@ export default function GameRoom() {
             <span className="font-extrabold text-sm tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
               Friendly Feud
             </span>
-            <span className="text-[10px] text-slate-400 truncate max-w-[180px] sm:max-w-[280px]" title={displayRoomName}>
+            <span className="text-[10px] text-slate-400 truncate max-w-[180px] sm:max-w-[280px] sm:hidden" title={displayRoomName}>
               {displayRoomName}
             </span>
           </div>
-          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-400 font-mono">
-            {roomId}
+          <span
+            className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-400 font-mono truncate max-w-[220px]"
+            title={displayRoomName}
+          >
+            {displayRoomName}
           </span>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
