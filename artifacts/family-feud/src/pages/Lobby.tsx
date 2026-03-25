@@ -121,12 +121,21 @@ export default function Lobby() {
   }, []);
 
   const [form, setForm] = useState({
-    name: "",
+    name: "My Room",
     team1Name: "Team 1",
     team2Name: "Team 2",
     totalRounds: 5,
     maxPlayers: 10,
   });
+
+  // Default room name when opening the creation dialog.
+  useEffect(() => {
+    if (!createOpen) return;
+    if (!form.name.trim()) {
+      setForm(f => ({ ...f, name: "My Room" }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createOpen]);
 
   const loadRooms = useCallback(async () => {
     try {
