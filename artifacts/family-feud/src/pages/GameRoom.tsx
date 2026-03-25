@@ -185,6 +185,7 @@ export default function GameRoom() {
     visible: Set<number>;
   } | null>(null);
   const pendingCanonicalRef = useRef<CanonicalAnswerSlot[] | null>(null);
+  const betweenRoundsRevealInitRef = useRef(false);
   const lastRevealBaselineRef = useRef<Set<number>>(new Set());
   const revealStaggerTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -244,11 +245,24 @@ export default function GameRoom() {
         }
         setGameState(state);
 
-        if (state.status === "between_rounds" && state.currentQuestion && pendingCanonicalRef.current) {
-          const canonical = pendingCanonicalRef.current;
+        // Between-rounds board reveal: do not rely on round_over arriving before game_state —
+        // build canonical answers from game_state when the ref is empty (socket order / reconnect).
+        if (state.status === "between_rounds" && state.currentQuestion && !betweenRoundsRevealInitRef.current) {
+          const fromPending = pendingCanonicalRef.current;
           pendingCanonicalRef.current = null;
+          const canonical: CanonicalAnswerSlot[] =
+            fromPending ??
+            state.currentQuestion.answers.map((a, i) => ({
+              index: i,
+              text: a.text ?? "",
+              points: a.points ?? 0,
+            }));
           const baseline = new Set(lastRevealBaselineRef.current);
-          startBoardRevealStagger(canonical, baseline);
+          const queue = canonical.map(c => c.index).filter(i => !baseline.has(i)).sort((a, b) => a - b);
+          betweenRoundsRevealInitRef.current = true;
+          if (queue.length > 0) {
+            startBoardRevealStagger(canonical, baseline);
+          }
         } else if (
           (state.status === "faceoff" || state.status === "playing" || state.status === "stealing") &&
           state.currentQuestion
@@ -335,7 +349,10 @@ export default function GameRoom() {
         setLastRoundResult({ winningTeam: data.winningTeam, points: data.points });
         playRoundEndSound();
         showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`);
-        pendingCanonicalRef.current = data.canonicalAnswers ?? null;
+        // If game_state already ran between_rounds (stagger started), do not stash stale canonical for the next round.
+        if (!betweenRoundsRevealInitRef.current) {
+          pendingCanonicalRef.current = data.canonicalAnswers ?? null;
+        }
       },
       onRoomDeleted: () => {
         showNotification("Room was deleted by host.");
@@ -354,7 +371,9 @@ export default function GameRoom() {
       },
       onFaceoffNoWinner: (data) => {
         showNotification("⏱ No winner in the face-off — moving to next round!");
-        pendingCanonicalRef.current = data.canonicalAnswers ?? null;
+        if (!betweenRoundsRevealInitRef.current) {
+          pendingCanonicalRef.current = data.canonicalAnswers ?? null;
+        }
       },
       onKickedInactive: (data) => {
         sessionStorage.setItem("kickedMessage", `You were removed due to being idle for ${data.idleMinutes} minute${data.idleMinutes === 1 ? "" : "s"}.`);
@@ -384,6 +403,7 @@ export default function GameRoom() {
     if (gameState?.status !== "between_rounds") {
       clearRevealStaggerTimers();
       setBoardRevealStagger(null);
+      betweenRoundsRevealInitRef.current = false;
     }
   }, [gameState?.status]);
 
