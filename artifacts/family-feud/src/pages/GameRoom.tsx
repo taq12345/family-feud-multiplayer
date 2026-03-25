@@ -590,6 +590,13 @@ export default function GameRoom() {
     return gameState.players.filter(p => (p.contributedPoints ?? 0) === topScore);
   }, [gameState?.players, localContributionPoints]);
   const mvpScore = mvpPlayers[0]?.contributedPoints ?? 0;
+  const renderMvpNames = (separatorClassName: string) =>
+    mvpPlayers.map((player, index) => (
+      <span key={`${player.name}-${player.team}`}>
+        {index > 0 && <span className={separatorClassName}>, </span>}
+        <span className={player.team === 1 ? "text-rose-300" : "text-blue-300"}>{player.name}</span>
+      </span>
+    ));
   const canStartGame = team1Count > 0 && team2Count > 0;
   const startGameTooltip = !canStartGame
     ? team1Count === 0 && team2Count === 0 ? "Both teams need at least 1 player."
