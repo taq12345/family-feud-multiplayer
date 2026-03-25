@@ -106,7 +106,7 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
                       <button
                         title="Kick"
                         onClick={() => onKick(p.name)}
-                        className="ml-auto text-slate-600 hover:text-red-400 transition-colors shrink-0"
+                        className="ml-auto px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/40 hover:text-red-300 transition-all shrink-0"
                       >
                         <UserX className="w-3 h-3" />
                       </button>
@@ -881,7 +881,7 @@ export default function GameRoom() {
                             <button
                               title="Kick"
                               onClick={() => kickPlayer(p.name)}
-                              className="ml-auto text-slate-600 hover:text-red-400 transition-colors shrink-0"
+                              className="ml-auto px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/40 hover:text-red-300 transition-all shrink-0"
                             >
                               <UserX className="w-3 h-3" />
                             </button>
