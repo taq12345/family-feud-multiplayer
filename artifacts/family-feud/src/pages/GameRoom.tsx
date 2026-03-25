@@ -304,11 +304,6 @@ export default function GameRoom() {
           createdAt: new Date().toISOString(),
           type: "system-correct" as const,
         }]);
-        // If the correct answer ended a face-off, announce which team will play
-        if (gameState?.status === "faceoff") {
-          const winningTeamName = data.team === 1 ? gameState.team1Name : gameState.team2Name;
-          setTimeout(() => showNotification(`🎉 ${winningTeamName} got the top answer and will play the round!`), 600);
-        }
         // Capture correct steal for the between-rounds summary
         if (gameState?.status === "stealing") {
           setStealAttempt({ playerName: data.playerName, answer: displayed, correct: true });
