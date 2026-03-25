@@ -91,6 +91,15 @@ export function playCorrectSound(): void {
   playTone(ctx, "sine", 1047, now + 0.22, 0.22, 0.25);
 }
 
+/** Short “board flip” ding when a survey answer is revealed (e.g. end-of-round stagger). */
+export function playAnswerRevealSound(): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  playTone(ctx, "sine", 784, now, 0.08, 0.2);
+  playTone(ctx, "sine", 1047, now + 0.06, 0.1, 0.18);
+}
+
 export function playRoundStartSound(): void {
   const ctx = getAudioContext();
   if (!ctx) return;
