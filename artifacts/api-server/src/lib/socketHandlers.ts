@@ -303,6 +303,16 @@ export function setupSocketHandlers(io: SocketServer) {
 
       const state = gameStates.get(roomId);
 
+      // Backward-compatible hydration: older in-memory states may not have roomName yet.
+      if (state && !state.roomName) {
+        try {
+          const [room] = await db.select().from(roomsTable).where(eq(roomsTable.id, roomId));
+          if (room?.name) state.roomName = room.name;
+        } catch {
+          // ignore; client will show fallback label
+        }
+      }
+
       // Check if this player was previously kicked due to inactivity
       const nameKey = trimmedPlayerName.toLowerCase();
       if (kickedPlayers.has(nameKey)) {
