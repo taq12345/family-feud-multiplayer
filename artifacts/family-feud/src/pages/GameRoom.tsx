@@ -760,7 +760,7 @@ export default function GameRoom() {
                   <p className="text-center text-slate-500 text-xs">
                     {gameState.faceoffTurn === team
                       ? `Waiting for ${gameState.faceoffDesignatedPlayerName} to answer for your team…`
-                      : `Waiting for the other team to answer…`}
+                      : ""}
                   </p>
                 )}
 
@@ -920,7 +920,7 @@ export default function GameRoom() {
                               : "bg-blue-500/10 border-blue-500/25 text-blue-300"
                           }`}
                         >
-                          <span className="font-semibold">{myTeam === 1 ? gameState.team1Name : gameState.team2Name}</span>{" "}
+                          <span className="font-semibold">Your Team</span>{" "}
                           got{" "}
                           <span className="font-black">
                             {lastRoundResult.winningTeam === myTeam ? lastRoundResult.points : 0}
