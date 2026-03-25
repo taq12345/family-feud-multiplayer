@@ -719,17 +719,24 @@ export default function GameRoom() {
               <div className="space-y-2">
                 {/* Input: only for the designated player */}
                 {isMyTurnToFaceoff && (
-                  <form onSubmit={handleAnswer} className="flex gap-2">
+                  <form
+                    onSubmit={handleAnswer}
+                    className="flex gap-2 rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-2 shadow-[0_0_24px_rgba(16,185,129,0.2)]"
+                  >
                     <Input
                       ref={answerInputRef}
                       placeholder="Give your answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 h-11"
+                      className="flex-1 bg-black/25 border-emerald-300/40 text-white placeholder:text-emerald-200/50 focus:border-emerald-300/70 h-11 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.15)]"
                       autoFocus
                       disabled={verifyingAnswer}
                     />
-                    <Button type="submit" disabled={verifyingAnswer} className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
+                    <Button
+                      type="submit"
+                      disabled={verifyingAnswer}
+                      className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0 shadow-[0_0_14px_rgba(16,185,129,0.45)]"
+                    >
                       {verifyingAnswer ? "…" : "Answer"}
                     </Button>
                   </form>
@@ -776,17 +783,24 @@ export default function GameRoom() {
             {gameState.status === "playing" && (
               <div className="space-y-2">
                 {isMyTurnToPlay && (
-                  <form onSubmit={handleAnswer} className="flex gap-2">
+                  <form
+                    onSubmit={handleAnswer}
+                    className="flex gap-2 rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-2 shadow-[0_0_24px_rgba(16,185,129,0.2)]"
+                  >
                     <Input
                       ref={answerInputRef}
                       placeholder="Your answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50 h-11"
+                      className="flex-1 bg-black/25 border-emerald-300/40 text-white placeholder:text-emerald-200/50 focus:border-emerald-300/70 h-11 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.15)]"
                       autoFocus
                       disabled={verifyingAnswer}
                     />
-                    <Button type="submit" disabled={verifyingAnswer} className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0">
+                    <Button
+                      type="submit"
+                      disabled={verifyingAnswer}
+                      className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 px-4 border-0 shadow-[0_0_14px_rgba(16,185,129,0.45)]"
+                    >
                       {verifyingAnswer ? "…" : "Answer"}
                     </Button>
                   </form>
@@ -855,17 +869,24 @@ export default function GameRoom() {
                   </div>
                 )}
                 {isMyTurnToPlay && !currentStealGuess && (
-                  <form onSubmit={handleAnswer} className="flex gap-2">
+                  <form
+                    onSubmit={handleAnswer}
+                    className="flex gap-2 rounded-xl border border-orange-400/35 bg-orange-500/10 p-2 shadow-[0_0_24px_rgba(249,115,22,0.2)]"
+                  >
                     <Input
                       ref={answerInputRef}
                       placeholder="Your steal answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      className="flex-1 bg-orange-500/10 border-orange-500/25 text-white placeholder:text-orange-400/50 focus:border-orange-500/50 h-11"
+                      className="flex-1 bg-black/25 border-orange-400/40 text-white placeholder:text-orange-300/60 focus:border-orange-300/70 h-11 shadow-[inset_0_0_0_1px_rgba(249,115,22,0.15)]"
                       autoFocus
                       disabled={verifyingAnswer}
                     />
-                    <Button type="submit" disabled={verifyingAnswer} className="bg-orange-500 hover:bg-orange-400 text-black font-bold h-11 px-4 border-0">
+                    <Button
+                      type="submit"
+                      disabled={verifyingAnswer}
+                      className="bg-orange-500 hover:bg-orange-400 text-black font-bold h-11 px-4 border-0 shadow-[0_0_14px_rgba(249,115,22,0.45)]"
+                    >
                       {verifyingAnswer ? "…" : "Steal!"}
                     </Button>
                   </form>
