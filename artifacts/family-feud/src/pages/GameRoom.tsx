@@ -942,14 +942,7 @@ export default function GameRoom() {
                   </div>
                 ) : null}
 
-                {/* Waiting message for others */}
-                {!isMyTurnToFaceoff && gameState.faceoffDesignatedPlayerName && (
-                  <p className="text-center text-slate-500 text-xs">
-                    {gameState.faceoffTurn === team
-                      ? `Waiting for ${gameState.faceoffDesignatedPlayerName} to answer for your team…`
-                      : ""}
-                  </p>
-                )}
+                {/* (removed) waiting message for other teams */}
 
                 {/* Phase description — hidden on small screens to save space */}
                 <div className="hidden sm:block rounded-xl bg-amber-500/8 border border-amber-500/20 px-4 py-2.5 text-center">
