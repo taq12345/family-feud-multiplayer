@@ -96,7 +96,10 @@ export function serializeGameState(state: GameState) {
   return {
     roomId: state.roomId,
     roomName: state.roomName,
-    players: Array.from(state.players.values()),
+    players: Array.from(state.players.values()).map(player => ({
+      ...player,
+      contributedPoints: player.contributedPoints ?? 0,
+    })),
     team1Score: state.team1Score,
     team2Score: state.team2Score,
     team1Name: state.team1Name,

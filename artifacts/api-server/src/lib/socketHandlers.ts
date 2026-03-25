@@ -576,7 +576,7 @@ export function setupSocketHandlers(io: SocketServer) {
             state.wrongAnswers.add(ns); // block any re-guess of the same word
           }
           const pts = state.currentQuestion.answers[matchIndex].points;
-          player.contributedPoints += pts;
+          player.contributedPoints = (player.contributedPoints ?? 0) + pts;
           state.faceoffWinner = player.team;
           state.playingTeam = player.team;
           state.roundPoints += pts;
@@ -680,7 +680,7 @@ export function setupSocketHandlers(io: SocketServer) {
             state.wrongAnswers.add(ns); // block any re-guess of the same word
           }
           const pts = state.currentQuestion.answers[matchIndex].points;
-          player.contributedPoints += pts;
+          player.contributedPoints = (player.contributedPoints ?? 0) + pts;
           state.roundPoints += pts;
 
           io.to(roomId).emit("answer_correct", {
@@ -1052,7 +1052,7 @@ export function getRoomPlayers(roomId: string) {
     name: p.name,
     team: p.team,
     isHost: p.isHost,
-    contributedPoints: p.contributedPoints,
+    contributedPoints: p.contributedPoints ?? 0,
   }));
 }
 

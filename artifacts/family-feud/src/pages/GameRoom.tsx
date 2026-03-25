@@ -98,7 +98,7 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
                     <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-30"}`} />
                     <span className="font-medium max-w-[60px] truncate">{p.name}</span>
                     <span className={`rounded-full px-1 py-0.5 text-[9px] font-bold tabular-nums ${isActive ? "bg-black/20 text-white/90" : "bg-white/5 text-slate-300"}`}>
-                      {p.contributedPoints} pts
+                      {p.contributedPoints ?? 0} pts
                     </span>
                     {p.isHost && <span className="text-amber-400 text-[9px] leading-none shrink-0">👑</span>}
                     {isHost && p.name !== myName && !p.isHost && (
@@ -527,8 +527,8 @@ export default function GameRoom() {
   const team2Count = gameState?.players.filter(p => p.team === 2).length ?? 0;
   const mvpPlayers = useMemo<GameStateData["players"]>(() => {
     if (!gameState?.players.length) return [];
-    const topScore = Math.max(...gameState.players.map(p => p.contributedPoints));
-    return gameState.players.filter(p => p.contributedPoints === topScore);
+    const topScore = Math.max(...gameState.players.map(p => p.contributedPoints ?? 0));
+    return gameState.players.filter(p => (p.contributedPoints ?? 0) === topScore);
   }, [gameState?.players]);
   const mvpScore = mvpPlayers[0]?.contributedPoints ?? 0;
   const canStartGame = team1Count > 0 && team2Count > 0;
