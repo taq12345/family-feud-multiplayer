@@ -72,7 +72,6 @@ Invalid topic format:
     const aiCall = openai.chat.completions.create({
       model: "gpt-5-nano",
       messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
       max_completion_tokens: 4000,
     });
 
@@ -81,13 +80,24 @@ Invalid topic format:
     );
 
     const response = await Promise.race([aiCall, timeoutPromise]);
-    const content = response.choices[0]?.message?.content;
+    const choice = response.choices[0];
+    const rawContent = choice?.message?.content ?? "";
 
-    if (!content) {
+    console.log(`[questionGenerator] finish_reason=${choice?.finish_reason} content_length=${rawContent.length}`);
+
+    if (!rawContent.trim()) {
+      console.error("[questionGenerator] Empty content. finish_reason:", choice?.finish_reason);
       return { valid: false, reason: "The AI returned an empty response. Please try again." };
     }
 
-    const parsed = JSON.parse(content) as {
+    // Extract JSON object from the response (model may wrap it in markdown code fences)
+    const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error("[questionGenerator] No JSON object found in response:", rawContent.slice(0, 200));
+      return { valid: false, reason: "The AI response was not in the expected format. Please try again." };
+    }
+
+    const parsed = JSON.parse(jsonMatch[0]) as {
       valid: boolean;
       reason?: string;
       questions?: Array<{
