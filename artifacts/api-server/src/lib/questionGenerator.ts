@@ -30,49 +30,25 @@ export async function generateCustomQuestions(
   topic: string,
   count: number
 ): Promise<GenerateResult> {
-  const prompt = `You are a Family Feud game show question writer. Generate exactly ${count} unique survey questions about the topic: "${topic}".
+  const systemPrompt = `You are a Family Feud question writer. Output ONLY valid JSON, no other text.
 
-Each question must:
-- Be directly and meaningfully related to the topic "${topic}"
-- Be phrased in classic Family Feud style: "Name something...", "Name a...", "What is something people...", etc.
-- Have exactly 6 answer options (minimum 5, maximum 8)
-- Have answer points that sum to EXACTLY 100
-- Be distributed realistically: the most obvious/popular answer gets the most points
-- Be appropriate for all ages and family-friendly
+Success format: {"valid":true,"questions":[{"question":"...","answers":[{"text":"...","points":35},{"text":"...","points":25},{"text":"...","points":20},{"text":"...","points":12},{"text":"...","points":8}]}]}
+Invalid format: {"valid":false,"reason":"..."}
 
-If the topic is: gibberish, random characters, nonsensical, inappropriate, offensive, a single character, or so vague it cannot generate meaningful survey questions (e.g. "stuff", "things", "yes", "no")—respond with valid=false.
+Rules: each question needs 5-6 answers, points sum to exactly 100, family-friendly.`;
 
-Respond ONLY with valid JSON in one of these two formats:
-
-Success format:
-{
-  "valid": true,
-  "questions": [
-    {
-      "question": "Name something you might see in outer space.",
-      "answers": [
-        { "text": "Stars", "points": 35 },
-        { "text": "Planets", "points": 28 },
-        { "text": "Asteroids", "points": 16 },
-        { "text": "Black holes", "points": 11 },
-        { "text": "Comets", "points": 6 },
-        { "text": "Space stations", "points": 4 }
-      ]
-    }
-  ]
-}
-
-Invalid topic format:
-{
-  "valid": false,
-  "reason": "The topic is not suitable for Family Feud questions."
-}`;
+  const userPrompt = `Generate exactly ${count} Family Feud survey questions about: "${topic}".
+Each question: classic Family Feud phrasing, 5-6 answers, points summing to 100, related to "${topic}".
+If the topic is nonsensical, gibberish, offensive, or too vague, respond with valid=false.`;
 
   try {
     const aiCall = openai.chat.completions.create({
       model: "gpt-5-nano",
-      messages: [{ role: "user", content: prompt }],
-      max_completion_tokens: 4000,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+      max_completion_tokens: 2000,
     });
 
     const timeoutPromise = new Promise<never>((_, reject) =>
