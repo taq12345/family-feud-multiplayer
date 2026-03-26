@@ -11,7 +11,7 @@ export type GenerateResult =
   | { valid: true; questions: SurveyQuestion[] };
 
 const AI_TIMEOUT_MS = 60000;
-const MIN_ANSWERS = 5;
+const MIN_ANSWERS = 3;
 const MAX_ANSWERS = 8;
 const POINTS_TARGET = 100;
 
@@ -35,10 +35,10 @@ export async function generateCustomQuestions(
 Success format: {"valid":true,"questions":[{"question":"...","answers":[{"text":"...","points":35},{"text":"...","points":25},{"text":"...","points":20},{"text":"...","points":12},{"text":"...","points":8}]}]}
 Invalid format: {"valid":false,"reason":"..."}
 
-Rules: each question needs 5-6 answers, points sum to exactly 100, family-friendly.`;
+Rules: each question needs 3-6 answers, points sum to exactly 100, family-friendly.`;
 
   const userPrompt = `Generate exactly ${count} Family Feud survey questions about: "${topic}".
-Each question: classic Family Feud phrasing, 5-6 answers, points summing to 100, related to "${topic}".
+Each question: classic Family Feud phrasing, 3-6 answers, points summing to 100, related to "${topic}".
 If the topic is nonsensical, gibberish, offensive, or too vague, respond with valid=false.`;
 
   try {
