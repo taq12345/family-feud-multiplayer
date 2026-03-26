@@ -98,7 +98,7 @@ export function FriendlyFeudWordmark({ className, compact = false }: FriendlyFeu
   return (
     <span
       className={cn(
-        "inline-flex flex-col items-start font-black uppercase leading-[0.8]",
+        "inline-flex flex-col items-start font-black uppercase leading-[0.68]",
         compact ? "gap-0 text-sm tracking-[0.16em]" : "gap-0 text-lg sm:text-xl tracking-[0.18em]",
         className,
       )}
@@ -106,7 +106,7 @@ export function FriendlyFeudWordmark({ className, compact = false }: FriendlyFeu
       <span className="bg-[linear-gradient(135deg,#dbeafe_0%,#60a5fa_55%,#2563eb_100%)] bg-clip-text text-transparent drop-shadow-[0_0_14px_rgba(96,165,250,0.22)]">
         Friendly
       </span>
-      <span className="-mt-[0.12em] bg-[linear-gradient(135deg,#fef3c7_0%,#fbbf24_45%,#f59e0b_100%)] bg-clip-text text-transparent drop-shadow-[0_0_16px_rgba(251,191,36,0.24)]">
+      <span className="-mt-[0.28em] bg-[linear-gradient(135deg,#fef3c7_0%,#fbbf24_45%,#f59e0b_100%)] bg-clip-text text-transparent drop-shadow-[0_0_16px_rgba(251,191,36,0.24)]">
         Feud
       </span>
     </span>
