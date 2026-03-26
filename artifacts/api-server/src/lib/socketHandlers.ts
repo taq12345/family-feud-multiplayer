@@ -509,6 +509,15 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!freshPlayer?.isHost) return;
       if (freshState.status !== "waiting") return;
 
+      // Ensure both teams still have players — someone may have left during generation
+      const playersAfter = Array.from(freshState.players.values());
+      const team1After = playersAfter.filter(p => p.team === 1).length;
+      const team2After = playersAfter.filter(p => p.team === 2).length;
+      if (team1After === 0 || team2After === 0) {
+        socket.emit("custom_questions_error", { message: "A team is now empty. Wait for players to join before starting." });
+        return;
+      }
+
       // Safety guard: require exactly totalRounds valid questions before proceeding
       if (result.questions.length !== freshState.totalRounds) {
         socket.emit("custom_questions_error", {
