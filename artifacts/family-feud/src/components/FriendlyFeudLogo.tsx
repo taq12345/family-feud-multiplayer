@@ -99,7 +99,7 @@ export function FriendlyFeudWordmark({ className, compact = false }: FriendlyFeu
     <span
       className={cn(
         "inline-flex flex-col items-start font-black uppercase leading-none",
-        compact ? "gap-0 text-sm tracking-[0.16em]" : "gap-0.5 text-lg sm:text-xl tracking-[0.18em]",
+        compact ? "gap-0 text-sm tracking-[0.16em]" : "gap-0 text-lg sm:text-xl tracking-[0.18em]",
         className,
       )}
     >
