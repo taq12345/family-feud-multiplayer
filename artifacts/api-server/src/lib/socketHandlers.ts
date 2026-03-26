@@ -183,8 +183,8 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
       await skipFaceoffRound(io, state, roomId);
       return;
     }
-    io.to(roomId).emit("game_state", serializeGameState(state));
     startFaceoffAnswerTimer(io, roomId);
+    io.to(roomId).emit("game_state", serializeGameState(state));
   }, FACEOFF_ANSWER_MS);
   faceoffAnswerTimers.set(roomId, timer);
 }
@@ -271,11 +271,11 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
           return;
         }
         io.to(roomId).emit("steal_chance", { team: stealingTeam });
-        io.to(roomId).emit("game_state", serializeGameState(current));
         startAnswerTimer(io, current, roomId);
+        io.to(roomId).emit("game_state", serializeGameState(current));
       } else {
-        io.to(roomId).emit("game_state", serializeGameState(current));
         startAnswerTimer(io, current, roomId);
+        io.to(roomId).emit("game_state", serializeGameState(current));
       }
     } else if (current.status === "stealing") {
       await endRound(io, current, roomId, current.playingTeam!);
@@ -559,8 +559,8 @@ export function setupSocketHandlers(io: SocketServer) {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
             state.faceoffTurn = nextTeam;
             state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
-            io.to(roomId).emit("game_state", serializeGameState(state));
             startFaceoffAnswerTimer(io, roomId);
+            io.to(roomId).emit("game_state", serializeGameState(state));
           }
           return;
         }
@@ -598,8 +598,8 @@ export function setupSocketHandlers(io: SocketServer) {
             points: pts,
             contributedPoints: player.contributedPoints,
           });
-          io.to(roomId).emit("game_state", serializeGameState(state));
           startAnswerTimer(io, state, roomId);
+          io.to(roomId).emit("game_state", serializeGameState(state));
         } else {
           if (normSub) state.wrongAnswers.add(normSub);
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
@@ -612,8 +612,8 @@ export function setupSocketHandlers(io: SocketServer) {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
             state.faceoffTurn = nextTeam;
             state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
-            io.to(roomId).emit("game_state", serializeGameState(state));
             startFaceoffAnswerTimer(io, roomId);
+            io.to(roomId).emit("game_state", serializeGameState(state));
           }
         }
       } finally {
@@ -657,11 +657,11 @@ export function setupSocketHandlers(io: SocketServer) {
               const stealingTeam = state.playingTeam === 1 ? 2 : 1;
               initStealTurn(state, stealingTeam);
               io.to(roomId).emit("steal_chance", { team: stealingTeam });
-              io.to(roomId).emit("game_state", serializeGameState(state));
               startAnswerTimer(io, state, roomId);
+              io.to(roomId).emit("game_state", serializeGameState(state));
             } else {
-              io.to(roomId).emit("game_state", serializeGameState(state));
               startAnswerTimer(io, state, roomId);
+              io.to(roomId).emit("game_state", serializeGameState(state));
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
@@ -707,8 +707,8 @@ export function setupSocketHandlers(io: SocketServer) {
           } else {
             // Rotate to next player on the playing team for the next answer
             rotatePlayingDesignatedPlayer(state);
-            io.to(roomId).emit("game_state", serializeGameState(state));
             startAnswerTimer(io, state, roomId);
+            io.to(roomId).emit("game_state", serializeGameState(state));
           }
         } else {
           if (normSub) state.wrongAnswers.add(normSub);
@@ -724,11 +724,11 @@ export function setupSocketHandlers(io: SocketServer) {
               const stealingTeam = state.playingTeam === 1 ? 2 : 1;
               initStealTurn(state, stealingTeam);
               io.to(roomId).emit("steal_chance", { team: stealingTeam });
-              io.to(roomId).emit("game_state", serializeGameState(state));
               startAnswerTimer(io, state, roomId);
+              io.to(roomId).emit("game_state", serializeGameState(state));
             } else {
-              io.to(roomId).emit("game_state", serializeGameState(state));
               startAnswerTimer(io, state, roomId);
+              io.to(roomId).emit("game_state", serializeGameState(state));
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
