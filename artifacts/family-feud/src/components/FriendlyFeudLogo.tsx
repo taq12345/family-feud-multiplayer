@@ -5,6 +5,11 @@ type FriendlyFeudLogoProps = {
   className?: string;
 };
 
+type FriendlyFeudWordmarkProps = {
+  className?: string;
+  compact?: boolean;
+};
+
 const marqueeBulbs = [
   { cx: 18, cy: 22 },
   { cx: 24, cy: 17.5 },
@@ -86,5 +91,24 @@ export function FriendlyFeudLogo({ className }: FriendlyFeudLogoProps) {
         <circle cx="43" cy="47.5" r="2.25" fill="#60A5FA" />
       </svg>
     </div>
+  );
+}
+
+export function FriendlyFeudWordmark({ className, compact = false }: FriendlyFeudWordmarkProps) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-baseline gap-[0.34em] font-black uppercase leading-none",
+        compact ? "text-sm tracking-[0.16em]" : "text-lg sm:text-xl tracking-[0.18em]",
+        className,
+      )}
+    >
+      <span className="bg-[linear-gradient(135deg,#dbeafe_0%,#60a5fa_55%,#2563eb_100%)] bg-clip-text text-transparent drop-shadow-[0_0_14px_rgba(96,165,250,0.22)]">
+        Friendly
+      </span>
+      <span className="bg-[linear-gradient(135deg,#fef3c7_0%,#fbbf24_45%,#f59e0b_100%)] bg-clip-text text-transparent drop-shadow-[0_0_16px_rgba(251,191,36,0.24)]">
+        Feud
+      </span>
+    </span>
   );
 }

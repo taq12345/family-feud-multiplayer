@@ -5,7 +5,7 @@ import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
-import { FriendlyFeudLogo } from "../components/FriendlyFeudLogo";
+import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { Send, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check, UserX } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
@@ -801,9 +801,7 @@ export default function GameRoom() {
         <div className="flex items-center gap-2 min-w-0">
           <FriendlyFeudLogo className="w-7 h-7 shrink-0" />
           <div className="min-w-0 flex flex-col">
-            <span className="font-extrabold text-sm tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
-              Friendly Feud
-            </span>
+            <FriendlyFeudWordmark compact />
             <span className="text-[10px] text-slate-400 truncate max-w-[180px] sm:max-w-[280px] sm:hidden" title={displayRoomName}>
               {displayRoomName}
             </span>

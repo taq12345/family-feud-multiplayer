@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { FriendlyFeudLogo } from "../components/FriendlyFeudLogo";
+import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { Tv2, ArrowLeft, Users, Zap, Shield, Trophy, RotateCcw, Star, Clock, Target } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
@@ -32,9 +32,7 @@ export default function Rules() {
           <div className="flex items-center gap-3">
             <FriendlyFeudLogo className="w-9 h-9 shrink-0" />
             <div>
-              <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
-                Friendly Feud
-              </span>
+              <FriendlyFeudWordmark />
               <p className="text-[10px] text-slate-500 font-medium tracking-wider uppercase">How to Play</p>
             </div>
           </div>
