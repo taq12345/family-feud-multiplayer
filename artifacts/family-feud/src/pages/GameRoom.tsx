@@ -1044,7 +1044,7 @@ export default function GameRoom() {
                             disabled={!canStartGame}
                             className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 disabled:opacity-40 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
                           >
-                            <Zap className="w-4 h-4 mr-2" /> Start Game!
+                            <Zap className="w-4 h-4 mr-2" /> Classic
                           </Button>
                         </span>
                       </TooltipTrigger>
@@ -1475,7 +1475,7 @@ export default function GameRoom() {
               <Wand2 className="w-4 h-4" /> Custom Questions
             </DialogTitle>
             <DialogDescription className="text-slate-400">
-              Enter a topic and AI will generate {gameState?.totalRounds ?? "the"} Family Feud-style questions for your game.
+              Enter a topic and AI will questions for your game.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-1">
