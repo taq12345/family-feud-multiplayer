@@ -1502,23 +1502,13 @@ export default function GameRoom() {
                 <span>Generating {gameState?.totalRounds} questions about "<span className="text-pink-300 font-medium">{customTopic}</span>"… <span className="text-slate-500">(may take up to a minute)</span></span>
               </div>
             )}
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1 border-white/10 text-slate-300 hover:bg-white/5"
-                onClick={() => setCustomQuestionsOpen(false)}
-                disabled={customQuestionsLoading}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="flex-1 bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 text-pink-950 font-bold border-0 disabled:opacity-40"
-                onClick={handleGenerateCustomQuestions}
-                disabled={customQuestionsLoading || !customTopic.trim()}
-              >
-                {customQuestionsLoading ? "Generating…" : "Generate & Start"}
-              </Button>
-            </div>
+            <Button
+              className="w-full bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 text-pink-950 font-bold border-0 disabled:opacity-40"
+              onClick={handleGenerateCustomQuestions}
+              disabled={customQuestionsLoading || !customTopic.trim()}
+            >
+              {customQuestionsLoading ? "Generating…" : "Generate & Start"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
