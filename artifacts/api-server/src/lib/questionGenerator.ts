@@ -30,6 +30,53 @@ const QUESTION_ANGLES = [
 
 const OFFENSIVE_PATTERN = /\b(sex|porn|nude|naked|kill|murder|drug|terror|racist|racist|slur|profan)\b/i;
 
+// Patterns that clearly indicate gibberish / non-topics
+const GIBBERISH_PATTERNS = [
+  /^(.)\1+$/,          // all same character: xxx, aaa, 111
+  /^[^a-zA-Z]+$/,      // no letters at all: 123, @#$
+  /^[qwertyuiop]{5,}$/i, // top keyboard row mash
+  /^[asdfghjkl]{5,}$/i,  // middle keyboard row mash
+  /^[zxcvbnm]{5,}$/i,    // bottom keyboard row mash
+];
+
+function isGibberish(topic: string): boolean {
+  return GIBBERISH_PATTERNS.some(p => p.test(topic));
+}
+
+async function validateTopic(topic: string): Promise<{ valid: boolean; reason?: string }> {
+  try {
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), 20000)
+    );
+    const call = openai.chat.completions.create({
+      model: "gpt-5-nano",
+      messages: [{
+        role: "user",
+        content: `Is "${topic}" a real, meaningful topic suitable for Family Feud survey questions? It must be a recognisable concept, object, activity, place, person, or theme that most people know and could be meaningfully surveyed about. Reject nonsense strings, gibberish, random characters, inappropriate adult content, or anything so obscure that no one could survey about it. Reply ONLY with JSON: {"valid":true} or {"valid":false,"reason":"brief reason"}`,
+      }],
+      max_completion_tokens: 500,
+      // @ts-ignore — reasoning_effort supported by reasoning models
+      reasoning_effort: "low",
+    });
+    const response = await Promise.race([call, timeout]);
+    const content = response.choices[0]?.message?.content ?? "";
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return { valid: true }; // if parse fails, let it through
+    const parsed = JSON.parse(jsonMatch[0]) as { valid?: boolean; reason?: string };
+    if (parsed.valid === false) {
+      return {
+        valid: false,
+        reason: parsed.reason
+          ? `"${topic}" isn't a suitable topic: ${parsed.reason}`
+          : "That topic isn't suitable for Family Feud. Please choose a real, family-friendly topic.",
+      };
+    }
+    return { valid: true };
+  } catch {
+    return { valid: true }; // default to valid on timeout/error — don't block generation
+  }
+}
+
 function normalizePoints(points: number[]): number[] | null {
   const total = points.reduce((s, p) => s + p, 0);
   if (total <= 0) return null;
@@ -124,6 +171,15 @@ export async function generateCustomQuestions(
   }
   if (OFFENSIVE_PATTERN.test(trimmed)) {
     return { valid: false, reason: "That topic isn't suitable for Family Feud. Please choose a family-friendly topic." };
+  }
+  if (isGibberish(trimmed)) {
+    return { valid: false, reason: "That doesn't look like a real topic. Try something like \"Pizza\", \"Space\", or \"Summer Vacation\"." };
+  }
+
+  // AI topic validation — single call to confirm the topic is real and surveyable
+  const topicCheck = await validateTopic(trimmed);
+  if (!topicCheck.valid) {
+    return { valid: false, reason: topicCheck.reason ?? "That topic isn't suitable for Family Feud. Please choose a real, family-friendly topic." };
   }
 
   // Assign an angle to each question to ensure variety
