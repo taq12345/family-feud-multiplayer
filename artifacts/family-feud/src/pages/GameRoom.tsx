@@ -1345,23 +1345,23 @@ export default function GameRoom() {
       <div className="md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10">
         <button
           onClick={() => { playClickSound(); setMobileTab("game"); }}
-          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs font-semibold transition-colors border-t-2 ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold transition-colors border-t-2 ${
             mobileTab === "game" ? "text-amber-400 border-amber-400" : "text-slate-500 border-transparent"
           }`}
         >
-          <Gamepad2 className="w-5 h-5" />
-          Game
+          <Gamepad2 className="w-4.5 h-4.5 shrink-0" />
+          <span>Game</span>
         </button>
         <button
           onClick={() => { playClickSound(); setMobileTab("chat"); setUnreadChats(0); }}
-          className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs font-semibold transition-colors relative border-t-2 ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold transition-colors border-t-2 ${
             mobileTab === "chat" ? "text-amber-400 border-amber-400" : "text-slate-500 border-transparent"
           }`}
         >
-          <MessageCircle className="w-5 h-5" />
-          Chat
+          <MessageCircle className="w-4.5 h-4.5 shrink-0" />
+          <span>Chat</span>
           {unreadChats > 0 && (
-            <span className="absolute top-2 right-[calc(50%-14px)] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+            <span className="inline-flex min-w-4 h-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
               {unreadChats > 9 ? "9+" : unreadChats}
             </span>
           )}
