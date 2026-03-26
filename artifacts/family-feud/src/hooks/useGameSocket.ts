@@ -39,9 +39,7 @@ export interface GameStateData {
   playingTeam: 1 | 2 | null;
   faceoffTurn: 1 | 2 | null;
   faceoffDesignatedPlayerName: string | null;
-  faceoffTurnStartedAt: number | null;
   playingDesignatedPlayerName: string | null;
-  playingTurnStartedAt: number | null;
   betweenRoundsStartedAt: number | null;
 }
 

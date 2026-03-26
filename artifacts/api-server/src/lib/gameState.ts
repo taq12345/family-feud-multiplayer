@@ -28,13 +28,9 @@ export interface GameState {
   faceoffWinner: 1 | 2 | null;
   faceoffTurn: 1 | 2 | null;
   faceoffDesignatedPlayerId: string | null;
-  /** Unix ms when the current faceoff turn started. */
-  faceoffTurnStartedAt: number | null;
   faceoffUsedPlayerIds: Set<string>;
   faceoffAttempts: number;
   playingDesignatedPlayerId: string | null;
-  /** Unix ms when the current playing/steal turn started. */
-  playingTurnStartedAt: number | null;
   playingUsedPlayerIds: Set<string>;
   questions: SurveyQuestion[];
   usedQuestionIds: Set<number>;
@@ -72,11 +68,9 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
     faceoffWinner: null,
     faceoffTurn: null,
     faceoffDesignatedPlayerId: null,
-    faceoffTurnStartedAt: null,
     faceoffUsedPlayerIds: new Set(),
     faceoffAttempts: 0,
     playingDesignatedPlayerId: null,
-    playingTurnStartedAt: null,
     playingUsedPlayerIds: new Set(),
     questions: allQuestions,
     usedQuestionIds: new Set(),
@@ -130,9 +124,7 @@ export function serializeGameState(state: GameState) {
     playingTeam: state.playingTeam,
     faceoffTurn: state.faceoffTurn,
     faceoffDesignatedPlayerName: designatedPlayer?.name ?? null,
-    faceoffTurnStartedAt: state.faceoffTurnStartedAt,
     playingDesignatedPlayerName: playingDesignatedPlayer?.name ?? null,
-    playingTurnStartedAt: state.playingTurnStartedAt,
     betweenRoundsStartedAt: state.betweenRoundsStartedAt,
   };
 }

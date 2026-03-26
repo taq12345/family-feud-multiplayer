@@ -11,14 +11,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
 const REVEAL_STAGGER_MS = 2000;
-const TURN_COUNTDOWN_SECONDS = 25;
-const AUTO_ADVANCE_SECONDS = 60;
-
-function getRemainingSeconds(startedAt: number | null | undefined, totalSeconds: number): number | null {
-  if (typeof startedAt !== "number") return null;
-  const elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
-  return Math.max(0, totalSeconds - elapsedSeconds);
-}
 
 function StrikeDisplay({ strikes }: { strikes: number }) {
   return (
@@ -561,34 +553,23 @@ export default function GameRoom() {
     prevStatusRef.current = current;
   }, [gameState?.status]);
 
-  // 25s faceoff countdown — derived from the server start time so it stays accurate after sleep/reconnect.
+  // 25s faceoff countdown — visible to ALL players; restarts whenever the designated player changes
   useEffect(() => {
-    const faceoffPlayerName = gameState?.faceoffDesignatedPlayerName ?? null;
-    const faceoffStartedAt = gameState?.faceoffTurnStartedAt ?? null;
-
-    if (gameState?.status !== "faceoff" || !faceoffPlayerName) {
+    if (gameState?.status === "faceoff" && gameState?.faceoffDesignatedPlayerName) {
+      setFaceoffCountdown(25);
+      const interval = setInterval(() => {
+        setFaceoffCountdown(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) { clearInterval(interval); return 0; }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
       setFaceoffCountdown(null);
       return undefined;
     }
-
-    const syncCountdown = () => {
-      setFaceoffCountdown(getRemainingSeconds(faceoffStartedAt, TURN_COUNTDOWN_SECONDS));
-    };
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") syncCountdown();
-    };
-
-    syncCountdown();
-    const interval = setInterval(syncCountdown, 1000);
-    window.addEventListener("focus", syncCountdown);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("focus", syncCountdown);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [gameState?.status, gameState?.faceoffDesignatedPlayerName, gameState?.faceoffTurnStartedAt]);
+  }, [gameState?.status, gameState?.faceoffDesignatedPlayerName]);
 
   const myPlayer = gameState?.players.find(p => p.name === playerName);
   const isHost = myPlayer?.isHost ?? false;
@@ -624,34 +605,24 @@ export default function GameRoom() {
       : "Team 2 needs at least 1 player."
     : "";
 
-  // 25s answer countdown — derived from the server start time so it stays accurate after sleep/reconnect.
+  // Local 25s countdown for normal/steal answers — runs for all players; restarts on rotation
   useEffect(() => {
-    const playingPlayerName = gameState?.playingDesignatedPlayerName ?? null;
-    const playingStartedAt = gameState?.playingTurnStartedAt ?? null;
-    const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && playingPlayerName !== null;
-    if (!active) {
+    const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && gameState.playingDesignatedPlayerName !== null;
+    if (active) {
+      setRoundCountdown(25);
+      const interval = setInterval(() => {
+        setRoundCountdown(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) { clearInterval(interval); return 0; }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
       setRoundCountdown(null);
       return undefined;
     }
-
-    const syncCountdown = () => {
-      setRoundCountdown(getRemainingSeconds(playingStartedAt, TURN_COUNTDOWN_SECONDS));
-    };
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") syncCountdown();
-    };
-
-    syncCountdown();
-    const interval = setInterval(syncCountdown, 1000);
-    window.addEventListener("focus", syncCountdown);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("focus", syncCountdown);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [gameState?.status, gameState?.playingDesignatedPlayerName, gameState?.playingTurnStartedAt]);
+  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName]);
 
   // Tick sound for the last 5 seconds of any active countdown
   useEffect(() => {
@@ -670,33 +641,28 @@ export default function GameRoom() {
 
   // 60s auto-advance countdown shown during between_rounds (not on game over).
   // Use the server-provided betweenRoundsStartedAt timestamp so the countdown
-  // stays correct across rejoin, backgrounding, and device sleep.
+  // resumes from the correct remaining time on rejoin instead of resetting to 60.
   useEffect(() => {
     if (!gameState) return;
     const isGameOver = gameState.currentRound >= gameState.totalRounds;
-    const betweenRoundsStartedAt = gameState.betweenRoundsStartedAt;
-    if (gameState.status !== "between_rounds" || isGameOver) {
+    if (gameState.status === "between_rounds" && !isGameOver) {
+      const startedAt = gameState.betweenRoundsStartedAt ?? Date.now();
+      const elapsedSec = Math.floor((Date.now() - startedAt) / 1000);
+      const initial = Math.max(0, 60 - elapsedSec);
+      setAutoAdvanceCountdown(initial);
+      if (initial === 0) return;
+      const interval = setInterval(() => {
+        setAutoAdvanceCountdown(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) { clearInterval(interval); return 0; }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
       setAutoAdvanceCountdown(null);
       return undefined;
     }
-
-    const syncCountdown = () => {
-      setAutoAdvanceCountdown(getRemainingSeconds(betweenRoundsStartedAt, AUTO_ADVANCE_SECONDS));
-    };
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") syncCountdown();
-    };
-
-    syncCountdown();
-    const interval = setInterval(syncCountdown, 1000);
-    window.addEventListener("focus", syncCountdown);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("focus", syncCountdown);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
   }, [gameState?.status, gameState?.currentRound, gameState?.totalRounds, gameState?.betweenRoundsStartedAt]);
 
   // Auto-focus + auto-select the answer box whenever it becomes this player's turn
