@@ -59,7 +59,7 @@ function AnswerBoard({ question, answers }: {
                 {i + 1}
               </div>
               <span className={`min-w-0 break-words leading-snug font-semibold text-sm ${a.revealed ? "text-white" : "text-slate-600"}`}>
-                {a.revealed ? a.text : "— — — — —"}
+                {a.revealed ? a.text : "— — — —"}
               </span>
             </div>
             <div className={`shrink-0 text-right text-sm font-bold ${a.revealed ? "text-amber-400" : "text-transparent"}`}>
