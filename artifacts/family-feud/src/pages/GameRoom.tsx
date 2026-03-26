@@ -6,7 +6,7 @@ import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Send, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check, UserX } from "lucide-react";
+import { Send, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check, UserX, Wand2, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
@@ -191,6 +191,10 @@ export default function GameRoom() {
   const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<number | null>(null);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [customQuestionsOpen, setCustomQuestionsOpen] = useState(false);
+  const [customTopic, setCustomTopic] = useState("");
+  const [customQuestionsLoading, setCustomQuestionsLoading] = useState(false);
+  const [customQuestionsError, setCustomQuestionsError] = useState<string | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
   const [unreadChats, setUnreadChats] = useState(0);
@@ -260,7 +264,7 @@ export default function GameRoom() {
     revealChain(queue);
   }
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -488,6 +492,10 @@ export default function GameRoom() {
         sessionStorage.setItem("kickedMessage", "You were removed from the room by the host.");
         setLocation("/");
       },
+      onCustomQuestionsError: (data) => {
+        setCustomQuestionsError(data.message);
+        setCustomQuestionsLoading(false);
+      },
     }
   );
 
@@ -522,6 +530,22 @@ export default function GameRoom() {
       cancelled = true;
     };
   }, [roomId, gameState?.roomName]);
+
+  // Auto-close the custom questions dialog when the game transitions away from waiting
+  useEffect(() => {
+    if (gameState?.status && gameState.status !== "waiting") {
+      setCustomQuestionsOpen(false);
+      setCustomQuestionsLoading(false);
+    }
+  }, [gameState?.status]);
+
+  const handleGenerateCustomQuestions = useCallback(() => {
+    const topic = customTopic.trim();
+    if (!topic) return;
+    setCustomQuestionsError(null);
+    setCustomQuestionsLoading(true);
+    generateCustomQuestions(topic);
+  }, [customTopic, generateCustomQuestions]);
 
   // Clear steal attempt summary and live guess when a new round's faceoff begins
   useEffect(() => {
@@ -1000,6 +1024,18 @@ export default function GameRoom() {
                       {shareCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
                       {shareCopied ? "Link Copied!" : "Invite Players"}
                     </button>
+                    <Button
+                      onClick={() => {
+                        playClickSound();
+                        setCustomTopic("");
+                        setCustomQuestionsError(null);
+                        setCustomQuestionsOpen(true);
+                      }}
+                      disabled={!canStartGame}
+                      className="bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 disabled:opacity-40 text-pink-950 font-bold px-5 h-11 border-0 shadow-[0_0_16px_rgba(236,72,153,0.2)] transition-all"
+                    >
+                      <Wand2 className="w-4 h-4 mr-2" /> Custom Questions
+                    </Button>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span>
@@ -1423,6 +1459,69 @@ export default function GameRoom() {
           </DialogContent>
         </Dialog>
       ))}
+
+      {/* Custom Questions Dialog */}
+      <Dialog
+        open={customQuestionsOpen}
+        onOpenChange={(open) => {
+          if (!customQuestionsLoading) {
+            setCustomQuestionsOpen(open);
+          }
+        }}
+      >
+        <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="font-bold flex items-center gap-2 text-pink-300">
+              <Wand2 className="w-4 h-4" /> Custom Questions
+            </DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Enter a topic and AI will generate {gameState?.totalRounds ?? "the"} Family Feud-style questions for your game.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-1">
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-slate-300">Topic</label>
+              <Input
+                value={customTopic}
+                onChange={(e) => setCustomTopic(e.target.value)}
+                placeholder="e.g. Pizza, Space, Superheroes..."
+                disabled={customQuestionsLoading}
+                onKeyDown={(e) => { if (e.key === "Enter") handleGenerateCustomQuestions(); }}
+                className="bg-white/5 border-white/20 text-white placeholder:text-slate-500 focus:border-pink-400/50"
+                maxLength={80}
+              />
+            </div>
+            {customQuestionsError && (
+              <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                {customQuestionsError}
+              </div>
+            )}
+            {customQuestionsLoading && (
+              <div className="flex items-center gap-2.5 text-slate-300 text-sm bg-white/5 rounded-lg px-3 py-2.5 border border-white/10">
+                <Loader2 className="w-4 h-4 animate-spin text-pink-400 shrink-0" />
+                <span>Generating {gameState?.totalRounds} questions about "<span className="text-pink-300 font-medium">{customTopic}</span>"…</span>
+              </div>
+            )}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1 border-white/10 text-slate-300 hover:bg-white/5"
+                onClick={() => setCustomQuestionsOpen(false)}
+                disabled={customQuestionsLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1 bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 text-pink-950 font-bold border-0 disabled:opacity-40"
+                onClick={handleGenerateCustomQuestions}
+                disabled={customQuestionsLoading || !customTopic.trim()}
+              >
+                {customQuestionsLoading ? "Generating…" : "Generate & Start"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
 import { findMatchIndex, normalizeSubmittedAnswer } from "./answerMatcher.js";
+import { generateCustomQuestions } from "./questionGenerator.js";
 
 const gameStates = new Map<string, GameState>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -448,6 +449,58 @@ export function setupSocketHandlers(io: SocketServer) {
 
       const question = getNextQuestion(state);
       if (!question) return;
+
+      state.usedQuestionIds.add(question.id);
+      state.currentQuestion = question;
+      state.wrongAnswers = new Set();
+      state.correctSubmissionNorms = new Set();
+      state.currentRound = 1;
+      state.status = "faceoff";
+      state.revealedAnswers = new Set();
+      state.strikes = 0;
+      state.roundPoints = 0;
+      state.playingTeam = null;
+      state.faceoffWinner = null;
+      initFaceoff(state, 1);
+      startFaceoffAnswerTimer(io, roomId);
+
+      await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
+
+      io.to(roomId).emit("game_state", serializeGameState(state));
+    });
+
+    socket.on("generate_custom_questions", async ({ roomId, topic }: { roomId: string; topic: string }) => {
+      const state = gameStates.get(roomId);
+      if (!state) return;
+      const player = state.players.get(socket.id);
+      if (!player?.isHost) return;
+      if (state.status !== "waiting") return;
+
+      const trimmedTopic = topic?.trim();
+      if (!trimmedTopic || trimmedTopic.length < 2) {
+        socket.emit("custom_questions_error", { message: "Please enter a valid topic (at least 2 characters)." });
+        return;
+      }
+
+      const result = await generateCustomQuestions(trimmedTopic, state.totalRounds);
+
+      if (!result.valid) {
+        socket.emit("custom_questions_error", { message: result.reason });
+        return;
+      }
+
+      // Overwrite the question pool with AI-generated questions
+      state.questions = result.questions;
+      state.usedQuestionIds = new Set();
+
+      // Auto-start — same logic as start_game
+      await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
+
+      const question = getNextQuestion(state);
+      if (!question) {
+        socket.emit("custom_questions_error", { message: "Could not start the game with generated questions. Please try again." });
+        return;
+      }
 
       state.usedQuestionIds.add(question.id);
       state.currentQuestion = question;
