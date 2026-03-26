@@ -1475,7 +1475,7 @@ export default function GameRoom() {
               <Wand2 className="w-4 h-4" /> Custom Questions
             </DialogTitle>
             <DialogDescription className="text-slate-400">
-              Enter a topic and AI will questions for your game.
+              Enter a topic and AI will generate questions for your game.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-1">
