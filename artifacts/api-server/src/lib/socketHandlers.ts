@@ -469,6 +469,8 @@ export function setupSocketHandlers(io: SocketServer) {
       io.to(roomId).emit("game_state", serializeGameState(state));
     });
 
+    const customQuestionsInFlight = new Set<string>();
+
     socket.on("generate_custom_questions", async ({ roomId, topic }: { roomId: string; topic: string }) => {
       const state = gameStates.get(roomId);
       if (!state) return;
@@ -476,57 +478,75 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player?.isHost) return;
       if (state.status !== "waiting") return;
 
+      if (customQuestionsInFlight.has(roomId)) {
+        socket.emit("custom_questions_error", { message: "Questions are already being generated for this room. Please wait." });
+        return;
+      }
+
       const trimmedTopic = topic?.trim();
       if (!trimmedTopic || trimmedTopic.length < 2) {
         socket.emit("custom_questions_error", { message: "Please enter a valid topic (at least 2 characters)." });
         return;
       }
 
-      const result = await generateCustomQuestions(trimmedTopic, state.totalRounds);
+      customQuestionsInFlight.add(roomId);
+      let result: Awaited<ReturnType<typeof generateCustomQuestions>>;
+      try {
+        result = await generateCustomQuestions(trimmedTopic, state.totalRounds);
+      } finally {
+        customQuestionsInFlight.delete(roomId);
+      }
 
       if (!result.valid) {
         socket.emit("custom_questions_error", { message: result.reason });
         return;
       }
 
+      // Re-validate room state after async AI call (race condition guard)
+      const freshState = gameStates.get(roomId);
+      if (!freshState) return;
+      const freshPlayer = freshState.players.get(socket.id);
+      if (!freshPlayer?.isHost) return;
+      if (freshState.status !== "waiting") return;
+
       // Safety guard: require exactly totalRounds valid questions before proceeding
-      if (result.questions.length !== state.totalRounds) {
+      if (result.questions.length !== freshState.totalRounds) {
         socket.emit("custom_questions_error", {
-          message: `Expected ${state.totalRounds} questions but only ${result.questions.length} were generated. Please try again.`,
+          message: `Expected ${freshState.totalRounds} questions but only ${result.questions.length} were generated. Please try again.`,
         });
         return;
       }
 
       // Overwrite the question pool with AI-generated questions
-      state.questions = result.questions;
-      state.usedQuestionIds = new Set();
+      freshState.questions = result.questions;
+      freshState.usedQuestionIds = new Set();
 
       // Auto-start — same logic as start_game
       await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
 
-      const question = getNextQuestion(state);
+      const question = getNextQuestion(freshState);
       if (!question) {
         socket.emit("custom_questions_error", { message: "Could not start the game with generated questions. Please try again." });
         return;
       }
 
-      state.usedQuestionIds.add(question.id);
-      state.currentQuestion = question;
-      state.wrongAnswers = new Set();
-      state.correctSubmissionNorms = new Set();
-      state.currentRound = 1;
-      state.status = "faceoff";
-      state.revealedAnswers = new Set();
-      state.strikes = 0;
-      state.roundPoints = 0;
-      state.playingTeam = null;
-      state.faceoffWinner = null;
-      initFaceoff(state, 1);
+      freshState.usedQuestionIds.add(question.id);
+      freshState.currentQuestion = question;
+      freshState.wrongAnswers = new Set();
+      freshState.correctSubmissionNorms = new Set();
+      freshState.currentRound = 1;
+      freshState.status = "faceoff";
+      freshState.revealedAnswers = new Set();
+      freshState.strikes = 0;
+      freshState.roundPoints = 0;
+      freshState.playingTeam = null;
+      freshState.faceoffWinner = null;
+      initFaceoff(freshState, 1);
       startFaceoffAnswerTimer(io, roomId);
 
-      await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
+      await db.update(roomsTable).set({ currentRound: freshState.currentRound }).where(eq(roomsTable.id, roomId));
 
-      io.to(roomId).emit("game_state", serializeGameState(state));
+      io.to(roomId).emit("game_state", serializeGameState(freshState));
     });
 
     socket.on("restart_game", async ({ roomId }: { roomId: string }) => {
