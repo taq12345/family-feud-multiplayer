@@ -5,7 +5,8 @@ import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
-import { Send, Tv2, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check, UserX } from "lucide-react";
+import { FriendlyFeudLogo } from "../components/FriendlyFeudLogo";
+import { Send, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check, UserX } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
@@ -798,9 +799,7 @@ export default function GameRoom() {
       {/* Header */}
       <header className="relative z-10 border-b border-white/5 bg-black/40 backdrop-blur-xl px-3 py-2 flex items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_12px_rgba(251,191,36,0.4)] shrink-0">
-            <Tv2 className="w-4 h-4 text-black" />
-          </div>
+          <FriendlyFeudLogo className="w-7 h-7 shrink-0" />
           <div className="min-w-0 flex flex-col">
             <span className="font-extrabold text-sm tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
               Friendly Feud

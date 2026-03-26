@@ -5,6 +5,7 @@ import { playClickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
+import { FriendlyFeudLogo } from "../components/FriendlyFeudLogo";
 import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare } from "lucide-react";
 
 interface Room {
@@ -292,9 +293,7 @@ export default function Lobby() {
       <header className="relative z-10 border-b border-white/5 bg-black/30 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)]">
-              <Tv2 className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
-            </div>
+            <FriendlyFeudLogo className="w-9 h-9 sm:w-10 sm:h-10 shrink-0" />
             <div>
               <h1 className="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
                 Friendly Feud

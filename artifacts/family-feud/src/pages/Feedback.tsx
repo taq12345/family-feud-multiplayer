@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { Tv2, ArrowLeft, Send, CheckCircle, MessageSquare } from "lucide-react";
+import { FriendlyFeudLogo } from "../components/FriendlyFeudLogo";
+import { ArrowLeft, Send, CheckCircle, MessageSquare } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -59,9 +60,7 @@ export default function Feedback() {
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)]">
-              <Tv2 className="w-5 h-5 text-black" />
-            </div>
+            <FriendlyFeudLogo className="w-9 h-9 shrink-0" />
             <div>
               <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
                 Friendly Feud

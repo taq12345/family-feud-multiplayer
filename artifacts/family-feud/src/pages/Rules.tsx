@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { FriendlyFeudLogo } from "../components/FriendlyFeudLogo";
 import { Tv2, ArrowLeft, Users, Zap, Shield, Trophy, RotateCcw, Star, Clock, Target } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
@@ -29,9 +30,7 @@ export default function Rules() {
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)]">
-              <Tv2 className="w-5 h-5 text-black" />
-            </div>
+            <FriendlyFeudLogo className="w-9 h-9 shrink-0" />
             <div>
               <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent uppercase">
                 Friendly Feud
