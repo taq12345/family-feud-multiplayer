@@ -72,7 +72,7 @@ Reply ONLY with this JSON (no other text):
     const call = openai.chat.completions.create({
       model: "gpt-5-nano",
       messages: [{ role: "user", content: prompt }],
-      max_completion_tokens: 300,
+      max_completion_tokens: 1500,
     });
     const response = await Promise.race([call, timeout]);
     const choice = response.choices[0];
@@ -118,7 +118,7 @@ export async function generateCustomQuestions(
         content: `Is "${topic}" a valid topic for Family Feud questions? Valid means it's specific, family-friendly, and not gibberish/offensive/a single character.
 Reply with ONLY: YES or NO`,
       }],
-      max_completion_tokens: 5,
+      max_completion_tokens: 500,
     });
     const validityResponse = await Promise.race([validityCall, validityTimeout]);
     const verdict = (validityResponse.choices[0]?.message?.content ?? "").trim().toUpperCase();
