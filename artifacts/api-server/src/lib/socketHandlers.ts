@@ -104,6 +104,7 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
   state.roundPoints = 0;
   state.playingTeam = null;
   state.faceoffWinner = null;
+  state.betweenRoundsStartedAt = null;
   initFaceoff(state, state.currentRound % 2 === 1 ? 1 : 2);
   startFaceoffAnswerTimer(io, roomId);
 
@@ -129,8 +130,9 @@ function scheduleAutoAdvance(io: SocketServer, roomId: string) {
 
 async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: string) {
   clearFaceoffAnswerTimer(roomId);
-  state.faceoffDesignatedPlayerId = null;
+  setFaceoffDesignatedPlayer(state, null);
   state.faceoffTurn = null;
+  setPlayingDesignatedPlayer(state, null);
   if (state.currentQuestion) {
     state.revealedAnswers = new Set(state.currentQuestion.answers.map((_, idx) => idx));
   }
@@ -172,7 +174,7 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
 
     const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
     state.faceoffTurn = nextTeam;
-    state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
+    setFaceoffDesignatedPlayer(state, pickDesignatedPlayer(state, nextTeam));
     if (!state.faceoffDesignatedPlayerId) {
       // Next team has no players — skip the faceoff instead of freezing
       await skipFaceoffRound(io, state, roomId);
@@ -193,11 +195,22 @@ function pickDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
   return teamPlayers[0]?.id ?? null;
 }
 
+function setFaceoffDesignatedPlayer(state: GameState, playerId: string | null) {
+  state.faceoffDesignatedPlayerId = playerId;
+  state.faceoffTurnStartedAt = playerId ? Date.now() : null;
+}
+
+function setPlayingDesignatedPlayer(state: GameState, playerId: string | null) {
+  state.playingDesignatedPlayerId = playerId;
+  state.playingTurnStartedAt = playerId ? Date.now() : null;
+}
+
 function initFaceoff(state: GameState, startingTeam: 1 | 2) {
   state.faceoffTurn = startingTeam;
   state.faceoffUsedPlayerIds = new Set();
   state.faceoffAttempts = 0;
-  state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, startingTeam);
+  setFaceoffDesignatedPlayer(state, pickDesignatedPlayer(state, startingTeam));
+  setPlayingDesignatedPlayer(state, null);
 }
 
 function pickPlayingDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
@@ -212,7 +225,7 @@ function pickPlayingDesignatedPlayer(state: GameState, team: 1 | 2): string | nu
 function initPlayingTurn(state: GameState, team: 1 | 2, excludePlayerId?: string) {
   state.playingUsedPlayerIds = new Set();
   if (excludePlayerId) state.playingUsedPlayerIds.add(excludePlayerId);
-  state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, team);
+  setPlayingDesignatedPlayer(state, pickPlayingDesignatedPlayer(state, team));
 }
 
 function rotatePlayingDesignatedPlayer(state: GameState) {
@@ -220,14 +233,14 @@ function rotatePlayingDesignatedPlayer(state: GameState) {
   const currentPlayer = state.players.get(state.playingDesignatedPlayerId);
   if (!currentPlayer) return;
   state.playingUsedPlayerIds.add(state.playingDesignatedPlayerId);
-  state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, currentPlayer.team);
+  setPlayingDesignatedPlayer(state, pickPlayingDesignatedPlayer(state, currentPlayer.team));
 }
 
 function initStealTurn(state: GameState, stealTeam: 1 | 2) {
   // Steal is one shot — pick the first available player from the stealing team
   const stealPlayers = Array.from(state.players.values()).filter(p => p.team === stealTeam);
   state.playingUsedPlayerIds = new Set();
-  state.playingDesignatedPlayerId = stealPlayers[0]?.id ?? null;
+  setPlayingDesignatedPlayer(state, stealPlayers[0]?.id ?? null);
 }
 
 function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
@@ -454,6 +467,7 @@ export function setupSocketHandlers(io: SocketServer) {
       state.roundPoints = 0;
       state.playingTeam = null;
       state.faceoffWinner = null;
+      state.betweenRoundsStartedAt = null;
       initFaceoff(state, 1);
       startFaceoffAnswerTimer(io, roomId);
 
@@ -500,11 +514,12 @@ export function setupSocketHandlers(io: SocketServer) {
       state.playingTeam = null;
       state.faceoffWinner = null;
       state.faceoffTurn = null;
-      state.faceoffDesignatedPlayerId = null;
+      setFaceoffDesignatedPlayer(state, null);
       state.faceoffUsedPlayerIds = new Set();
       state.faceoffAttempts = 0;
-      state.playingDesignatedPlayerId = null;
+      setPlayingDesignatedPlayer(state, null);
       state.playingUsedPlayerIds = new Set();
+      state.betweenRoundsStartedAt = null;
 
       await db.update(roomsTable).set({ status: "playing", team1Score: 0, team2Score: 0 }).where(eq(roomsTable.id, roomId));
 
@@ -552,7 +567,7 @@ export function setupSocketHandlers(io: SocketServer) {
           } else {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
             state.faceoffTurn = nextTeam;
-            state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
+            setFaceoffDesignatedPlayer(state, pickDesignatedPlayer(state, nextTeam));
             io.to(roomId).emit("game_state", serializeGameState(state));
             startFaceoffAnswerTimer(io, roomId);
           }
@@ -567,7 +582,7 @@ export function setupSocketHandlers(io: SocketServer) {
         if (state.status !== "faceoff" || state.faceoffDesignatedPlayerId !== socket.id) return;
 
         if (matchIndex !== -1 && !state.revealedAnswers.has(matchIndex)) {
-          state.faceoffDesignatedPlayerId = null;
+          setFaceoffDesignatedPlayer(state, null);
           state.faceoffTurn = null;
           state.revealedAnswers.add(matchIndex);
           const ns = normalizeSubmittedAnswer(answer);
@@ -605,7 +620,7 @@ export function setupSocketHandlers(io: SocketServer) {
           } else {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
             state.faceoffTurn = nextTeam;
-            state.faceoffDesignatedPlayerId = pickDesignatedPlayer(state, nextTeam);
+            setFaceoffDesignatedPlayer(state, pickDesignatedPlayer(state, nextTeam));
             io.to(roomId).emit("game_state", serializeGameState(state));
             startFaceoffAnswerTimer(io, roomId);
           }
@@ -956,7 +971,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
           state.faceoffTurn = otherTeam;
           newDesignated = pickDesignatedPlayer(state, otherTeam);
         }
-        state.faceoffDesignatedPlayerId = newDesignated;
+        setFaceoffDesignatedPlayer(state, newDesignated);
         if (newDesignated) startFaceoffAnswerTimer(io, roomId);
       }
 
@@ -970,7 +985,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
           : (state.playingTeam === 1 ? 2 : 1) as 1 | 2;
         const teamPlayers = Array.from(state.players.values()).filter(p => p.team === activeTeam);
         if (teamPlayers.length > 0) {
-          state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, activeTeam);
+          setPlayingDesignatedPlayer(state, pickPlayingDesignatedPlayer(state, activeTeam));
           startAnswerTimer(io, state, roomId);
         } else {
           // No one left on the active team — end the round
@@ -1009,6 +1024,8 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
 
   state.status = "between_rounds";
   state.betweenRoundsStartedAt = Date.now();
+  setFaceoffDesignatedPlayer(state, null);
+  setPlayingDesignatedPlayer(state, null);
 
   // Full board in server state (reconnects / consistency). Client animates reveals using canonicalAnswers on round_over.
   if (state.currentQuestion) {
