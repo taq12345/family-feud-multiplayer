@@ -1499,7 +1499,7 @@ export default function GameRoom() {
             {customQuestionsLoading && (
               <div className="flex items-center gap-2.5 text-slate-300 text-sm bg-white/5 rounded-lg px-3 py-2.5 border border-white/10">
                 <Loader2 className="w-4 h-4 animate-spin text-pink-400 shrink-0" />
-                <span>Generating {gameState?.totalRounds} questions about "<span className="text-pink-300 font-medium">{customTopic}</span>"…</span>
+                <span>Generating {gameState?.totalRounds} questions about "<span className="text-pink-300 font-medium">{customTopic}</span>"… <span className="text-slate-500">(may take up to a minute)</span></span>
               </div>
             )}
             <div className="flex gap-3">

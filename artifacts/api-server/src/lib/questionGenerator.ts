@@ -10,7 +10,7 @@ export type GenerateResult =
   | { valid: false; reason: string }
   | { valid: true; questions: SurveyQuestion[] };
 
-const AI_TIMEOUT_MS = 30000;
+const AI_TIMEOUT_MS = 60000;
 const MIN_ANSWERS = 5;
 const MAX_ANSWERS = 8;
 const POINTS_TARGET = 100;
