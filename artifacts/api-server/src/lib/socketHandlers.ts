@@ -587,6 +587,7 @@ export function setupSocketHandlers(io: SocketServer) {
           state.playingTeam = player.team;
           state.roundPoints += pts;
           state.status = "playing";
+          state.faceoffTimerStartedAt = null;
           initPlayingTurn(state, player.team, player.id);
 
           io.to(roomId).emit("answer_correct", {
