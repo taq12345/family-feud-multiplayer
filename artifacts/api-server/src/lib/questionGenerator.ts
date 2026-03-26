@@ -12,7 +12,7 @@ export type GenerateResult =
 
 const PER_ATTEMPT_TIMEOUT_MS = 30000;  // 30s per individual API call attempt
 const VALIDATE_TIMEOUT_MS    = 15000;  // 15s for the topic-validation call
-const OVERALL_TIMEOUT_MS     = 90000;  // 90s hard cap — entire generateCustomQuestions call
+const OVERALL_TIMEOUT_MS     = 90000;  // 90s hard cap for the entire generateCustomQuestions call
 const MIN_ANSWERS = 3;
 const MAX_ANSWERS = 8;
 const POINTS_TARGET = 100;
@@ -45,42 +45,52 @@ function isGibberish(topic: string): boolean {
 }
 
 /**
- * Create an AbortController that fires after `ms` milliseconds.
- * If `parentSignal` is provided, also fires when the parent is aborted.
- * Returns the controller AND a cleanup function that must always be called.
+ * Returns a promise that rejects with a timeout error after `ms` milliseconds.
+ * Also propagates an optional parent abort signal.
+ * Returns the promise AND a cleanup fn that must always be called to avoid timer leaks.
  */
-function makeTimeoutController(ms: number, parentSignal?: AbortSignal): { controller: AbortController; cleanup: () => void } {
-  const controller = new AbortController();
+function makeTimeoutRace(ms: number, parentSignal?: AbortSignal): { timeoutPromise: Promise<never>; cleanup: () => void } {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  let onParentAbort: (() => void) | undefined;
+  let reject_: (err: Error) => void;
 
-  const timeoutId = setTimeout(() => controller.abort(new Error("timeout")), ms);
-
-  const onParentAbort = () => controller.abort(new Error("parent_aborted"));
-  parentSignal?.addEventListener("abort", onParentAbort);
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    reject_ = reject;
+    timeoutId = setTimeout(() => reject(new Error("timeout")), ms);
+    if (parentSignal) {
+      onParentAbort = () => reject(new Error("parent_aborted"));
+      parentSignal.addEventListener("abort", onParentAbort);
+    }
+  });
 
   const cleanup = () => {
     clearTimeout(timeoutId);
-    parentSignal?.removeEventListener("abort", onParentAbort);
+    if (parentSignal && onParentAbort) {
+      parentSignal.removeEventListener("abort", onParentAbort);
+    }
   };
 
-  return { controller, cleanup };
+  return { timeoutPromise, cleanup };
 }
 
 async function validateTopic(topic: string, parentSignal?: AbortSignal): Promise<{ valid: boolean; reason?: string }> {
   if (parentSignal?.aborted) return { valid: true };
 
-  const { controller, cleanup } = makeTimeoutController(VALIDATE_TIMEOUT_MS, parentSignal);
+  const { timeoutPromise, cleanup } = makeTimeoutRace(VALIDATE_TIMEOUT_MS, parentSignal);
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-5-nano",
-      messages: [{
-        role: "user",
-        content: `Is "${topic}" a real, meaningful topic suitable for Family Feud survey questions? It must be a recognisable concept, object, activity, place, person, or theme that most people know and could be meaningfully surveyed about. Reject nonsense strings, gibberish, random characters, inappropriate adult content, or anything so obscure that no one could survey about it. Reply ONLY with JSON: {"valid":true} or {"valid":false,"reason":"brief reason"}`,
-      }],
-      max_completion_tokens: 500,
-      // @ts-ignore — reasoning_effort supported by reasoning models
-      reasoning_effort: "low",
-      signal: controller.signal,
-    });
+    const response = await Promise.race([
+      openai.chat.completions.create({
+        model: "gpt-5-nano",
+        messages: [{
+          role: "user",
+          content: `Is "${topic}" a real, meaningful topic suitable for Family Feud survey questions? It must be a recognisable concept, object, activity, place, person, or theme that most people know and could be meaningfully surveyed about. Reject nonsense strings, gibberish, random characters, inappropriate adult content, or anything so obscure that no one could survey about it. Reply ONLY with JSON: {"valid":true} or {"valid":false,"reason":"brief reason"}`,
+        }],
+        max_completion_tokens: 500,
+        // @ts-ignore — reasoning_effort supported by reasoning models
+        reasoning_effort: "low",
+      }),
+      timeoutPromise,
+    ]);
     const content = response.choices[0]?.message?.content ?? "";
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) return { valid: true };
@@ -161,16 +171,18 @@ Rules:
     // Bail immediately if the overall budget is already spent
     if (parentSignal?.aborted) return null;
 
-    const { controller, cleanup } = makeTimeoutController(PER_ATTEMPT_TIMEOUT_MS, parentSignal);
+    const { timeoutPromise, cleanup } = makeTimeoutRace(PER_ATTEMPT_TIMEOUT_MS, parentSignal);
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-5-nano",
-        messages: [{ role: "user", content: prompt }],
-        max_completion_tokens: 3000,
-        // @ts-ignore — reasoning_effort supported by reasoning models; reduces thinking tokens
-        reasoning_effort: "low",
-        signal: controller.signal,
-      });
+      const response = await Promise.race([
+        openai.chat.completions.create({
+          model: "gpt-5-nano",
+          messages: [{ role: "user", content: prompt }],
+          max_completion_tokens: 3000,
+          // @ts-ignore — reasoning_effort supported by reasoning models; reduces thinking tokens
+          reasoning_effort: "low",
+        }),
+        timeoutPromise,
+      ]);
       const choice = response.choices[0];
       const rawContent = choice?.message?.content ?? "";
       const reasoningTokens = (response.usage as any)?.completion_tokens_details?.reasoning_tokens ?? "?";
@@ -186,7 +198,6 @@ Rules:
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`[questionGenerator] Q${index} attempt=${attempt} error: ${msg}`);
-      // If overall budget is spent, stop retrying immediately
       if (parentSignal?.aborted) return null;
     } finally {
       cleanup();
@@ -213,7 +224,8 @@ export async function generateCustomQuestions(
   }
 
   // --- Overall hard cap: 90 seconds for the entire AI flow ---
-  const { controller: overallController, cleanup: overallCleanup } = makeTimeoutController(OVERALL_TIMEOUT_MS);
+  const overallController = new AbortController();
+  const overallTimeoutId = setTimeout(() => overallController.abort(), OVERALL_TIMEOUT_MS);
   const overallSignal = overallController.signal;
 
   try {
@@ -227,7 +239,7 @@ export async function generateCustomQuestions(
       return { valid: false, reason: "Question generation timed out. Please try again." };
     }
 
-    // Parallel question generation — all questions race against the shared overall signal
+    // Parallel question generation — all questions share the overall signal for early bail-out
     const angles = Array.from({ length: count }, (_, i) => QUESTION_ANGLES[i % QUESTION_ANGLES.length]);
     const results = await Promise.all(
       angles.map((angle, i) => generateOneQuestion(trimmed, angle, i, overallSignal))
@@ -251,6 +263,7 @@ export async function generateCustomQuestions(
 
     return { valid: true, questions };
   } finally {
-    overallCleanup();
+    clearTimeout(overallTimeoutId);
+    overallController.abort(); // clean up any lingering listeners
   }
 }
