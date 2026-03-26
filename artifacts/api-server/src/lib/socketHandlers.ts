@@ -489,6 +489,14 @@ export function setupSocketHandlers(io: SocketServer) {
         return;
       }
 
+      // Safety guard: require exactly totalRounds valid questions before proceeding
+      if (result.questions.length !== state.totalRounds) {
+        socket.emit("custom_questions_error", {
+          message: `Expected ${state.totalRounds} questions but only ${result.questions.length} were generated. Please try again.`,
+        });
+        return;
+      }
+
       // Overwrite the question pool with AI-generated questions
       state.questions = result.questions;
       state.usedQuestionIds = new Set();

@@ -11,6 +11,20 @@ export type GenerateResult =
   | { valid: true; questions: SurveyQuestion[] };
 
 const AI_TIMEOUT_MS = 30000;
+const MIN_ANSWERS = 5;
+const MAX_ANSWERS = 8;
+const POINTS_TARGET = 100;
+
+function normalizePoints(points: number[]): number[] | null {
+  const total = points.reduce((s, p) => s + p, 0);
+  if (total <= 0) return null;
+  const scaled = points.map(p => Math.max(1, Math.round((p / total) * POINTS_TARGET)));
+  const scaledTotal = scaled.reduce((s, p) => s + p, 0);
+  const diff = POINTS_TARGET - scaledTotal;
+  scaled[0] += diff;
+  if (scaled[0] <= 0) return null;
+  return scaled;
+}
 
 export async function generateCustomQuestions(
   topic: string,
@@ -21,8 +35,8 @@ export async function generateCustomQuestions(
 Each question must:
 - Be directly and meaningfully related to the topic "${topic}"
 - Be phrased in classic Family Feud style: "Name something...", "Name a...", "What is something people...", etc.
-- Have 5 to 8 answer options
-- Have answer points that sum to exactly 100
+- Have exactly 6 answer options (minimum 5, maximum 8)
+- Have answer points that sum to EXACTLY 100
 - Be distributed realistically: the most obvious/popular answer gets the most points
 - Be appropriate for all ages and family-friendly
 
@@ -91,26 +105,45 @@ Invalid topic format:
       };
     }
 
-    if (!Array.isArray(parsed.questions) || parsed.questions.length === 0) {
+    if (!Array.isArray(parsed.questions)) {
       return { valid: false, reason: "No valid questions were generated. Please try a different topic." };
     }
 
-    const questions: SurveyQuestion[] = parsed.questions
-      .slice(0, count)
-      .map((q, i) => ({
-        id: 9000 + i,
-        question: String(q.question ?? "").trim(),
-        answers: (Array.isArray(q.answers) ? q.answers : [])
-          .map(a => ({
-            text: String(a.text ?? "").trim(),
-            points: Math.max(1, Math.round(Number(a.points) || 1)),
-          }))
-          .filter(a => a.text.length > 0),
-      }))
-      .filter(q => q.question.length > 0 && q.answers.length >= 3);
+    const questions: SurveyQuestion[] = [];
+    for (let i = 0; i < parsed.questions.length && questions.length < count; i++) {
+      const q = parsed.questions[i];
+      const questionText = String(q?.question ?? "").trim();
+      if (!questionText) continue;
 
-    if (questions.length === 0) {
-      return { valid: false, reason: "Generated questions were invalid. Please try a different topic." };
+      if (!Array.isArray(q.answers)) continue;
+
+      const validAnswers = q.answers
+        .map(a => ({
+          text: String(a?.text ?? "").trim(),
+          points: Number(a?.points),
+        }))
+        .filter(a => a.text.length > 0 && isFinite(a.points) && a.points >= 1);
+
+      if (validAnswers.length < MIN_ANSWERS || validAnswers.length > MAX_ANSWERS) continue;
+
+      const normalizedPoints = normalizePoints(validAnswers.map(a => a.points));
+      if (!normalizedPoints) continue;
+
+      questions.push({
+        id: 9000 + questions.length,
+        question: questionText,
+        answers: validAnswers.map((a, idx) => ({
+          text: a.text,
+          points: normalizedPoints[idx],
+        })),
+      });
+    }
+
+    if (questions.length !== count) {
+      return {
+        valid: false,
+        reason: `Could only generate ${questions.length} of ${count} valid questions for that topic. Please try a different or more specific topic.`,
+      };
     }
 
     return { valid: true, questions };
