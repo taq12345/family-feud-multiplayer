@@ -1024,18 +1024,6 @@ export default function GameRoom() {
                       {shareCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
                       {shareCopied ? "Link Copied!" : "Invite Players"}
                     </button>
-                    <Button
-                      onClick={() => {
-                        playClickSound();
-                        setCustomTopic("");
-                        setCustomQuestionsError(null);
-                        setCustomQuestionsOpen(true);
-                      }}
-                      disabled={!canStartGame}
-                      className="bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 disabled:opacity-40 text-pink-950 font-bold px-5 h-11 border-0 shadow-[0_0_16px_rgba(236,72,153,0.2)] transition-all"
-                    >
-                      <Wand2 className="w-4 h-4 mr-2" /> Custom Questions
-                    </Button>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span>
@@ -1050,6 +1038,18 @@ export default function GameRoom() {
                       </TooltipTrigger>
                       {!canStartGame && <TooltipContent side="top">{startGameTooltip}</TooltipContent>}
                     </Tooltip>
+                    <Button
+                      onClick={() => {
+                        playClickSound();
+                        setCustomTopic("");
+                        setCustomQuestionsError(null);
+                        setCustomQuestionsOpen(true);
+                      }}
+                      disabled={!canStartGame}
+                      className="bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 disabled:opacity-40 text-pink-950 font-bold px-5 h-11 border-0 shadow-[0_0_16px_rgba(236,72,153,0.2)] transition-all"
+                    >
+                      <Wand2 className="w-4 h-4 mr-2" /> Custom Questions
+                    </Button>
                   </div>
                 )}
               </div>
