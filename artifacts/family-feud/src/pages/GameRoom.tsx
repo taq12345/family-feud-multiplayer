@@ -1044,7 +1044,7 @@ export default function GameRoom() {
                             disabled={!canStartGame}
                             className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 disabled:opacity-40 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
                           >
-                            <Zap className="w-4 h-4 mr-2" /> Classic
+                            <Zap className="w-4 h-4 mr-2" /> Classic Questions
                           </Button>
                         </span>
                       </TooltipTrigger>
