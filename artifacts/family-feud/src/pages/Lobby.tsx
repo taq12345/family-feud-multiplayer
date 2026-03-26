@@ -6,7 +6,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown } from "lucide-react";
 
 interface Room {
   id: string;
@@ -583,7 +583,7 @@ export default function Lobby() {
                           <div className="text-[11px] text-slate-500 italic">No players yet</div>
                         ) : teamPlayers.map(p => (
                           <div key={p.id} className="flex items-center gap-1 text-[11px]">
-                            {p.isHost && <span className="text-amber-400">★</span>}
+                            {p.isHost && <Crown className="w-3 h-3 text-amber-400" />}
                             <span className="text-slate-300">{p.name}</span>
                           </div>
                         ))}

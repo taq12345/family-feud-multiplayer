@@ -1048,7 +1048,7 @@ export default function GameRoom() {
                       disabled={!canStartGame}
                       className="bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 disabled:opacity-40 text-pink-950 font-bold px-5 h-11 border-0 shadow-[0_0_16px_rgba(236,72,153,0.2)] transition-all"
                     >
-                      <Wand2 className="w-4 h-4 mr-2" /> Custom Questions
+                      <Wand2 className="w-4 h-4 mr-2" /> Custom Questions (Beta)
                     </Button>
                   </div>
                 )}
@@ -1472,7 +1472,7 @@ export default function GameRoom() {
         <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
           <DialogHeader>
             <DialogTitle className="font-bold flex items-center gap-2 text-pink-300">
-              <Wand2 className="w-4 h-4" /> Custom Questions
+              <Wand2 className="w-4 h-4" /> Custom Questions (Beta)
             </DialogTitle>
             <DialogDescription className="text-slate-400">
               Enter a topic and AI will generate questions for your game.
