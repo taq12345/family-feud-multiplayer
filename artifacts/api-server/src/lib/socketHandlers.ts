@@ -556,14 +556,14 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player?.isHost) return;
       if (state.status !== "between_rounds" || state.currentRound < state.totalRounds) return;
 
-      const team1Players = Array.from(state.players.values()).filter(p => p.team === 1);
-      const team2Players = Array.from(state.players.values()).filter(p => p.team === 2);
-      if (team1Players.length === 0 || team2Players.length === 0) return;
+      // Cancel any active timers so they don't fire into the waiting state
+      clearFaceoffAnswerTimer(roomId);
+      clearAnswerTimer(roomId);
+      clearAutoAdvanceTimer(roomId);
 
-      // Reshuffle questions, placing previously-used ones at the end so they don't repeat immediately
+      // Reshuffle standard questions, placing previously-used ones at the back.
+      // Always reverts to the standard survey pool (AI-generated questions are not kept).
       const previouslyUsed = new Set(state.usedQuestionIds);
-      const freshQuestions = surveyQuestions.filter(q => !previouslyUsed.has(q.id));
-      const staleQuestions = surveyQuestions.filter(q => previouslyUsed.has(q.id));
       function shuffle<T>(arr: T[]): T[] {
         const a = [...arr];
         for (let i = a.length - 1; i > 0; i--) {
@@ -572,18 +572,23 @@ export function setupSocketHandlers(io: SocketServer) {
         }
         return a;
       }
+      const freshQuestions = surveyQuestions.filter(q => !previouslyUsed.has(q.id));
+      const staleQuestions = surveyQuestions.filter(q => previouslyUsed.has(q.id));
       state.questions = [...shuffle(freshQuestions), ...shuffle(staleQuestions)];
       state.usedQuestionIds = new Set();
 
-      // Reset scores and round counters
+      // Reset all game state to initial "waiting" values — players keep their teams
       state.team1Score = 0;
       state.team2Score = 0;
-      state.players.forEach(existingPlayer => {
-        existingPlayer.contributedPoints = 0;
-      });
+      state.players.forEach(p => { p.contributedPoints = 0; });
+      state.status = "waiting";
+      state.currentRound = 0;
+      state.currentQuestion = null;
+      state.revealedAnswers = new Set();
       state.roundPoints = 0;
       state.strikes = 0;
-      state.revealedAnswers = new Set();
+      state.wrongAnswers = new Set();
+      state.correctSubmissionNorms = new Set();
       state.playingTeam = null;
       state.faceoffWinner = null;
       state.faceoffTurn = null;
@@ -592,22 +597,13 @@ export function setupSocketHandlers(io: SocketServer) {
       state.faceoffAttempts = 0;
       state.playingDesignatedPlayerId = null;
       state.playingUsedPlayerIds = new Set();
+      state.betweenRoundsStartedAt = null;
+      state.faceoffTimerStartedAt = null;
+      state.roundTimerStartedAt = null;
 
-      await db.update(roomsTable).set({ status: "playing", team1Score: 0, team2Score: 0 }).where(eq(roomsTable.id, roomId));
-
-      const question = getNextQuestion(state);
-      if (!question) return;
-
-      state.usedQuestionIds.add(question.id);
-      state.currentQuestion = question;
-      state.wrongAnswers = new Set();
-      state.correctSubmissionNorms = new Set();
-      state.currentRound = 1;
-      state.status = "faceoff";
-      initFaceoff(state, 1);
-      startFaceoffAnswerTimer(io, roomId);
-
-      await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
+      await db.update(roomsTable)
+        .set({ status: "waiting", team1Score: 0, team2Score: 0, currentRound: 0 })
+        .where(eq(roomsTable.id, roomId));
 
       io.to(roomId).emit("game_state", serializeGameState(state));
     });
