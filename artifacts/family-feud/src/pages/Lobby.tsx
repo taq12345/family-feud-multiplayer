@@ -301,7 +301,7 @@ export default function Lobby() {
 
           <div className="flex items-center gap-2">
             {nickname && (
-              <div className="hidden xs:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="text-xs text-slate-300">
                   Playing as <span className="font-semibold text-amber-400">{nickname}</span>
