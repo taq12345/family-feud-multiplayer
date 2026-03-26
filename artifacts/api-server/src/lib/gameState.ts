@@ -39,6 +39,10 @@ export interface GameState {
   correctSubmissionNorms: Set<string>;
   /** Unix ms when the game entered between_rounds for the current round (for accurate countdown on rejoin). */
   betweenRoundsStartedAt: number | null;
+  /** Unix ms when the current faceoff answer timer was started (for accurate countdown on rejoin). */
+  faceoffTimerStartedAt: number | null;
+  /** Unix ms when the current playing/stealing answer timer was started (for accurate countdown on rejoin). */
+  roundTimerStartedAt: number | null;
 }
 
 export function createGameState(roomId: string, roomName: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
@@ -77,6 +81,8 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
     wrongAnswers: new Set(),
     correctSubmissionNorms: new Set(),
     betweenRoundsStartedAt: null,
+    faceoffTimerStartedAt: null,
+    roundTimerStartedAt: null,
   };
 }
 
@@ -126,5 +132,7 @@ export function serializeGameState(state: GameState) {
     faceoffDesignatedPlayerName: designatedPlayer?.name ?? null,
     playingDesignatedPlayerName: playingDesignatedPlayer?.name ?? null,
     betweenRoundsStartedAt: state.betweenRoundsStartedAt,
+    faceoffTimerStartedAt: state.faceoffTimerStartedAt,
+    roundTimerStartedAt: state.roundTimerStartedAt,
   };
 }

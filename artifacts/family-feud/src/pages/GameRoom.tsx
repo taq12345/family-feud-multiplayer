@@ -553,10 +553,15 @@ export default function GameRoom() {
     prevStatusRef.current = current;
   }, [gameState?.status]);
 
-  // 25s faceoff countdown — visible to ALL players; restarts whenever the designated player changes
+  // 25s faceoff countdown — visible to ALL players; restarts whenever the designated player changes.
+  // Uses the server-provided faceoffTimerStartedAt so rejoin/mid-round joins resume from real time.
   useEffect(() => {
     if (gameState?.status === "faceoff" && gameState?.faceoffDesignatedPlayerName) {
-      setFaceoffCountdown(25);
+      const startedAt = gameState.faceoffTimerStartedAt ?? Date.now();
+      const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+      const initial = Math.max(0, 25 - elapsed);
+      setFaceoffCountdown(initial);
+      if (initial === 0) return;
       const interval = setInterval(() => {
         setFaceoffCountdown(prev => {
           if (prev === null) return null;
@@ -569,7 +574,7 @@ export default function GameRoom() {
       setFaceoffCountdown(null);
       return undefined;
     }
-  }, [gameState?.status, gameState?.faceoffDesignatedPlayerName]);
+  }, [gameState?.status, gameState?.faceoffDesignatedPlayerName, gameState?.faceoffTimerStartedAt]);
 
   const myPlayer = gameState?.players.find(p => p.name === playerName);
   const isHost = myPlayer?.isHost ?? false;
@@ -605,11 +610,16 @@ export default function GameRoom() {
       : "Team 2 needs at least 1 player."
     : "";
 
-  // Local 25s countdown for normal/steal answers — runs for all players; restarts on rotation
+  // Local 25s countdown for normal/steal answers — runs for all players; restarts on rotation.
+  // Uses the server-provided roundTimerStartedAt so rejoin/mid-round joins resume from real time.
   useEffect(() => {
     const active = gameState && (gameState.status === "playing" || gameState.status === "stealing") && gameState.playingDesignatedPlayerName !== null;
     if (active) {
-      setRoundCountdown(25);
+      const startedAt = gameState!.roundTimerStartedAt ?? Date.now();
+      const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+      const initial = Math.max(0, 25 - elapsed);
+      setRoundCountdown(initial);
+      if (initial === 0) return;
       const interval = setInterval(() => {
         setRoundCountdown(prev => {
           if (prev === null) return null;
@@ -622,7 +632,7 @@ export default function GameRoom() {
       setRoundCountdown(null);
       return undefined;
     }
-  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName]);
+  }, [gameState?.status, gameState?.strikes, gameState?.roundPoints, gameState?.playingDesignatedPlayerName, gameState?.roundTimerStartedAt]);
 
   // Tick sound for the last 5 seconds of any active countdown
   useEffect(() => {

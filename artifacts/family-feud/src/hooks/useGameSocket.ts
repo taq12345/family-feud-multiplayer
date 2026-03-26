@@ -41,6 +41,8 @@ export interface GameStateData {
   faceoffDesignatedPlayerName: string | null;
   playingDesignatedPlayerName: string | null;
   betweenRoundsStartedAt: number | null;
+  faceoffTimerStartedAt: number | null;
+  roundTimerStartedAt: number | null;
 }
 
 export interface ChatMsg {

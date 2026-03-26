@@ -104,6 +104,7 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
   state.roundPoints = 0;
   state.playingTeam = null;
   state.faceoffWinner = null;
+  state.roundTimerStartedAt = null;
   initFaceoff(state, state.currentRound % 2 === 1 ? 1 : 2);
   startFaceoffAnswerTimer(io, roomId);
 
@@ -136,6 +137,8 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
   }
   state.status = "between_rounds";
   state.betweenRoundsStartedAt = Date.now();
+  state.faceoffTimerStartedAt = null;
+  state.roundTimerStartedAt = null;
   const canonicalAnswers = state.currentQuestion
     ? state.currentQuestion.answers.map((a, i) => ({ index: i, text: a.text, points: a.points }))
     : null;
@@ -149,6 +152,8 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
 
 function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
   clearFaceoffAnswerTimer(roomId);
+  const _state = gameStates.get(roomId);
+  if (_state) _state.faceoffTimerStartedAt = Date.now();
   const timer = setTimeout(async () => {
     faceoffAnswerTimers.delete(roomId);
     const state = gameStates.get(roomId);
@@ -232,6 +237,7 @@ function initStealTurn(state: GameState, stealTeam: 1 | 2) {
 
 function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
   clearAnswerTimer(roomId);
+  state.roundTimerStartedAt = Date.now();
   const timer = setTimeout(async () => {
     const current = gameStates.get(roomId);
     if (!current || (current.status !== "playing" && current.status !== "stealing") || !current.currentQuestion) return;
@@ -1009,6 +1015,8 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
 
   state.status = "between_rounds";
   state.betweenRoundsStartedAt = Date.now();
+  state.faceoffTimerStartedAt = null;
+  state.roundTimerStartedAt = null;
 
   // Full board in server state (reconnects / consistency). Client animates reveals using canonicalAnswers on round_over.
   if (state.currentQuestion) {
