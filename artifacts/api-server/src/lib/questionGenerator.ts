@@ -76,7 +76,9 @@ function buildQuestion(parsed: { question: string; answers: { text: string; poin
 async function generateOneQuestion(topic: string, angle: string, index: number): Promise<SurveyQuestion | null> {
   const prompt = `Generate 1 Family Feud survey question about "${topic}" with the angle: ${angle}.
 Reply ONLY with JSON: {"question":"Name something...","answers":[{"text":"...","points":40},{"text":"...","points":30},{"text":"...","points":20},{"text":"...","points":10}]}
-Rules: 3–6 answers, points sum to 100, family-friendly, classic Family Feud phrasing.`;
+Rules:
+- 3–6 answers, points sum to 100, family-friendly, classic Family Feud phrasing
+- Keep answer text VERY SHORT: 1–4 words max, like real Family Feud answers (e.g. "Shah Rukh Khan", "Song/Music", "Dance", "Colorful Outfits", "Romance")`;
 
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
