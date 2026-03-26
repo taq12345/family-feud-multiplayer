@@ -10,22 +10,25 @@ export type GenerateResult =
   | { valid: false; reason: string }
   | { valid: true; questions: SurveyQuestion[] };
 
-const AI_TIMEOUT_MS = 45000;
+// Per-question timeout — parallel calls, so each must finish well within the socket keepalive window
+const PER_QUESTION_TIMEOUT_MS = 50000;
 const MIN_ANSWERS = 3;
 const MAX_ANSWERS = 8;
 const POINTS_TARGET = 100;
 
-// Different "angles" to ensure parallel single-question calls produce varied questions
+// Different "angles" so parallel calls produce varied questions
 const QUESTION_ANGLES = [
-  "general / everyday life",
-  "famous people or celebrities",
-  "things you see, eat, or buy",
-  "activities or experiences",
-  "cultural traditions or history",
+  "general / everyday life aspects",
+  "famous people or celebrities associated with it",
+  "things you see, eat, or buy related to it",
+  "activities or experiences people enjoy",
+  "cultural traditions, history, or unique facts",
   "feelings or emotions people associate with it",
-  "places or locations",
-  "objects or items",
+  "places or locations connected to it",
+  "objects or items commonly associated with it",
 ];
+
+const OFFENSIVE_PATTERN = /\b(sex|porn|nude|naked|kill|murder|drug|terror|racist|racist|slur|profan)\b/i;
 
 function normalizePoints(points: number[]): number[] | null {
   const total = points.reduce((s, p) => s + p, 0);
@@ -47,107 +50,97 @@ function parseQuestion(rawContent: string): { question: string; answers: { text:
       answers?: Array<{ text?: string; points?: number }>;
     };
     if (!parsed.question || !Array.isArray(parsed.answers)) return null;
-    return { question: String(parsed.question).trim(), answers: parsed.answers as { text: string; points: number }[] };
+    return {
+      question: String(parsed.question).trim(),
+      answers: parsed.answers as { text: string; points: number }[],
+    };
   } catch {
     return null;
   }
 }
 
-async function generateOneQuestion(topic: string, angle: string, index: number): Promise<SurveyQuestion | null> {
-  const prompt = `Generate exactly 1 Family Feud survey question about "${topic}" focusing on the angle: ${angle}.
-
-Rules:
-- Classic Family Feud phrasing ("Name something...", "Name a...", etc.)
-- 3 to 6 answer options
-- Points must sum to exactly 100, highest first
-- Family-friendly only
-
-Reply ONLY with this JSON (no other text):
-{"question":"...","answers":[{"text":"...","points":40},{"text":"...","points":30},{"text":"...","points":20},{"text":"...","points":10}]}`;
-
-  try {
-    const timeout = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("timeout")), AI_TIMEOUT_MS)
-    );
-    const call = openai.chat.completions.create({
-      model: "gpt-5-nano",
-      messages: [{ role: "user", content: prompt }],
-      max_completion_tokens: 1500,
-    });
-    const response = await Promise.race([call, timeout]);
-    const choice = response.choices[0];
-    const rawContent = choice?.message?.content ?? "";
-    console.log(`[questionGenerator] Q${index} finish_reason=${choice?.finish_reason} len=${rawContent.length} usage=${JSON.stringify(response.usage)}`);
-    return parseQuestion(rawContent) ? {
-      id: 9000 + index,
-      ...parseQuestion(rawContent)!,
-      answers: (() => {
-        const parsed = parseQuestion(rawContent)!;
-        const validAnswers = parsed.answers
-          .map(a => ({ text: String(a?.text ?? "").trim(), points: Number(a?.points) }))
-          .filter(a => a.text.length > 0 && isFinite(a.points) && a.points >= 1);
-        if (validAnswers.length < MIN_ANSWERS || validAnswers.length > MAX_ANSWERS) return null!;
-        const pts = normalizePoints(validAnswers.map(a => a.points));
-        if (!pts) return null!;
-        return validAnswers.map((a, i) => ({ text: a.text, points: pts[i] }));
-      })(),
-    } : null;
-  } catch (err) {
-    console.error(`[questionGenerator] Q${index} error:`, err instanceof Error ? err.message : err);
-    return null;
-  }
+function buildQuestion(parsed: { question: string; answers: { text: string; points: number }[] }, id: number): SurveyQuestion | null {
+  const validAnswers = parsed.answers
+    .map(a => ({ text: String(a?.text ?? "").trim(), points: Number(a?.points) }))
+    .filter(a => a.text.length > 0 && isFinite(a.points) && a.points >= 1);
+  if (validAnswers.length < MIN_ANSWERS || validAnswers.length > MAX_ANSWERS) return null;
+  const pts = normalizePoints(validAnswers.map(a => a.points));
+  if (!pts) return null;
+  return {
+    id,
+    question: parsed.question,
+    answers: validAnswers.map((a, i) => ({ text: a.text, points: pts[i] })),
+  };
 }
 
-function isValidQuestion(q: SurveyQuestion | null): q is SurveyQuestion {
-  return q !== null && Array.isArray(q.answers) && q.answers.length >= MIN_ANSWERS;
+async function generateOneQuestion(topic: string, angle: string, index: number): Promise<SurveyQuestion | null> {
+  const prompt = `Generate 1 Family Feud survey question about "${topic}" with the angle: ${angle}.
+Reply ONLY with JSON: {"question":"Name something...","answers":[{"text":"...","points":40},{"text":"...","points":30},{"text":"...","points":20},{"text":"...","points":10}]}
+Rules: 3–6 answers, points sum to 100, family-friendly, classic Family Feud phrasing.`;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const timeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), PER_QUESTION_TIMEOUT_MS)
+      );
+      const call = openai.chat.completions.create({
+        model: "gpt-5-nano",
+        messages: [{ role: "user", content: prompt }],
+        max_completion_tokens: 3000,
+        // @ts-ignore — reasoning_effort supported by reasoning models; reduces thinking tokens
+        reasoning_effort: "low",
+      });
+      const response = await Promise.race([call, timeout]);
+      const choice = response.choices[0];
+      const rawContent = choice?.message?.content ?? "";
+      const reasoningTokens = (response.usage as any)?.completion_tokens_details?.reasoning_tokens ?? "?";
+      console.log(`[questionGenerator] Q${index} attempt=${attempt} finish=${choice?.finish_reason} len=${rawContent.length} reasoning=${reasoningTokens}`);
+
+      if (!rawContent.trim()) continue;
+
+      const parsed = parseQuestion(rawContent);
+      if (!parsed) continue;
+
+      const q = buildQuestion(parsed, 9000 + index);
+      if (q) return q;
+    } catch (err) {
+      console.error(`[questionGenerator] Q${index} attempt=${attempt} error:`, err instanceof Error ? err.message : err);
+    }
+  }
+  return null;
 }
 
 export async function generateCustomQuestions(
   topic: string,
   count: number
 ): Promise<GenerateResult> {
-  // First, do a quick topic validity check with a tiny call
-  try {
-    const validityTimeout = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("timeout")), 20000)
-    );
-    const validityCall = openai.chat.completions.create({
-      model: "gpt-5-nano",
-      messages: [{
-        role: "user",
-        content: `Is "${topic}" a valid topic for Family Feud questions? Valid means it's specific, family-friendly, and not gibberish/offensive/a single character.
-Reply with ONLY: YES or NO`,
-      }],
-      max_completion_tokens: 500,
-    });
-    const validityResponse = await Promise.race([validityCall, validityTimeout]);
-    const verdict = (validityResponse.choices[0]?.message?.content ?? "").trim().toUpperCase();
-    console.log(`[questionGenerator] topic="${topic}" validity=${verdict}`);
-    if (verdict.startsWith("NO")) {
-      return {
-        valid: false,
-        reason: `"${topic}" doesn't work well for Family Feud. Try something more specific, like 'pizza', 'Bollywood movies', or 'superheroes'.`,
-      };
-    }
-  } catch (err) {
-    // If validity check fails, proceed anyway — don't block on this
-    console.warn("[questionGenerator] Validity check failed, proceeding:", err instanceof Error ? err.message : err);
+  const trimmed = topic.trim();
+
+  // Basic local validation — avoid obvious bad topics before hitting AI
+  if (trimmed.length < 2) {
+    return { valid: false, reason: "Please enter a more specific topic." };
+  }
+  if (OFFENSIVE_PATTERN.test(trimmed)) {
+    return { valid: false, reason: "That topic isn't suitable for Family Feud. Please choose a family-friendly topic." };
   }
 
-  // Generate each question in parallel with a different angle
-  const angles = QUESTION_ANGLES.slice(0, count);
-  while (angles.length < count) angles.push(QUESTION_ANGLES[angles.length % QUESTION_ANGLES.length]);
+  // Assign an angle to each question to ensure variety
+  const angles = Array.from({ length: count }, (_, i) => QUESTION_ANGLES[i % QUESTION_ANGLES.length]);
 
+  // Generate all questions in parallel
   const results = await Promise.all(
-    angles.slice(0, count).map((angle, i) => generateOneQuestion(topic, angle, i))
+    angles.map((angle, i) => generateOneQuestion(trimmed, angle, i))
   );
 
-  const questions = results.filter(isValidQuestion).map((q, i) => ({ ...q, id: 9000 + i }));
+  const questions = results
+    .filter((q): q is SurveyQuestion => q !== null)
+    .map((q, i) => ({ ...q, id: 9000 + i }));
 
   if (questions.length !== count) {
+    const failed = count - questions.length;
     return {
       valid: false,
-      reason: `Only ${questions.length} of ${count} questions generated successfully. Please try again — AI generation can be inconsistent.`,
+      reason: `${failed} of ${count} question${failed === 1 ? "" : "s"} couldn't be generated. Please try again — it usually works on a retry.`,
     };
   }
 
