@@ -428,6 +428,13 @@ export function setupSocketHandlers(io: SocketServer) {
         if (state.playingDesignatedPlayerId === existingSocketId) {
           state.playingDesignatedPlayerId = socket.id;
         }
+        // Keep cross-round last-guesser tracking in sync with the new socket ID
+        if (state.lastGuesserTeam1 === existingSocketId) {
+          state.lastGuesserTeam1 = socket.id;
+        }
+        if (state.lastGuesserTeam2 === existingSocketId) {
+          state.lastGuesserTeam2 = socket.id;
+        }
 
         console.log(`${trimmedPlayerName} reconnected to ${roomId} (${existingSocketId} → ${socket.id})`);
 
