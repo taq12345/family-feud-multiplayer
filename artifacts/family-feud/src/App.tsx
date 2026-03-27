@@ -6,6 +6,7 @@ import Lobby from "./pages/Lobby";
 import GameRoom from "./pages/GameRoom";
 import Rules from "./pages/Rules";
 import Feedback from "./pages/Feedback";
+import About from "./pages/About";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +22,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Lobby} />
       <Route path="/rules" component={Rules} />
+      <Route path="/about" component={About} />
       <Route path="/feedback" component={Feedback} />
       <Route path="/room/:roomId" component={GameRoom} />
       <Route>
