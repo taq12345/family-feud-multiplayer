@@ -1005,7 +1005,7 @@ export default function GameRoom() {
                   ))}
                 </div>
                 {isHost && (
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
                     <button
                       onClick={() => {
                         playClickSound();
@@ -1015,7 +1015,7 @@ export default function GameRoom() {
                           setTimeout(() => setShareCopied(false), 2000);
                         });
                       }}
-                      className={`flex items-center gap-2 px-5 h-11 rounded-lg border font-bold text-sm transition-all ${
+                      className={`flex items-center justify-center sm:justify-start gap-2 px-5 h-11 rounded-lg border font-bold text-sm transition-all ${
                         shareCopied
                           ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400 shadow-[0_0_16px_rgba(52,211,153,0.2)]"
                           : "bg-white/5 border-white/15 text-white hover:bg-white/10 hover:border-white/25"
@@ -1026,11 +1026,11 @@ export default function GameRoom() {
                     </button>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span>
+                        <span className="w-full sm:w-auto">
                           <Button
                             onClick={startGame}
                             disabled={!canStartGame}
-                            className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 disabled:opacity-40 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
+                            className="w-full sm:w-auto bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 disabled:opacity-40 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
                           >
                             <Zap className="w-4 h-4 mr-2" /> Classic Questions
                           </Button>
@@ -1046,7 +1046,7 @@ export default function GameRoom() {
                         setCustomQuestionsOpen(true);
                       }}
                       disabled={!canStartGame}
-                      className="bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 disabled:opacity-40 text-pink-950 font-bold px-5 h-11 border-0 shadow-[0_0_16px_rgba(236,72,153,0.2)] transition-all"
+                      className="w-full sm:w-auto bg-gradient-to-br from-pink-300 to-pink-400 hover:from-pink-200 hover:to-pink-300 disabled:opacity-40 text-pink-950 font-bold px-5 h-11 border-0 shadow-[0_0_16px_rgba(236,72,153,0.2)] transition-all"
                     >
                       <Wand2 className="w-4 h-4 mr-2" /> Custom Questions (Beta)
                     </Button>
