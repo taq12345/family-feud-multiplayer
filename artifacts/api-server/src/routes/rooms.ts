@@ -39,19 +39,23 @@ router.post("/rooms", async (req, res) => {
   const normalizedTotalRounds = totalRounds === undefined ? 4 : Number(totalRounds);
 
   if (!trimmedRoomName || !trimmedHostName || !team1Name || !team2Name) {
-    return res.status(400).json({ error: "name, hostName, team1Name, team2Name are required" });
+    res.status(400).json({ error: "name, hostName, team1Name, team2Name are required" });
+    return;
   }
 
   if (trimmedRoomName.length > 32) {
-    return res.status(400).json({ error: "Room name must be 32 characters or fewer." });
+    res.status(400).json({ error: "Room name must be 32 characters or fewer." });
+    return;
   }
 
   if (trimmedHostName.length > 16) {
-    return res.status(400).json({ error: "Nickname must be 16 characters or fewer." });
+    res.status(400).json({ error: "Nickname must be 16 characters or fewer." });
+    return;
   }
 
   if (!Number.isInteger(normalizedTotalRounds) || !ALLOWED_TOTAL_ROUNDS.has(normalizedTotalRounds)) {
-    return res.status(400).json({ error: "totalRounds must be one of: 2, 4, 6, 8, 10." });
+    res.status(400).json({ error: "totalRounds must be one of: 2, 4, 6, 8, 10." });
+    return;
   }
 
   const id = nanoid(8);
@@ -59,7 +63,8 @@ router.post("/rooms", async (req, res) => {
     // Enforce at most one room per host
     const existing = await db.select().from(roomsTable).where(eq(roomsTable.hostName, trimmedHostName));
     if (existing.length > 0) {
-      return res.status(400).json({ error: "You already have an active room." });
+      res.status(400).json({ error: "You already have an active room." });
+      return;
     }
 
     const [room] = await db.insert(roomsTable).values({
@@ -92,8 +97,10 @@ router.post("/rooms", async (req, res) => {
       totalRounds: room.totalRounds,
       createdAt: room.createdAt.toISOString(),
     });
+    return;
   } catch (err) {
     res.status(500).json({ error: "Failed to create room" });
+    return;
   }
 });
 
@@ -101,7 +108,10 @@ router.get("/rooms/:roomId", async (req, res) => {
   const { roomId } = req.params;
   try {
     const [room] = await db.select().from(roomsTable).where(eq(roomsTable.id, roomId));
-    if (!room) return res.status(404).json({ error: "Room not found" });
+    if (!room) {
+      res.status(404).json({ error: "Room not found" });
+      return;
+    }
 
     res.json({
       id: room.id,
@@ -118,8 +128,10 @@ router.get("/rooms/:roomId", async (req, res) => {
       totalRounds: room.totalRounds,
       createdAt: room.createdAt.toISOString(),
     });
+    return;
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch room" });
+    return;
   }
 });
 
@@ -140,9 +152,13 @@ router.get("/nicknames/:name/check", (req, res) => {
 
 router.get("/player-slots", (req, res) => {
   const nickname = req.query.nickname as string | undefined;
-  if (!nickname?.trim()) return res.status(400).json({ error: "nickname required" });
+  if (!nickname?.trim()) {
+    res.status(400).json({ error: "nickname required" });
+    return;
+  }
   const slot = getPlayerSlot(nickname);
   res.json(slot ?? null);
+  return;
 });
 
 router.get("/questions", (_req, res) => {
