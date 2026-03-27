@@ -467,7 +467,7 @@ export default function Lobby() {
 
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
-        <div className="mb-6">
+        <div className="mb-6 flex flex-wrap items-center gap-3">
           <a
             href="https://www.patreon.com/cw/talhaqureshi/membership"
             target="_blank"
@@ -479,6 +479,18 @@ export default function Lobby() {
               <path d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21M2 21.6h3.5V2.41H2V21.6z"/>
             </svg>
             Consider supporting :)
+          </a>
+          <a
+            href="https://discord.gg/vug29JzN"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => playClickSound()}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-[#5865F2]/22 via-[#4C59E8]/18 to-[#2B317B]/24 hover:from-[#6B77FF]/28 hover:via-[#5865F2]/24 hover:to-[#343B97]/30 border border-[#7C85FF]/35 hover:border-[#9AA3FF]/55 text-[#EEF1FF] font-semibold text-sm transition-all shadow-[0_0_20px_rgba(88,101,242,0.18)] hover:shadow-[0_0_30px_rgba(88,101,242,0.3)] backdrop-blur-sm"
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current shrink-0" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M20.317 4.369A19.791 19.791 0 0 0 16.558 3c-.161.287-.349.673-.478.975a18.27 18.27 0 0 0-8.159 0A9.755 9.755 0 0 0 7.443 3a19.736 19.736 0 0 0-3.76 1.369C1.307 7.951.665 11.445.986 14.89a19.962 19.962 0 0 0 4.6 2.342c.37-.5.699-1.028.983-1.58-.537-.203-1.05-.454-1.538-.744.129-.094.256-.191.379-.29 2.968 1.396 6.193 1.396 9.126 0 .125.102.252.199.379.29-.49.29-1.004.541-1.54.744.284.552.614 1.08.985 1.58a19.93 19.93 0 0 0 4.6-2.342c.376-3.992-.642-7.454-2.643-10.521ZM8.678 12.773c-.89 0-1.623-.817-1.623-1.82 0-1.002.715-1.82 1.623-1.82.915 0 1.64.825 1.623 1.82 0 1.003-.715 1.82-1.623 1.82Zm6.644 0c-.89 0-1.623-.817-1.623-1.82 0-1.002.715-1.82 1.623-1.82.915 0 1.64.825 1.623 1.82 0 1.003-.708 1.82-1.623 1.82Z" />
+            </svg>
+            Join Discord
           </a>
         </div>
 
