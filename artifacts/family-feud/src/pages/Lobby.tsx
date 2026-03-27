@@ -96,6 +96,7 @@ export default function Lobby() {
   const [changeNicknameInput, setChangeNicknameInput] = useState("");
   const [changeNicknameError, setChangeNicknameError] = useState<string | null>(null);
   const [changeNicknameLoading, setChangeNicknameLoading] = useState(false);
+  const [refreshSpinKey, setRefreshSpinKey] = useState(0);
   const [reconnectSlot, setReconnectSlot] = useState<{ roomId: string; team: 1 | 2 } | null>(null);
 
   const [kickedMessage, setKickedMessage] = useState<string | null>(null);
@@ -389,11 +390,18 @@ export default function Lobby() {
               <MessageSquare className="w-4 h-4" />
             </button>
             <button
-              onClick={() => { playClickSound(); loadRooms(); }}
+              onClick={() => {
+                playClickSound();
+                setRefreshSpinKey(key => key + 1);
+                void loadRooms();
+              }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Refresh"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw
+                key={refreshSpinKey}
+                className={refreshSpinKey === 0 ? "w-4 h-4" : "w-4 h-4 animate-[spin_0.65s_cubic-bezier(0.22,1,0.36,1)]"}
+              />
             </button>
             <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
