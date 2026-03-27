@@ -38,6 +38,8 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 const ALLOWED_TOTAL_ROUNDS = [2, 4, 6, 8, 10] as const;
+const VISIBLE_ROOMS_REFRESH_MS = 15000;
+const HIDDEN_ROOMS_REFRESH_MS = 60000;
 
 async function checkNickname(name: string): Promise<boolean> {
   try {
@@ -72,6 +74,7 @@ async function createRoomApi(body: {
 
 export default function Lobby() {
   const [, setLocation] = useLocation();
+  const roomsRequestInFlight = useRef(false);
   const [nickname, setNickname] = useState(() => {
     const stored = localStorage.getItem("playerName") ?? "";
     return stored.length > 16 ? stored.slice(0, 16) : stored;
@@ -141,18 +144,56 @@ export default function Lobby() {
   }, [createOpen]);
 
   const loadRooms = useCallback(async () => {
+    if (roomsRequestInFlight.current) return;
+    roomsRequestInFlight.current = true;
     try {
       const data = await fetchRooms();
       setRooms(data);
     } catch { /* ignore */ } finally {
+      roomsRequestInFlight.current = false;
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadRooms();
-    const id = setInterval(loadRooms, 5000);
-    return () => clearInterval(id);
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let scheduleVersion = 0;
+
+    const scheduleNextRefresh = (version: number) => {
+      const delay = document.visibilityState === "visible"
+        ? VISIBLE_ROOMS_REFRESH_MS
+        : HIDDEN_ROOMS_REFRESH_MS;
+      timeoutId = setTimeout(async () => {
+        await loadRooms();
+        if (version === scheduleVersion) {
+          scheduleNextRefresh(version);
+        }
+      }, delay);
+    };
+
+    const resetPolling = (refreshNow: boolean) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      scheduleVersion += 1;
+      if (refreshNow) void loadRooms();
+      scheduleNextRefresh(scheduleVersion);
+    };
+
+    void loadRooms();
+    scheduleNextRefresh(scheduleVersion);
+
+    const handleFocus = () => resetPolling(true);
+    const handleVisibilityChange = () => {
+      resetPolling(document.visibilityState === "visible");
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [loadRooms]);
 
   useEffect(() => {
