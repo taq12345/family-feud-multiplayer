@@ -303,11 +303,12 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
     }
 
     if (current.status === "playing") {
-      rotatePlayingDesignatedPlayer(current);
       current.strikes++;
       io.to(roomId).emit("strike", { strikes: current.strikes });
 
       if (current.strikes >= 3) {
+        // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
+        // pointing at the player who actually made the final (3rd) guess.
         current.status = "stealing";
         current.strikes = 0;
         const stealingTeam = current.playingTeam === 1 ? 2 : 1;
@@ -321,6 +322,7 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
         startAnswerTimer(io, current, roomId);
         io.to(roomId).emit("game_state", serializeGameState(current));
       } else {
+        rotatePlayingDesignatedPlayer(current);
         startAnswerTimer(io, current, roomId);
         io.to(roomId).emit("game_state", serializeGameState(current));
       }
@@ -790,10 +792,11 @@ export function setupSocketHandlers(io: SocketServer) {
         if (normSub && state.wrongAnswers.has(normSub)) {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            rotatePlayingDesignatedPlayer(state);
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
             if (state.strikes >= 3) {
+              // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
+              // pointing at the player who actually made the final (3rd) guess.
               state.status = "stealing";
               state.strikes = 0;
               const stealingTeam = state.playingTeam === 1 ? 2 : 1;
@@ -802,6 +805,7 @@ export function setupSocketHandlers(io: SocketServer) {
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             } else {
+              rotatePlayingDesignatedPlayer(state);
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             }
@@ -856,11 +860,12 @@ export function setupSocketHandlers(io: SocketServer) {
           if (normSub) state.wrongAnswers.add(normSub);
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            rotatePlayingDesignatedPlayer(state);
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
 
             if (state.strikes >= 3) {
+              // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
+              // pointing at the player who actually made the final (3rd) guess.
               state.status = "stealing";
               state.strikes = 0;
               const stealingTeam = state.playingTeam === 1 ? 2 : 1;
@@ -869,6 +874,7 @@ export function setupSocketHandlers(io: SocketServer) {
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             } else {
+              rotatePlayingDesignatedPlayer(state);
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             }
