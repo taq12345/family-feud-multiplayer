@@ -58,14 +58,6 @@ export interface CanonicalAnswerSlot {
   points: number;
 }
 
-export type SubmittedGuessPhase = "faceoff" | "playing" | "stealing";
-
-export interface SubmittedGuessData {
-  playerName: string;
-  answer: string;
-  phase: SubmittedGuessPhase;
-}
-
 export function useGameSocket(
   roomId: string | null,
   playerName: string | null,
@@ -92,7 +84,7 @@ export function useGameSocket(
     onHostChanged?: (data: { hostName: string }) => void;
     onFaceoffNoWinner?: (data: { canonicalAnswers: CanonicalAnswerSlot[] | null }) => void;
     onKickedInactive?: (data: { idleMinutes: number }) => void;
-    onAnswerSubmitted?: (data: SubmittedGuessData) => void;
+    onStealGuess?: (data: { playerName: string; answer: string }) => void;
     onKicked?: () => void;
     onPlayerKicked?: (data: { playerName: string; hostName: string }) => void;
     onCustomQuestionsError?: (data: { message: string }) => void;
@@ -128,7 +120,7 @@ export function useGameSocket(
       faceoff_no_winner: (data: { canonicalAnswers: CanonicalAnswerSlot[] | null }) =>
         callbacksRef.current.onFaceoffNoWinner?.(data),
       kicked_inactive: (data: { idleMinutes: number }) => callbacksRef.current.onKickedInactive?.(data),
-      answer_submitted: (data: SubmittedGuessData) => callbacksRef.current.onAnswerSubmitted?.(data),
+      steal_guess: (data: { playerName: string; answer: string }) => callbacksRef.current.onStealGuess?.(data),
       kicked: () => callbacksRef.current.onKicked?.(),
       player_kicked: (data: { playerName: string; hostName: string }) => callbacksRef.current.onPlayerKicked?.(data),
       custom_questions_error: (data: { message: string }) => callbacksRef.current.onCustomQuestionsError?.(data),

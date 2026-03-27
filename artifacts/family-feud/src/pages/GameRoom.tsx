@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
-import { useGameSocket, GameStateData, ChatMsg, CanonicalAnswerSlot, SubmittedGuessData } from "../hooks/useGameSocket";
+import { useGameSocket, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
@@ -11,40 +11,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
 const REVEAL_STAGGER_MS = 2000;
-
-function SubmittedGuessCard({ submittedGuess }: { submittedGuess: SubmittedGuessData }) {
-  const tone = submittedGuess.phase === "stealing"
-    ? {
-        container: "bg-orange-500/15 border-orange-400/40",
-        label: "text-orange-300/70",
-        answer: "text-orange-100",
-        meta: "text-orange-400/70",
-        title: "Steal guess submitted",
-      }
-    : submittedGuess.phase === "faceoff"
-      ? {
-          container: "bg-emerald-500/15 border-emerald-400/40",
-          label: "text-emerald-300/70",
-          answer: "text-emerald-50",
-          meta: "text-emerald-400/70",
-          title: "Face-off guess submitted",
-        }
-      : {
-          container: "bg-cyan-500/15 border-cyan-400/40",
-          label: "text-cyan-300/70",
-          answer: "text-cyan-50",
-          meta: "text-cyan-400/70",
-          title: "Answer submitted",
-        };
-
-  return (
-    <div className={`rounded-xl border p-3 text-center animate-pulse-once ${tone.container}`}>
-      <p className={`text-xs uppercase tracking-widest mb-1 ${tone.label}`}>{tone.title}</p>
-      <p className={`font-bold text-lg ${tone.answer}`}>"{submittedGuess.answer}"</p>
-      <p className={`text-xs mt-0.5 ${tone.meta}`}>By {submittedGuess.playerName}</p>
-    </div>
-  );
-}
 
 function StrikeDisplay({ strikes }: { strikes: number }) {
   return (
@@ -235,7 +201,7 @@ export default function GameRoom() {
   const [fallbackRoomName, setFallbackRoomName] = useState<string>(roomNameFromQuery);
   const [verifyingAnswer, setVerifyingAnswer] = useState(false);
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
-  const [currentSubmittedGuess, setCurrentSubmittedGuess] = useState<SubmittedGuessData | null>(null);
+  const [currentStealGuess, setCurrentStealGuess] = useState<{ playerName: string; answer: string } | null>(null);
   const [lastRoundResult, setLastRoundResult] = useState<{ winningTeam: 1 | 2; points: number } | null>(null);
   const [boardRevealStagger, setBoardRevealStagger] = useState<{
     canonical: CanonicalAnswerSlot[];
@@ -484,10 +450,10 @@ export default function GameRoom() {
         }
       },
       onStealChance: (data) => {
-        setCurrentSubmittedGuess(null);
+        setCurrentStealGuess(null);
         showNotification(`🎯 Team ${data.team} gets a steal chance!`);
       },
-      onAnswerSubmitted: (data) => setCurrentSubmittedGuess(data),
+      onStealGuess: (data) => setCurrentStealGuess({ playerName: data.playerName, answer: data.answer }),
       onRoundOver: (data) => {
         setLastRoundResult({ winningTeam: data.winningTeam, points: data.points });
         playRoundEndSound();
@@ -581,15 +547,15 @@ export default function GameRoom() {
     generateCustomQuestions(topic);
   }, [customTopic, generateCustomQuestions]);
 
-  // Clear round summaries and the latest submitted guess when a new round begins.
+  // Clear steal attempt summary and live guess when a new round's faceoff begins
   useEffect(() => {
     if (gameState?.status === "faceoff") {
       setStealAttempt(null);
-      setCurrentSubmittedGuess(null);
+      setCurrentStealGuess(null);
       setLastRoundResult(null);
     }
     if (gameState?.status === "between_rounds") {
-      setCurrentSubmittedGuess(null);
+      setCurrentStealGuess(null);
     }
   }, [gameState?.status]);
 
@@ -1136,7 +1102,6 @@ export default function GameRoom() {
                     )}
                   </div>
                 ) : null}
-                {currentSubmittedGuess && <SubmittedGuessCard submittedGuess={currentSubmittedGuess} />}
 
                 {/* (removed) waiting message for other teams */}
 
@@ -1194,7 +1159,6 @@ export default function GameRoom() {
                   </div>
                 )}
                 {/* Phase description — hidden on small screens to save space */}
-                {currentSubmittedGuess && <SubmittedGuessCard submittedGuess={currentSubmittedGuess} />}
                 <div className={`hidden sm:block rounded-xl border px-4 py-2.5 text-center ${
                   gameState.playingTeam === 1
                     ? "bg-rose-500/8 border-rose-500/20"
@@ -1224,8 +1188,14 @@ export default function GameRoom() {
                     </p>
                   )}
                 </div>
-                {currentSubmittedGuess && <SubmittedGuessCard submittedGuess={currentSubmittedGuess} />}
-                {isMyTurnToPlay && currentSubmittedGuess?.phase !== "stealing" && (
+                {currentStealGuess && (
+                  <div className="rounded-xl bg-orange-500/15 border border-orange-400/40 p-3 text-center animate-pulse-once">
+                    <p className="text-orange-300/70 text-xs uppercase tracking-widest mb-1">Steal guess submitted</p>
+                    <p className="text-orange-100 font-bold text-lg">"{currentStealGuess.answer}"</p>
+                    <p className="text-orange-400/70 text-xs mt-0.5">by {currentStealGuess.playerName}</p>
+                  </div>
+                )}
+                {isMyTurnToPlay && !currentStealGuess && (
                   <form
                     onSubmit={handleAnswer}
                     className="flex gap-2 rounded-xl border border-orange-400/35 bg-orange-500/10 p-2 shadow-[0_0_24px_rgba(249,115,22,0.2)]"
