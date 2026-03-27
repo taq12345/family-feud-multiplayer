@@ -1062,7 +1062,7 @@ export default function GameRoom() {
                 {isMyTurnToFaceoff && (
                   <form
                     onSubmit={handleAnswer}
-                    className="fixed bottom-0 left-0 right-0 z-40 mx-2 mb-2 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:z-auto sm:mx-0 sm:mb-0 flex gap-2 rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-2 shadow-[0_0_24px_rgba(16,185,129,0.2)]"
+                    className="flex gap-2 rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-2 shadow-[0_0_24px_rgba(16,185,129,0.2)]"
                   >
                     <Input
                       ref={answerInputRef}
@@ -1119,7 +1119,7 @@ export default function GameRoom() {
                 {isMyTurnToPlay && (
                   <form
                     onSubmit={handleAnswer}
-                    className="fixed bottom-0 left-0 right-0 z-40 mx-2 mb-2 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:z-auto sm:mx-0 sm:mb-0 flex gap-2 rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-2 shadow-[0_0_24px_rgba(16,185,129,0.2)]"
+                    className="flex gap-2 rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-2 shadow-[0_0_24px_rgba(16,185,129,0.2)]"
                   >
                     <Input
                       ref={answerInputRef}
@@ -1198,7 +1198,7 @@ export default function GameRoom() {
                 {isMyTurnToPlay && !currentStealGuess && (
                   <form
                     onSubmit={handleAnswer}
-                    className="fixed bottom-0 left-0 right-0 z-40 mx-2 mb-2 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:z-auto sm:mx-0 sm:mb-0 flex gap-2 rounded-xl border border-orange-400/35 bg-orange-500/10 p-2 shadow-[0_0_24px_rgba(249,115,22,0.2)]"
+                    className="flex gap-2 rounded-xl border border-orange-400/35 bg-orange-500/10 p-2 shadow-[0_0_24px_rgba(249,115,22,0.2)]"
                   >
                     <Input
                       ref={answerInputRef}
