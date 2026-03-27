@@ -242,9 +242,11 @@ function pickPlayingDesignatedPlayer(state: GameState, team: 1 | 2): string | nu
     setLastGuesser(state, team, eligible[0].id);
     return eligible[0].id;
   }
-  // All used — reset rotation and try again
+  // All used — reset rotation, but skip whoever just went to avoid an immediate repeat
+  const lastId = getLastGuesser(state, team);
   state.playingUsedPlayerIds = new Set();
-  const picked = teamPlayers[0]?.id ?? null;
+  const eligible2 = teamPlayers.filter(p => p.id !== lastId);
+  const picked = eligible2.length > 0 ? eligible2[0].id : (teamPlayers[0]?.id ?? null);
   if (picked) setLastGuesser(state, team, picked);
   return picked;
 }
