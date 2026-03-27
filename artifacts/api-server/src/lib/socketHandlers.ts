@@ -691,6 +691,8 @@ export function setupSocketHandlers(io: SocketServer) {
         // Clear the per-player faceoff timer immediately so it cannot fire during the async AI call
         clearFaceoffAnswerTimer(roomId);
 
+        io.to(roomId).emit("answer_submitted", { playerName: player.name, answer, phase: "faceoff" });
+
         // Reject immediately if this answer was already used (wrong or correct) this round.
         // Use the same full normalizer as the answer matcher so the key is always consistent.
         const normSub = normalizeSubmittedAnswer(answer);
@@ -784,10 +786,7 @@ export function setupSocketHandlers(io: SocketServer) {
       clearAnswerTimer(roomId);
 
       try {
-        // Broadcast the steal guess to all players immediately (before AI processing)
-        if (state.status === "stealing") {
-          io.to(roomId).emit("steal_guess", { playerName: player.name, answer });
-        }
+        io.to(roomId).emit("answer_submitted", { playerName: player.name, answer, phase: state.status });
 
         // Reject immediately if this answer was already used (wrong or correct) this round.
         const normSub = normalizeSubmittedAnswer(answer);
