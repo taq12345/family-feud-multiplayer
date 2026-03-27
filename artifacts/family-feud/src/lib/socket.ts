@@ -7,6 +7,13 @@ export function getSocket(): Socket {
     socket = io({
       path: "/api/socket.io",
       transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: Infinity,
+      // Increase ping/pong timeouts for iOS Safari
+      pingInterval: 25000,
+      pingTimeout: 60000,
     });
   }
   return socket;

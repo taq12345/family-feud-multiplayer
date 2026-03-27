@@ -48,6 +48,12 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    hmr: {
+      protocol: "wss",
+      host: undefined,
+      port: undefined,
+      timeout: 60000,
+    },
   },
   preview: {
     port,
