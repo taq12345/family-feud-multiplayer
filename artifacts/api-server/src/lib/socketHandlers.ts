@@ -190,13 +190,41 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
   faceoffAnswerTimers.set(roomId, timer);
 }
 
+function getLastGuesser(state: GameState, team: 1 | 2): string | null {
+  return team === 1 ? state.lastGuesserTeam1 : state.lastGuesserTeam2;
+}
+
+function setLastGuesser(state: GameState, team: 1 | 2, playerId: string | null) {
+  if (team === 1) state.lastGuesserTeam1 = playerId;
+  else state.lastGuesserTeam2 = playerId;
+}
+
 function pickDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
   const teamPlayers = Array.from(state.players.values()).filter(p => p.team === team);
-  const eligible = teamPlayers.filter(p => !state.faceoffUsedPlayerIds.has(p.id));
-  if (eligible.length > 0) return eligible[0].id;
-  // All used — reset used IDs for this team and try again
+  if (teamPlayers.length === 0) return null;
+  // Single-player team — no rotation possible
+  if (teamPlayers.length === 1) {
+    setLastGuesser(state, team, teamPlayers[0].id);
+    return teamPlayers[0].id;
+  }
+  const lastId = getLastGuesser(state, team);
+  // Exclude both within-round used players AND the cross-round last guesser
+  const excluded = new Set([...state.faceoffUsedPlayerIds, ...(lastId ? [lastId] : [])]);
+  const eligible = teamPlayers.filter(p => !excluded.has(p.id));
+  if (eligible.length > 0) {
+    setLastGuesser(state, team, eligible[0].id);
+    return eligible[0].id;
+  }
+  // All excluded by combined set — clear within-round tracking, still skip cross-round last
   for (const p of teamPlayers) state.faceoffUsedPlayerIds.delete(p.id);
-  return teamPlayers[0]?.id ?? null;
+  const eligible2 = teamPlayers.filter(p => p.id !== lastId);
+  if (eligible2.length > 0) {
+    setLastGuesser(state, team, eligible2[0].id);
+    return eligible2[0].id;
+  }
+  // Only the last guesser remains (edge case) — pick them anyway
+  setLastGuesser(state, team, teamPlayers[0].id);
+  return teamPlayers[0].id;
 }
 
 function initFaceoff(state: GameState, startingTeam: 1 | 2) {
@@ -208,16 +236,25 @@ function initFaceoff(state: GameState, startingTeam: 1 | 2) {
 
 function pickPlayingDesignatedPlayer(state: GameState, team: 1 | 2): string | null {
   const teamPlayers = Array.from(state.players.values()).filter(p => p.team === team);
+  if (teamPlayers.length === 0) return null;
   const eligible = teamPlayers.filter(p => !state.playingUsedPlayerIds.has(p.id));
-  if (eligible.length > 0) return eligible[0].id;
+  if (eligible.length > 0) {
+    setLastGuesser(state, team, eligible[0].id);
+    return eligible[0].id;
+  }
   // All used — reset rotation and try again
   state.playingUsedPlayerIds = new Set();
-  return teamPlayers[0]?.id ?? null;
+  const picked = teamPlayers[0]?.id ?? null;
+  if (picked) setLastGuesser(state, team, picked);
+  return picked;
 }
 
 function initPlayingTurn(state: GameState, team: 1 | 2, excludePlayerId?: string) {
+  const lastId = getLastGuesser(state, team);
   state.playingUsedPlayerIds = new Set();
   if (excludePlayerId) state.playingUsedPlayerIds.add(excludePlayerId);
+  // Also pre-exclude the cross-round last guesser so they don't go first this round either
+  if (lastId && lastId !== excludePlayerId) state.playingUsedPlayerIds.add(lastId);
   state.playingDesignatedPlayerId = pickPlayingDesignatedPlayer(state, team);
 }
 
@@ -230,10 +267,19 @@ function rotatePlayingDesignatedPlayer(state: GameState) {
 }
 
 function initStealTurn(state: GameState, stealTeam: 1 | 2) {
-  // Steal is one shot — pick the first available player from the stealing team
   const stealPlayers = Array.from(state.players.values()).filter(p => p.team === stealTeam);
   state.playingUsedPlayerIds = new Set();
-  state.playingDesignatedPlayerId = stealPlayers[0]?.id ?? null;
+  if (stealPlayers.length <= 1) {
+    const picked = stealPlayers[0]?.id ?? null;
+    if (picked) setLastGuesser(state, stealTeam, picked);
+    state.playingDesignatedPlayerId = picked;
+    return;
+  }
+  const lastId = getLastGuesser(state, stealTeam);
+  const eligible = stealPlayers.filter(p => p.id !== lastId);
+  const picked = eligible.length > 0 ? eligible[0].id : stealPlayers[0].id;
+  setLastGuesser(state, stealTeam, picked);
+  state.playingDesignatedPlayerId = picked;
 }
 
 function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
@@ -609,6 +655,8 @@ export function setupSocketHandlers(io: SocketServer) {
       state.betweenRoundsStartedAt = null;
       state.faceoffTimerStartedAt = null;
       state.roundTimerStartedAt = null;
+      state.lastGuesserTeam1 = null;
+      state.lastGuesserTeam2 = null;
 
       await db.update(roomsTable)
         .set({ status: "waiting", team1Score: 0, team2Score: 0, currentRound: 0 })

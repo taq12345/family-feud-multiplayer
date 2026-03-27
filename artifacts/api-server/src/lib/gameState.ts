@@ -43,6 +43,9 @@ export interface GameState {
   faceoffTimerStartedAt: number | null;
   /** Unix ms when the current playing/stealing answer timer was started (for accurate countdown on rejoin). */
   roundTimerStartedAt: number | null;
+  /** Cross-round: last designated guesser for each team (to prevent back-to-back picks). */
+  lastGuesserTeam1: string | null;
+  lastGuesserTeam2: string | null;
 }
 
 export function createGameState(roomId: string, roomName: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
@@ -83,6 +86,8 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
     betweenRoundsStartedAt: null,
     faceoffTimerStartedAt: null,
     roundTimerStartedAt: null,
+    lastGuesserTeam1: null,
+    lastGuesserTeam2: null,
   };
 }
 
