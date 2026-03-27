@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import { surveyQuestions } from "../data/questions.js";
 
 const router: IRouter = Router();
+const ALLOWED_TOTAL_ROUNDS = new Set([2, 4, 6, 8, 10]);
 
 router.get("/rooms", async (_req, res) => {
   try {
@@ -35,6 +36,7 @@ router.post("/rooms", async (req, res) => {
   const { name, hostName, team1Name, team2Name, maxPlayers, totalRounds } = req.body;
   const trimmedRoomName = String(name ?? "").trim();
   const trimmedHostName = String(hostName ?? "").trim();
+  const normalizedTotalRounds = totalRounds === undefined ? 4 : Number(totalRounds);
 
   if (!trimmedRoomName || !trimmedHostName || !team1Name || !team2Name) {
     return res.status(400).json({ error: "name, hostName, team1Name, team2Name are required" });
@@ -46,6 +48,10 @@ router.post("/rooms", async (req, res) => {
 
   if (trimmedHostName.length > 16) {
     return res.status(400).json({ error: "Nickname must be 16 characters or fewer." });
+  }
+
+  if (!Number.isInteger(normalizedTotalRounds) || !ALLOWED_TOTAL_ROUNDS.has(normalizedTotalRounds)) {
+    return res.status(400).json({ error: "totalRounds must be one of: 2, 4, 6, 8, 10." });
   }
 
   const id = nanoid(8);
@@ -63,7 +69,7 @@ router.post("/rooms", async (req, res) => {
       team1Name,
       team2Name,
       maxPlayers: Math.min(10, Math.max(2, Number(maxPlayers) || 10)),
-      totalRounds: totalRounds ?? 5,
+      totalRounds: normalizedTotalRounds,
       status: "waiting",
       playerCount: 0,
       team1Score: 0,

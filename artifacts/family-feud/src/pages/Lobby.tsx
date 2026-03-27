@@ -37,6 +37,8 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+const ALLOWED_TOTAL_ROUNDS = [2, 4, 6, 8, 10] as const;
+
 async function checkNickname(name: string): Promise<boolean> {
   try {
     const res = await fetch(`/api/nicknames/${encodeURIComponent(name.trim())}/check`);
@@ -125,7 +127,7 @@ export default function Lobby() {
     name: "My Room",
     team1Name: "Team 1",
     team2Name: "Team 2",
-    totalRounds: 5,
+    totalRounds: 4,
     maxPlayers: 10,
   });
 
@@ -194,6 +196,10 @@ export default function Lobby() {
     if (trimmedRoomName.length > 32) { setCreateError("Room name must be 32 characters or fewer."); return; }
     if (!trimmedNickname) return;
     if (trimmedNickname.length > 16) { setCreateError("Nickname must be 16 characters or fewer."); return; }
+    if (!ALLOWED_TOTAL_ROUNDS.includes(form.totalRounds as (typeof ALLOWED_TOTAL_ROUNDS)[number])) {
+      setCreateError("Number of rounds must be 2, 4, 6, 8, or 10.");
+      return;
+    }
 
     setCreateError(null);
     setCreateLoading(true);
@@ -384,7 +390,7 @@ export default function Lobby() {
                         onChange={e => setForm(f => ({ ...f, totalRounds: parseInt(e.target.value) }))}
                         className="mt-1 w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-amber-500/50"
                       >
-                        {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                        {ALLOWED_TOTAL_ROUNDS.map(n => (
                           <option key={n} value={n} className="bg-[#0d1525]">{n} round{n !== 1 ? "s" : ""}</option>
                         ))}
                       </select>
