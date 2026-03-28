@@ -221,10 +221,10 @@ function stemmedMatch(normSubmitted: string, normCanonical: string): boolean {
 
 /** Ask AI whether submitted and canonical mean the same thing in context */
 async function aiSemanticMatch(submitted: string, canonical: string, question: string): Promise<boolean> {
-  const AI_TIMEOUT_MS = 5000;
+  const AI_TIMEOUT_MS = 15000;
   try {
     const aiCall = openai.chat.completions.create({
-      model: "gpt-5-nano",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",

@@ -80,14 +80,12 @@ async function validateTopic(topic: string, parentSignal?: AbortSignal): Promise
   try {
     const response = await Promise.race([
       openai.chat.completions.create({
-        model: "gpt-5-nano",
+        model: "gpt-4o",
         messages: [{
           role: "user",
           content: `Is "${topic}" a real, meaningful topic suitable for Family Feud survey questions? It must be a recognisable concept, object, activity, place, person, or theme that most people know and could be meaningfully surveyed about. Reject nonsense strings, gibberish, random characters, inappropriate adult content, or anything so obscure that no one could survey about it. Reply ONLY with JSON: {"valid":true} or {"valid":false,"reason":"brief reason"}`,
         }],
-        max_completion_tokens: 500,
-        // @ts-ignore — reasoning_effort supported by reasoning models
-        reasoning_effort: "low",
+        max_tokens: 500,
       }),
       timeoutPromise,
     ]);
@@ -175,18 +173,15 @@ Rules:
     try {
       const response = await Promise.race([
         openai.chat.completions.create({
-          model: "gpt-5-nano",
+          model: "gpt-4o",
           messages: [{ role: "user", content: prompt }],
-          max_completion_tokens: 3000,
-          // @ts-ignore — reasoning_effort supported by reasoning models; reduces thinking tokens
-          reasoning_effort: "low",
+          max_tokens: 1000,
         }),
         timeoutPromise,
       ]);
       const choice = response.choices[0];
       const rawContent = choice?.message?.content ?? "";
-      const reasoningTokens = (response.usage as any)?.completion_tokens_details?.reasoning_tokens ?? "?";
-      console.log(`[questionGenerator] Q${index} attempt=${attempt} finish=${choice?.finish_reason} len=${rawContent.length} reasoning=${reasoningTokens}`);
+      console.log(`[questionGenerator] Q${index} attempt=${attempt} finish=${choice?.finish_reason} len=${rawContent.length}`);
 
       if (!rawContent.trim()) continue;
 

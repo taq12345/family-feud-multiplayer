@@ -577,10 +577,13 @@ export function setupSocketHandlers(io: SocketServer) {
         socket.emit("join_rejected", { reason: "Nickname must be 1–16 characters." });
         return;
       }
-      const existingSocketId = activeNicknames.get(trimmedName.toLowerCase());
+      // For solo games, allow the same nickname to start multiple games (e.g., different browser tabs).
+      // No nickname uniqueness check needed since solo games are per-player and transient.
+      // Just clear any old nickname entry for this socket to avoid stale references.
+      const nameKey = trimmedName.toLowerCase();
+      const existingSocketId = activeNicknames.get(nameKey);
       if (existingSocketId && existingSocketId !== socket.id) {
-        socket.emit("join_rejected", { reason: "That nickname is already taken. Please choose a different one." });
-        return;
+        // Different socket, different session — that's fine for solo. Just overwrite.
       }
 
       const numRounds = Math.min(Math.max(rounds, 2), 10);
