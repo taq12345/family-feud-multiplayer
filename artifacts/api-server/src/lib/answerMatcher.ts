@@ -1,15 +1,15 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
-if (!process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL) {
+if (!process.env.AI_INTEGRATIONS_OPENAI_BASE_URL || !process.env.AI_INTEGRATIONS_OPENAI_API_KEY) {
   console.warn(
-    "[answerMatcher] WARNING: AI_INTEGRATIONS_ANTHROPIC_BASE_URL is not set. " +
+    "[answerMatcher] WARNING: AI_INTEGRATIONS_OPENAI_BASE_URL or AI_INTEGRATIONS_OPENAI_API_KEY is not set. " +
     "Layer-3 semantic matching will be disabled (all AI calls will fail-closed to false)."
   );
 }
 
-const anthropic = new Anthropic({
-  baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL ?? "http://localhost",
-  apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY ?? "unconfigured",
+const openai = new OpenAI({
+  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL ?? "http://localhost",
+  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY ?? "unconfigured",
 });
 
 // In-memory cache: "canonical|||submitted" -> boolean (max 1000 entries, FIFO eviction)
@@ -223,22 +223,26 @@ function stemmedMatch(normSubmitted: string, normCanonical: string): boolean {
 async function aiSemanticMatch(submitted: string, canonical: string, question: string): Promise<boolean> {
   const AI_TIMEOUT_MS = 5000;
   try {
-    const aiCall = anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 1000,
-      system: "You are a Family Feud judge. Your job is to decide if a player's answer means essentially the same thing as the official survey answer, given the survey question. Consider synonyms, related concepts, alternate phrasings, and cultural equivalents. Respond ONLY with YES or NO.",
+    const aiCall = openai.chat.completions.create({
+      model: "gpt-5-nano",
       messages: [
+        {
+          role: "system",
+          content:
+            "You are a Family Feud judge. Your job is to decide if a player's answer means essentially the same thing as the official survey answer, given the survey question. Consider synonyms, related concepts, alternate phrasings, and cultural equivalents. Respond ONLY with YES or NO.",
+        },
         {
           role: "user",
           content: `Survey question: "${question}"\nOfficial answer: "${canonical}"\nPlayer's answer: "${submitted}"\n\nDoes the player's answer mean essentially the same thing as the official answer? YES or NO.`,
         },
       ],
+      max_completion_tokens: 1000,
     });
     const timeout = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("AI match timeout")), AI_TIMEOUT_MS)
     );
     const response = await Promise.race([aiCall, timeout]);
-    const verdict = (response.content[0]?.type === "text") ? response.content[0].text.trim().toUpperCase() : "";
+    const verdict = response.choices[0]?.message?.content?.trim().toUpperCase() ?? "";
     return verdict.startsWith("YES");
   } catch (err) {
     console.error("[answerMatcher] AI call failed or timed out:", err);
