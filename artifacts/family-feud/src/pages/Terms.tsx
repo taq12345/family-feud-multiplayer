@@ -5,7 +5,7 @@ import { ArrowLeft, ScrollText } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
 const LAST_UPDATED = "March 28, 2025";
-const CONTACT_EMAIL = "support@friendlyfeud.fun";
+const CONTACT_EMAIL = "talhaahmadqureshi@gmail.com";
 const SITE_URL = "https://friendlyfeud.fun";
 
 export default function Terms() {
