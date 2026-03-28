@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Info, Gamepad2 } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion } from "lucide-react";
 import { createSoloGame } from "../hooks/useGameSocket";
 
 interface Room {
@@ -434,19 +434,13 @@ export default function Lobby() {
             >
               <BookOpen className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => { playClickSound(); setLocation("/about"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-              title="About Friendly Feud"
-            >
-              <Info className="w-4 h-4" />
-            </button>
+
             <button
               onClick={() => { playClickSound(); setLocation("/questions"); }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Survey Questions"
             >
-              <Tv2 className="w-4 h-4" />
+              <FileQuestion className="w-4 h-4" />
             </button>
             <button
               onClick={() => { playClickSound(); setLocation("/feedback"); }}
