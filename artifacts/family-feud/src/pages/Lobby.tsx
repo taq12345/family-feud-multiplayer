@@ -8,7 +8,7 @@ import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Info, Gamepad2 } from "lucide-react";
-import { getSocket } from "../lib/socket";
+import { createSoloGame } from "../hooks/useGameSocket";
 
 interface Room {
   id: string;
@@ -132,11 +132,9 @@ export default function Lobby() {
   const handleSoloPlay = () => {
     if (!nickname) return;
     playClickSound();
-    const socket = getSocket();
-    socket.once("solo_game_created", ({ roomId }: { roomId: string }) => {
+    createSoloGame(nickname, (roomId) => {
       setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
     });
-    socket.emit("create_solo_game", { playerName: nickname });
   };
 
   const [form, setForm] = useState({

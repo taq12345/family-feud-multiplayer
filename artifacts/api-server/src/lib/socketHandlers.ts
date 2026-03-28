@@ -577,6 +577,12 @@ export function setupSocketHandlers(io: SocketServer) {
         socket.emit("join_rejected", { reason: "Nickname must be 1–16 characters." });
         return;
       }
+      const existingSocketId = activeNicknames.get(trimmedName.toLowerCase());
+      if (existingSocketId && existingSocketId !== socket.id) {
+        socket.emit("join_rejected", { reason: "That nickname is already taken. Please choose a different one." });
+        return;
+      }
+
       const roomId = `solo_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
       const state = createGameState(roomId, "Solo Play", "You", "CPU", 4);
       state.isSolo = true;
