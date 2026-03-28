@@ -1,3 +1,4 @@
+import { SEO } from "../components/SEO";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
@@ -7,19 +8,22 @@ import { playClickSound } from "../lib/sounds";
 export default function About() {
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    document.title = "About Friendly Feud – Free Online Quiz Game";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const prev = metaDesc?.getAttribute("content") ?? "";
-    metaDesc?.setAttribute("content", "Learn about Friendly Feud — a free, open-source online multiplayer survey game inspired by classic TV game shows. Built for fun, friendship, and fierce competition.");
-    return () => {
-      document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
-      metaDesc?.setAttribute("content", prev);
-    };
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
+      <SEO 
+        title="About Friendly Feud" 
+        description="Learn about Friendly Feud, the inspiration behind the free multiplayer survey game, and how it was built to bring friends and family together." 
+        canonical="https://friendlyfeud.fun/about"
+        schema={{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Friendly Feud",
+    "url": "https://friendlyfeud.fun"
+  }
+}}
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
         <div className="absolute top-1/3 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />

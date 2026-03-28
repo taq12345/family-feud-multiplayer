@@ -1,3 +1,4 @@
+import { SEO } from "../components/SEO";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
@@ -11,19 +12,13 @@ const SITE_URL = "https://friendlyfeud.fun";
 export default function Terms() {
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    document.title = "Terms of Service – Friendly Feud";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const prev = metaDesc?.getAttribute("content") ?? "";
-    metaDesc?.setAttribute("content", "Read the Friendly Feud Terms of Service. By using friendlyfeud.fun you agree to these terms covering acceptable use, content, and limitations of liability.");
-    return () => {
-      document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
-      metaDesc?.setAttribute("content", prev);
-    };
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
+      <SEO 
+        title="Terms of Service" 
+        description="Terms of Service and user agreement for playing Friendly Feud online." 
+        canonical="https://friendlyfeud.fun/terms"
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
         <div className="absolute top-1/3 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />

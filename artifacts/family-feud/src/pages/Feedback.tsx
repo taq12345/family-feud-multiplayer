@@ -1,3 +1,4 @@
+import { SEO } from "../components/SEO";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
@@ -14,17 +15,6 @@ export default function Feedback() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    document.title = "Feedback & Bug Reports – Friendly Feud";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const prev = metaDesc?.getAttribute("content") ?? "";
-    metaDesc?.setAttribute("content", "Send feedback, report bugs, or share suggestions for Friendly Feud — the free online multiplayer quiz game.");
-    return () => {
-      document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
-      metaDesc?.setAttribute("content", prev);
-    };
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -50,6 +40,11 @@ export default function Feedback() {
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
+      <SEO 
+        title="Feedback & Bug Reports" 
+        description="Report bugs, suggest new features, or contact the developer of Friendly Feud." 
+        canonical="https://friendlyfeud.fun/feedback"
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
         <div className="absolute top-1/3 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />

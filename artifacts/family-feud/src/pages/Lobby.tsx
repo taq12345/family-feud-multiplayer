@@ -1,3 +1,4 @@
+import { SEO } from "../components/SEO";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
@@ -313,6 +314,7 @@ export default function Lobby() {
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
+      <SEO />
       {/* Decorative background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />

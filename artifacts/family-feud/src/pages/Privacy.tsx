@@ -1,3 +1,4 @@
+import { SEO } from "../components/SEO";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
@@ -11,19 +12,13 @@ const SITE_URL = "https://friendlyfeud.fun";
 export default function Privacy() {
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    document.title = "Privacy Policy – Friendly Feud";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const prev = metaDesc?.getAttribute("content") ?? "";
-    metaDesc?.setAttribute("content", "Read the Friendly Feud Privacy Policy. Learn what data we collect, how we use it, and your rights as a user of friendlyfeud.fun.");
-    return () => {
-      document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
-      metaDesc?.setAttribute("content", prev);
-    };
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
+      <SEO 
+        title="Privacy Policy" 
+        description="Privacy Policy for Friendly Feud. Learn how we handle your data and protect your privacy while you play our online games." 
+        canonical="https://friendlyfeud.fun/privacy"
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
         <div className="absolute top-1/3 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />

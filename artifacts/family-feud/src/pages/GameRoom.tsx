@@ -1,3 +1,4 @@
+import { SEO } from "../components/SEO";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
