@@ -219,46 +219,9 @@ function stemmedMatch(normSubmitted: string, normCanonical: string): boolean {
   return true;
 }
 
-/**
- * Layer 2.5: Check if submitted contains canonical as a core, with only noise words added.
- * Examples:
- *   "tissue" contained in "tissue papers" (papers is noise) → true
- *   "tissue" contained in "tissue box" (box is noise) → true
- *   "peanut" NOT contained in "butter" in "peanut butter" (peanut is not noise) → false
- */
-function noiseWordContainmentMatch(normSubmitted: string, normCanonical: string): boolean {
-  const submittedStems = stemmedTokens(normSubmitted);
-  const canonicalStems = stemmedTokens(normCanonical);
-
-  if (submittedStems.size === 0 || canonicalStems.size === 0) return false;
-  
-  // Only useful if submitted has more tokens than canonical
-  if (submittedStems.size <= canonicalStems.size) return false;
-
-  // All canonical stems must appear in submitted
-  for (const s of canonicalStems) {
-    if (!submittedStems.has(s)) return false;
-  }
-
-  // Extra tokens must all be common noise words
-  const NOISE_WORDS = new Set([
-    "paper", "papers", "box", "boxes", "bag", "bags", "can", "cans",
-    "jar", "jars", "container", "containers", "store", "stores", "shop", "shops",
-    "place", "places", "thing", "things", "stuff", "item", "items", "type", "types",
-    "kind", "kinds", "service", "services", "machine", "machines", "brand", "brands"
-  ]);
-
-  for (const submitted of submittedStems) {
-    if (!canonicalStems.has(submitted) && !NOISE_WORDS.has(submitted)) {
-      return false; // Non-noise extra word
-    }
-  }
-  return true;
-}
-
 /** Ask AI whether submitted and canonical mean the same thing in context */
 async function aiSemanticMatch(submitted: string, canonical: string, question: string): Promise<boolean> {
-  const AI_TIMEOUT_MS = 8000;
+  const AI_TIMEOUT_MS = 15000;
   try {
     const aiCall = openai.chat.completions.create({
       model: "gpt-5-nano",
@@ -356,13 +319,6 @@ export async function findMatchIndex(
 
       // Layer 2: stemmed token-set equality
       if (stemmedMatch(normSubmitted, normVariant)) {
-        cacheSet(key, true);
-        return i;
-      }
-
-      // Layer 2.5: canonical contained in submitted with only noise words added
-      // (e.g., "tissue papers" → "tissue", "tissue box" → "tissue")
-      if (noiseWordContainmentMatch(normSubmitted, normVariant)) {
         cacheSet(key, true);
         return i;
       }
