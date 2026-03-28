@@ -571,7 +571,7 @@ export function setupSocketHandlers(io: SocketServer) {
       }
     });
 
-    socket.on("create_solo_game", ({ playerName, rounds = 4 }: { playerName: string; rounds?: number }) => {
+    socket.on("create_solo_game", ({ playerName, rounds = 4, topic }: { playerName: string; rounds?: number; topic?: string }) => {
       const trimmedName = (playerName ?? "").trim();
       if (!trimmedName || trimmedName.length > 16) {
         socket.emit("join_rejected", { reason: "Nickname must be 1–16 characters." });
@@ -597,29 +597,36 @@ export function setupSocketHandlers(io: SocketServer) {
       };
       state.players.set(socket.id, soloPlayer);
 
-      const question = getNextQuestion(state);
-      if (!question) {
-        socket.emit("join_rejected", { reason: "No questions available." });
-        return;
-      }
-      state.usedQuestionIds.add(question.id);
-      state.currentQuestion = question;
-      state.currentRound = 1;
-      state.status = "playing";
-      state.playingTeam = 1;
-      state.faceoffTimerStartedAt = null;
-      initPlayingTurn(state, 1);
-
       gameStates.set(roomId, state);
       socket.join(roomId);
       socket.data.roomId = roomId;
       socket.data.playerName = trimmedName;
       activeNicknames.set(trimmedName.toLowerCase(), socket.id);
 
-      socket.emit("solo_game_created", { roomId });
-      startAnswerTimer(io, state, roomId);
-      socket.emit("game_state", serializeGameState(state));
-      console.log(`Solo game created: ${roomId} for ${trimmedName}`);
+      if (!topic?.trim()) {
+        // Classic flow: pick a question and start immediately
+        const question = getNextQuestion(state);
+        if (!question) {
+          socket.emit("join_rejected", { reason: "No questions available." });
+          return;
+        }
+        state.usedQuestionIds.add(question.id);
+        state.currentQuestion = question;
+        state.currentRound = 1;
+        state.status = "playing";
+        state.playingTeam = 1;
+        state.faceoffTimerStartedAt = null;
+        initPlayingTurn(state, 1);
+        socket.emit("solo_game_created", { roomId });
+        startAnswerTimer(io, state, roomId);
+        socket.emit("game_state", serializeGameState(state));
+      } else {
+        // Custom questions flow: stay in "waiting" status, frontend will trigger generate_custom_questions
+        state.status = "waiting";
+        socket.emit("solo_game_created", { roomId });
+        socket.emit("game_state", serializeGameState(state));
+      }
+      console.log(`Solo game created: ${roomId} for ${trimmedName}${topic ? ` (custom topic: ${topic})` : ""}`);
     });
 
     socket.on("generate_custom_questions", async ({ roomId, topic }: { roomId: string; topic: string }) => {
@@ -688,7 +695,31 @@ export function setupSocketHandlers(io: SocketServer) {
       freshState.questions = result.questions;
       freshState.usedQuestionIds = new Set();
 
-      // Auto-start — same logic as start_game
+      if (freshState.isSolo) {
+        // Solo custom questions: skip team check and DB calls, start directly in "playing"
+        const question = getNextQuestion(freshState);
+        if (!question) {
+          socket.emit("custom_questions_error", { message: "Could not start the game with generated questions. Please try again." });
+          return;
+        }
+        freshState.usedQuestionIds.add(question.id);
+        freshState.currentQuestion = question;
+        freshState.wrongAnswers = new Set();
+        freshState.correctSubmissionNorms = new Set();
+        freshState.currentRound = 1;
+        freshState.status = "playing";
+        freshState.revealedAnswers = new Set();
+        freshState.strikes = 0;
+        freshState.roundPoints = 0;
+        freshState.playingTeam = 1;
+        freshState.faceoffTimerStartedAt = null;
+        initPlayingTurn(freshState, 1);
+        startAnswerTimer(io, freshState, roomId);
+        io.to(roomId).emit("game_state", serializeGameState(freshState));
+        return;
+      }
+
+      // Auto-start — same logic as start_game (multiplayer)
       await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
 
       const question = getNextQuestion(freshState);

@@ -180,6 +180,7 @@ export default function GameRoom() {
   const teamParam = parseInt(searchParams.get("team") ?? "1");
   const team = (teamParam === 2 ? 2 : 1) as 1 | 2;
   const roomNameFromQuery = searchParams.get("roomName")?.trim() ?? "";
+  const soloTopicFromUrl = searchParams.get("soloTopic")?.trim() ?? "";
 
   const [gameState, setGameState] = useState<GameStateData | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMsg[]>([]);
@@ -193,8 +194,9 @@ export default function GameRoom() {
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [customQuestionsOpen, setCustomQuestionsOpen] = useState(false);
-  const [customTopic, setCustomTopic] = useState("");
-  const [customQuestionsLoading, setCustomQuestionsLoading] = useState(false);
+  const [customTopic, setCustomTopic] = useState(soloTopicFromUrl);
+  const [customQuestionsLoading, setCustomQuestionsLoading] = useState(!!soloTopicFromUrl);
+  const soloCustomAutoTriggeredRef = useRef(false);
   const [customQuestionsError, setCustomQuestionsError] = useState<string | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<"game" | "chat">("game");
@@ -547,6 +549,19 @@ export default function GameRoom() {
     setCustomQuestionsLoading(true);
     generateCustomQuestions(topic);
   }, [customTopic, generateCustomQuestions]);
+
+  // Auto-trigger custom question generation for solo games entered via soloTopic URL param
+  useEffect(() => {
+    if (!soloTopicFromUrl) return;
+    if (soloCustomAutoTriggeredRef.current) return;
+    if (!gameState || gameState.status !== "waiting") return;
+    const isSoloGame = gameState.isSolo ?? false;
+    if (!isSoloGame) return;
+    soloCustomAutoTriggeredRef.current = true;
+    setCustomQuestionsError(null);
+    setCustomQuestionsLoading(true);
+    generateCustomQuestions(soloTopicFromUrl);
+  }, [gameState?.status, gameState?.isSolo, soloTopicFromUrl, generateCustomQuestions]);
 
   // Clear steal attempt summary and live guess when a new round's faceoff begins
   useEffect(() => {
@@ -987,7 +1002,33 @@ export default function GameRoom() {
           <div className="shrink-0 space-y-2">
 
             {/* Waiting to start */}
-            {gameState.status === "waiting" && (
+            {gameState.status === "waiting" && isSolo && soloTopicFromUrl && (
+              <div className="rounded-2xl bg-white/[0.03] border border-pink-500/20 p-6 text-center space-y-3">
+                <Loader2 className="w-8 h-8 animate-spin text-pink-400 mx-auto" />
+                <p className="text-white font-bold text-base">Generating Questions…</p>
+                <p className="text-slate-400 text-sm">
+                  AI is creating <span className="text-pink-300 font-medium">{gameState.totalRounds} survey questions</span> about <span className="text-pink-300 font-medium">"{soloTopicFromUrl}"</span>
+                </p>
+                <p className="text-slate-500 text-xs">This may take up to a minute</p>
+                {customQuestionsError && (
+                  <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 text-left">
+                    {customQuestionsError}
+                    <Button
+                      className="w-full mt-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 font-bold text-xs"
+                      onClick={() => {
+                        soloCustomAutoTriggeredRef.current = false;
+                        setCustomQuestionsError(null);
+                        setCustomQuestionsLoading(true);
+                        generateCustomQuestions(soloTopicFromUrl);
+                      }}
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+            {gameState.status === "waiting" && !(isSolo && soloTopicFromUrl) && (
               <div className="rounded-2xl bg-white/[0.03] border border-white/8 p-5">
                 <p className="text-slate-400 text-sm text-center mb-4">
                   {isHost ? "You're the host — start the game when everyone is ready!" : "Waiting for the host to start…"}

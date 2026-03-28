@@ -131,12 +131,17 @@ export default function Lobby() {
 
   const [soloOpen, setSoloOpen] = useState(false);
   const [soloRounds, setSoloRounds] = useState(4);
+  const [soloMode, setSoloMode] = useState<"classic" | "custom">("classic");
+  const [soloTopic, setSoloTopic] = useState("");
 
-  const handleSoloPlay = () => {
+  const handleSoloPlay = (mode: "classic" | "custom" = soloMode) => {
     if (!nickname) return;
     playClickSound();
-    createSoloGame(nickname, soloRounds, (roomId) => {
-      setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
+    const topic = mode === "custom" ? soloTopic.trim() : undefined;
+    createSoloGame(nickname, soloRounds, topic, (roomId) => {
+      const params = new URLSearchParams({ name: nickname, team: "1" });
+      if (topic) params.set("soloTopic", topic);
+      setLocation(`/room/${roomId}?${params.toString()}`);
     });
   };
 
@@ -522,14 +527,14 @@ export default function Lobby() {
             Find Friends
           </a>
           {nickname && (
-            <Dialog open={soloOpen} onOpenChange={setSoloOpen}>
+            <Dialog open={soloOpen} onOpenChange={(open) => { setSoloOpen(open); if (!open) { setSoloMode("classic"); setSoloTopic(""); } }}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-all text-xs font-medium">
                   <Gamepad2 className="w-3.5 h-3.5" />
                   Solo Play
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-[#0d1525] border border-white/10 shadow-2xl">
+              <DialogContent className="bg-[#0d1525] border border-white/10 shadow-2xl max-w-sm">
                 <DialogHeader>
                   <DialogTitle className="text-white">Play Solo</DialogTitle>
                 </DialogHeader>
@@ -549,16 +554,54 @@ export default function Lobby() {
                       <option value={10} className="bg-[#0d1525]">10 rounds</option>
                     </select>
                   </div>
-                  <Button
-                    onClick={() => {
-                      playClickSound();
-                      setSoloOpen(false);
-                      handleSoloPlay();
-                    }}
-                    className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all"
-                  >
-                    Start Solo Game
-                  </Button>
+
+                  {soloMode === "custom" && (
+                    <div>
+                      <Label htmlFor="solo-topic" className="text-slate-300 text-sm font-medium mb-2 block">Topic</Label>
+                      <Input
+                        id="solo-topic"
+                        value={soloTopic}
+                        onChange={e => setSoloTopic(e.target.value)}
+                        placeholder="e.g. Pizza, Space, Superheroes…"
+                        maxLength={80}
+                        className="bg-white/5 border-white/20 text-white placeholder:text-slate-500 focus:border-pink-400/50"
+                        onKeyDown={e => {
+                          if (e.key === "Enter" && soloTopic.trim()) {
+                            setSoloOpen(false);
+                            handleSoloPlay("custom");
+                          }
+                        }}
+                      />
+                      <p className="text-slate-500 text-xs mt-1.5">AI will generate {soloRounds} survey questions about this topic.</p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      onClick={() => {
+                        setSoloOpen(false);
+                        handleSoloPlay("classic");
+                      }}
+                      className="bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all"
+                    >
+                      Classic Questions
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        if (soloMode !== "custom") {
+                          setSoloMode("custom");
+                        } else if (soloTopic.trim()) {
+                          setSoloOpen(false);
+                          handleSoloPlay("custom");
+                        }
+                      }}
+                      className="bg-gradient-to-br from-pink-400/80 to-purple-500/80 hover:from-pink-300/80 hover:to-purple-400/80 text-white font-bold border border-pink-500/30 shadow-[0_0_16px_rgba(236,72,153,0.15)] hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all disabled:opacity-50"
+                      disabled={soloMode === "custom" && !soloTopic.trim()}
+                    >
+                      {soloMode === "custom" ? "Start Custom" : "Custom Questions"}
+                      {soloMode !== "custom" && <span className="ml-1.5 text-[10px] font-semibold px-1 py-0.5 rounded bg-white/15">Beta</span>}
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
