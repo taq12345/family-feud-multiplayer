@@ -442,6 +442,13 @@ export default function Lobby() {
               <Info className="w-4 h-4" />
             </button>
             <button
+              onClick={() => { playClickSound(); setLocation("/questions"); }}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              title="Survey Questions"
+            >
+              <Tv2 className="w-4 h-4" />
+            </button>
+            <button
               onClick={() => { playClickSound(); setLocation("/feedback"); }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Feedback & Bug Reports"
@@ -613,16 +620,11 @@ export default function Lobby() {
           </div>
         </div>
 
-        {/* SEO hero — crawlable text for search engines */}
+        {/* SEO — crawlable text for search engines */}
         {rooms.length === 0 && !isLoading && (
-          <section className="mb-8 rounded-2xl bg-gradient-to-br from-amber-500/5 via-transparent to-blue-500/5 border border-white/5 p-6 sm:p-8 text-center">
-            <h3 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-3">
-              Play a Family Feud-Style Game Online — Free
-            </h3>
-            <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-              Friendly Feud is a free multiplayer survey game inspired by the classic TV show. Create a room, invite your friends, split into two teams, and compete to guess the most popular survey answers — just like Family Feud, but online. No downloads, no sign-ups, works on any device.
-            </p>
-          </section>
+          <p className="mb-6 text-xs text-slate-600 text-center leading-relaxed">
+            Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
+          </p>
         )}
 
         {isLoading ? (

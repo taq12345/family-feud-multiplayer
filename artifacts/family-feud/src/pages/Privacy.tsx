@@ -16,7 +16,7 @@ export default function Privacy() {
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO 
         title="Privacy Policy" 
-        description="Privacy Policy for Friendly Feud. Learn how we handle your data and protect your privacy while you play our online games." 
+        description="Privacy Policy for Friendly Feud, a free online Family Feud-style survey game. Learn how we handle your data and protect your privacy while you play." 
         canonical="https://friendlyfeud.fun/privacy"
       />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
@@ -57,7 +57,7 @@ export default function Privacy() {
               Last updated: <span className="text-slate-300 font-medium">{LAST_UPDATED}</span>
             </p>
             <p className="text-slate-400 text-sm mt-2 max-w-2xl mx-auto">
-              This policy explains what information Friendly Feud collects, how it is used, and your rights regarding that information.
+              This policy explains what information Friendly Feud, a free Family Feud-style survey game, collects, how it is used, and your rights regarding that information.
             </p>
           </header>
 
@@ -68,7 +68,7 @@ export default function Privacy() {
               content: (
                 <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
                   <p>
-                    Friendly Feud ("<strong className="text-white">we</strong>", "<strong className="text-white">us</strong>", or "<strong className="text-white">our</strong>") operates the website at <a href={SITE_URL} className="text-amber-400 hover:underline">{SITE_URL}</a>. This Privacy Policy describes how we handle your personal information when you use our service.
+                    Friendly Feud ("<strong className="text-white">we</strong>", "<strong className="text-white">us</strong>", or "<strong className="text-white">our</strong>") operates the website at <a href={SITE_URL} className="text-amber-400 hover:underline">{SITE_URL}</a>, a free online Family Feud-style multiplayer survey game. This Privacy Policy describes how we handle your personal information when you use our service.
                   </p>
                   <p>
                     By using Friendly Feud, you agree to the collection and use of information in accordance with this policy.

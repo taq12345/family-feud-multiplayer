@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { SEO } from "../components/SEO";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { ArrowLeft, Search, Tv2, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
 // A curated list of popular survey questions — sourced from the open-source question database
@@ -109,18 +109,8 @@ const questionsSchema = {
 
 export default function Questions() {
   const [, setLocation] = useLocation();
-  const [searchTerm, setSearchTerm] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set([0, 1]));
   const [revealedQuestions, setRevealedQuestions] = useState<Set<number>>(new Set());
-
-  const filteredCategories = useMemo(() => {
-    if (!searchTerm.trim()) return CATEGORIES;
-    const term = searchTerm.toLowerCase();
-    return CATEGORIES.map(cat => ({
-      ...cat,
-      questions: cat.questions.filter(q => q.q.toLowerCase().includes(term))
-    })).filter(cat => cat.questions.length > 0);
-  }, [searchTerm]);
 
   const totalQuestions = SURVEY_QUESTIONS.length;
 
@@ -182,7 +172,7 @@ export default function Questions() {
         <article>
           <header className="mb-8 text-center">
             <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-3">
-              {totalQuestions}+ Survey Questions &amp; Answers
+              Survey Questions &amp; Answers
             </h1>
             <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
               Browse free survey questions perfect for playing a Family Feud-style game online.
@@ -209,29 +199,12 @@ export default function Questions() {
             </button>
           </div>
 
-          {/* Search */}
-          <div className="mb-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-              <input
-                type="text"
-                placeholder="Search questions (e.g. 'pizza', 'holiday', 'animals')..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
-              />
-            </div>
-          </div>
+
 
           {/* Categories */}
-          {filteredCategories.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-slate-500">No questions match "{searchTerm}"</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {filteredCategories.map((cat, catIdx) => {
-                const isExpanded = searchTerm.trim() || expandedCategories.has(catIdx);
+          <div className="space-y-4">
+              {CATEGORIES.map((cat, catIdx) => {
+                const isExpanded = expandedCategories.has(catIdx);
                 const startIdx = globalIdx;
                 const count = cat.questions.length;
                 globalIdx += count;
@@ -290,7 +263,6 @@ export default function Questions() {
                 );
               })}
             </div>
-          )}
 
           {/* Bottom CTA */}
           <div className="mt-12 text-center">
