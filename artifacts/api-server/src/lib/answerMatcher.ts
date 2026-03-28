@@ -42,6 +42,14 @@ function normalize(text: string): string {
     .trim();
 }
 
+/**
+ * Strip leading/trailing articles (the, a, an) from a normalized string.
+ * Examples: "the tube" → "tube", "an apple" → "apple", "a cat" → "cat"
+ */
+function stripArticles(text: string): string {
+  return text.replace(/^\s*(the|a|an)\s+/, "").replace(/\s+(the|a|an)\s*$/, "");
+}
+
 /** Same normalization as matching — used to detect repeat guesses without awaiting AI. */
 export function normalizeSubmittedAnswer(submitted: string): string {
   return normalize(submitted);
@@ -297,6 +305,14 @@ export async function findMatchIndex(
 
       // Layer 1: exact normalized equality
       if (normSubmitted === normVariant) {
+        cacheSet(key, true);
+        return i;
+      }
+
+      // Layer 1.5: match after stripping articles (e.g., "tube" matches "the tube")
+      const strippedSubmitted = stripArticles(normSubmitted);
+      const strippedVariant = stripArticles(normVariant);
+      if (strippedSubmitted === strippedVariant && strippedSubmitted) {
         cacheSet(key, true);
         return i;
       }
