@@ -34,7 +34,12 @@ const ROUND_ANSWER_MS = 25 * 1000; // 25 seconds per guess
 
 async function deleteRoomNow(roomId: string) {
   clearAutoAdvanceTimer(roomId);
+  const isSoloRoom = gameStates.get(roomId)?.isSolo ?? false;
   gameStates.delete(roomId);
+  if (isSoloRoom) {
+    console.log(`Cleaned up solo room ${roomId}`);
+    return;
+  }
   try {
     await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
     await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
@@ -85,14 +90,35 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
   // Don't advance if the game is over (last round done or out of questions)
   if (state.currentRound >= state.totalRounds) return;
 
+  const question = getNextQuestion(state);
+  if (!question) return;
+
+  // Solo rooms: skip faceoff entirely, go straight to playing
+  if (state.isSolo) {
+    state.usedQuestionIds.add(question.id);
+    state.currentQuestion = question;
+    state.wrongAnswers = new Set();
+    state.correctSubmissionNorms = new Set();
+    state.currentRound++;
+    state.status = "playing";
+    state.revealedAnswers = new Set();
+    state.strikes = 0;
+    state.roundPoints = 0;
+    state.playingTeam = 1;
+    state.faceoffWinner = null;
+    state.faceoffTimerStartedAt = null;
+    state.roundTimerStartedAt = null;
+    initPlayingTurn(state, 1);
+    startAnswerTimer(io, state, roomId);
+    io.to(roomId).emit("game_state", serializeGameState(state));
+    return;
+  }
+
   // Don't advance if a team is empty — the game would freeze at faceoff
   const players = Array.from(state.players.values());
   const team1Count = players.filter(p => p.team === 1).length;
   const team2Count = players.filter(p => p.team === 2).length;
   if (team1Count === 0 || team2Count === 0) return;
-
-  const question = getNextQuestion(state);
-  if (!question) return;
 
   state.usedQuestionIds.add(question.id);
   state.currentQuestion = question;
@@ -309,6 +335,11 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
       io.to(roomId).emit("strike", { strikes: current.strikes });
 
       if (current.strikes >= 3) {
+        // Solo: no steal — end the round immediately for team 1
+        if (current.isSolo) {
+          await endRound(io, current, roomId, 1);
+          return;
+        }
         // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
         // pointing at the player who actually made the final (3rd) guess.
         current.status = "stealing";
@@ -538,6 +569,50 @@ export function setupSocketHandlers(io: SocketServer) {
       if (customQuestionsInFlight.has(roomId)) {
         customQuestionsCancelled.add(roomId);
       }
+    });
+
+    socket.on("create_solo_game", ({ playerName }: { playerName: string }) => {
+      const trimmedName = (playerName ?? "").trim();
+      if (!trimmedName || trimmedName.length > 16) {
+        socket.emit("join_rejected", { reason: "Nickname must be 1–16 characters." });
+        return;
+      }
+      const roomId = `solo_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const state = createGameState(roomId, "Solo Play", "You", "CPU", 4);
+      state.isSolo = true;
+
+      const soloPlayer: import("./gameState.js").Player = {
+        id: socket.id,
+        name: trimmedName,
+        team: 1,
+        isHost: true,
+        contributedPoints: 0,
+      };
+      state.players.set(socket.id, soloPlayer);
+
+      const question = getNextQuestion(state);
+      if (!question) {
+        socket.emit("join_rejected", { reason: "No questions available." });
+        return;
+      }
+      state.usedQuestionIds.add(question.id);
+      state.currentQuestion = question;
+      state.currentRound = 1;
+      state.status = "playing";
+      state.playingTeam = 1;
+      state.faceoffTimerStartedAt = null;
+      initPlayingTurn(state, 1);
+
+      gameStates.set(roomId, state);
+      socket.join(roomId);
+      socket.data.roomId = roomId;
+      socket.data.playerName = trimmedName;
+      activeNicknames.set(trimmedName.toLowerCase(), socket.id);
+
+      socket.emit("solo_game_created", { roomId });
+      startAnswerTimer(io, state, roomId);
+      socket.emit("game_state", serializeGameState(state));
+      console.log(`Solo game created: ${roomId} for ${trimmedName}`);
     });
 
     socket.on("generate_custom_questions", async ({ roomId, topic }: { roomId: string; topic: string }) => {
@@ -816,6 +891,11 @@ export function setupSocketHandlers(io: SocketServer) {
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
             if (state.strikes >= 3) {
+              // Solo: no steal — end the round immediately
+              if (state.isSolo) {
+                await endRound(io, state, roomId, 1);
+                return;
+              }
               // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
               // pointing at the player who actually made the final (3rd) guess.
               state.status = "stealing";
@@ -885,6 +965,11 @@ export function setupSocketHandlers(io: SocketServer) {
             io.to(roomId).emit("strike", { strikes: state.strikes });
 
             if (state.strikes >= 3) {
+              // Solo: no steal — end the round immediately
+              if (state.isSolo) {
+                await endRound(io, state, roomId, 1);
+                return;
+              }
               // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
               // pointing at the player who actually made the final (3rd) guess.
               state.status = "stealing";
@@ -1023,6 +1108,19 @@ export function setupSocketHandlers(io: SocketServer) {
           const key = (playerName as string).trim().toLowerCase();
           if (activeNicknames.get(key) === socket.id) activeNicknames.delete(key);
         }
+        return;
+      }
+
+      // Solo rooms: clean up immediately — no grace window
+      if (state.isSolo) {
+        clearAnswerTimer(roomId);
+        clearFaceoffAnswerTimer(roomId);
+        clearAutoAdvanceTimer(roomId);
+        if (playerName) {
+          const key = (playerName as string).trim().toLowerCase();
+          if (activeNicknames.get(key) === socket.id) activeNicknames.delete(key);
+        }
+        handlePlayerLeave(io, socket, roomId).catch(() => {});
         return;
       }
 

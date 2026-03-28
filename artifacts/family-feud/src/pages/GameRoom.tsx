@@ -602,6 +602,7 @@ export default function GameRoom() {
   }, [gameState?.status, gameState?.faceoffDesignatedPlayerName, gameState?.faceoffTimerStartedAt]);
 
   const myPlayer = gameState?.players.find(p => p.name === playerName);
+  const isSolo = gameState?.isSolo ?? false;
   const isHost = myPlayer?.isHost ?? false;
   const myTeam = myPlayer?.team ?? null;
   const isMyTeamPlaying = gameState?.playingTeam === team;
@@ -788,6 +789,7 @@ export default function GameRoom() {
   }
 
   const statusLabel =
+    isSolo && gameState.status === "playing" ? "Solo Play" :
     gameState.status === "waiting" ? "Waiting to start" :
     gameState.status === "faceoff" ? "FACE-OFF!" :
     gameState.status === "playing" ? `${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} is playing` :
@@ -857,35 +859,39 @@ export default function GameRoom() {
               </span>
             </div>
           )}
-          <div className="hidden xs:flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/10 mr-1">
-            <Users className="w-3 h-3 text-slate-400" />
-            <span className="text-xs text-slate-400">{gameState.players.length}</span>
-            {isHost && <Crown className="w-3 h-3 text-amber-400 ml-0.5" />}
-          </div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => {
-                  playClickSound();
-                  const url = `${window.location.origin}${import.meta.env.BASE_URL}?join=${roomId}`;
-                  navigator.clipboard.writeText(url).then(() => {
-                    setShareCopied(true);
-                    setTimeout(() => setShareCopied(false), 2000);
-                  });
-                }}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all text-xs font-medium ${
-                  shareCopied
-                    ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
-                    : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {shareCopied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
-                <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Invite"}</span>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Copy invite link</TooltipContent>
-          </Tooltip>
-          {isHost && (
+          {!isSolo && (
+            <div className="hidden xs:flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/10 mr-1">
+              <Users className="w-3 h-3 text-slate-400" />
+              <span className="text-xs text-slate-400">{gameState.players.length}</span>
+              {isHost && <Crown className="w-3 h-3 text-amber-400 ml-0.5" />}
+            </div>
+          )}
+          {!isSolo && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    playClickSound();
+                    const url = `${window.location.origin}${import.meta.env.BASE_URL}?join=${roomId}`;
+                    navigator.clipboard.writeText(url).then(() => {
+                      setShareCopied(true);
+                      setTimeout(() => setShareCopied(false), 2000);
+                    });
+                  }}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all text-xs font-medium ${
+                    shareCopied
+                      ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
+                      : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  {shareCopied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+                  <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Invite"}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Copy invite link</TooltipContent>
+            </Tooltip>
+          )}
+          {isHost && !isSolo && (
             <button
               onClick={() => { playClickSound(); setDeleteConfirmOpen(true); }}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all text-xs font-medium"
@@ -927,16 +933,24 @@ export default function GameRoom() {
             <span className={`text-xs font-bold uppercase tracking-wide ${statusColor}`}>{statusLabel}</span>
           </div>
 
-          <ScoreBoard
-            team1Name={gameState.team1Name}
-            team2Name={gameState.team2Name}
-            team1Score={gameState.team1Score}
-            team2Score={gameState.team2Score}
-            playingTeam={gameState.playingTeam}
-            roundPoints={gameState.roundPoints}
-          />
+          {isSolo ? (
+            <div className="shrink-0 flex items-center justify-center gap-3 py-2 px-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+              <span className="text-amber-400/70 text-xs font-semibold uppercase tracking-wider">Your Score</span>
+              <span className="text-2xl font-black text-amber-400">{gameState.team1Score}</span>
+              <span className="text-amber-600 text-xs font-semibold">pts</span>
+            </div>
+          ) : (
+            <ScoreBoard
+              team1Name={gameState.team1Name}
+              team2Name={gameState.team2Name}
+              team1Score={gameState.team1Score}
+              team2Score={gameState.team2Score}
+              playingTeam={gameState.playingTeam}
+              roundPoints={gameState.roundPoints}
+            />
+          )}
 
-          {gameState.status !== "waiting" && (
+          {gameState.status !== "waiting" && !isSolo && (
             <TeamRoster
               players={gameState.players}
               team1Name={gameState.team1Name}
@@ -1229,6 +1243,14 @@ export default function GameRoom() {
                 <div className={`rounded-2xl p-3 text-center ${isGameOver ? "bg-white/[0.03] border border-amber-500/25" : "bg-white/[0.03] border border-white/8"}`}>
                   <Trophy className={`mx-auto mb-1 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] ${isGameOver ? "w-8 h-8 text-amber-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]" : "w-8 h-8 text-amber-400"}`} />
                   {isGameOver ? (() => {
+                    if (isSolo) {
+                      return (
+                        <>
+                          <h2 className="text-xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-1">Game Over!</h2>
+                          <p className="text-slate-400 text-sm mb-2">Final Score: <span className="text-amber-400 font-black text-lg">{gameState.team1Score}</span> pts</p>
+                        </>
+                      );
+                    }
                     const winningTeam = gameState.team1Score > gameState.team2Score ? 1
                       : gameState.team2Score > gameState.team1Score ? 2
                       : null;
@@ -1306,13 +1328,22 @@ export default function GameRoom() {
                   )}
                   {isHost ? (
                     isGameOver ? (
-                      <Button
-                        onClick={restartGame}
-                        disabled={!canStartGame}
-                        className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Play Again
-                      </Button>
+                      isSolo ? (
+                        <Button
+                          onClick={() => { playClickSound(); setLocation("/"); }}
+                          className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
+                        >
+                          Play Again
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={restartGame}
+                          disabled={!canStartGame}
+                          className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Play Again
+                        </Button>
+                      )
                     ) : (
                       <Button
                         onClick={nextRound}
@@ -1333,7 +1364,8 @@ export default function GameRoom() {
           </div>
         </div>
 
-        {/* Chat panel */}
+        {/* Chat panel — hidden in solo mode */}
+        {!isSolo && (
         <div className={`${mobileTab === "chat" ? "flex" : "hidden"} md:flex w-full md:w-64 lg:w-72 border-l border-white/5 flex-col bg-black/30 backdrop-blur-sm`}>
           <div className="px-3 py-2.5 border-b border-white/5 flex items-center gap-2 shrink-0">
             <MessageCircle className="w-3.5 h-3.5 text-slate-500" />
@@ -1385,10 +1417,11 @@ export default function GameRoom() {
             </Button>
           </form>
         </div>
+        )}
       </div>
 
-      {/* Mobile bottom tab bar */}
-      <div className="md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10">
+      {/* Mobile bottom tab bar — hidden in solo mode */}
+      <div className={`${isSolo ? "hidden" : ""} md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10`}>
         <button
           onClick={() => { playClickSound(); setMobileTab("game"); }}
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold transition-colors border-t-2 ${

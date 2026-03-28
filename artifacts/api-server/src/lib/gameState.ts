@@ -12,6 +12,7 @@ export interface Player {
 export interface GameState {
   roomId: string;
   roomName: string;
+  isSolo: boolean;
   players: Map<string, Player>;
   team1Score: number;
   team2Score: number;
@@ -59,6 +60,7 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
   return {
     roomId,
     roomName,
+    isSolo: false,
     players: new Map(),
     team1Score: 0,
     team2Score: 0,
@@ -107,6 +109,7 @@ export function serializeGameState(state: GameState) {
   return {
     roomId: state.roomId,
     roomName: state.roomName,
+    isSolo: state.isSolo ?? false,
     players: Array.from(state.players.values()).map(player => ({
       ...player,
       contributedPoints: player.contributedPoints ?? 0,

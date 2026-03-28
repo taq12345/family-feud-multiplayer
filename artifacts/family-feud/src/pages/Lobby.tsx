@@ -7,7 +7,8 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Info } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Info, Gamepad2 } from "lucide-react";
+import { getSocket } from "../lib/socket";
 
 interface Room {
   id: string;
@@ -127,6 +128,16 @@ export default function Lobby() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleSoloPlay = () => {
+    if (!nickname) return;
+    playClickSound();
+    const socket = getSocket();
+    socket.once("solo_game_created", ({ roomId }: { roomId: string }) => {
+      setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
+    });
+    socket.emit("create_solo_game", { playerName: nickname });
+  };
 
   const [form, setForm] = useState({
     name: "My Room",
@@ -510,6 +521,26 @@ export default function Lobby() {
             Find Friends
           </a>
         </div>
+
+        {nickname && (
+          <div className="mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-600/10 border border-emerald-500/25 p-4 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 shadow-[0_0_24px_rgba(16,185,129,0.08)]">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center shrink-0">
+                <Gamepad2 className="w-5 h-5 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-white font-bold text-sm">Solo Play</p>
+                <p className="text-slate-400 text-xs mt-0.5">Answer survey questions alone — no faceoff, no steal.</p>
+              </div>
+            </div>
+            <Button
+              onClick={handleSoloPlay}
+              className="w-full xs:w-auto bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all shrink-0"
+            >
+              <Gamepad2 className="w-4 h-4 mr-2" /> Play Solo
+            </Button>
+          </div>
+        )}
 
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">

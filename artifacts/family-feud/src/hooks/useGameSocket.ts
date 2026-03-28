@@ -25,6 +25,7 @@ export interface CurrentQuestion {
 export interface GameStateData {
   roomId: string;
   roomName: string;
+  isSolo?: boolean;
   players: Player[];
   team1Score: number;
   team2Score: number;
