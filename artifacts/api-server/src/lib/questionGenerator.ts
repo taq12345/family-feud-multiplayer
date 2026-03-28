@@ -1,9 +1,8 @@
-import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
 import { SurveyQuestion } from "../data/questions.js";
 
-const openai = new OpenAI({
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL ?? "http://localhost",
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY ?? "unconfigured",
+const anthropic = new Anthropic({
+  apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY ?? "unconfigured",
 });
 
 export type GenerateResult =
@@ -79,19 +78,17 @@ async function validateTopic(topic: string, parentSignal?: AbortSignal): Promise
   const { timeoutPromise, cleanup } = makeTimeoutRace(VALIDATE_TIMEOUT_MS, parentSignal);
   try {
     const response = await Promise.race([
-      openai.chat.completions.create({
-        model: "gpt-5-nano",
+      anthropic.messages.create({
+        model: "claude-3-5-sonnet-20241022",
+        max_tokens: 500,
         messages: [{
           role: "user",
           content: `Is "${topic}" a real, meaningful topic suitable for Family Feud survey questions? It must be a recognisable concept, object, activity, place, person, or theme that most people know and could be meaningfully surveyed about. Reject nonsense strings, gibberish, random characters, inappropriate adult content, or anything so obscure that no one could survey about it. Reply ONLY with JSON: {"valid":true} or {"valid":false,"reason":"brief reason"}`,
         }],
-        max_completion_tokens: 500,
-        // @ts-ignore — reasoning_effort supported by reasoning models
-        reasoning_effort: "low",
       }),
       timeoutPromise,
     ]);
-    const content = response.choices[0]?.message?.content ?? "";
+    const content = (response.content[0]?.type === "text") ? response.content[0].text : "";
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) return { valid: true };
     const parsed = JSON.parse(jsonMatch[0]) as { valid?: boolean; reason?: string };
@@ -174,19 +171,15 @@ Rules:
     const { timeoutPromise, cleanup } = makeTimeoutRace(PER_ATTEMPT_TIMEOUT_MS, parentSignal);
     try {
       const response = await Promise.race([
-        openai.chat.completions.create({
-          model: "gpt-5-nano",
+        anthropic.messages.create({
+          model: "claude-3-5-sonnet-20241022",
+          max_tokens: 3000,
           messages: [{ role: "user", content: prompt }],
-          max_completion_tokens: 3000,
-          // @ts-ignore — reasoning_effort supported by reasoning models; reduces thinking tokens
-          reasoning_effort: "low",
         }),
         timeoutPromise,
       ]);
-      const choice = response.choices[0];
-      const rawContent = choice?.message?.content ?? "";
-      const reasoningTokens = (response.usage as any)?.completion_tokens_details?.reasoning_tokens ?? "?";
-      console.log(`[questionGenerator] Q${index} attempt=${attempt} finish=${choice?.finish_reason} len=${rawContent.length} reasoning=${reasoningTokens}`);
+      const rawContent = (response.content[0]?.type === "text") ? response.content[0].text : "";
+      console.log(`[questionGenerator] Q${index} attempt=${attempt} stopReason=${response.stop_reason} len=${rawContent.length}`);
 
       if (!rawContent.trim()) continue;
 
