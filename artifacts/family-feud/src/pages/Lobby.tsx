@@ -129,10 +129,13 @@ export default function Lobby() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [soloOpen, setSoloOpen] = useState(false);
+  const [soloRounds, setSoloRounds] = useState(4);
+
   const handleSoloPlay = () => {
     if (!nickname) return;
     playClickSound();
-    createSoloGame(nickname, (roomId) => {
+    createSoloGame(nickname, soloRounds, (roomId) => {
       setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
     });
   };
@@ -518,27 +521,49 @@ export default function Lobby() {
             </svg>
             Find Friends
           </a>
+          {nickname && (
+            <Dialog open={soloOpen} onOpenChange={setSoloOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-all text-xs font-medium">
+                  <Gamepad2 className="w-3.5 h-3.5" />
+                  Solo Play
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#0d1525] border border-white/10 shadow-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-white">Play Solo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="solo-rounds" className="text-slate-300 text-sm font-medium mb-2 block">Number of Rounds</Label>
+                    <select
+                      id="solo-rounds"
+                      value={soloRounds}
+                      onChange={e => setSoloRounds(parseInt(e.target.value))}
+                      className="w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-emerald-500/50"
+                    >
+                      <option value={2} className="bg-[#0d1525]">2 rounds</option>
+                      <option value={4} className="bg-[#0d1525]">4 rounds</option>
+                      <option value={6} className="bg-[#0d1525]">6 rounds</option>
+                      <option value={8} className="bg-[#0d1525]">8 rounds</option>
+                      <option value={10} className="bg-[#0d1525]">10 rounds</option>
+                    </select>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      playClickSound();
+                      setSoloOpen(false);
+                      handleSoloPlay();
+                    }}
+                    className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all"
+                  >
+                    Start Solo Game
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
-
-        {nickname && (
-          <div className="mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-600/10 border border-emerald-500/25 p-4 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 shadow-[0_0_24px_rgba(16,185,129,0.08)]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center shrink-0">
-                <Gamepad2 className="w-5 h-5 text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-white font-bold text-sm">Solo Play</p>
-                <p className="text-slate-400 text-xs mt-0.5">Answer survey questions alone — no faceoff, no steal.</p>
-              </div>
-            </div>
-            <Button
-              onClick={handleSoloPlay}
-              className="w-full xs:w-auto bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all shrink-0"
-            >
-              <Gamepad2 className="w-4 h-4 mr-2" /> Play Solo
-            </Button>
-          </div>
-        )}
 
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">

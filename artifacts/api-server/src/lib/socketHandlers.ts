@@ -571,7 +571,7 @@ export function setupSocketHandlers(io: SocketServer) {
       }
     });
 
-    socket.on("create_solo_game", ({ playerName }: { playerName: string }) => {
+    socket.on("create_solo_game", ({ playerName, rounds = 4 }: { playerName: string; rounds?: number }) => {
       const trimmedName = (playerName ?? "").trim();
       if (!trimmedName || trimmedName.length > 16) {
         socket.emit("join_rejected", { reason: "Nickname must be 1–16 characters." });
@@ -583,8 +583,9 @@ export function setupSocketHandlers(io: SocketServer) {
         return;
       }
 
+      const numRounds = Math.min(Math.max(rounds, 2), 10);
       const roomId = `solo_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-      const state = createGameState(roomId, "Solo Play", "You", "CPU", 4);
+      const state = createGameState(roomId, "Solo Play", "You", "CPU", numRounds);
       state.isSolo = true;
 
       const soloPlayer: import("./gameState.js").Player = {

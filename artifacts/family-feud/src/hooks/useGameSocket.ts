@@ -59,12 +59,12 @@ export interface CanonicalAnswerSlot {
   points: number;
 }
 
-export function createSoloGame(playerName: string, onCreated: (roomId: string) => void) {
+export function createSoloGame(playerName: string, rounds: number, onCreated: (roomId: string) => void) {
   const socket = getSocket();
   socket.once("solo_game_created", ({ roomId }: { roomId: string }) => {
     onCreated(roomId);
   });
-  socket.emit("create_solo_game", { playerName });
+  socket.emit("create_solo_game", { playerName, rounds });
 }
 
 export function useGameSocket(
