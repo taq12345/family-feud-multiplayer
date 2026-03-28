@@ -1175,14 +1175,26 @@ export default function GameRoom() {
                 )}
                 {/* Phase description — hidden on small screens to save space */}
                 <div className={`hidden sm:block rounded-xl border px-4 py-2.5 text-center ${
-                  gameState.playingTeam === 1
+                  isSolo
+                    ? "bg-amber-500/8 border-amber-500/20"
+                    : gameState.playingTeam === 1
                     ? "bg-rose-500/8 border-rose-500/20"
                     : "bg-blue-500/8 border-blue-500/20"
                 }`}>
-                  <p className={`font-bold text-xs uppercase tracking-wider mb-0.5 ${gameState.playingTeam === 1 ? "text-rose-400" : "text-blue-400"}`}>
-                    🏆 {gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} is Playing
+                  <p className={`font-bold text-xs uppercase tracking-wider mb-0.5 ${
+                    isSolo
+                      ? "text-amber-400"
+                      : gameState.playingTeam === 1
+                      ? "text-rose-400"
+                      : "text-blue-400"
+                  }`}>
+                    {isSolo ? "🎮 Solo Mode" : `🏆 ${gameState.playingTeam === 1 ? gameState.team1Name : gameState.team2Name} is Playing`}
                   </p>
-                  <p className="text-slate-400 text-xs">Name all the survey answers to score points. 3 wrong answers and the other team gets a steal!</p>
+                  <p className="text-slate-400 text-xs">
+                    {isSolo
+                      ? "Name the survey answers to score points. Get 3 wrong in a round and move to the next."
+                      : "Name all the survey answers to score points. 3 wrong answers and the other team gets a steal!"}
+                  </p>
                 </div>
               </div>
             )}
@@ -1281,12 +1293,14 @@ export default function GameRoom() {
                       {myTeam !== null && lastRoundResult && (
                         <div
                           className={`rounded-lg border px-3 py-1.5 mb-2 text-xs ${
-                            myTeam === 1
+                            isSolo
+                              ? "bg-amber-500/10 border-amber-500/25 text-amber-300"
+                              : myTeam === 1
                               ? "bg-rose-500/10 border-rose-500/25 text-rose-300"
                               : "bg-blue-500/10 border-blue-500/25 text-blue-300"
                           }`}
                         >
-                          <span className="font-semibold">Your Team</span>{" "}
+                          <span className="font-semibold">{isSolo ? "You" : "Your Team"}</span>{" "}
                           got{" "}
                           <span className="font-black">
                             {lastRoundResult.winningTeam === myTeam ? lastRoundResult.points : 0}
