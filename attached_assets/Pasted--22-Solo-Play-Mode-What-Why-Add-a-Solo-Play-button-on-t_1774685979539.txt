@@ -1,0 +1,34 @@
+#22 - Solo Play Mode
+What & Why
+Add a "Solo Play" button on the lobby that lets a single player enjoy the game alone — answering questions without a faceoff or steal phase. No public room is created; the game exists only in-memory. The experience is streamlined: just the player vs the question board, answering until all answers are revealed or 3 strikes are accumulated.
+
+Done looks like
+A "Solo Play" button appears on the lobby home page
+Clicking it immediately creates a private game and navigates the player to a game room
+The board is shown immediately (no faceoff waiting)
+The player answers questions; correct answers reveal board tiles; 3 wrong answers ends the round (no steal phase)
+The round summary ("Next Round") is controlled by the player themselves
+The header shows "Your Score" instead of a team-vs-team scoreboard
+No team roster panel or faceoff/steal UI is shown
+The room never appears in the public lobby list
+When the player disconnects or leaves, the solo room is immediately cleaned up
+Out of scope
+Leaderboards or score saving for solo mode
+Timers that differ from multiplayer (same 25s timer applies)
+Custom questions / AI question generation in solo mode (can be added later)
+Any chat panel in solo mode
+Tasks
+Backend: isSolo flag + solo room creation — Add isSolo: boolean to GameState (and serializeGameState so the frontend receives it). Add a create_solo_game socket event that creates an in-memory-only game state (no DB insert), adds the player to team 1 as host/designated player, and immediately starts in "playing" status. Emit solo_game_created with { roomId } back to the connecting socket.
+
+Backend: solo-aware game flow — Modify submit_answer so that when state.isSolo is true and strikes reach 3, the round ends immediately (skip steal entirely). Modify advanceToNextRound to skip the team-count guard and the faceoff phase for solo rooms: directly set status to "playing" with team 1 and call initPlayingTurn. When the solo player disconnects, immediately clean up the game state (no 30-minute grace window).
+
+Frontend: solo game socket hook + lobby button — Add createSoloGame(playerName) to useGameSocket that emits create_solo_game and on solo_game_created navigates to /room/:roomId. Add a "Solo Play" button on the Lobby that triggers this flow after the player has set their nickname.
+
+Frontend: GameRoom solo UI — When gameState.isSolo is true, adapt the GameRoom UI: replace the team scoreboard header with a single "Your Score" display; hide the team roster panel; suppress all faceoff and steal UI elements; show "Next Round" / "Play Again" controls without any team-size guard; show a "Back to Lobby" button at game over.
+
+Relevant files
+artifacts/api-server/src/lib/gameState.ts
+artifacts/api-server/src/lib/socketHandlers.ts:81-117,252-332,495-523,766-905
+artifacts/family-feud/src/hooks/useGameSocket.ts
+artifacts/family-feud/src/pages/Lobby.tsx
+artifacts/family-feud/src/pages/GameRoom.tsx:600-615,673-690,1226-1335

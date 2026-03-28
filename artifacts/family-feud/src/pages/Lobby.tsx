@@ -7,7 +7,8 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Info } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Info, Gamepad2 } from "lucide-react";
+import { createSoloGame } from "../hooks/useGameSocket";
 
 interface Room {
   id: string;
@@ -127,6 +128,17 @@ export default function Lobby() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const [soloOpen, setSoloOpen] = useState(false);
+  const [soloRounds, setSoloRounds] = useState(4);
+
+  const handleSoloPlay = () => {
+    if (!nickname) return;
+    playClickSound();
+    createSoloGame(nickname, soloRounds, (roomId) => {
+      setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
+    });
+  };
 
   const [form, setForm] = useState({
     name: "My Room",
@@ -509,6 +521,48 @@ export default function Lobby() {
             </svg>
             Find Friends
           </a>
+          {nickname && (
+            <Dialog open={soloOpen} onOpenChange={setSoloOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-br from-emerald-500/40 to-teal-600/40 border border-emerald-400/50 text-emerald-300 hover:from-emerald-500/50 hover:to-teal-600/50 hover:border-emerald-300/60 hover:text-emerald-200 transition-all text-sm font-bold shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_24px_rgba(16,185,129,0.35)]">
+                  <Gamepad2 className="w-5 h-5" />
+                  Solo Play
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#0d1525] border border-white/10 shadow-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-white">Play Solo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="solo-rounds" className="text-slate-300 text-sm font-medium mb-2 block">Number of Rounds</Label>
+                    <select
+                      id="solo-rounds"
+                      value={soloRounds}
+                      onChange={e => setSoloRounds(parseInt(e.target.value))}
+                      className="w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-emerald-500/50"
+                    >
+                      <option value={2} className="bg-[#0d1525]">2 rounds</option>
+                      <option value={4} className="bg-[#0d1525]">4 rounds</option>
+                      <option value={6} className="bg-[#0d1525]">6 rounds</option>
+                      <option value={8} className="bg-[#0d1525]">8 rounds</option>
+                      <option value={10} className="bg-[#0d1525]">10 rounds</option>
+                    </select>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      playClickSound();
+                      setSoloOpen(false);
+                      handleSoloPlay();
+                    }}
+                    className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all"
+                  >
+                    Start Solo Game
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
 
         <div className="flex items-center justify-between mb-6">

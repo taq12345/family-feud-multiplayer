@@ -25,6 +25,7 @@ export interface CurrentQuestion {
 export interface GameStateData {
   roomId: string;
   roomName: string;
+  isSolo?: boolean;
   players: Player[];
   team1Score: number;
   team2Score: number;
@@ -56,6 +57,14 @@ export interface CanonicalAnswerSlot {
   index: number;
   text: string;
   points: number;
+}
+
+export function createSoloGame(playerName: string, rounds: number, onCreated: (roomId: string) => void) {
+  const socket = getSocket();
+  socket.once("solo_game_created", ({ roomId }: { roomId: string }) => {
+    onCreated(roomId);
+  });
+  socket.emit("create_solo_game", { playerName, rounds });
 }
 
 export function useGameSocket(
