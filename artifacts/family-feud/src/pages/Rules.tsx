@@ -11,7 +11,7 @@ export default function Rules() {
     document.title = "How to Play Friendly Feud – Game Rules & Guide";
     const metaDesc = document.querySelector('meta[name="description"]');
     const prev = metaDesc?.getAttribute("content") ?? "";
-    metaDesc?.setAttribute("content", "Learn how to play Friendly Feud — the free online Family Feud-style game. Full rules covering Face-Off, Playing phase, Steal, scoring, and tips to win.");
+    metaDesc?.setAttribute("content", "Learn how to play Friendly Feud — the free online feud-style survey game. Full rules covering Face-Off, Playing phase, Steal, scoring, and tips to win.");
     return () => {
       document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
       metaDesc?.setAttribute("content", prev);

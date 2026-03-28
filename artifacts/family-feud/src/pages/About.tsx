@@ -11,7 +11,7 @@ export default function About() {
     document.title = "About Friendly Feud – Free Online Quiz Game";
     const metaDesc = document.querySelector('meta[name="description"]');
     const prev = metaDesc?.getAttribute("content") ?? "";
-    metaDesc?.setAttribute("content", "Learn about Friendly Feud — a free, open-source online multiplayer survey game inspired by Family Feud. Built for fun, friendship, and fierce competition.");
+    metaDesc?.setAttribute("content", "Learn about Friendly Feud — a free, open-source online multiplayer survey game inspired by classic TV game shows. Built for fun, friendship, and fierce competition.");
     return () => {
       document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
       metaDesc?.setAttribute("content", prev);
@@ -63,7 +63,7 @@ export default function About() {
             </h2>
             <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-5 sm:p-6 space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
               <p>
-                Friendly Feud is a free online multiplayer quiz game inspired by the classic Family Feud format. Two teams compete to guess the most popular survey answers, racing against the clock and each other for points.
+                Friendly Feud is a free online multiplayer quiz game inspired by classic TV game show formats. Two teams compete to guess the most popular survey answers, racing against the clock and each other for points.
               </p>
               <p>
                 Whether you're playing with friends, family, or strangers online, Friendly Feud brings the energy, laughs, and friendly competition that make game nights unforgettable.

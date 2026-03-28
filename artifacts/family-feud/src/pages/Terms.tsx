@@ -82,7 +82,7 @@ export default function Terms() {
               content: (
                 <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
                   <p>
-                    Friendly Feud is a free, browser-based multiplayer quiz game inspired by the Family Feud format. It allows users to create or join game rooms, form teams, and compete to answer survey-style questions in real time.
+                    Friendly Feud is a free, browser-based multiplayer quiz game inspired by classic TV game show formats. It allows users to create or join game rooms, form teams, and compete to answer survey-style questions in real time.
                   </p>
                   <p>
                     The Service is provided free of charge and does not require account registration. We reserve the right to modify, suspend, or discontinue the Service at any time without prior notice.
