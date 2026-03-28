@@ -227,18 +227,56 @@ export default function Lobby() {
   useEffect(() => {
     if (!nickname) { setReconnectSlot(null); return; }
     let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let scheduleVersion = 0;
+
     async function checkSlot() {
+      if (cancelled) return;
       try {
         const res = await fetch(`/api/player-slots?nickname=${encodeURIComponent(nickname)}`);
-        if (res.ok) {
+        if (res.ok && !cancelled) {
           const data = await res.json();
-          if (!cancelled) setReconnectSlot(data); // null or { roomId, team }
+          setReconnectSlot(data); // null or { roomId, team }
         }
       } catch { /* ignore */ }
     }
-    checkSlot();
-    const id = setInterval(checkSlot, 5000);
-    return () => { cancelled = true; clearInterval(id); };
+
+    const scheduleNextCheck = (version: number) => {
+      const delay = document.visibilityState === "visible"
+        ? VISIBLE_ROOMS_REFRESH_MS
+        : HIDDEN_ROOMS_REFRESH_MS;
+      timeoutId = setTimeout(async () => {
+        await checkSlot();
+        if (version === scheduleVersion && !cancelled) {
+          scheduleNextCheck(version);
+        }
+      }, delay);
+    };
+
+    const resetPolling = (checkNow: boolean) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      scheduleVersion += 1;
+      if (checkNow) void checkSlot();
+      scheduleNextCheck(scheduleVersion);
+    };
+
+    void checkSlot();
+    scheduleNextCheck(scheduleVersion);
+
+    const handleFocus = () => resetPolling(true);
+    const handleVisibilityChange = () => {
+      resetPolling(document.visibilityState === "visible");
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [nickname]);
 
   async function handleCreate(e: React.FormEvent) {
