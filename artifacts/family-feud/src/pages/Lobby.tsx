@@ -780,6 +780,22 @@ export default function Lobby() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs text-slate-600">
+            © {new Date().getFullYear()} Friendly Feud · Made with ♥ by Talha Qureshi
+          </p>
+          <nav className="flex items-center gap-4 text-xs text-slate-600" aria-label="Legal">
+            <button onClick={() => { playClickSound(); setLocation("/about"); }} className="hover:text-slate-400 transition-colors">About</button>
+            <button onClick={() => { playClickSound(); setLocation("/rules"); }} className="hover:text-slate-400 transition-colors">How to Play</button>
+            <button onClick={() => { playClickSound(); setLocation("/feedback"); }} className="hover:text-slate-400 transition-colors">Contact</button>
+            <button onClick={() => { playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</button>
+            <button onClick={() => { playClickSound(); setLocation("/terms"); }} className="hover:text-slate-400 transition-colors">Terms of Service</button>
+          </nav>
+        </div>
+      </footer>
     </div>
   );
 }

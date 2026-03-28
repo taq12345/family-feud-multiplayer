@@ -7,6 +7,8 @@ import GameRoom from "./pages/GameRoom";
 import Rules from "./pages/Rules";
 import Feedback from "./pages/Feedback";
 import About from "./pages/About";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +26,8 @@ function Router() {
       <Route path="/rules" component={Rules} />
       <Route path="/about" component={About} />
       <Route path="/feedback" component={Feedback} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
       <Route path="/room/:roomId" component={GameRoom} />
       <Route>
         <div className="min-h-screen bg-blue-950 flex items-center justify-center text-white">
