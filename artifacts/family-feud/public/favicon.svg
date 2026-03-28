@@ -1,50 +1,26 @@
-<svg viewBox="4 4 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="shell" x1="10" y1="7" x2="54" y2="58" gradientUnits="userSpaceOnUse">
-      <stop stopColor="#93C5FD" />
-      <stop offset="0.45" stopColor="#2563EB" />
-      <stop offset="1" stopColor="#0F172A" />
+    <linearGradient id="gold" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FCD34D" />
+      <stop offset="0.4" stop-color="#F59E0B" />
+      <stop offset="1" stop-color="#B45309" />
     </linearGradient>
-    <radialGradient id="marquee" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(32 17) rotate(90) scale(30 36)">
-      <stop stopColor="#FEF3C7" />
-      <stop offset="0.72" stopColor="#FBBF24" />
-      <stop offset="1" stopColor="#D97706" />
-    </radialGradient>
-    <linearGradient id="core" x1="18" y1="20" x2="46" y2="43" gradientUnits="userSpaceOnUse">
-      <stop stopColor="#1E3A8A" />
-      <stop offset="1" stopColor="#2563EB" />
+    <linearGradient id="blueCore" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#60A5FA" />
+      <stop offset="0.6" stop-color="#2563EB" />
+      <stop offset="1" stop-color="#1E3A8A" />
     </linearGradient>
   </defs>
 
-  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#shell)" />
-  <rect x="5" y="5" width="54" height="54" rx="13" stroke="#F8FAFC" strokeOpacity="0.14" />
+  <!-- Thick gold frame -->
+  <ellipse cx="50" cy="50" rx="49" ry="39" fill="url(#gold)" />
   
-  <path
-    d="M12 27.5C12 18.39 20.95 11 32 11C43.05 11 52 18.39 52 27.5C52 36.61 43.05 44 32 44C20.95 44 12 36.61 12 27.5Z"
-    fill="url(#marquee)"
-    stroke="#FDE68A"
-    strokeOpacity="0.75"
-  />
-  <path
-    d="M16 27.5C16 20.6 23.16 15 32 15C40.84 15 48 20.6 48 27.5C48 34.4 40.84 40 32 40C23.16 40 16 34.4 16 27.5Z"
-    fill="url(#core)"
-    stroke="#BFDBFE"
-    strokeOpacity="0.7"
-  />
-
-  <circle cx="18" cy="22" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="24" cy="17.5" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="32" cy="15.5" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="40" cy="17.5" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="46" cy="22" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="18" cy="41.5" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="24" cy="46" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="32" cy="48" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="40" cy="46" r="2" fill="#FDE68A" fillOpacity="0.95" />
-  <circle cx="46" cy="41.5" r="2" fill="#FDE68A" fillOpacity="0.95" />
-
-  <path d="M23 22H31V25.5H26.5V29H30V32.5H26.5V37H23V22ZM34 22H42V25.5H37.5V29H41V32.5H37.5V37H34V22Z" fill="#FDE68A" />
-  <path d="M21 47.5H43" stroke="#FBBF24" strokeWidth="3" strokeLinecap="round" />
-  <circle cx="21" cy="47.5" r="2.25" fill="#60A5FA" />
-  <circle cx="43" cy="47.5" r="2.25" fill="#60A5FA" />
+  <!-- Center blue screen -->
+  <ellipse cx="50" cy="50" rx="38" ry="28" fill="url(#blueCore)" />
+  
+  <!-- Inner light blue accent ring -->
+  <ellipse cx="50" cy="50" rx="33" ry="23" fill="none" stroke="#93C5FD" stroke-width="2" opacity="0.8" />
+  
+  <!-- Marquee bulbs! Uses dashed thick stroke to create perfect little circular dots -->
+  <ellipse cx="50" cy="50" rx="43.5" ry="33.5" fill="none" stroke="#FEF3C7" stroke-width="5" stroke-dasharray="0.1 14" stroke-linecap="round"/>
 </svg>
