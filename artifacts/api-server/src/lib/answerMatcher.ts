@@ -224,7 +224,7 @@ async function aiSemanticMatch(submitted: string, canonical: string, question: s
   const AI_TIMEOUT_MS = 15000;
   try {
     const aiCall = openai.chat.completions.create({
-      model: "gpt-5-nano",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
