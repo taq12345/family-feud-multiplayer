@@ -1192,7 +1192,7 @@ export default function GameRoom() {
                   </p>
                   <p className="text-slate-400 text-xs">
                     {isSolo
-                      ? "Name all the survey answers to score points. Get 3 wrong and it's game over!"
+                      ? "Name the survey answers to score points. Get 3 wrong in a round and move to the next."
                       : "Name all the survey answers to score points. 3 wrong answers and the other team gets a steal!"}
                   </p>
                 </div>
@@ -1293,12 +1293,14 @@ export default function GameRoom() {
                       {myTeam !== null && lastRoundResult && (
                         <div
                           className={`rounded-lg border px-3 py-1.5 mb-2 text-xs ${
-                            myTeam === 1
+                            isSolo
+                              ? "bg-amber-500/10 border-amber-500/25 text-amber-300"
+                              : myTeam === 1
                               ? "bg-rose-500/10 border-rose-500/25 text-rose-300"
                               : "bg-blue-500/10 border-blue-500/25 text-blue-300"
                           }`}
                         >
-                          <span className="font-semibold">Your Team</span>{" "}
+                          <span className="font-semibold">{isSolo ? "You" : "Your Team"}</span>{" "}
                           got{" "}
                           <span className="font-black">
                             {lastRoundResult.winningTeam === myTeam ? lastRoundResult.points : 0}
