@@ -9,7 +9,13 @@ export default function About() {
 
   useEffect(() => {
     document.title = "About Friendly Feud – Free Online Quiz Game";
-    return () => { document.title = "Friendly Feud – Free Online Multiplayer Quiz Game"; };
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const prev = metaDesc?.getAttribute("content") ?? "";
+    metaDesc?.setAttribute("content", "Learn about Friendly Feud — a free, open-source online multiplayer survey game inspired by Family Feud. Built for fun, friendship, and fierce competition.");
+    return () => {
+      document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
+      metaDesc?.setAttribute("content", prev);
+    };
   }, []);
 
   return (

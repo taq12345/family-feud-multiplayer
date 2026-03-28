@@ -17,7 +17,13 @@ export default function Feedback() {
 
   useEffect(() => {
     document.title = "Feedback & Bug Reports – Friendly Feud";
-    return () => { document.title = "Friendly Feud – Free Online Multiplayer Quiz Game"; };
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const prev = metaDesc?.getAttribute("content") ?? "";
+    metaDesc?.setAttribute("content", "Send feedback, report bugs, or share suggestions for Friendly Feud — the free online multiplayer quiz game.");
+    return () => {
+      document.title = "Friendly Feud – Free Online Multiplayer Quiz Game";
+      metaDesc?.setAttribute("content", prev);
+    };
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
