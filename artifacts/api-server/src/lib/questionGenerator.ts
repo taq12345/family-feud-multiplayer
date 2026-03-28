@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { SurveyQuestion } from "../data/questions.js";
 
 const anthropic = new Anthropic({
+  baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL ?? "http://localhost",
   apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY ?? "unconfigured",
 });
 

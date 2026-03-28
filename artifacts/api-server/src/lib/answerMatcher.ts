@@ -1,13 +1,14 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-if (!process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY) {
+if (!process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL) {
   console.warn(
-    "[answerMatcher] WARNING: AI_INTEGRATIONS_ANTHROPIC_API_KEY is not set. " +
+    "[answerMatcher] WARNING: AI_INTEGRATIONS_ANTHROPIC_BASE_URL is not set. " +
     "Layer-3 semantic matching will be disabled (all AI calls will fail-closed to false)."
   );
 }
 
 const anthropic = new Anthropic({
+  baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL ?? "http://localhost",
   apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY ?? "unconfigured",
 });
 
