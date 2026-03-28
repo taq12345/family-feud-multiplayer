@@ -8,6 +8,7 @@ import Lobby from "./pages/Lobby";
 
 const GameRoom = lazy(() => import("./pages/GameRoom"));
 const Rules = lazy(() => import("./pages/Rules"));
+const Questions = lazy(() => import("./pages/Questions"));
 const Feedback = lazy(() => import("./pages/Feedback"));
 const About = lazy(() => import("./pages/About"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -32,6 +33,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Lobby} />
         <Route path="/rules" component={Rules} />
+        <Route path="/questions" component={Questions} />
         <Route path="/about" component={About} />
         <Route path="/feedback" component={Feedback} />
         <Route path="/privacy" component={Privacy} />

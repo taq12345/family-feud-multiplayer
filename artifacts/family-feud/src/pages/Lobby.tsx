@@ -613,6 +613,18 @@ export default function Lobby() {
           </div>
         </div>
 
+        {/* SEO hero — crawlable text for search engines */}
+        {rooms.length === 0 && !isLoading && (
+          <section className="mb-8 rounded-2xl bg-gradient-to-br from-amber-500/5 via-transparent to-blue-500/5 border border-white/5 p-6 sm:p-8 text-center">
+            <h3 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent mb-3">
+              Play a Family Feud-Style Game Online — Free
+            </h3>
+            <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+              Friendly Feud is a free multiplayer survey game inspired by the classic TV show. Create a room, invite your friends, split into two teams, and compete to guess the most popular survey answers — just like Family Feud, but online. No downloads, no sign-ups, works on any device.
+            </p>
+          </section>
+        )}
+
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <div className="w-10 h-10 rounded-full border-2 border-amber-400/30 border-t-amber-400 animate-spin" />
@@ -875,19 +887,22 @@ export default function Lobby() {
         </DialogContent>
       </Dialog>
 
-      {/* Footer */}
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-slate-600">
             © {new Date().getFullYear()} Friendly Feud · Made with ♥ by Talha Qureshi
           </p>
-          <nav className="flex items-center gap-4 text-xs text-slate-600" aria-label="Legal">
-            <button onClick={() => { playClickSound(); setLocation("/about"); }} className="hover:text-slate-400 transition-colors">About</button>
-            <button onClick={() => { playClickSound(); setLocation("/rules"); }} className="hover:text-slate-400 transition-colors">How to Play</button>
-            <button onClick={() => { playClickSound(); setLocation("/feedback"); }} className="hover:text-slate-400 transition-colors">Contact</button>
-            <button onClick={() => { playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</button>
-            <button onClick={() => { playClickSound(); setLocation("/terms"); }} className="hover:text-slate-400 transition-colors">Terms of Service</button>
+          <nav className="flex items-center gap-4 text-xs text-slate-600" aria-label="Footer navigation">
+            <a href="/about" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/about"); }} className="hover:text-slate-400 transition-colors">About</a>
+            <a href="/rules" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/rules"); }} className="hover:text-slate-400 transition-colors">How to Play</a>
+            <a href="/questions" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/questions"); }} className="hover:text-slate-400 transition-colors">Survey Questions</a>
+            <a href="/feedback" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/feedback"); }} className="hover:text-slate-400 transition-colors">Contact</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</a>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/terms"); }} className="hover:text-slate-400 transition-colors">Terms of Service</a>
           </nav>
+          <p className="w-full text-[10px] text-slate-700 mt-1">
+            Friendly Feud is an independent fan project inspired by classic TV survey game shows. "Family Feud" is a registered trademark of Fremantle. Friendly Feud is not affiliated with or endorsed by Fremantle.
+          </p>
         </div>
       </footer>
     </div>

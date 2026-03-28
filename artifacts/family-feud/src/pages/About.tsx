@@ -12,7 +12,7 @@ export default function About() {
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO 
         title="About Friendly Feud" 
-        description="Learn about Friendly Feud, the inspiration behind the free multiplayer survey game, and how it was built to bring friends and family together." 
+        description="Learn about Friendly Feud, a free Family Feud-style multiplayer survey game built to bring friends and family together for game night fun." 
         canonical="https://friendlyfeud.fun/about"
         schema={{
   "@context": "https://schema.org",
