@@ -265,7 +265,7 @@ export default function GameRoom() {
     revealChain(queue);
   }
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -1465,8 +1465,10 @@ export default function GameRoom() {
       <Dialog
         open={customQuestionsOpen}
         onOpenChange={(open) => {
-          if (!customQuestionsLoading) {
-            setCustomQuestionsOpen(open);
+          setCustomQuestionsOpen(open);
+          if (!open && customQuestionsLoading) {
+            cancelCustomQuestions();
+            setCustomQuestionsLoading(false);
           }
         }}
       >

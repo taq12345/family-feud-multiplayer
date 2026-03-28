@@ -527,6 +527,18 @@ export function setupSocketHandlers(io: SocketServer) {
     });
 
     const customQuestionsInFlight = new Set<string>();
+    // Track rooms where the host cancelled generation while the AI was still running
+    const customQuestionsCancelled = new Set<string>();
+
+    socket.on("cancel_custom_questions", ({ roomId }: { roomId: string }) => {
+      const state = gameStates.get(roomId);
+      if (!state) return;
+      const player = state.players.get(socket.id);
+      if (!player?.isHost) return;
+      if (customQuestionsInFlight.has(roomId)) {
+        customQuestionsCancelled.add(roomId);
+      }
+    });
 
     socket.on("generate_custom_questions", async ({ roomId, topic }: { roomId: string; topic: string }) => {
       const state = gameStates.get(roomId);
@@ -546,12 +558,19 @@ export function setupSocketHandlers(io: SocketServer) {
         return;
       }
 
+      customQuestionsCancelled.delete(roomId);
       customQuestionsInFlight.add(roomId);
       let result: Awaited<ReturnType<typeof generateCustomQuestions>>;
       try {
         result = await generateCustomQuestions(trimmedTopic, state.totalRounds);
       } finally {
         customQuestionsInFlight.delete(roomId);
+      }
+
+      // If the host cancelled while we were generating, discard the result silently
+      if (customQuestionsCancelled.has(roomId)) {
+        customQuestionsCancelled.delete(roomId);
+        return;
       }
 
       if (!result.valid) {
