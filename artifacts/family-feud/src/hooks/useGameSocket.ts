@@ -201,5 +201,10 @@ export function useGameSocket(
     getSocket().emit("generate_custom_questions", { roomId, topic });
   }, [roomId]);
 
-  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions };
+  const cancelCustomQuestions = useCallback(() => {
+    if (!roomId) return;
+    getSocket().emit("cancel_custom_questions", { roomId });
+  }, [roomId]);
+
+  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions };
 }

@@ -30,7 +30,7 @@ export const ListRoomsResponseItem = zod.object({
   team1Score: zod.number(),
   team2Score: zod.number(),
   currentRound: zod.number(),
-  totalRounds: zod.number(),
+  totalRounds: zod.union([zod.literal(2), zod.literal(4), zod.literal(6), zod.literal(8), zod.literal(10)]),
   createdAt: zod.string(),
 });
 export const ListRoomsResponse = zod.array(ListRoomsResponseItem);
@@ -44,7 +44,7 @@ export const CreateRoomBody = zod.object({
   team1Name: zod.string(),
   team2Name: zod.string(),
   maxPlayers: zod.number().optional(),
-  totalRounds: zod.number().optional(),
+  totalRounds: zod.union([zod.literal(2), zod.literal(4), zod.literal(6), zod.literal(8), zod.literal(10)]).optional(),
 });
 
 /**
@@ -66,7 +66,7 @@ export const GetRoomResponse = zod.object({
   team1Score: zod.number(),
   team2Score: zod.number(),
   currentRound: zod.number(),
-  totalRounds: zod.number(),
+  totalRounds: zod.union([zod.literal(2), zod.literal(4), zod.literal(6), zod.literal(8), zod.literal(10)]),
   createdAt: zod.string(),
 });
 

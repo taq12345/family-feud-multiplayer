@@ -152,6 +152,7 @@ components:
           type: integer
         totalRounds:
           type: integer
+          enum: [2, 4, 6, 8, 10]
         createdAt:
           type: string
       required:
@@ -184,6 +185,7 @@ components:
           type: integer
         totalRounds:
           type: integer
+          enum: [2, 4, 6, 8, 10]
       required:
         - name
         - hostName

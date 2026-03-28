@@ -1,19 +1,67 @@
-import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { SEO } from "../components/SEO";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { Tv2, ArrowLeft, Users, Zap, Shield, Trophy, RotateCcw, Star, Clock, Target } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does the game use AI to judge answers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Answers are checked in three layers: exact match, stem/synonym matching, and an AI model as a final fallback. This means alternate phrasings and common synonyms are generally accepted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if a player disconnects?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Disconnected players are held in the game for up to 30 minutes. If they reconnect in time, they rejoin seamlessly. If the designated player disconnects, the turn passes to the next eligible player."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I play with just one person per team?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — 1v1 is fully supported. The game will rotate back to the same player if they're the only one on their team."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who controls when the next round starts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The host can advance to the next round manually after the between-round summary is shown. If the host doesn't act, the game auto-advances after 60 seconds."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a chat during the game?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every room has a live chat panel visible on the right side (or in the Chat tab on mobile) so your group can talk while playing."
+      }
+    }
+  ]
+};
+
 export default function Rules() {
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    document.title = "How to Play Friendly Feud – Game Rules";
-    return () => { document.title = "Friendly Feud – Free Online Multiplayer Quiz Game"; };
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
+      <SEO 
+        title="How to Play" 
+        description="Learn how to play Friendly Feud — the free online feud-style survey game. Full rules covering Face-Off, Playing phase, Steal, scoring, and tips to win." 
+        canonical="https://friendlyfeud.fun/rules"
+        schema={faqSchema}
+      />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
         <div className="absolute top-1/3 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />

@@ -242,9 +242,11 @@ function pickPlayingDesignatedPlayer(state: GameState, team: 1 | 2): string | nu
     setLastGuesser(state, team, eligible[0].id);
     return eligible[0].id;
   }
-  // All used — reset rotation and try again
+  // All used — reset rotation, but skip whoever just went to avoid an immediate repeat
+  const lastId = getLastGuesser(state, team);
   state.playingUsedPlayerIds = new Set();
-  const picked = teamPlayers[0]?.id ?? null;
+  const eligible2 = teamPlayers.filter(p => p.id !== lastId);
+  const picked = eligible2.length > 0 ? eligible2[0].id : (teamPlayers[0]?.id ?? null);
   if (picked) setLastGuesser(state, team, picked);
   return picked;
 }
@@ -303,11 +305,12 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
     }
 
     if (current.status === "playing") {
-      rotatePlayingDesignatedPlayer(current);
       current.strikes++;
       io.to(roomId).emit("strike", { strikes: current.strikes });
 
       if (current.strikes >= 3) {
+        // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
+        // pointing at the player who actually made the final (3rd) guess.
         current.status = "stealing";
         current.strikes = 0;
         const stealingTeam = current.playingTeam === 1 ? 2 : 1;
@@ -321,6 +324,7 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
         startAnswerTimer(io, current, roomId);
         io.to(roomId).emit("game_state", serializeGameState(current));
       } else {
+        rotatePlayingDesignatedPlayer(current);
         startAnswerTimer(io, current, roomId);
         io.to(roomId).emit("game_state", serializeGameState(current));
       }
@@ -523,6 +527,18 @@ export function setupSocketHandlers(io: SocketServer) {
     });
 
     const customQuestionsInFlight = new Set<string>();
+    // Track rooms where the host cancelled generation while the AI was still running
+    const customQuestionsCancelled = new Set<string>();
+
+    socket.on("cancel_custom_questions", ({ roomId }: { roomId: string }) => {
+      const state = gameStates.get(roomId);
+      if (!state) return;
+      const player = state.players.get(socket.id);
+      if (!player?.isHost) return;
+      if (customQuestionsInFlight.has(roomId)) {
+        customQuestionsCancelled.add(roomId);
+      }
+    });
 
     socket.on("generate_custom_questions", async ({ roomId, topic }: { roomId: string; topic: string }) => {
       const state = gameStates.get(roomId);
@@ -542,12 +558,19 @@ export function setupSocketHandlers(io: SocketServer) {
         return;
       }
 
+      customQuestionsCancelled.delete(roomId);
       customQuestionsInFlight.add(roomId);
       let result: Awaited<ReturnType<typeof generateCustomQuestions>>;
       try {
         result = await generateCustomQuestions(trimmedTopic, state.totalRounds);
       } finally {
         customQuestionsInFlight.delete(roomId);
+      }
+
+      // If the host cancelled while we were generating, discard the result silently
+      if (customQuestionsCancelled.has(roomId)) {
+        customQuestionsCancelled.delete(roomId);
+        return;
       }
 
       if (!result.valid) {
@@ -790,10 +813,11 @@ export function setupSocketHandlers(io: SocketServer) {
         if (normSub && state.wrongAnswers.has(normSub)) {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            rotatePlayingDesignatedPlayer(state);
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
             if (state.strikes >= 3) {
+              // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
+              // pointing at the player who actually made the final (3rd) guess.
               state.status = "stealing";
               state.strikes = 0;
               const stealingTeam = state.playingTeam === 1 ? 2 : 1;
@@ -802,6 +826,7 @@ export function setupSocketHandlers(io: SocketServer) {
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             } else {
+              rotatePlayingDesignatedPlayer(state);
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             }
@@ -856,11 +881,12 @@ export function setupSocketHandlers(io: SocketServer) {
           if (normSub) state.wrongAnswers.add(normSub);
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            rotatePlayingDesignatedPlayer(state);
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
 
             if (state.strikes >= 3) {
+              // Do NOT rotate before transitioning to steal — lastGuesserTeam must stay
+              // pointing at the player who actually made the final (3rd) guess.
               state.status = "stealing";
               state.strikes = 0;
               const stealingTeam = state.playingTeam === 1 ? 2 : 1;
@@ -869,6 +895,7 @@ export function setupSocketHandlers(io: SocketServer) {
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             } else {
+              rotatePlayingDesignatedPlayer(state);
               startAnswerTimer(io, state, roomId);
               io.to(roomId).emit("game_state", serializeGameState(state));
             }

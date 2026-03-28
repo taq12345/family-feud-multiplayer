@@ -1,3 +1,4 @@
+import { SEO } from "../components/SEO";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
 import { useGameSocket, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
@@ -264,7 +265,7 @@ export default function GameRoom() {
     revealChain(queue);
   }
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -1315,8 +1316,7 @@ export default function GameRoom() {
                     ) : (
                       <Button
                         onClick={nextRound}
-                        disabled={!canStartGame}
-                        className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
                       >
                         Next Round →
                       </Button>
@@ -1464,8 +1464,10 @@ export default function GameRoom() {
       <Dialog
         open={customQuestionsOpen}
         onOpenChange={(open) => {
-          if (!customQuestionsLoading) {
-            setCustomQuestionsOpen(open);
+          setCustomQuestionsOpen(open);
+          if (!open && customQuestionsLoading) {
+            cancelCustomQuestions();
+            setCustomQuestionsLoading(false);
           }
         }}
       >
