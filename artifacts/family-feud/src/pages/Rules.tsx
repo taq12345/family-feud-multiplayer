@@ -58,7 +58,7 @@ export default function Rules() {
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO 
         title="How to Play" 
-        description="Learn how to play Friendly Feud — the free online feud-style survey game. Full rules covering Face-Off, Playing phase, Steal, scoring, and tips to win." 
+        description="Learn how to play Friendly Feud — a free online Family Feud-style survey game. Full rules covering Face-Off, Playing phase, Steal, scoring, and tips to win." 
         canonical="https://friendlyfeud.fun/rules"
         schema={faqSchema}
       />
@@ -94,7 +94,7 @@ export default function Rules() {
               How to Play Friendly Feud
             </h1>
             <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
-              Friendly Feud is a free online multiplayer survey game for two teams. Guess the most popular survey answers to win points — fastest fingers and sharpest minds win!
+              Friendly Feud is a free online multiplayer survey game inspired by Family Feud. Two teams compete to guess the most popular survey answers — fastest fingers and sharpest minds win!
             </p>
           </header>
 

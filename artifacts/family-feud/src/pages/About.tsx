@@ -12,7 +12,7 @@ export default function About() {
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO 
         title="About Friendly Feud" 
-        description="Learn about Friendly Feud, the inspiration behind the free multiplayer survey game, and how it was built to bring friends and family together." 
+        description="Learn about Friendly Feud, a free Family Feud-style multiplayer survey game built to bring friends and family together for game night fun." 
         canonical="https://friendlyfeud.fun/about"
         schema={{
   "@context": "https://schema.org",
@@ -56,7 +56,7 @@ export default function About() {
               About Friendly Feud
             </h1>
             <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
-              A free, open-source multiplayer survey game built for fun, friendship, and fierce competition.
+              A free, open-source Family Feud-style multiplayer survey game built for fun, friendship, and fierce competition.
             </p>
           </header>
 
@@ -67,7 +67,7 @@ export default function About() {
             </h2>
             <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-5 sm:p-6 space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
               <p>
-                Friendly Feud is a free online multiplayer quiz game inspired by classic TV game show formats. Two teams compete to guess the most popular survey answers, racing against the clock and each other for points.
+                Friendly Feud is a free online multiplayer quiz game inspired by the classic TV show Family Feud. Two teams compete to guess the most popular survey answers, racing against the clock and each other for points.
               </p>
               <p>
                 Whether you're playing with friends, family, or strangers online, Friendly Feud brings the energy, laughs, and friendly competition that make game nights unforgettable.

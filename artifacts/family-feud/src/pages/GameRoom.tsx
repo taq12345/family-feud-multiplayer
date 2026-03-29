@@ -458,7 +458,10 @@ export default function GameRoom() {
       onRoundOver: (data) => {
         setLastRoundResult({ winningTeam: data.winningTeam, points: data.points });
         playRoundEndSound();
-        showNotification(`🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`);
+        const message = isSolo
+          ? `🏆 Round complete! +${data.points} pts`
+          : `🏆 Team ${data.winningTeam} wins the round! +${data.points} pts`;
+        showNotification(message);
         // If game_state already ran between_rounds (stagger started), do not stash stale canonical for the next round.
         if (!betweenRoundsRevealInitRef.current) {
           pendingCanonicalRef.current = data.canonicalAnswers ?? null;

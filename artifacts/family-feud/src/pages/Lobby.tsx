@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Info, Gamepad2 } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion } from "lucide-react";
 import { createSoloGame } from "../hooks/useGameSocket";
 
 interface Room {
@@ -227,18 +227,56 @@ export default function Lobby() {
   useEffect(() => {
     if (!nickname) { setReconnectSlot(null); return; }
     let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let scheduleVersion = 0;
+
     async function checkSlot() {
+      if (cancelled) return;
       try {
         const res = await fetch(`/api/player-slots?nickname=${encodeURIComponent(nickname)}`);
-        if (res.ok) {
+        if (res.ok && !cancelled) {
           const data = await res.json();
-          if (!cancelled) setReconnectSlot(data); // null or { roomId, team }
+          setReconnectSlot(data); // null or { roomId, team }
         }
       } catch { /* ignore */ }
     }
-    checkSlot();
-    const id = setInterval(checkSlot, 5000);
-    return () => { cancelled = true; clearInterval(id); };
+
+    const scheduleNextCheck = (version: number) => {
+      const delay = document.visibilityState === "visible"
+        ? VISIBLE_ROOMS_REFRESH_MS
+        : HIDDEN_ROOMS_REFRESH_MS;
+      timeoutId = setTimeout(async () => {
+        await checkSlot();
+        if (version === scheduleVersion && !cancelled) {
+          scheduleNextCheck(version);
+        }
+      }, delay);
+    };
+
+    const resetPolling = (checkNow: boolean) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      scheduleVersion += 1;
+      if (checkNow) void checkSlot();
+      scheduleNextCheck(scheduleVersion);
+    };
+
+    void checkSlot();
+    scheduleNextCheck(scheduleVersion);
+
+    const handleFocus = () => resetPolling(true);
+    const handleVisibilityChange = () => {
+      resetPolling(document.visibilityState === "visible");
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [nickname]);
 
   async function handleCreate(e: React.FormEvent) {
@@ -396,12 +434,13 @@ export default function Lobby() {
             >
               <BookOpen className="w-4 h-4" />
             </button>
+
             <button
-              onClick={() => { playClickSound(); setLocation("/about"); }}
+              onClick={() => { playClickSound(); setLocation("/questions"); }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-              title="About Friendly Feud"
+              title="Survey Questions"
             >
-              <Info className="w-4 h-4" />
+              <FileQuestion className="w-4 h-4" />
             </button>
             <button
               onClick={() => { playClickSound(); setLocation("/feedback"); }}
@@ -837,19 +876,28 @@ export default function Lobby() {
         </DialogContent>
       </Dialog>
 
-      {/* Footer */}
+      <div className="max-w-4xl mx-auto px-4 mt-12 mb-4">
+        <p className="text-sm text-slate-500 text-center leading-relaxed">
+          Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
+        </p>
+      </div>
+
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-slate-600">
             © {new Date().getFullYear()} Friendly Feud · Made with ♥ by Talha Qureshi
           </p>
-          <nav className="flex items-center gap-4 text-xs text-slate-600" aria-label="Legal">
-            <button onClick={() => { playClickSound(); setLocation("/about"); }} className="hover:text-slate-400 transition-colors">About</button>
-            <button onClick={() => { playClickSound(); setLocation("/rules"); }} className="hover:text-slate-400 transition-colors">How to Play</button>
-            <button onClick={() => { playClickSound(); setLocation("/feedback"); }} className="hover:text-slate-400 transition-colors">Contact</button>
-            <button onClick={() => { playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</button>
-            <button onClick={() => { playClickSound(); setLocation("/terms"); }} className="hover:text-slate-400 transition-colors">Terms of Service</button>
+          <nav className="flex items-center gap-4 text-xs text-slate-600" aria-label="Footer navigation">
+            <a href="/about" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/about"); }} className="hover:text-slate-400 transition-colors">About</a>
+            <a href="/rules" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/rules"); }} className="hover:text-slate-400 transition-colors">How to Play</a>
+            <a href="/questions" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/questions"); }} className="hover:text-slate-400 transition-colors">Survey Questions</a>
+            <a href="/feedback" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/feedback"); }} className="hover:text-slate-400 transition-colors">Contact</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</a>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/terms"); }} className="hover:text-slate-400 transition-colors">Terms of Service</a>
           </nav>
+          <p className="w-full text-[10px] text-slate-700 mt-1">
+            Friendly Feud is an independent fan project inspired by classic TV survey game shows. "Family Feud" is a registered trademark of Fremantle. Friendly Feud is not affiliated with or endorsed by Fremantle.
+          </p>
         </div>
       </footer>
     </div>
