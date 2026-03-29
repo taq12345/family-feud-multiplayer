@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion, Wand2 } from "lucide-react";
 import { createSoloGame } from "../hooks/useGameSocket";
 
 interface Room {
@@ -609,9 +609,9 @@ export default function Lobby() {
                     </button>
                     <button
                       onClick={() => { playClickSound(); setSoloMode("custom"); setSoloError(null); }}
-                      className={`flex-1 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "custom" ? "bg-amber-500/20 text-amber-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "custom" ? "bg-pink-500/20 text-pink-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
                     >
-                      Custom AI
+                      <Wand2 className="w-4 h-4" /> Custom AI
                     </button>
                   </div>
                   <div>
@@ -632,8 +632,8 @@ export default function Lobby() {
                   </div>
                   {soloMode === "custom" && (
                     <div className="animate-in fade-in slide-in-from-top-2">
-                      <Label htmlFor="solo-topic" className="text-amber-300/90 text-sm font-medium mb-2 flex items-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5" />
+                      <Label htmlFor="solo-topic" className="text-pink-300/90 text-sm font-medium mb-2 flex items-center gap-1.5">
+                        <Wand2 className="w-3.5 h-3.5" />
                         Custom Topic
                       </Label>
                       <Input
@@ -641,7 +641,7 @@ export default function Lobby() {
                         placeholder="e.g. 90s Action Movies, Fast Food, etc."
                         value={soloTopic}
                         onChange={e => setSoloTopic(e.target.value)}
-                        className="w-full bg-white/5 border-amber-500/30 text-white placeholder:text-slate-500 focus:border-amber-500/60 focus:ring-amber-500/20"
+                        className="w-full bg-white/5 border-pink-500/30 text-white placeholder:text-slate-500 focus:border-pink-500/60 focus:ring-pink-500/20"
                         disabled={soloLoading}
                         onKeyDown={e => {
                           if (e.key === "Enter" && !soloLoading) {
