@@ -93,7 +93,6 @@ export default function Lobby() {
   const [joinRoomPlayers, setJoinRoomPlayers] = useState<Array<{ id: string; name: string; team: 1 | 2; isHost: boolean }> | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isInGame, setIsInGame] = useState(false);
   const [changeNicknameOpen, setChangeNicknameOpen] = useState(false);
   const [changeNicknameInput, setChangeNicknameInput] = useState("");
   const [changeNicknameError, setChangeNicknameError] = useState<string | null>(null);
@@ -241,15 +240,6 @@ export default function Lobby() {
     if (nickname) localStorage.setItem("playerName", nickname);
   }, [nickname]);
 
-  // Check whether the current nickname is active in a game room.
-  // On the lobby page the user has no socket open, so "taken" → they're in a game elsewhere.
-  useEffect(() => {
-    if (!nickname) { setIsInGame(false); return; }
-    let cancelled = false;
-    checkNickname(nickname).then(taken => { if (!cancelled) setIsInGame(taken); });
-    return () => { cancelled = true; };
-  }, [nickname]);
-
   // Poll for an existing player slot so we can show "Reconnect" on the matching room card.
   useEffect(() => {
     if (!nickname) { setReconnectSlot(null); return; }
@@ -366,7 +356,6 @@ export default function Lobby() {
       if (taken) { setChangeNicknameError(`"${trimmed}" is already in use. Pick another.`); return; }
       setNickname(trimmed);
       localStorage.setItem("playerName", trimmed);
-      setIsInGame(false);
       setChangeNicknameOpen(false);
       setChangeNicknameInput("");
     } finally {
@@ -436,10 +425,7 @@ export default function Lobby() {
               </div>
             )}
             {nickname && (
-              <span
-                title={isInGame ? "Leave your current game before changing your nickname" : "Change nickname"}
-                className="inline-flex"
-              >
+              <span title="Change nickname" className="inline-flex">
                 <button
                   onClick={() => {
                     playClickSound();
@@ -447,8 +433,7 @@ export default function Lobby() {
                     setChangeNicknameError(null);
                     setChangeNicknameOpen(true);
                   }}
-                  disabled={isInGame}
-                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/5 disabled:hover:text-slate-400 pointer-events-auto"
+                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all pointer-events-auto"
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
