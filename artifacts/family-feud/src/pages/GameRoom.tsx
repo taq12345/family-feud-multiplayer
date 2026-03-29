@@ -810,7 +810,7 @@ export default function GameRoom() {
   const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
 
   return (
-    <div className="h-dvh overflow-hidden bg-[#070d1f] text-white flex flex-col">
+    <div className="h-svh overflow-hidden bg-[#070d1f] text-white flex flex-col">
       {/* Answer verification overlay */}
       {verifyingAnswer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -1144,7 +1144,6 @@ export default function GameRoom() {
                       placeholder="Your answer…"
                       value={answerInput}
                       onChange={e => setAnswerInput(e.target.value)}
-                      onFocus={e => setTimeout(() => e.target.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100)}
                       className="flex-1 bg-black/25 border-emerald-300/40 text-white placeholder:text-emerald-200/50 focus:border-emerald-300/70 h-11 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.15)]"
                       autoFocus
                       disabled={verifyingAnswer}
