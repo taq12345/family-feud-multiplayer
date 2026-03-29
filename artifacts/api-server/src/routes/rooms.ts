@@ -4,7 +4,7 @@ import { roomsTable } from "@workspace/db/schema";
 import { getRoomPlayers, isNicknameTaken, getPlayerSlot } from "../lib/socketHandlers.js";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { surveyQuestions } from "../data/questions.js";
+import { surveyQuestions } from "../lib/questionsBank.js";
 
 const router: IRouter = Router();
 const ALLOWED_TOTAL_ROUNDS = new Set([2, 4, 6, 8, 10]);
