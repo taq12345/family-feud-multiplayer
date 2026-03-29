@@ -5,19 +5,7 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
-// Anti-cheat: Insert invisible zero-width characters between each letter so
-// Ctrl+F plain-text searching cannot match the displayed answer.
-const ZWJ = "\u200D";       // Zero-width joiner
-const ZWNJ = "\u200C";     // Zero-width non-joiner
 
-function obfuscate(text: string): string {
-  return text
-    .split("")
-    .map((ch, i) => ch + (i % 2 === 0 ? ZWJ : ZWNJ))
-    .join("");
-}
-
-// ——— Question data sourced from our open-source database ———
 // Each answer includes the survey point value from the original show data.
 interface Q { q: string; a: { text: string; pts: number }[] }
 
@@ -349,7 +337,7 @@ export default function Questions() {
                                     >
                                       <span>
                                         <span className="text-amber-400 font-bold mr-2">{aIdx + 1}.</span>
-                                        <span className="text-slate-300 capitalize">{obfuscate(ans.text)}</span>
+                                        <span className="text-slate-300 capitalize">{ans.text}</span>
                                       </span>
                                       <span className="text-amber-400/80 font-mono text-xs font-bold whitespace-nowrap">{ans.pts} pts</span>
                                     </div>
