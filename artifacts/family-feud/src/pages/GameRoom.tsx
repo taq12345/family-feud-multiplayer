@@ -728,26 +728,6 @@ export default function GameRoom() {
     return () => clearTimeout(t);
   }, [isMyTurnToFaceoff, isMyTurnToPlay, verifyingAnswer]);
 
-  // iOS Safari: when the virtual keyboard opens the visual viewport shrinks but the
-  // layout viewport does not. Scroll the focused input into view whenever that happens.
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    let lastHeight = vv.height;
-    const handleResize = () => {
-      if (vv.height < lastHeight) {
-        // Viewport shrank → keyboard opened
-        setTimeout(() => {
-          const el = document.activeElement as HTMLElement | null;
-          el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
-        }, 100);
-      }
-      lastHeight = vv.height;
-    };
-    vv.addEventListener("resize", handleResize);
-    return () => vv.removeEventListener("resize", handleResize);
-  }, []);
-
   function handleLeave() {
     didRequestLeaveRef.current = true;
     leaveRoom();
