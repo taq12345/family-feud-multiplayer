@@ -169510,7 +169510,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "hor after eating",
+                            "text":  "no swimming after eating",
                             "points":  8
                         },
                         {
