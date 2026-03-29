@@ -127,61 +127,101 @@ const SURVEY_QUESTIONS: Q[] = [
   { q: "If you're going to do your own taxes, name something you probably need.", a: [{ text: "Calculator", pts: 41 }, { text: "Forms", pts: 25 }, { text: "Records", pts: 21 }, { text: "Pencil", pts: 8 }] },
   { q: "If you met Prince Charming, how would you know it was him?", a: [{ text: "Wears a crown", pts: 38 }, { text: "Rides white horse", pts: 25 }, { text: "Good looking", pts: 14 }, { text: "Magical kiss", pts: 12 }] },
   { q: "If there was no speed limit, how fast would you drive to work?", a: [{ text: "100 mph", pts: 30 }, { text: "80 mph", pts: 29 }, { text: "70 mph", pts: 19 }, { text: "90 mph", pts: 11 }, { text: "60 mph", pts: 8 }] },
+  // ——— Love, Dating & Relationships ———
+  { q: "Name a sign your girlfriend might be turning into a mermaid.", a: [{ text: "Grows tail", pts: 39 }, { text: "Swims often", pts: 20 }, { text: "Getting scales", pts: 15 }, { text: "Always in water", pts: 12 }, { text: "Gills", pts: 8 }] },
+  { q: "Love is the right reason to get married. Name one of the wrong reasons.", a: [{ text: "Money/Status", pts: 57 }, { text: "Lust/Infatuation", pts: 34 }, { text: "Pregnant", pts: 5 }] },
+  { q: "Men hunt for animals. What do women hunt for?", a: [{ text: "Men/Husbands", pts: 68 }, { text: "Clothes/Shoes", pts: 13 }, { text: "Bargains", pts: 12 }, { text: "Bank account", pts: 5 }, { text: "Diamonds", pts: 2 }] },
+  { q: "Name something specific a man compliments a woman on when trying to pick her up.", a: [{ text: "Eyes", pts: 51 }, { text: "Hair", pts: 29 }, { text: "Smile", pts: 8 }, { text: "Clothes", pts: 8 }, { text: "Body", pts: 3 }] },
+  { q: "Name a reason a husband might send his wife flowers.", a: [{ text: "Anniversary", pts: 51 }, { text: "Apology", pts: 23 }, { text: "Birthday", pts: 12 }, { text: "Valentine's Day", pts: 6 }] },
+  { q: "If voodoo dolls really worked, name a person you'd stick a pin in.", a: [{ text: "An Ex", pts: 19 }, { text: "Spouse", pts: 18 }, { text: "Boss", pts: 15 }, { text: "Sibling", pts: 12 }, { text: "In-laws", pts: 12 }] },
+  { q: "In your opinion, what occupation has the most masculine men?", a: [{ text: "Construction", pts: 35 }, { text: "Pro Sports", pts: 20 }, { text: "Firemen", pts: 14 }, { text: "Fitness trainer", pts: 7 }] },
+  { q: "Name something a woman might do to her hair.", a: [{ text: "Dye/color", pts: 45 }, { text: "Cut", pts: 25 }, { text: "Curl", pts: 15 }, { text: "Straighten", pts: 10 }] },
+  { q: "Name something a man might forget to wear.", a: [{ text: "Watch", pts: 30 }, { text: "Deodorant", pts: 25 }, { text: "Belt", pts: 20 }, { text: "Tie", pts: 15 }] },
+  { q: "Name a reason a couple might break up.", a: [{ text: "Cheating", pts: 40 }, { text: "Lying", pts: 25 }, { text: "Money issues", pts: 15 }, { text: "Fell out of love", pts: 12 }] },
+
+  // ——— Spooky, Weird & Mysterious ———
+  { q: "If they were smart, name a place horror movie characters would stay far away from.", a: [{ text: "Woods", pts: 29 }, { text: "Cemetery", pts: 25 }, { text: "Basement", pts: 23 }, { text: "Place of worship", pts: 17 }] },
+  { q: "Name something people claim to have seen that others think is crazy.", a: [{ text: "UFO", pts: 38 }, { text: "Elvis", pts: 21 }, { text: "Ghost", pts: 15 }, { text: "Big foot", pts: 12 }, { text: "Lochness monster", pts: 9 }] },
+  { q: "Name a city with a lot of pollution.", a: [{ text: "Los Angeles", pts: 59 }, { text: "New York", pts: 19 }, { text: "St. Louis", pts: 9 }, { text: "Cleveland", pts: 5 }, { text: "Chicago", pts: 3 }] },
+  { q: "Name something you'd find in a haunted house.", a: [{ text: "Ghosts", pts: 35 }, { text: "Cobwebs", pts: 25 }, { text: "Bats", pts: 15 }, { text: "Dust", pts: 10 }] },
+  { q: "Name a famous monster.", a: [{ text: "Frankenstein", pts: 40 }, { text: "Dracula", pts: 30 }, { text: "Wolfman", pts: 15 }, { text: "Mummy", pts: 10 }] },
+  { q: "Name something associated with witches.", a: [{ text: "Broomstick", pts: 45 }, { text: "Black cat", pts: 25 }, { text: "Cauldron", pts: 15 }, { text: "Warts", pts: 10 }] },
+  { q: "Name a superstition.", a: [{ text: "Black cat", pts: 35 }, { text: "Broken mirror", pts: 25 }, { text: "Walk under ladder", pts: 20 }, { text: "Friday 13th", pts: 15 }] },
+  { q: "Name something that scares children at night.", a: [{ text: "Monsters under bed", pts: 40 }, { text: "The dark", pts: 30 }, { text: "Thunder", pts: 15 }, { text: "Closet", pts: 10 }] },
+  { q: "Name a creature of the night.", a: [{ text: "Bat", pts: 45 }, { text: "Owl", pts: 30 }, { text: "Vampire", pts: 15 }, { text: "Wolf", pts: 5 }] },
+  { q: "Name something you associate with aliens.", a: [{ text: "UFO", pts: 50 }, { text: "Green skin", pts: 25 }, { text: "Space", pts: 15 }, { text: "Probes", pts: 5 }] },
+
+  // ——— More Food & Drink ———
+  { q: "Name something you mix with water before drinking.", a: [{ text: "Kool Aid", pts: 39 }, { text: "Tea", pts: 32 }, { text: "Juice concentrate", pts: 14 }, { text: "Coffee", pts: 11 }] },
+  { q: "Name a comfort food that has cheese in/on it.", a: [{ text: "Pizza", pts: 47 }, { text: "Mac and cheese", pts: 21 }, { text: "Grilled cheese", pts: 10 }, { text: "Nachos", pts: 9 }, { text: "Crackers", pts: 9 }] },
+  { q: "Name an accessory that might be sold with a James Bond action figure.", a: [{ text: "Gun", pts: 44 }, { text: "Car", pts: 14 }, { text: "Sunglasses", pts: 11 }, { text: "Phone", pts: 10 }, { text: "Clothes", pts: 9 }, { text: "Watch", pts: 5 }] },
+  { q: "Name a Christmas movie people are tired of.", a: [{ text: "A Wonderful Life", pts: 24 }, { text: "White Christmas", pts: 22 }, { text: "Miracle on 34th st", pts: 22 }, { text: "Home Alone", pts: 12 }] },
+  { q: "Name a piece of clothing that comes in pairs.", a: [{ text: "Socks", pts: 45 }, { text: "Shoes", pts: 35 }, { text: "Gloves", pts: 15 }, { text: "Mittens", pts: 5 }] },
+  { q: "Name something that melts.", a: [{ text: "Ice", pts: 40 }, { text: "Snow", pts: 30 }, { text: "Ice cream", pts: 15 }, { text: "Snowman", pts: 10 }] },
+  { q: "Name a type of soup.", a: [{ text: "Chicken noodle", pts: 45 }, { text: "Tomato", pts: 25 }, { text: "Vegetable", pts: 15 }, { text: "Clam chowder", pts: 10 }] },
+  { q: "Name a popular soda.", a: [{ text: "Coca Cola", pts: 40 }, { text: "Pepsi", pts: 30 }, { text: "Sprite", pts: 15 }, { text: "Dr. Pepper", pts: 10 }] },
+  { q: "Name a candy bar that has nuts in it.", a: [{ text: "Snickers", pts: 50 }, { text: "Almond Joy", pts: 25 }, { text: "Payday", pts: 15 }, { text: "Baby Ruth", pts: 5 }] },
+  { q: "Name a popular type of bread.", a: [{ text: "White", pts: 40 }, { text: "Wheat", pts: 30 }, { text: "Sourdough", pts: 15 }, { text: "Rye", pts: 10 }] },
+
+  // ——— More Daily Life & Home ———
+  { q: "In a crowded house, name something specific people have to line up to use.", a: [{ text: "Toilet", pts: 53 }, { text: "Shower", pts: 29 }, { text: "Phone", pts: 13 }] },
+  { q: "If you were dead tired, name something you might forget to do before bed.", a: [{ text: "Brush teeth", pts: 27 }, { text: "Clothes", pts: 17 }, { text: "Prayers", pts: 12 }, { text: "Lock door", pts: 9 }, { text: "Turn off light", pts: 9 }] },
+  { q: "In the shower, which part of the body is soaped first?", a: [{ text: "Arms", pts: 21 }, { text: "Abdomen", pts: 14 }, { text: "Face", pts: 12 }, { text: "Chest", pts: 12 }, { text: "Underarm", pts: 12 }, { text: "Hands", pts: 10 }] },
+  { q: "Name something you wouldn't want your kid bringing home from school.", a: [{ text: "Lice", pts: 31 }, { text: "Bad grades", pts: 24 }, { text: "Drugs", pts: 21 }, { text: "Illness", pts: 7 }, { text: "Germs", pts: 6 }] },
+  { q: "Name something people cover when it rains.", a: [{ text: "Head", pts: 28 }, { text: "Car", pts: 17 }, { text: "Outdoor furniture", pts: 7 }, { text: "Pool", pts: 3 }] },
+  { q: "Name an appliance that gets hot.", a: [{ text: "Oven", pts: 40 }, { text: "Toaster", pts: 30 }, { text: "Iron", pts: 15 }, { text: "Microwave", pts: 10 }] },
+  { q: "Name something people hang on their walls.", a: [{ text: "Pictures", pts: 50 }, { text: "Clocks", pts: 20 }, { text: "Mirrors", pts: 15 }, { text: "Calendar", pts: 10 }] },
+  { q: "Name something in a kitchen that starts with the letter 'S'.", a: [{ text: "Spoon", pts: 40 }, { text: "Stove", pts: 30 }, { text: "Sink", pts: 15 }, { text: "Spatula", pts: 10 }] },
+  { q: "Name something you keep in the trunk of your car.", a: [{ text: "Spare tire", pts: 45 }, { text: "Jack", pts: 25 }, { text: "Jumper cables", pts: 15 }, { text: "Groceries", pts: 10 }] },
+  { q: "Name a room in a house.", a: [{ text: "Bedroom", pts: 35 }, { text: "Living room", pts: 30 }, { text: "Kitchen", pts: 20 }, { text: "Bathroom", pts: 10 }] },
+
+  // ——— Actions, Events & Wildcards ———
+  { q: "If you got access to a police car, what's the first thing you'd do?", a: [{ text: "Turn on siren", pts: 51 }, { text: "Speed", pts: 32 }, { text: "Turn on lights", pts: 8 }, { text: "Pull someone over", pts: 7 }] },
+  { q: "If a matador is too wimpy to fight a bull, what might he fight instead?", a: [{ text: "Cow", pts: 38 }, { text: "Goat", pts: 12 }, { text: "Person", pts: 10 }, { text: "Cat", pts: 6 }, { text: "Chicken", pts: 6 }] },
+  { q: "If a baby was six feet tall, what would be hard to buy for him?", a: [{ text: "Clothes/Shoes", pts: 47 }, { text: "Diapers", pts: 39 }, { text: "Crib", pts: 10 }, { text: "Car seat", pts: 2 }] },
+  { q: "Name something you remember about the TV show MASH.", a: [{ text: "Hot lips", pts: 26 }, { text: "Hawkeye", pts: 22 }, { text: "Radar", pts: 16 }, { text: "War", pts: 12 }, { text: "Doctors", pts: 8 }] },
+  { q: "Name a party game you'd be surprised to find at an adult's birthday.", a: [{ text: "Pin the tail", pts: 54 }, { text: "Twister", pts: 20 }, { text: "Spin the bottle", pts: 13 }, { text: "Musical chairs", pts: 9 }] },
+  { q: "Name something you recycle.", a: [{ text: "Plastic", pts: 40 }, { text: "Paper", pts: 30 }, { text: "Glass", pts: 15 }, { text: "Aluminum", pts: 10 }] },
+  { q: "Name something people bring to a picnic.", a: [{ text: "Food", pts: 45 }, { text: "Blanket", pts: 25 }, { text: "Drinks", pts: 15 }, { text: "Basket", pts: 10 }] },
+  { q: "Name something you'd find at an amusement park.", a: [{ text: "Roller coaster", pts: 50 }, { text: "Games", pts: 20 }, { text: "Cotton candy", pts: 15 }, { text: "Ferris wheel", pts: 10 }] },
+  { q: "Name something associated with pirates.", a: [{ text: "Eye patch", pts: 35 }, { text: "Peg leg", pts: 25 }, { text: "Parrot", pts: 20 }, { text: "Treasure", pts: 15 }] },
+  { q: "Name an animal you might ride.", a: [{ text: "Horse", pts: 60 }, { text: "Elephant", pts: 20 }, { text: "Camel", pts: 10 }, { text: "Donkey", pts: 5 }] },
+
+  // ——— Work & School Extra ———
+  { q: "Name a subject in school.", a: [{ text: "Math", pts: 40 }, { text: "English", pts: 25 }, { text: "History", pts: 15 }, { text: "Science", pts: 10 }] },
+  { q: "Name an occupation that requires wearing a uniform.", a: [{ text: "Police officer", pts: 40 }, { text: "Firefighter", pts: 25 }, { text: "Nurse", pts: 15 }, { text: "Military", pts: 10 }] },
+  { q: "Name something students carry in their backpacks.", a: [{ text: "Books", pts: 45 }, { text: "Pencils", pts: 25 }, { text: "Paper/Notebooks", pts: 15 }, { text: "Lunch", pts: 10 }] },
+  { q: "Name something you do at recess.", a: [{ text: "Play", pts: 40 }, { text: "Run", pts: 25 }, { text: "Talk", pts: 15 }, { text: "Swing", pts: 10 }] },
+  { q: "Name something teachers do.", a: [{ text: "Grade papers", pts: 40 }, { text: "Teach", pts: 30 }, { text: "Talk", pts: 15 }, { text: "Yell", pts: 10 }] },
 ];
 
-// Group questions into categories
-const CATEGORIES: { name: string; emoji: string; questions: Q[] }[] = [
-  {
-    name: "Funny & Entertaining",
-    emoji: "😂",
-    questions: SURVEY_QUESTIONS.slice(0, 10),
-  },
-  {
-    name: "Food & Drink",
-    emoji: "🍕",
-    questions: SURVEY_QUESTIONS.slice(10, 20),
-  },
-  {
-    name: "Family & Holidays",
-    emoji: "🎄",
-    questions: SURVEY_QUESTIONS.slice(20, 30),
-  },
-  {
-    name: "Daily Life & Work",
-    emoji: "🏠",
-    questions: SURVEY_QUESTIONS.slice(30, 40),
-  },
-  {
-    name: "Pop Culture & Fun Facts",
-    emoji: "🌟",
-    questions: SURVEY_QUESTIONS.slice(40, 49),
-  },
-  {
-    name: "Animals & Nature",
-    emoji: "🌿",
-    questions: SURVEY_QUESTIONS.slice(49, 55),
-  },
-  {
-    name: "Hypotheticals & Imagination",
-    emoji: "✨",
-    questions: SURVEY_QUESTIONS.slice(55, 65),
-  },
-  {
-    name: "Home & Lifestyle",
-    emoji: "🏡",
-    questions: SURVEY_QUESTIONS.slice(65, 74),
-  },
-  {
-    name: "Social & Conversation",
-    emoji: "💬",
-    questions: SURVEY_QUESTIONS.slice(74, 80),
-  },
-  {
-    name: "More Great Questions",
-    emoji: "🎯",
-    questions: SURVEY_QUESTIONS.slice(80),
-  },
+// Group questions into categories playfully
+const categoryNames = [
+  { name: "Funny & Entertaining", emoji: "😂" },
+  { name: "Food & Drink", emoji: "🍕" },
+  { name: "Family & Holidays", emoji: "🎄" },
+  { name: "Daily Life & Work", emoji: "🏠" },
+  { name: "Pop Culture & Fun Facts", emoji: "🌟" },
+  { name: "Animals & Nature", emoji: "🌿" },
+  { name: "Hypotheticals & Imagination", emoji: "✨" },
+  { name: "Home & Lifestyle", emoji: "🏡" },
+  { name: "Social & Conversation", emoji: "💬" },
+  { name: "Love, Dating & Relationships", emoji: "❤️" },
+  { name: "Spooky & Mysterious", emoji: "👻" },
+  { name: "More Food & Drink", emoji: "🍔" },
+  { name: "More Daily Life", emoji: "⏰" },
+  { name: "Actions & Events", emoji: "🎬" },
+  { name: "Work & School", emoji: "📚" },
+  { name: "Bonus Round", emoji: "🎯" },
 ];
+
+const CATEGORIES = categoryNames.map((cat, i) => {
+  const size = Math.ceil(SURVEY_QUESTIONS.length / categoryNames.length);
+  return {
+    ...cat,
+    questions: SURVEY_QUESTIONS.slice(i * size, (i + 1) * size),
+  };
+}).filter(c => c.questions.length > 0);
 
 const questionsSchema = {
   "@context": "https://schema.org",
@@ -227,7 +267,7 @@ export default function Questions() {
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO
-        title="Survey Questions & Answers for Game Night"
+        title="150+ Best Family Feud-Style Survey Questions & Answers for Game Night"
         description={`Browse ${totalQuestions}+ survey questions and answers with point values, perfect for playing a Family Feud-style game online. Use these free trivia and survey questions for game nights, parties, team building, and virtual events.`}
         canonical="https://friendlyfeud.fun/questions"
         schema={questionsSchema}

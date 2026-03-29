@@ -535,6 +535,10 @@ export default function Lobby() {
 
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
+        <p className="mb-6 text-sm text-slate-400 leading-relaxed max-w-3xl">
+          Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
+        </p>
+
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <a
             href="https://www.patreon.com/cw/talhaqureshi/membership"
@@ -613,13 +617,6 @@ export default function Lobby() {
             </span>
           </div>
         </div>
-
-        {/* SEO — crawlable text for search engines */}
-        {rooms.length === 0 && !isLoading && (
-          <p className="mb-6 text-xs text-slate-600 text-center leading-relaxed">
-            Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
-          </p>
-        )}
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
