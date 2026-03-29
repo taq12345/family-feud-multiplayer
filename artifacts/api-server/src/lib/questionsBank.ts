@@ -23,11 +23,13 @@ function cleanAnswerText(q: SurveyQuestion, text: string): string {
   return text;
 }
 
-export const surveyQuestions: SurveyQuestion[] = rawSurveyQuestions.map((q) => ({
-  ...q,
-  question: cleanQuestionText(q),
-  answers: q.answers
-    .filter((a) => a.text !== "send us your answers!")
-    .map((a) => ({ ...a, text: cleanAnswerText(q, a.text) })),
-}));
+export const surveyQuestions: SurveyQuestion[] = rawSurveyQuestions
+  .map((q) => ({
+    ...q,
+    question: cleanQuestionText(q),
+    answers: q.answers
+      .filter((a) => a.text !== "send us your answers!")
+      .map((a) => ({ ...a, text: cleanAnswerText(q, a.text) })),
+  }))
+  .filter((q) => q.id !== 3410);
 
