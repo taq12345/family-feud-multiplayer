@@ -571,10 +571,10 @@ export function setupSocketHandlers(io: SocketServer) {
       }
     });
 
-    socket.on("create_solo_game", ({ playerName, rounds = 4 }: { playerName: string; rounds?: number }) => {
+    socket.on("create_solo_game", async ({ playerName, rounds = 4, topic }: { playerName: string; rounds?: number; topic?: string }) => {
       const trimmedName = (playerName ?? "").trim();
       if (!trimmedName || trimmedName.length > 16) {
-        socket.emit("join_rejected", { reason: "Nickname must be 1–16 characters." });
+        socket.emit("solo_game_error", { message: "Nickname must be 1–16 characters." });
         return;
       }
       // For solo games, allow the same nickname to start multiple games (e.g., different browser tabs).
@@ -600,9 +600,32 @@ export function setupSocketHandlers(io: SocketServer) {
       };
       state.players.set(socket.id, soloPlayer);
 
+      if (topic) {
+        const trimmedTopic = topic.trim();
+        if (trimmedTopic.length < 2) {
+          socket.emit("solo_game_error", { message: "Please enter a valid topic (at least 2 characters)." });
+          return;
+        }
+
+        const result = await generateCustomQuestions(trimmedTopic, numRounds);
+        if (!result.valid) {
+          socket.emit("solo_game_error", { message: result.reason });
+          return;
+        }
+
+        if (result.questions.length !== numRounds) {
+          socket.emit("solo_game_error", {
+            message: `Expected ${numRounds} questions but only ${result.questions.length} were generated. Please try again.`,
+          });
+          return;
+        }
+
+        state.questions = result.questions;
+      }
+
       const question = getNextQuestion(state);
       if (!question) {
-        socket.emit("join_rejected", { reason: "No questions available." });
+        socket.emit("solo_game_error", { message: "No questions available." });
         return;
       }
       state.usedQuestionIds.add(question.id);

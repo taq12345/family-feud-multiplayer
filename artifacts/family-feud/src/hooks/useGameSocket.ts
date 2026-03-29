@@ -59,12 +59,23 @@ export interface CanonicalAnswerSlot {
   points: number;
 }
 
-export function createSoloGame(playerName: string, rounds: number, onCreated: (roomId: string) => void) {
+export function createSoloGame(
+  playerName: string, 
+  rounds: number, 
+  topic: string | undefined,
+  onCreated: (roomId: string) => void,
+  onError: (error: string) => void
+) {
   const socket = getSocket();
   socket.once("solo_game_created", ({ roomId }: { roomId: string }) => {
+    socket.off("solo_game_error");
     onCreated(roomId);
   });
-  socket.emit("create_solo_game", { playerName, rounds });
+  socket.once("solo_game_error", ({ message }: { message: string }) => {
+    socket.off("solo_game_created");
+    onError(message);
+  });
+  socket.emit("create_solo_game", { playerName, rounds, topic });
 }
 
 export function useGameSocket(

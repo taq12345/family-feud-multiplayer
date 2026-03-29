@@ -131,13 +131,40 @@ export default function Lobby() {
 
   const [soloOpen, setSoloOpen] = useState(false);
   const [soloRounds, setSoloRounds] = useState(4);
+  const [soloMode, setSoloMode] = useState<"classic" | "custom">("classic");
+  const [soloTopic, setSoloTopic] = useState("");
+  const [soloError, setSoloError] = useState<string | null>(null);
+  const [soloLoading, setSoloLoading] = useState(false);
 
   const handleSoloPlay = () => {
     if (!nickname) return;
+    
+    if (soloMode === "custom") {
+      const trimmed = soloTopic.trim();
+      if (trimmed.length < 2) {
+        setSoloError("Please enter a valid topic (at least 2 characters).");
+        return;
+      }
+    }
+    
+    setSoloError(null);
+    setSoloLoading(true);
     playClickSound();
-    createSoloGame(nickname, soloRounds, (roomId) => {
-      setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
-    });
+    
+    createSoloGame(
+      nickname, 
+      soloRounds, 
+      soloMode === "custom" ? soloTopic.trim() : undefined,
+      (roomId) => {
+        setSoloLoading(false);
+        setSoloOpen(false);
+        setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
+      },
+      (error) => {
+        setSoloLoading(false);
+        setSoloError(error);
+      }
+    );
   };
 
   const [form, setForm] = useState({
@@ -561,7 +588,7 @@ export default function Lobby() {
             Find Friends
           </a>
           {nickname && (
-            <Dialog open={soloOpen} onOpenChange={setSoloOpen}>
+            <Dialog open={soloOpen} onOpenChange={v => { setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-br from-emerald-500/40 to-teal-600/40 border border-emerald-400/50 text-emerald-300 hover:from-emerald-500/50 hover:to-teal-600/50 hover:border-emerald-300/60 hover:text-emerald-200 transition-all text-sm font-bold shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_24px_rgba(16,185,129,0.35)]">
                   <Gamepad2 className="w-5 h-5" />
@@ -573,6 +600,20 @@ export default function Lobby() {
                   <DialogTitle className="text-white">Play Solo</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
+                  <div className="flex bg-[#070d1f] p-1 rounded-lg border border-white/5">
+                    <button
+                      onClick={() => { playClickSound(); setSoloMode("classic"); setSoloError(null); }}
+                      className={`flex-1 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "classic" ? "bg-emerald-500/20 text-emerald-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                    >
+                      Classic
+                    </button>
+                    <button
+                      onClick={() => { playClickSound(); setSoloMode("custom"); setSoloError(null); }}
+                      className={`flex-1 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "custom" ? "bg-amber-500/20 text-amber-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                    >
+                      Custom AI
+                    </button>
+                  </div>
                   <div>
                     <Label htmlFor="solo-rounds" className="text-slate-300 text-sm font-medium mb-2 block">Number of Rounds</Label>
                     <select
@@ -580,6 +621,7 @@ export default function Lobby() {
                       value={soloRounds}
                       onChange={e => setSoloRounds(parseInt(e.target.value))}
                       className="w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-emerald-500/50"
+                      disabled={soloLoading}
                     >
                       <option value={2} className="bg-[#0d1525]">2 rounds</option>
                       <option value={4} className="bg-[#0d1525]">4 rounds</option>
@@ -588,15 +630,39 @@ export default function Lobby() {
                       <option value={10} className="bg-[#0d1525]">10 rounds</option>
                     </select>
                   </div>
+                  {soloMode === "custom" && (
+                    <div className="animate-in fade-in slide-in-from-top-2">
+                      <Label htmlFor="solo-topic" className="text-amber-300/90 text-sm font-medium mb-2 flex items-center gap-1.5">
+                        <Zap className="w-3.5 h-3.5" />
+                        Custom Topic
+                      </Label>
+                      <Input
+                        id="solo-topic"
+                        placeholder="e.g. 90s Action Movies, Fast Food, etc."
+                        value={soloTopic}
+                        onChange={e => setSoloTopic(e.target.value)}
+                        className="w-full bg-white/5 border-amber-500/30 text-white placeholder:text-slate-500 focus:border-amber-500/60 focus:ring-amber-500/20"
+                        disabled={soloLoading}
+                        onKeyDown={e => {
+                          if (e.key === "Enter" && !soloLoading) {
+                            e.preventDefault();
+                            handleSoloPlay();
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                  {soloError && (
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 text-red-400 text-sm animate-in fade-in">
+                      {soloError}
+                    </div>
+                  )}
                   <Button
-                    onClick={() => {
-                      playClickSound();
-                      setSoloOpen(false);
-                      handleSoloPlay();
-                    }}
+                    onClick={handleSoloPlay}
+                    disabled={soloLoading}
                     className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all"
                   >
-                    Start Solo Game
+                    {soloLoading ? (soloMode === "custom" ? "Generating..." : "Starting...") : "Start Solo Game"}
                   </Button>
                 </div>
               </DialogContent>
