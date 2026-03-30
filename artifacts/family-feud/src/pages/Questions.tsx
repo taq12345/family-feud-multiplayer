@@ -241,6 +241,7 @@ export default function Questions() {
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set([0, 1]));
   const [revealedQuestions, setRevealedQuestions] = useState<Set<number>>(new Set());
   const [randomQuestion, setRandomQuestion] = useState<Q | null>(null);
+  const [randomRevealed, setRandomRevealed] = useState(false);
   const lastRandomIdx = useRef<number>(-1);
 
   const totalQuestions = SURVEY_QUESTIONS.length;
@@ -272,6 +273,12 @@ export default function Questions() {
     }
     lastRandomIdx.current = idx;
     setRandomQuestion(SURVEY_QUESTIONS[idx]);
+    setRandomRevealed(false);
+  };
+
+  const toggleRandomReveal = () => {
+    playClickSound();
+    setRandomRevealed(prev => !prev);
   };
 
   let globalIdx = 0;
@@ -362,23 +369,33 @@ export default function Questions() {
             </div>
             {randomQuestion && (
               <div className="border-t border-white/5 px-5 py-4">
-                <h3 className="font-semibold text-sm text-slate-100 mb-3 leading-snug">
-                  {randomQuestion.q}
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {randomQuestion.a.map((ans, aIdx) => (
-                    <div
-                      key={aIdx}
-                      className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm flex items-center justify-between gap-2"
-                    >
-                      <span>
-                        <span className="text-amber-400 font-bold mr-2">{aIdx + 1}.</span>
-                        <span className="text-slate-300 capitalize">{ans.text}</span>
-                      </span>
-                      <span className="text-amber-400/80 font-mono text-xs font-bold whitespace-nowrap">{ans.pts} pts</span>
-                    </div>
-                  ))}
-                </div>
+                <button
+                  onClick={toggleRandomReveal}
+                  className="w-full text-left group mb-3"
+                >
+                  <h3 className="font-semibold text-sm text-slate-200 group-hover:text-amber-300 transition-colors">
+                    {randomQuestion.q}
+                  </h3>
+                  <p className="text-xs text-amber-500/70 mt-1">
+                    {randomRevealed ? "Click to hide answers ▴" : `Click to reveal ${randomQuestion.a.length} answers ▾`}
+                  </p>
+                </button>
+                {randomRevealed && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {randomQuestion.a.map((ans, aIdx) => (
+                      <div
+                        key={aIdx}
+                        className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm flex items-center justify-between gap-2"
+                      >
+                        <span>
+                          <span className="text-amber-400 font-bold mr-2">{aIdx + 1}.</span>
+                          <span className="text-slate-300 capitalize">{ans.text}</span>
+                        </span>
+                        <span className="text-amber-400/80 font-mono text-xs font-bold whitespace-nowrap">{ans.pts} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
