@@ -108,6 +108,7 @@ export function useGameSocket(
     onKicked?: () => void;
     onPlayerKicked?: (data: { playerName: string; hostName: string }) => void;
     onCustomQuestionsError?: (data: { message: string }) => void;
+    onNextRoundError?: (data: { message: string }) => void;
   }
 ) {
   const callbacksRef = useRef(callbacks);
@@ -144,6 +145,7 @@ export function useGameSocket(
       kicked: () => callbacksRef.current.onKicked?.(),
       player_kicked: (data: { playerName: string; hostName: string }) => callbacksRef.current.onPlayerKicked?.(data),
       custom_questions_error: (data: { message: string }) => callbacksRef.current.onCustomQuestionsError?.(data),
+      next_round_error: (data: { message: string }) => callbacksRef.current.onNextRoundError?.(data),
     };
 
     Object.entries(handlers).forEach(([event, handler]) => {

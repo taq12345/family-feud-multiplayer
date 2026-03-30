@@ -83,15 +83,15 @@ function clearAutoAdvanceTimer(roomId: string) {
 
 const AUTO_ADVANCE_MS = 60 * 1000; // 60 seconds between rounds before auto-advancing
 
-async function advanceToNextRound(io: SocketServer, roomId: string) {
+async function advanceToNextRound(io: SocketServer, roomId: string): Promise<string | null> {
   const state = gameStates.get(roomId);
-  if (!state || state.status !== "between_rounds") return;
+  if (!state || state.status !== "between_rounds") return "Game is not between rounds.";
 
   // Don't advance if the game is over (last round done or out of questions)
-  if (state.currentRound >= state.totalRounds) return;
+  if (state.currentRound >= state.totalRounds) return "The game is already over.";
 
   const question = getNextQuestion(state);
-  if (!question) return;
+  if (!question) return "No more questions available.";
 
   // Solo rooms: skip faceoff entirely, go straight to playing
   if (state.isSolo) {
@@ -111,14 +111,16 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
     initPlayingTurn(state, 1);
     startAnswerTimer(io, state, roomId);
     io.to(roomId).emit("game_state", serializeGameState(state));
-    return;
+    return null;
   }
 
   // Don't advance if a team is empty — the game would freeze at faceoff
   const players = Array.from(state.players.values());
   const team1Count = players.filter(p => p.team === 1).length;
   const team2Count = players.filter(p => p.team === 2).length;
-  if (team1Count === 0 || team2Count === 0) return;
+  if (team1Count === 0 || team2Count === 0) {
+    return "One team has no players — waiting for someone to join before starting.";
+  }
 
   state.usedQuestionIds.add(question.id);
   state.currentQuestion = question;
@@ -140,6 +142,7 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
   } catch { /* ignore */ }
 
   io.to(roomId).emit("game_state", serializeGameState(state));
+  return null;
 }
 
 function scheduleAutoAdvance(io: SocketServer, roomId: string) {
@@ -1052,11 +1055,25 @@ export function setupSocketHandlers(io: SocketServer) {
     socket.on("next_round", async ({ roomId }: { roomId: string }) => {
       const state = gameStates.get(roomId);
       if (!state || state.status !== "between_rounds") return;
-      const player = state.players.get(socket.id);
+
+      // Primary lookup by current socket.id; fall back to name-based scan so a
+      // recently-reconnected host (whose socket.id was just swapped in join_room)
+      // is still recognized if join_room hasn't fully processed yet.
+      let player = state.players.get(socket.id);
+      if (!player && socket.data.playerName) {
+        const nameKey = (socket.data.playerName as string).trim().toLowerCase();
+        for (const p of state.players.values()) {
+          if (p.name.trim().toLowerCase() === nameKey) { player = p; break; }
+        }
+      }
       if (!player?.isHost) return;
+
       // Cancel the auto-advance timer — host is manually advancing
       clearAutoAdvanceTimer(roomId);
-      await advanceToNextRound(io, roomId);
+      const error = await advanceToNextRound(io, roomId);
+      if (error) {
+        socket.emit("next_round_error", { message: error });
+      }
     });
 
     socket.on("delete_room", async ({ roomId }: { roomId: string }) => {

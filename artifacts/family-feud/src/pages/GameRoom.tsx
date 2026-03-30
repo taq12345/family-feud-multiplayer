@@ -500,6 +500,9 @@ export default function GameRoom() {
         setCustomQuestionsError(data.message);
         setCustomQuestionsLoading(false);
       },
+      onNextRoundError: (data) => {
+        showNotification(`⚠️ ${data.message}`);
+      },
     }
   );
 
