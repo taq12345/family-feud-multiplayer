@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { SEO } from "../components/SEO";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles, Shuffle } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
 
@@ -240,6 +240,8 @@ export default function Questions() {
   const [, setLocation] = useLocation();
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set([0, 1]));
   const [revealedQuestions, setRevealedQuestions] = useState<Set<number>>(new Set());
+  const [randomQuestion, setRandomQuestion] = useState<Q | null>(null);
+  const lastRandomIdx = useRef<number>(-1);
 
   const totalQuestions = SURVEY_QUESTIONS.length;
 
@@ -260,6 +262,16 @@ export default function Questions() {
       else next.add(globalIndex);
       return next;
     });
+  };
+
+  const pickRandomQuestion = () => {
+    playClickSound();
+    let idx = Math.floor(Math.random() * SURVEY_QUESTIONS.length);
+    if (idx === lastRandomIdx.current && SURVEY_QUESTIONS.length > 1) {
+      idx = (idx + 1) % SURVEY_QUESTIONS.length;
+    }
+    lastRandomIdx.current = idx;
+    setRandomQuestion(SURVEY_QUESTIONS[idx]);
   };
 
   let globalIdx = 0;
@@ -326,6 +338,49 @@ export default function Questions() {
               <Tv2 className="w-4 h-4" />
               Play Now — It's Free
             </button>
+          </div>
+
+          {/* Random Question Generator */}
+          <div className="mb-8 rounded-2xl bg-white/[0.03] border border-amber-500/20 overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center shrink-0">
+                  <Shuffle className="w-4 h-4 text-amber-400" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-white text-base">Random Question</h2>
+                  <p className="text-xs text-slate-500">Get a surprise survey question with answers</p>
+                </div>
+              </div>
+              <button
+                onClick={pickRandomQuestion}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold text-sm shadow-[0_0_16px_rgba(251,191,36,0.3)] hover:shadow-[0_0_24px_rgba(251,191,36,0.45)] transition-all active:scale-95"
+              >
+                <Shuffle className="w-3.5 h-3.5" />
+                {randomQuestion ? "Try Another" : "Random Question"}
+              </button>
+            </div>
+            {randomQuestion && (
+              <div className="border-t border-white/5 px-5 py-4">
+                <h3 className="font-semibold text-sm text-slate-100 mb-3 leading-snug">
+                  {randomQuestion.q}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {randomQuestion.a.map((ans, aIdx) => (
+                    <div
+                      key={aIdx}
+                      className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm flex items-center justify-between gap-2"
+                    >
+                      <span>
+                        <span className="text-amber-400 font-bold mr-2">{aIdx + 1}.</span>
+                        <span className="text-slate-300 capitalize">{ans.text}</span>
+                      </span>
+                      <span className="text-amber-400/80 font-mono text-xs font-bold whitespace-nowrap">{ans.pts} pts</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Categories */}
