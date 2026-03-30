@@ -1,7 +1,7 @@
 import { SEO } from "../components/SEO";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
-import { useGameSocket, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
+import { useGameSocket, createSoloGame, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
@@ -204,6 +204,12 @@ export default function GameRoom() {
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
   const [currentStealGuess, setCurrentStealGuess] = useState<{ playerName: string; answer: string } | null>(null);
   const [lastRoundResult, setLastRoundResult] = useState<{ winningTeam: 1 | 2; points: number } | null>(null);
+  const [soloReplayOpen, setSoloReplayOpen] = useState(false);
+  const [soloReplayRounds, setSoloReplayRounds] = useState(4);
+  const [soloReplayMode, setSoloReplayMode] = useState<"classic" | "custom">("classic");
+  const [soloReplayTopic, setSoloReplayTopic] = useState("");
+  const [soloReplayError, setSoloReplayError] = useState<string | null>(null);
+  const [soloReplayLoading, setSoloReplayLoading] = useState(false);
   const [boardRevealStagger, setBoardRevealStagger] = useState<{
     canonical: CanonicalAnswerSlot[];
     visible: Set<number>;
@@ -229,6 +235,33 @@ export default function GameRoom() {
     setNotification(msg);
     setTimeout(() => setNotification(null), 3000);
   }, []);
+
+  const handleSoloReplay = () => {
+    if (soloReplayMode === "custom") {
+      const trimmed = soloReplayTopic.trim();
+      if (trimmed.length < 2) {
+        setSoloReplayError("Please enter a valid topic (at least 2 characters).");
+        return;
+      }
+    }
+    setSoloReplayError(null);
+    setSoloReplayLoading(true);
+    playClickSound();
+    createSoloGame(
+      playerName,
+      soloReplayRounds,
+      soloReplayMode === "custom" ? soloReplayTopic.trim() : undefined,
+      (newRoomId) => {
+        setSoloReplayLoading(false);
+        setSoloReplayOpen(false);
+        setLocation(`/room/${newRoomId}?name=${encodeURIComponent(playerName)}&team=1`);
+      },
+      (error) => {
+        setSoloReplayLoading(false);
+        setSoloReplayError(error);
+      }
+    );
+  };
 
   function clearRevealStaggerTimers() {
     revealStaggerTimersRef.current.forEach(clearTimeout);
@@ -1350,10 +1383,10 @@ export default function GameRoom() {
                     isGameOver ? (
                       isSolo ? (
                         <Button
-                          onClick={() => { playClickSound(); setLocation("/"); }}
+                          onClick={() => { playClickSound(); setSoloReplayOpen(true); }}
                           className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
                         >
-                          Back to Lobby
+                          Play Again
                         </Button>
                       ) : (
                         <Button
@@ -1563,6 +1596,87 @@ export default function GameRoom() {
               disabled={customQuestionsLoading || !customTopic.trim()}
             >
               {customQuestionsLoading ? "Generating…" : "Generate & Start"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Solo Play Again Dialog */}
+      <Dialog
+        open={soloReplayOpen}
+        onOpenChange={(open) => {
+          setSoloReplayOpen(open);
+          if (!open) { setSoloReplayError(null); setSoloReplayLoading(false); }
+        }}
+      >
+        <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-white font-bold">Play Again</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex bg-[#070d1f] p-1 rounded-lg border border-white/5">
+              <button
+                onClick={() => { playClickSound(); setSoloReplayMode("classic"); setSoloReplayError(null); }}
+                className={`flex-1 py-1.5 text-sm font-semibold rounded-md transition-all ${soloReplayMode === "classic" ? "bg-emerald-500/20 text-emerald-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                Classic
+              </button>
+              <button
+                onClick={() => { playClickSound(); setSoloReplayMode("custom"); setSoloReplayError(null); }}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-sm font-semibold rounded-md transition-all ${soloReplayMode === "custom" ? "bg-pink-500/20 text-pink-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                <Wand2 className="w-4 h-4" /> Custom AI
+              </button>
+            </div>
+            <div>
+              <label className="text-slate-300 text-sm font-medium mb-2 block">Number of Rounds</label>
+              <select
+                value={soloReplayRounds}
+                onChange={e => setSoloReplayRounds(parseInt(e.target.value))}
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-emerald-500/50"
+                disabled={soloReplayLoading}
+              >
+                <option value={2} className="bg-[#0d1525]">2 rounds</option>
+                <option value={4} className="bg-[#0d1525]">4 rounds</option>
+                <option value={6} className="bg-[#0d1525]">6 rounds</option>
+                <option value={8} className="bg-[#0d1525]">8 rounds</option>
+                <option value={10} className="bg-[#0d1525]">10 rounds</option>
+              </select>
+            </div>
+            {soloReplayMode === "custom" && (
+              <div className="animate-in fade-in slide-in-from-top-2">
+                <label className="text-pink-300/90 text-sm font-medium mb-2 flex items-center gap-1.5">
+                  <Wand2 className="w-3.5 h-3.5" />
+                  Custom Topic
+                </label>
+                <Input
+                  placeholder="e.g. 90s Action Movies, Fast Food, etc."
+                  value={soloReplayTopic}
+                  onChange={e => setSoloReplayTopic(e.target.value)}
+                  className="w-full bg-white/5 border-pink-500/30 text-white placeholder:text-slate-500 focus:border-pink-500/60 focus:ring-pink-500/20"
+                  disabled={soloReplayLoading}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && !soloReplayLoading) {
+                      e.preventDefault();
+                      handleSoloReplay();
+                    }
+                  }}
+                />
+              </div>
+            )}
+            {soloReplayError && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 text-red-400 text-sm animate-in fade-in">
+                {soloReplayError}
+              </div>
+            )}
+            <Button
+              onClick={handleSoloReplay}
+              disabled={soloReplayLoading}
+              className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all disabled:opacity-50"
+            >
+              {soloReplayLoading
+                ? (soloReplayMode === "custom" ? <><Loader2 className="w-4 h-4 animate-spin inline mr-2" />Generating...</> : "Starting...")
+                : "Start Game"}
             </Button>
           </div>
         </DialogContent>
