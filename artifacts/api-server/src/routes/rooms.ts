@@ -98,7 +98,7 @@ router.post("/rooms", async (req, res) => {
       totalRounds: room.totalRounds,
       createdAt: room.createdAt.toISOString(),
     });
-    notifyRoomCreated(room);
+    void notifyRoomCreated(room);
     return;
   } catch (err) {
     res.status(500).json({ error: "Failed to create room" });
