@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { roomsTable } from "@workspace/db/schema";
 import { getRoomPlayers, isNicknameTaken, getPlayerSlot } from "../lib/socketHandlers.js";
+import { notifyRoomCreated } from "../lib/notify.js";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { surveyQuestions } from "../lib/questionsBank.js";
@@ -97,6 +98,7 @@ router.post("/rooms", async (req, res) => {
       totalRounds: room.totalRounds,
       createdAt: room.createdAt.toISOString(),
     });
+    notifyRoomCreated(room);
     return;
   } catch (err) {
     res.status(500).json({ error: "Failed to create room" });
