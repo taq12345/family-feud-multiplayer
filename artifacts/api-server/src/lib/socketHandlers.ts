@@ -200,7 +200,7 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
     state.faceoffUsedPlayerIds.add(player.id);
     state.faceoffAttempts++;
 
-    if (state.faceoffAttempts >= 8) {
+    if (state.faceoffAttempts >= 4) {
       await skipFaceoffRound(io, state, roomId);
       return;
     }
@@ -829,7 +829,7 @@ export function setupSocketHandlers(io: SocketServer) {
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
-          if (state.faceoffAttempts >= 8) {
+          if (state.faceoffAttempts >= 4) {
             await skipFaceoffRound(io, state, roomId);
           } else {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
@@ -883,7 +883,7 @@ export function setupSocketHandlers(io: SocketServer) {
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
 
-          if (state.faceoffAttempts >= 8) {
+          if (state.faceoffAttempts >= 4) {
             await skipFaceoffRound(io, state, roomId);
           } else {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
