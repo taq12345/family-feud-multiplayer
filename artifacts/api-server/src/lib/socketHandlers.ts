@@ -28,7 +28,7 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
   return existing !== excludeSocketId;
 }
 
-const PLAYER_DISCONNECT_GRACE_MS = 30 * 60 * 1000; // 30 minutes per-player reconnect window
+const PLAYER_DISCONNECT_GRACE_MS = 10 * 60 * 1000; // 10 minutes per-player reconnect window
 const FACEOFF_ANSWER_MS = 25 * 1000; // 25 seconds per faceoff guess
 const ROUND_ANSWER_MS = 25 * 1000; // 25 seconds per guess
 
