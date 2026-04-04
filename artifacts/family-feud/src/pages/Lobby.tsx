@@ -676,8 +676,8 @@ export default function Lobby() {
               <Tv2 className="w-8 h-8 text-slate-600" />
             </div>
             <div className="text-center">
-              <p className="text-slate-300 font-semibold">No rooms yet</p>
-              <p className="text-slate-500 text-sm mt-1">Be the first to create one!</p>
+              <p className="text-slate-300 font-semibold">Play with friends!</p>
+              <p className="text-slate-500 text-sm mt-1">Create a room and invite your friends!</p>
             </div>
             <Button
               onClick={() => setCreateOpen(true)}
