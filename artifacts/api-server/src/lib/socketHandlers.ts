@@ -812,6 +812,7 @@ export function setupSocketHandlers(io: SocketServer) {
       if (state.faceoffDesignatedPlayerId !== socket.id) return;
       const player = state.players.get(socket.id);
       if (!player) return;
+      console.log(`${player.name} submitted answer ${answer}`);
 
       // Mutex: reject if another answer is already being processed for this room
       if (answerProcessing.get(roomId)) return;
@@ -902,6 +903,7 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!state || (state.status !== "playing" && state.status !== "stealing") || !state.currentQuestion) return;
       const player = state.players.get(socket.id);
       if (!player) return;
+      console.log(`${player.name} submitted answer ${answer}`);
       if (state.status === "playing" && player.team !== state.playingTeam) return;
       if (state.status === "stealing" && player.team === state.playingTeam) return;
       // Only the designated player may answer
