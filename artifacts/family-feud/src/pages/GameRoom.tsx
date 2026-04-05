@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
 import { useGameSocket, createSoloGame, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
+import { trackEvent } from "../lib/analytics";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
@@ -792,6 +793,12 @@ export default function GameRoom() {
     e.preventDefault();
     if (!answerInput.trim()) return;
     setVerifyingAnswer(true);
+    trackEvent("answer_submitted", {
+      player_name: playerName,
+      answer_text: answerInput,
+      answer_type: isMyTurnToFaceoff ? "faceoff" : "playing",
+      game_mode: gameState?.isSolo ? "solo" : "multiplayer",
+    });
     if (isMyTurnToFaceoff) {
       setFaceoffCountdown(null);
       faceoffAnswer(answerInput);
