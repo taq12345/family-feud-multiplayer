@@ -794,8 +794,6 @@ export default function GameRoom() {
     if (!answerInput.trim()) return;
     setVerifyingAnswer(true);
     trackEvent("answer_submitted", {
-      player_name: playerName,
-      answer_text: answerInput,
       answer_type: isMyTurnToFaceoff ? "faceoff" : "playing",
       game_mode: gameState?.isSolo ? "solo" : "multiplayer",
     });
