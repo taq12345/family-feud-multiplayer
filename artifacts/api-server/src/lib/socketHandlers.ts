@@ -191,6 +191,7 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
     const player = state.players.get(state.faceoffDesignatedPlayerId);
     if (!player) return;
 
+    console.log(`${player.name} failed to submit answer in time [game_mode=${state.isSolo ? "solo" : "multiplayer"}]`);
     io.to(roomId).emit("answer_wrong", {
       playerName: player.name,
       team: player.team,
@@ -326,6 +327,7 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
       : null;
 
     if (designatedPlayer) {
+      console.log(`${designatedPlayer.name} failed to submit answer in time [game_mode=${current.isSolo ? "solo" : "multiplayer"}]`);
       io.to(roomId).emit("answer_wrong", {
         playerName: designatedPlayer.name,
         team: designatedPlayer.team,
