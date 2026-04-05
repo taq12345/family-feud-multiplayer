@@ -795,7 +795,6 @@ export default function GameRoom() {
     setVerifyingAnswer(true);
     trackEvent("answer_submitted", {
       game_mode: gameState?.isSolo ? "solo" : "multiplayer",
-      team: team === 2 ? "team2" : "team1",
     });
     if (isMyTurnToFaceoff) {
       setFaceoffCountdown(null);
