@@ -1639,7 +1639,7 @@ export default function GameRoom() {
                 onClick={() => { playClickSound(); setSoloReplayMode("custom"); setSoloReplayError(null); }}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-sm font-semibold rounded-md transition-all ${soloReplayMode === "custom" ? "bg-pink-500/20 text-pink-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
               >
-                <Wand2 className="w-4 h-4" /> Custom AI
+                <Wand2 className="w-4 h-4" /> <span className="text-pink-400">Custom Topic</span>
               </button>
             </div>
             <div>
