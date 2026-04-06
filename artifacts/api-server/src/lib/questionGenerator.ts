@@ -17,16 +17,46 @@ const MIN_ANSWERS = 3;
 const MAX_ANSWERS = 8;
 const POINTS_TARGET = 100;
 
-// Different "angles" so parallel calls produce varied questions
+// Large pool of angles — shuffled randomly each generation so the same topic yields different questions
 const QUESTION_ANGLES = [
-  "general / everyday life aspects",
+  "general / everyday life aspects most people can relate to",
   "famous people or celebrities associated with it",
-  "things you see, eat, or buy related to it",
-  "activities or experiences people enjoy",
-  "cultural traditions, history, or unique facts",
+  "things you see, eat, wear, or buy related to it",
+  "activities or experiences people commonly enjoy",
+  "cultural traditions, history, or origin stories",
   "feelings or emotions people associate with it",
-  "places or locations connected to it",
-  "objects or items commonly associated with it",
+  "places or locations strongly connected to it",
+  "rivalries, competitions, or head-to-head matchups",
+  "biggest moments, turning points, or milestones",
+  "things that make people argue or strongly disagree about",
+  "superlatives — the most famous, rarest, most controversial, or greatest",
+  "things associated with a specific era, decade, or generation",
+  "common misconceptions or things that surprise people",
+  "behind-the-scenes or lesser-known facts most people don't know",
+  "things people love about it vs things people hate",
+  "statistics, records, or impressive numbers",
+  "generational differences — what older vs younger people think",
+  "comparisons to similar things — what else is it like?",
+  "things seen on TV, social media, or in the news about it",
+  "what beginners think vs what experts or superfans know",
+  "what people spend money on related to it",
+  "things parents and kids disagree about",
+  "what outsiders think vs what insiders actually experience",
+  "funny, ironic, or counterintuitive things about it",
+];
+
+// Creativity twists — one picked at random per question to push GPT away from obvious output
+const CREATIVITY_TWISTS = [
+  "Avoid the most obvious or predictable question — go for something surprising or fresh.",
+  "Focus on an underrated or unexpected aspect that most people overlook.",
+  "Frame it as a ranking or comparison question if possible.",
+  "Focus on what people argue or passionately disagree about.",
+  "Think about what would genuinely surprise someone who knows nothing about this topic.",
+  "Focus on a specific memorable moment, event, or era related to this topic.",
+  "Consider what hardcore fans or experts would say vs what casual people would say.",
+  "Look for something funny, ironic, or counterintuitive about this topic.",
+  "Think about extremes — what's the best, worst, biggest, or most embarrassing thing related to it?",
+  "Consider the emotional side — what do people feel proud of, nostalgic about, or embarrassed by?",
 ];
 
 const OFFENSIVE_PATTERN = /\b(sex|porn|nude|naked|kill|murder|drug|terror|racist|slur|profan)\b/i;
@@ -159,11 +189,14 @@ async function generateOneQuestion(
   index: number,
   parentSignal?: AbortSignal,
 ): Promise<SurveyQuestion | null> {
+  const twist = CREATIVITY_TWISTS[Math.floor(Math.random() * CREATIVITY_TWISTS.length)];
   const prompt = `Generate 1 Family Feud survey question about "${topic}" with the angle: ${angle}.
+Creativity instruction: ${twist}
 Reply ONLY with JSON: {"question":"Name something...","answers":[{"text":"...","points":40},{"text":"...","points":30},{"text":"...","points":20},{"text":"...","points":10}]}
 Rules:
 - 3–6 answers, points sum to 100, family-friendly, classic Family Feud phrasing
-- Keep answer text VERY SHORT: 1–4 words max, like real Family Feud answers (e.g. "Shah Rukh Khan", "Song/Music", "Dance", "Colorful Outfits", "Romance")`;
+- Keep answer text VERY SHORT: 1–4 words max, like real Family Feud answers (e.g. "Shah Rukh Khan", "Song/Music", "Dance", "Colorful Outfits", "Romance")
+- Do NOT generate a question that is an obvious, generic, or predictable choice for this topic`;
 
   for (let attempt = 0; attempt < 3; attempt++) {
     // Bail immediately if the overall budget is already spent
@@ -176,6 +209,7 @@ Rules:
           model: "gpt-4o",
           messages: [{ role: "user", content: prompt }],
           max_tokens: 1000,
+          temperature: 1.1,
         }),
         timeoutPromise,
       ]);
@@ -234,8 +268,9 @@ export async function generateCustomQuestions(
       return { valid: false, reason: "Question generation timed out. Please try again." };
     }
 
-    // Parallel question generation — all questions share the overall signal for early bail-out
-    const angles = Array.from({ length: count }, (_, i) => QUESTION_ANGLES[i % QUESTION_ANGLES.length]);
+    // Parallel question generation — shuffle angles randomly so same topic yields different results each run
+    const shuffled = [...QUESTION_ANGLES].sort(() => Math.random() - 0.5);
+    const angles = Array.from({ length: count }, (_, i) => shuffled[i % shuffled.length]);
     const results = await Promise.all(
       angles.map((angle, i) => generateOneQuestion(trimmed, angle, i, overallSignal))
     );
