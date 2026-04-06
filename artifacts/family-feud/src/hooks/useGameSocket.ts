@@ -118,6 +118,7 @@ export function useGameSocket(
   // If the socket reconnects before answer_correct/answer_wrong arrives, the answer is
   // re-emitted so the server gets a second chance to process it.
   const pendingAnswerRef = useRef<{ answer: string; type: "faceoff" | "submit" } | null>(null);
+  const reemitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!roomId || !playerName || !team) return;
@@ -176,7 +177,9 @@ export function useGameSocket(
       // the re-emit if the round has already moved on.
       if (pendingAnswerRef.current) {
         const pending = pendingAnswerRef.current;
-        setTimeout(() => {
+        if (reemitTimerRef.current) clearTimeout(reemitTimerRef.current);
+        reemitTimerRef.current = setTimeout(() => {
+          reemitTimerRef.current = null;
           if (!pendingAnswerRef.current) return; // Cleared by answer_correct/answer_wrong — no need to re-emit
           if (pending.type === "faceoff") {
             socket.emit("faceoff_answer", { roomId, answer: pending.answer });
@@ -199,6 +202,10 @@ export function useGameSocket(
         socket.off(event, handler as (...args: unknown[]) => void);
       });
       socket.off("connect", handleConnect);
+      if (reemitTimerRef.current) {
+        clearTimeout(reemitTimerRef.current);
+        reemitTimerRef.current = null;
+      }
     };
   }, [roomId, playerName, team]);
 
