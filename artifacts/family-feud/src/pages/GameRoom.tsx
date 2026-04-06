@@ -299,7 +299,7 @@ export default function GameRoom() {
     revealChain(queue);
   }
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions, setPendingAnswer, clearPendingAnswer } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -364,7 +364,12 @@ export default function GameRoom() {
         setChatMessages(prev => [...prev.slice(-99), msg]);
         setUnreadChats(prev => mobileTab === "game" ? prev + 1 : 0);
       },
-      onChatHistory: (msgs) => setChatMessages(msgs),
+      onChatHistory: (msgs) => {
+        // chat_history is only sent on join/reconnect — safe to clear the verifying overlay
+        // here so a reconnect mid-answer doesn't leave the player permanently blocked.
+        setVerifyingAnswer(false);
+        setChatMessages(msgs);
+      },
       onPlayerJoined: (data) => {
         playPlayerJoinSound();
         showNotification(`${data.playerName} joined Team ${data.team}`);
@@ -406,6 +411,7 @@ export default function GameRoom() {
       },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
+        clearPendingAnswer();
         const key = data.playerName.trim().toLowerCase();
         const nextContributionPoints = (localContributionPointsRef.current[key] ?? 0) + data.points;
         localContributionPointsRef.current = {
@@ -455,6 +461,7 @@ export default function GameRoom() {
       },
       onAnswerWrong: (data) => {
         setVerifyingAnswer(false);
+        clearPendingAnswer();
         playBuzzerSound();
         // Synthetic chat message (italic, red) — pushed immediately so it's always visible
         setChatMessages(prev => [...prev.slice(-99), {
@@ -796,6 +803,9 @@ export default function GameRoom() {
     trackEvent("answer_submitted", {
       game_mode: gameState?.isSolo ? "solo" : "multiplayer",
     });
+    // Store the answer so it can be re-emitted automatically if the socket drops
+    // before the server responds with answer_correct or answer_wrong.
+    setPendingAnswer(answerInput, isMyTurnToFaceoff ? "faceoff" : "submit");
     if (isMyTurnToFaceoff) {
       setFaceoffCountdown(null);
       faceoffAnswer(answerInput);
