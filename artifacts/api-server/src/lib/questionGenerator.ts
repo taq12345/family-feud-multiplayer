@@ -137,7 +137,7 @@ async function generateAllQuestions(
 Requirements:
 - Each question must cover a DIFFERENT aspect or dimension of "${topic}" — you decide what angles to use, but make sure no two questions feel similar or overlap in what they ask.
 - Use classic Family Feud phrasing (e.g. "Name something...", "Name a...", "We asked 100 people...")
-- Questions and answers should feel like what actual survey respondents would realistically say, not academic or overly polished.
+- Answers should reflect what actual survey respondents would have answered, and the points should match how popular each answer would likely be among those respondents.
 - Each question must have 3–6 answers with points that sum to 100, ordered highest to lowest, and the most popular answer should have the highest points.
 - Answer text must be VERY SHORT: 1–4 words max (e.g. "Imran Khan", "Fast bowling", "1992 World Cup", "Six")
 - Family-friendly only
