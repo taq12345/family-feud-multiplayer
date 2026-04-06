@@ -594,9 +594,9 @@ export default function Lobby() {
                     </button>
                     <button
                       onClick={() => { playClickSound(); setSoloMode("custom"); setSoloError(null); }}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "custom" ? "bg-pink-500/20 text-pink-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "custom" ? "bg-pink-500/20 text-pink-400 shadow-sm" : "text-pink-400/60 hover:text-pink-400"}`}
                     >
-                      <Wand2 className="w-4 h-4" /> Custom AI
+                      <Wand2 className="w-4 h-4" /> Custom Topic
                     </button>
                   </div>
                   <div>
