@@ -1210,10 +1210,10 @@ export default function GameRoom() {
                 )}
                 {/* Who's turn banner */}
                 {gameState.playingDesignatedPlayerName && (
-                  <div className={`text-center ${
-                    isSolo && roundCountdown !== null
-                      ? `fixed bottom-0 left-0 right-0 z-40 border-t p-3 backdrop-blur-xl ${gameState.playingTeam === 1 ? "bg-rose-950/80 border-rose-500/25" : "bg-blue-950/80 border-blue-500/25"}`
-                      : `rounded-xl border p-2 sm:p-3 ${gameState.playingTeam === 1 ? "bg-rose-500/10 border-rose-500/25" : "bg-blue-500/10 border-blue-500/25"}`
+                  <div className={`rounded-xl border p-2 sm:p-3 text-center ${
+                    gameState.playingTeam === 1
+                      ? "bg-rose-500/10 border-rose-500/25"
+                      : "bg-blue-500/10 border-blue-500/25"
                   }`}>
                     <p className={`font-bold text-sm ${gameState.playingTeam === 1 ? "text-rose-400" : "text-blue-400"}`}>
                       🎯 {gameState.playingDesignatedPlayerName === playerName
