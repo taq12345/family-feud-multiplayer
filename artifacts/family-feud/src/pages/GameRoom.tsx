@@ -974,7 +974,7 @@ export default function GameRoom() {
         </div>
       )}
 
-      <div className={`flex ${isSolo ? "h-svh flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
+      <div className={`flex ${isSolo ? "h-[88vh] flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
         {/* Main game area */}
         <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 overflow-hidden ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
@@ -1029,7 +1029,7 @@ export default function GameRoom() {
 
           {/* Answer board — grows to fill remaining space */}
           {gameState.currentQuestion && answerBoardAnswers && (
-            <div className="flex-1 min-h-0">
+            <div className={`min-h-0 ${isSolo ? "max-h-[38vh]" : "flex-1"}`}>
               <AnswerBoard
                 question={gameState.currentQuestion.question}
                 answers={answerBoardAnswers}
