@@ -1480,6 +1480,14 @@ export default function GameRoom() {
             })}
             <div ref={chatEndRef} />
           </div>
+          <div className="shrink-0 overflow-hidden border-t border-white/5 flex items-center justify-center bg-black/20" style={{ height: 250 }}>
+            <iframe
+              srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              style={{ width: 300, height: 250, border: "none", display: "block" }}
+              title="Advertisement"
+            />
+          </div>
           <form onSubmit={handleSendChat} className="p-2.5 border-t border-white/5 flex gap-2 shrink-0">
             <Input
               placeholder="Message…"
