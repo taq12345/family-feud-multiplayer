@@ -1509,7 +1509,7 @@ export default function GameRoom() {
 
       {isSolo && (
         <div className="w-full">
-          <AdsterraWidget />
+          <AdsterraWidget key={`solo-ad-${gameState?.currentRound ?? 0}`} />
         </div>
       )}
 
