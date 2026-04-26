@@ -672,7 +672,7 @@ export default function Lobby() {
             <p className="text-slate-500 text-sm">Loading rooms…</p>
           </div>
         ) : rooms.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-4 rounded-3xl bg-white/[0.02] border border-white/5">
+          <div className="flex flex-col items-center justify-center py-10 gap-4 rounded-3xl bg-white/[0.02] border border-white/5">
             <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
               <Tv2 className="w-8 h-8 text-slate-600" />
             </div>
@@ -929,13 +929,13 @@ export default function Lobby() {
       </Dialog>
 
       <div className="max-w-4xl mx-auto px-4 mt-12 mb-4">
-        <p className="text-sm text-slate-500 text-center leading-relaxed">
-          Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
-        </p>
+        <AdsterraWidget />
       </div>
 
       <div className="max-w-4xl mx-auto px-4 mb-8">
-        <AdsterraWidget />
+        <p className="text-sm text-slate-500 text-center leading-relaxed">
+          Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
+        </p>
       </div>
 
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
