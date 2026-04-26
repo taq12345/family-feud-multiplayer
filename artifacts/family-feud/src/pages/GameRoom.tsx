@@ -881,21 +881,6 @@ export default function GameRoom() {
         </div>
       )}
 
-      {/* Solo mode: fixed countdown pill — stays visible when scrolled to ads */}
-      {isSolo && roundCountdown !== null && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none animate-in fade-in duration-200">
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-2xl border backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] font-black text-xl tabular-nums ${
-            roundCountdown <= 5
-              ? "bg-red-500/20 border-red-500/40 text-red-400"
-              : roundCountdown <= 10
-              ? "bg-amber-500/20 border-amber-500/40 text-amber-400"
-              : "bg-[#0d1525]/90 border-white/10 text-slate-200"
-          }`}>
-            ⏱ {roundCountdown}<span className="text-sm font-normal opacity-50 ml-0.5">s</span>
-          </div>
-        </div>
-      )}
-
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-32 -left-32 w-80 h-80 bg-amber-500/8 rounded-full blur-3xl" />
@@ -1225,10 +1210,10 @@ export default function GameRoom() {
                 )}
                 {/* Who's turn banner */}
                 {gameState.playingDesignatedPlayerName && (
-                  <div className={`rounded-xl border p-2 sm:p-3 text-center ${
-                    gameState.playingTeam === 1
-                      ? "bg-rose-500/10 border-rose-500/25"
-                      : "bg-blue-500/10 border-blue-500/25"
+                  <div className={`text-center ${
+                    isSolo && roundCountdown !== null
+                      ? `fixed bottom-0 left-0 right-0 z-40 border-t p-3 backdrop-blur-xl ${gameState.playingTeam === 1 ? "bg-rose-950/80 border-rose-500/25" : "bg-blue-950/80 border-blue-500/25"}`
+                      : `rounded-xl border p-2 sm:p-3 ${gameState.playingTeam === 1 ? "bg-rose-500/10 border-rose-500/25" : "bg-blue-500/10 border-blue-500/25"}`
                   }`}>
                     <p className={`font-bold text-sm ${gameState.playingTeam === 1 ? "text-rose-400" : "text-blue-400"}`}>
                       🎯 {gameState.playingDesignatedPlayerName === playerName
