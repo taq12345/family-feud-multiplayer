@@ -40,7 +40,8 @@ export default function AdsterraWidget() {
       ref={iframeRef}
       srcDoc={AD_HTML}
       sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-      style={{ width: "100%", height, border: "none", display: "block" }}
+      scrolling="no"
+      style={{ width: "100%", height, border: "none", display: "block", overflow: "hidden" }}
       title="Advertisement"
     />
   );
