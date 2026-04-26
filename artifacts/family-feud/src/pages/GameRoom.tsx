@@ -1438,6 +1438,14 @@ export default function GameRoom() {
             <MessageCircle className="w-3.5 h-3.5 text-slate-500" />
             <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Live Chat</span>
           </div>
+          <div className="shrink-0 overflow-hidden border-b border-white/5 flex items-center justify-center bg-black/20" style={{ height: 50 }}>
+            <iframe
+              srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'a27b4847f4b5d00d63623929539b2b8a','format':'iframe','height':50,'width':320,'params':{}};<\/script><script src="https://www.highperformanceformat.com/a27b4847f4b5d00d63623929539b2b8a/invoke.js"><\/script></body></html>`}
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              style={{ width: 320, height: 50, border: "none", display: "block" }}
+              title="Advertisement"
+            />
+          </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {chatMessages.length === 0 && (
               <p className="text-slate-600 text-xs text-center mt-6">No messages yet. Say hello!</p>
