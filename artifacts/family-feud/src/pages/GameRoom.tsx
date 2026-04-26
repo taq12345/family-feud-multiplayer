@@ -861,7 +861,7 @@ export default function GameRoom() {
   const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
 
   return (
-    <div className="h-svh overflow-hidden bg-[#070d1f] text-white flex flex-col">
+    <div className={`${isSolo ? "min-h-svh overflow-y-auto" : "h-svh overflow-hidden"} bg-[#070d1f] text-white flex flex-col`}>
       {/* Answer verification overlay */}
       {verifyingAnswer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -974,7 +974,7 @@ export default function GameRoom() {
         </div>
       )}
 
-      <div className="flex flex-1 overflow-hidden relative z-10">
+      <div className={`flex ${isSolo ? "h-svh flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
         {/* Main game area */}
         <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 overflow-hidden ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
@@ -1431,11 +1431,6 @@ export default function GameRoom() {
 
           </div>
 
-          {isSolo && (
-            <div className="shrink-0 pt-1">
-              <AdsterraWidget />
-            </div>
-          )}
         </div>
 
         {/* Chat panel — hidden in solo mode */}
@@ -1509,6 +1504,12 @@ export default function GameRoom() {
         </div>
         )}
       </div>
+
+      {isSolo && (
+        <div className="w-full">
+          <AdsterraWidget />
+        </div>
+      )}
 
       {/* Mobile bottom tab bar — hidden in solo mode */}
       <div className={`${isSolo ? "hidden" : ""} md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10`}>
