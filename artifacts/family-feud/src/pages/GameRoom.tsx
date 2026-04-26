@@ -974,9 +974,9 @@ export default function GameRoom() {
         </div>
       )}
 
-      <div className={`flex ${isSolo ? "h-[88vh] flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
+      <div className={`flex ${isSolo ? "flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
         {/* Main game area */}
-        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 overflow-hidden ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
+        <div className={`${isSolo ? "" : "flex-1 overflow-hidden"} flex flex-col p-2 md:p-3 gap-2 ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
           {/* Round info bar */}
           <div className="shrink-0 flex items-center justify-center gap-3 py-0.5">
