@@ -1073,15 +1073,6 @@ export default function GameRoom() {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-center my-3">
-                  <iframe
-                    srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
-                    sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                    scrolling="no"
-                    style={{ width: 300, height: 250, border: "none", display: "block" }}
-                    title="Advertisement"
-                  />
-                </div>
                 {isHost && (
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
                     <button
@@ -1130,6 +1121,15 @@ export default function GameRoom() {
                     </Button>
                   </div>
                 )}
+                <div className="flex justify-center mt-3">
+                  <iframe
+                    srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                    scrolling="no"
+                    style={{ width: 300, height: 250, border: "none", display: "block" }}
+                    title="Advertisement"
+                  />
+                </div>
               </div>
             )}
 
