@@ -74,6 +74,20 @@ async function createRoomApi(body: {
   return data;
 }
 
+function AdsterraWidget() {
+  useEffect(() => {
+    const containerId = "container-272c9d71cc235c9077a71bec4e2c70cb";
+    if (document.getElementById(containerId)?.childElementCount) return;
+    const script = document.createElement("script");
+    script.async = true;
+    script.setAttribute("data-cfasync", "false");
+    script.src = "https://pl29266201.profitablecpmratenetwork.com/272c9d71cc235c9077a71bec4e2c70cb/invoke.js";
+    document.getElementById(containerId)?.appendChild(script);
+  }, []);
+
+  return <div id="container-272c9d71cc235c9077a71bec4e2c70cb" />;
+}
+
 export default function Lobby() {
   const [, setLocation] = useLocation();
   const roomsRequestInFlight = useRef(false);
@@ -931,6 +945,10 @@ export default function Lobby() {
         <p className="text-sm text-slate-500 text-center leading-relaxed">
           Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
         </p>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 mb-8">
+        <AdsterraWidget />
       </div>
 
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
