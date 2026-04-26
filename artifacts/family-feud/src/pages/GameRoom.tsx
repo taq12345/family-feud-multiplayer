@@ -1,4 +1,5 @@
 import { SEO } from "../components/SEO";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
 import { useGameSocket, createSoloGame, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
@@ -1429,6 +1430,12 @@ export default function GameRoom() {
             })()}
 
           </div>
+
+          {isSolo && (
+            <div className="shrink-0 pt-1">
+              <AdsterraWidget />
+            </div>
+          )}
         </div>
 
         {/* Chat panel — hidden in solo mode */}
