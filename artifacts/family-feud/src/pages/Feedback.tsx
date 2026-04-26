@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { ArrowLeft, Send, CheckCircle, MessageSquare } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -167,6 +168,10 @@ export default function Feedback() {
             </Button>
           </form>
         )}
+
+        <div className="mt-10">
+          <AdsterraWidget />
+        </div>
       </main>
     </div>
   );

@@ -4,6 +4,7 @@ import { SEO } from "../components/SEO";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles, Shuffle } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
+import AdsterraWidget from "../components/AdsterraWidget";
 
 
 // Each answer includes the survey point value from the original show data.
@@ -479,6 +480,10 @@ export default function Questions() {
               <Tv2 className="w-4 h-4" />
               Start Playing Now
             </button>
+          </div>
+
+          <div className="mt-10">
+            <AdsterraWidget />
           </div>
 
           {/* Disclaimer */}

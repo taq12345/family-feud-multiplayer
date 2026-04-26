@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion, Wand2 } from "lucide-react";
 import { createSoloGame } from "../hooks/useGameSocket";
+import AdsterraWidget from "../components/AdsterraWidget";
 
 interface Room {
   id: string;
@@ -72,20 +73,6 @@ async function createRoomApi(body: {
   const data = await res.json();
   if (!res.ok) throw new Error(data.error ?? "Failed to create room");
   return data;
-}
-
-function AdsterraWidget() {
-  useEffect(() => {
-    const containerId = "container-272c9d71cc235c9077a71bec4e2c70cb";
-    if (document.getElementById(containerId)?.childElementCount) return;
-    const script = document.createElement("script");
-    script.async = true;
-    script.setAttribute("data-cfasync", "false");
-    script.src = "https://pl29266201.profitablecpmratenetwork.com/272c9d71cc235c9077a71bec4e2c70cb/invoke.js";
-    document.getElementById(containerId)?.appendChild(script);
-  }, []);
-
-  return <div id="container-272c9d71cc235c9077a71bec4e2c70cb" />;
 }
 
 export default function Lobby() {

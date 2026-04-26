@@ -3,6 +3,7 @@ import { SEO } from "../components/SEO";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { Tv2, ArrowLeft, Users, Zap, Shield, Trophy, RotateCcw, Star, Clock, Target } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
+import AdsterraWidget from "../components/AdsterraWidget";
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -271,6 +272,10 @@ export default function Rules() {
             </button>
           </div>
         </article>
+
+        <div className="mt-10">
+          <AdsterraWidget />
+        </div>
       </main>
     </div>
   );
