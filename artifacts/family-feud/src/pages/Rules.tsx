@@ -99,6 +99,10 @@ export default function Rules() {
             </p>
           </header>
 
+          <div className="mb-10">
+            <AdsterraWidget />
+          </div>
+
           <section className="mb-10" aria-labelledby="overview-heading">
             <h2 id="overview-heading" className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <Users className="w-5 h-5 text-amber-400" />
@@ -273,9 +277,6 @@ export default function Rules() {
           </div>
         </article>
 
-        <div className="mt-10">
-          <AdsterraWidget />
-        </div>
       </main>
     </div>
   );

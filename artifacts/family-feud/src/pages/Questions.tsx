@@ -330,6 +330,10 @@ export default function Questions() {
             </p>
           </header>
 
+          <div className="mb-8">
+            <AdsterraWidget />
+          </div>
+
           {/* Play CTA */}
           <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 p-5 sm:p-6 text-center">
             <p className="text-amber-300 font-semibold mb-2 flex items-center justify-center gap-2">
@@ -480,10 +484,6 @@ export default function Questions() {
               <Tv2 className="w-4 h-4" />
               Start Playing Now
             </button>
-          </div>
-
-          <div className="mt-10">
-            <AdsterraWidget />
           </div>
 
           {/* Disclaimer */}

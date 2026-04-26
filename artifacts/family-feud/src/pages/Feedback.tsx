@@ -84,6 +84,10 @@ export default function Feedback() {
           </p>
         </div>
 
+        <div className="mb-8">
+          <AdsterraWidget />
+        </div>
+
         {success ? (
           <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/25 p-8 text-center">
             <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
@@ -169,9 +173,6 @@ export default function Feedback() {
           </form>
         )}
 
-        <div className="mt-10">
-          <AdsterraWidget />
-        </div>
       </main>
     </div>
   );
