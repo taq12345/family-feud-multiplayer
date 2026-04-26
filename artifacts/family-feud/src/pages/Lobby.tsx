@@ -468,7 +468,7 @@ export default function Lobby() {
                 setRefreshSpinKey(key => key + 1);
                 void loadRooms();
               }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="p-2 rounded-lg bg-white/8 border border-white/20 text-slate-300 hover:text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/40 transition-all"
               title="Refresh"
             >
               <RefreshCw
