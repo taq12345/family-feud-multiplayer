@@ -932,9 +932,10 @@ export default function Lobby() {
         <AdsterraWidget />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 mb-8">
-        <p className="text-sm text-slate-500 text-center leading-relaxed">
-          Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
+      <div className="max-w-3xl mx-auto px-4 mb-8 text-center">
+        <h2 className="text-base font-semibold text-slate-400 mb-2">Play Family Feud Online With Friends — Free</h2>
+        <p className="text-sm text-slate-500 leading-relaxed">
+          Friendly Feud is the fastest way to play Family Feud online with friends — no download, no account, no cost. Create a private room, share the link, and your friends join instantly. Split into two teams and race to guess the top survey answers before the other side does. With 8,700+ classic questions and AI-powered custom rounds, every game is different.
         </p>
       </div>
 
