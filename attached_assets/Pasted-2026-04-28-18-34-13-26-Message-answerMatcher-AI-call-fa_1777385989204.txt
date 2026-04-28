@@ -1,0 +1,133 @@
+2026-04-28 18:34:13.26
+Message
+[answerMatcher] AI call failed or timed out: Hr [Error]: 500 status code (no body)
+Status
+500
+Request ID
+30f23375-5dfe-4c49-bd2b-968828109410
+Content-Type
+application/json
+Content-Length
+111
+Date
+Tue, 28 Apr 2026 13:34:12 GMT
+Via
+1.1 google
+Error / Param / Type
+undefined / undefined / undefined
+Stack trace
+Z.makeStatusError (index.cjs:128:1147)
+Z.makeRequest (index.cjs:128:4514)
+e.generate (index.cjs:106:2076398)
+S1.<anonymous> (index.cjs:146:18115)
+Ok (index.cjs:132:1004)
+Promise.all (index 0)
+Promise.all (index 5)
+2026-04-28 18:35:38.44
+Message
+[answerMatcher] AI call failed or timed out: Hr [Error]: 500 status code (no body)
+Status
+500
+Request ID
+56e77301-a121-46d8-b702-e48f97cffc15
+Content-Type
+application/json
+Content-Length
+111
+Date
+Tue, 28 Apr 2026 13:35:38 GMT
+Via
+1.1 google
+Stack trace
+Z.makeStatusError (index.cjs:128:1147)
+Z.makeRequest (index.cjs:128:4514)
+e.generate (index.cjs:106:2076398)
+S1.<anonymous> (index.cjs:146:18115)
+Knt (index.cjs:132:208)
+Ok (index.cjs:132:1004)
+Promise.all (index 0)
+Promise.all (index 4)
+process.processTicksAndRejections (task_queues:103:5)
+2026-04-28 18:35:48.52
+Message
+[answerMatcher] AI call failed or timed out: Hr [Error]: 500 status code (no body)
+Status
+500
+Request ID
+cf45ff56-dcd6-4a99-8714-d03baf9e7603
+Content-Type
+application/json
+Content-Length
+111
+Date
+Tue, 28 Apr 2026 13:35:48 GMT
+Via
+1.1 google
+Stack trace
+Z.makeStatusError (index.cjs:128:1147)
+Z.makeRequest (index.cjs:128:4514)
+e.generate (index.cjs:106:2076398)
+S1.<anonymous> (index.cjs:146:18115)
+Knt (index.cjs:132:208)
+Ok (index.cjs:132:1004)
+Promise.all (index 0) × 2
+process.processTicksAndRejections (task_queues:103:5)
+2026-04-28 18:36:49.78
+Message
+Partial log — request initiated, no full error captured
+Status
+500 (inferred)
+Stack trace
+Z.makeRequest (index.cjs:128:4514)
+[remainder of log missing]
+2026-04-28 18:41:06.87
+Message
+[answerMatcher] AI call failed or timed out: Hr [Error]: 500 status code (no body)
+Status
+500
+Request ID
+b682e024-dd30-4162-af6a-28b0caac6a8e
+Content-Type
+application/json
+Content-Length
+111
+Date
+Tue, 28 Apr 2026 13:41:06 GMT
+Error / Param / Type
+undefined / undefined / undefined
+Stack trace
+Z.makeStatusError (index.cjs:128:1147)
+Z.makeRequest (index.cjs:128:4514)
+e.generate (index.cjs:106:2076398)
+S1.<anonymous> (index.cjs:146:18115)
+Knt (index.cjs:132:208)
+Ok (index.cjs:132:1004)
+Promise.all (index 0)
+Promise.all (index 3)
+process.processTicksAndRejections (task_queues:103:5)
+2026-04-28 18:41:47.41
+Message
+[answerMatcher] AI call failed or timed out: Hr [Error]: 500 status code (no body)
+Status
+500
+Request ID
+a05202f3-dea0-4b5a-baf4-3c5574d5f5c4
+Content-Type
+application/json
+Content-Length
+111
+Date
+Tue, 28 Apr 2026 13:41:47 GMT
+Via
+1.1 google
+Error / Param / Type
+undefined / undefined / undefined
+Stack trace
+Z.makeStatusError (index.cjs:128:1147)
+Z.makeRequest (index.cjs:128:4514)
+e.generate (index.cjs:106:2076398)
+S1.<anonymous> (index.cjs:146:18115)
+Ok (index.cjs:132:1004)
+Promise.all (index 1)
+Promise.all (index 0)
+process.processTicksAndRejections (task_queues:103:5)
