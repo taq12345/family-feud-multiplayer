@@ -221,7 +221,7 @@ function stemmedMatch(normSubmitted: string, normCanonical: string): boolean {
 
 /** Ask AI whether submitted and canonical mean the same thing in context */
 async function aiSemanticMatch(submitted: string, canonical: string, question: string): Promise<boolean> {
-  const AI_TIMEOUT_MS = 15000;
+  const AI_TIMEOUT_MS = 6000;
   try {
     const aiCall = openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -236,7 +236,7 @@ async function aiSemanticMatch(submitted: string, canonical: string, question: s
           content: `Survey question: "${question}"\nOfficial answer: "${canonical}"\nPlayer's answer: "${submitted}"\n\nDoes the player's answer mean essentially the same thing as the official answer? YES or NO.`,
         },
       ],
-      max_completion_tokens: 1000,
+      max_completion_tokens: 5,
     });
     const timeout = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("AI match timeout")), AI_TIMEOUT_MS)
