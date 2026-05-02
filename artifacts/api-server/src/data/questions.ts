@@ -16141,7 +16141,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  626,
-        "question":  "Name Something You Eat On A Bun.",
+        "question":  "Name something you eat on a bun.",
         "answers":  [
                         {
                             "text":  "hot dog",
@@ -81137,7 +81137,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3086,
-        "question":  "Name An Occupation That Edward Scissorhands Would Be Good At",
+        "question":  "Name an occupation that Edward Scissorhands would be good at.",
         "answers":  [
                         {
                             "text":  "gardener",
@@ -81155,7 +81155,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3087,
-        "question":  "Name Something You Drink At The First Sign Of A Cold To Try To Ward It Off.",
+        "question":  "Name something you drink at the first sign of a cold to try to ward it off.",
         "answers":  [
                         {
                             "text":  "tea",
@@ -81453,7 +81453,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3098,
-        "question":  "Name A Celebrity That Might Make Your Spouse Jealous",
+        "question":  "Name a celebrity that might make your spouse jealous.",
         "answers":  [
                         {
                             "text":  "brad pitt",
@@ -185401,7 +185401,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7004,
-        "question":  "Name Something You Tap.",
+        "question":  "Name something you tap.",
         "answers":  [
                         {
                             "text":  "foot",
@@ -206975,7 +206975,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7801,
-        "question":  "Name A Reason You Might Wear A Hat.",
+        "question":  "Name a reason you might wear a hat.",
         "answers":  [
                         {
                             "text":  "sun protection",
@@ -207005,7 +207005,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7802,
-        "question":  "Name Something Specific You Might Wear To Bed If You\u0027re Really Cold",
+        "question":  "Name something specific you might wear to bed if you're really cold.",
         "answers":  [
                         {
                             "text":  "socks",
@@ -207035,7 +207035,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7803,
-        "question":  "Name Something Most Parents Would Let Their Teen Experiment With",
+        "question":  "Name something most parents would let their teen experiment with.",
         "answers":  [
                         {
                             "text":  "driving",
@@ -207057,7 +207057,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7804,
-        "question":  "Name Something A Clown Might Be Carrying",
+        "question":  "Name something a clown might be carrying.",
         "answers":  [
                         {
                             "text":  "balloons",
@@ -207091,7 +207091,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7805,
-        "question":  "Name Somewhere That Parents Cant Wait For Their Kids To Go",
+        "question":  "Name somewhere that parents can't wait for their kids to go.",
         "answers":  [
                         {
                             "text":  "to school",
@@ -207113,7 +207113,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7806,
-        "question":  "Name Something You Do After Getting A Bad Haircut",
+        "question":  "Name something you do after getting a bad haircut.",
         "answers":  [
                         {
                             "text":  "cry",
@@ -207135,7 +207135,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7807,
-        "question":  "Name Something Kids Are Taught About Abe Lincoln",
+        "question":  "Name something kids are taught about Abe Lincoln.",
         "answers":  [
                         {
                             "text":  "16th president",
@@ -207161,7 +207161,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7808,
-        "question":  "Name An Object Considered To Be Good Luck",
+        "question":  "Name an object considered to be good luck.",
         "answers":  [
                         {
                             "text":  "four leaf clover",
@@ -207183,7 +207183,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7809,
-        "question":  "Name Something You Might See At A Church Gift Shop.",
+        "question":  "Name something you might see at a church gift shop.",
         "answers":  [
                         {
                             "text":  "bible",
@@ -207197,7 +207197,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7810,
-        "question":  "Name A Reason Why You Dont Answer The Phone When Youre Home",
+        "question":  "Name a reason why you don't answer the phone when you're home.",
         "answers":  [
                         {
                             "text":  "don\u0027t want to talk",
@@ -207223,7 +207223,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7811,
-        "question":  "Name A Famous Character Who Is Never Seen Without His Mask.",
+        "question":  "Name a famous character who is never seen without his mask.",
         "answers":  [
                         {
                             "text":  "batman",
@@ -207253,7 +207253,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7812,
-        "question":  "Name Something You Do To Your Lawn That You Would Never Do To Your Wall-To-Wall Carpet.",
+        "question":  "Name something you do to your lawn that you would never do to your wall-to-wall carpet.",
         "answers":  [
                         {
                             "text":  "water it",
@@ -207279,7 +207279,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7813,
-        "question":  "Name Something You shouldnt Squeeze too Tightly",
+        "question":  "Name something you shouldn't squeeze too tightly.",
         "answers":  [
                         {
                             "text":  "baby",
@@ -207309,7 +207309,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7814,
-        "question":  "Name A Reason A Kid Might Get Sent Home From School.",
+        "question":  "Name a reason a kid might get sent home from school.",
         "answers":  [
                         {
                             "text":  "got in a fight",
@@ -207339,7 +207339,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7815,
-        "question":  "Name Something Specific A Person May Change In Order To Become A Celebrity",
+        "question":  "Name something specific a person may change in order to become a celebrity.",
         "answers":  [
                         {
                             "text":  "body",
@@ -207365,7 +207365,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7816,
-        "question":  "Name Something A Dad Would Look Silly Borrowing From His Child At The Bowling Alley",
+        "question":  "Name something a dad would look silly borrowing from his child at the bowling alley.",
         "answers":  [
                         {
                             "text":  "shoes",
@@ -207383,7 +207383,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7817,
-        "question":  "Name Something A Baseball Umpire Might Keep In His Locker",
+        "question":  "Name something a baseball umpire might keep in his locker.",
         "answers":  [
                         {
                             "text":  "facemask",
@@ -207413,7 +207413,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7818,
-        "question":  "Name The Best Flavor Of Popsicle.",
+        "question":  "Name the best flavor of popsicle.",
         "answers":  [
                         {
                             "text":  "cherry",
@@ -207447,7 +207447,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7819,
-        "question":  "Name A Singer Who Became Famous As A Child",
+        "question":  "Name a singer who became famous as a child.",
         "answers":  [
                         {
                             "text":  "michael jackson",
@@ -207469,7 +207469,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7820,
-        "question":  "Name Something A Vacation Brochure Tells You About A Destination",
+        "question":  "Name something a vacation brochure tells you about a destination.",
         "answers":  [
                         {
                             "text":  "weather",
@@ -207491,7 +207491,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7821,
-        "question":  "Name An Animal Character That Talks In The Movies",
+        "question":  "Name an animal character that talks in the movies.",
         "answers":  [
                         {
                             "text":  "bugs bunny",
@@ -207525,7 +207525,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7822,
-        "question":  "Name Something Dogs Get More Excited About Than Humans Do.",
+        "question":  "Name something dogs get more excited about than humans do.",
         "answers":  [
                         {
                             "text":  "bones",
@@ -207555,7 +207555,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7823,
-        "question":  "Name A Fruit That Can Get Bruised",
+        "question":  "Name a fruit that can get bruised.",
         "answers":  [
                         {
                             "text":  "apple",
@@ -207577,7 +207577,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7824,
-        "question":  "Name A Profession Where You Might Have A Dog For A Sidekick",
+        "question":  "Name a profession where you might have a dog for a sidekick.",
         "answers":  [
                         {
                             "text":  "police officer",
@@ -207595,7 +207595,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7825,
-        "question":  "Name Something You Would Need If You Were Putting On A Rock Concert",
+        "question":  "Name something you would need if you were putting on a rock concert.",
         "answers":  [
                         {
                             "text":  "band",
