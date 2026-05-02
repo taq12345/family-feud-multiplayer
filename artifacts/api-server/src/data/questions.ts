@@ -161,7 +161,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6,
-        "question":  "ame A Reason Why You Might Be Nervous While Driving",
+        "question":  "Name A Reason Why You Might Be Nervous While Driving",
         "answers":  [
                         {
                             "text":  "weather conditions",
