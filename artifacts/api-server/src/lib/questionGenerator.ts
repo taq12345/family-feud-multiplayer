@@ -133,15 +133,21 @@ async function generateAllQuestions(
   count: number,
   parentSignal?: AbortSignal,
 ): Promise<SurveyQuestion[] | null> {
-  const prompt = `Generate exactly ${count} Family Feud survey questions about "${topic}".
+  const prompt = `Generate exactly ${count} Family Feud survey questions about "${topic}". Make them genuinely FUN and surprising — the kind that get players laughing, arguing, or saying "oh obviously!" when the answer is revealed.
 
 Requirements:
-- Each question must cover a DIFFERENT aspect or dimension of "${topic}" — you decide what angles to use, but make sure no two questions feel similar or overlap in what they ask.
-- Use classic Family Feud phrasing (e.g. "Name something...", "Name a...", "We asked 100 people...")
-- Answers should reflect what actual survey respondents would have answered, and the points should match how popular each answer would likely be among those respondents.
-- Each question must have 3–6 answers with points that sum to 100, ordered highest to lowest, and the most popular answer should have the highest points.
-- Answer text must be VERY SHORT: 1–4 words max (e.g. "Imran Khan", "Fast bowling", "1992 World Cup", "Six")
-- Family-friendly only
+- Cover DIFFERENT angles of "${topic}" — mix serious, silly, nostalgic, and unexpected. Avoid safe/obvious angles that everyone would immediately guess.
+- Use varied classic Family Feud phrasing. Mix these styles freely:
+    • "Name something..." / "Name a..."
+    • "We asked 100 people..." / "We surveyed 100 [relevant group]..."
+    • "What's the first thing that comes to mind when you think of..."
+    • "If [topic-related thing] could talk, what would it say?"
+    • "What would you find in/at a [topic-related place]?"
+    • "Name a [topic-related word] that [funny condition]"
+- Answers should reflect what real survey respondents would say — include at least one answer that's a bit unexpected or funny but still plausible.
+- Each question must have 3–6 answers with points summing to 100, ordered highest to lowest.
+- Answer text must be VERY SHORT: 1–4 words max.
+- Family-friendly only.
 
 Reply ONLY with a JSON object of this exact shape, no extra text:
 {"questions":[
@@ -159,7 +165,7 @@ Reply ONLY with a JSON object of this exact shape, no extra text:
           model: "gpt-4o",
           messages: [{ role: "user", content: prompt }],
           max_tokens: Math.min(2500, 350 * count + 200),
-          temperature: 1.1,
+          temperature: 1.3,
           response_format: { type: "json_object" },
         }),
         timeoutPromise,
