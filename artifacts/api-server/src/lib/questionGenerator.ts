@@ -133,18 +133,16 @@ async function generateAllQuestions(
   count: number,
   parentSignal?: AbortSignal,
 ): Promise<SurveyQuestion[] | null> {
-  const prompt = `Generate exactly ${count} Family Feud survey questions about "${topic}". Make them genuinely FUN and surprising — the kind that get players laughing, arguing, or saying "oh obviously!" when the answer is revealed.
+  const prompt = `Generate exactly ${count} Family Feud survey questions about "${topic}". Aim for a well-rounded mix: some classic, crowd-pleasing questions with obvious answers everyone can enjoy, and a few with more unexpected or playful angles that spark debate or laughter.
 
 Requirements:
-- Cover DIFFERENT angles of "${topic}" — mix serious, silly, nostalgic, and unexpected. Avoid safe/obvious angles that everyone would immediately guess.
-- Use varied classic Family Feud phrasing. Mix these styles freely:
+- Cover DIFFERENT aspects of "${topic}" — use a variety of angles (everyday, nostalgic, situational, funny, factual). Do not make every question quirky or surprising; include solid, straightforward ones too.
+- Use varied classic Family Feud phrasing. Mix these naturally:
     • "Name something..." / "Name a..."
     • "We asked 100 people..." / "We surveyed 100 [relevant group]..."
     • "What's the first thing that comes to mind when you think of..."
-    • "If [topic-related thing] could talk, what would it say?"
     • "What would you find in/at a [topic-related place]?"
-    • "Name a [topic-related word] that [funny condition]"
-- Answers should reflect what real survey respondents would say — include at least one answer that's a bit unexpected or funny but still plausible.
+- Answers should reflect what real survey respondents would say. Most answers should be predictable and satisfying; occasionally include one that's a bit unexpected but still plausible.
 - Each question must have 3–6 answers with points summing to 100, ordered highest to lowest.
 - Answer text must be VERY SHORT: 1–4 words max.
 - Family-friendly only.
