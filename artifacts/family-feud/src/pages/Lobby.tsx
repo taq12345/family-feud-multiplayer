@@ -7,7 +7,8 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion, Wand2 } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion, Wand2, MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../components/ui/dropdown-menu";
 import { createSoloGame } from "../hooks/useGameSocket";
 import AdsterraWidget from "../components/AdsterraWidget";
 
@@ -416,9 +417,9 @@ export default function Lobby() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {nickname && (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="text-xs text-slate-300">
                   Playing as <span className="font-semibold text-amber-400">{nickname}</span>
@@ -426,7 +427,7 @@ export default function Lobby() {
               </div>
             )}
             {nickname && (
-              <span title="Change nickname" className="inline-flex">
+              <span title="Change nickname" className="hidden sm:inline-flex">
                 <button
                   onClick={() => {
                     playClickSound();
@@ -442,7 +443,7 @@ export default function Lobby() {
             )}
             <button
               onClick={() => { playClickSound(); setLocation("/rules"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="How to Play"
             >
               <BookOpen className="w-4 h-4" />
@@ -459,14 +460,14 @@ export default function Lobby() {
 
             <button
               onClick={() => { playClickSound(); setLocation("/questions"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Survey Questions"
             >
               <FileQuestion className="w-4 h-4" />
             </button>
             <button
               onClick={() => { playClickSound(); setLocation("/feedback"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Feedback & Bug Reports"
             >
               <MessageSquare className="w-4 h-4" />
@@ -485,6 +486,67 @@ export default function Lobby() {
                 className={refreshSpinKey === 0 ? "w-4 h-4" : "w-4 h-4 animate-[spin_0.65s_cubic-bezier(0.22,1,0.36,1)]"}
               />
             </button>
+
+            {/* Mobile-only "More" menu — collapses secondary buttons that are hidden on small screens */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  onClick={() => playClickSound()}
+                  className="sm:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                  title="More"
+                  aria-label="More"
+                >
+                  <MoreVertical className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white min-w-[200px]"
+              >
+                {nickname && (
+                  <>
+                    <DropdownMenuItem disabled className="opacity-100 focus:bg-transparent">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                        <span className="text-xs text-slate-400">
+                          Playing as <span className="font-semibold text-amber-400">{nickname}</span>
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        playClickSound();
+                        setChangeNicknameInput("");
+                        setChangeNicknameError(null);
+                        setChangeNicknameOpen(true);
+                      }}
+                      className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                    >
+                      <Pencil className="w-4 h-4 mr-2" /> Change nickname
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="bg-white/10" />
+                  </>
+                )}
+                <DropdownMenuItem
+                  onClick={() => { playClickSound(); setLocation("/rules"); }}
+                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                >
+                  <BookOpen className="w-4 h-4 mr-2" /> How to Play
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => { playClickSound(); setLocation("/questions"); }}
+                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                >
+                  <FileQuestion className="w-4 h-4 mr-2" /> Survey Questions
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => { playClickSound(); setLocation("/feedback"); }}
+                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" /> Feedback
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all border-0 px-3 sm:px-4">
