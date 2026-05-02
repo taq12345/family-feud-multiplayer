@@ -449,6 +449,15 @@ export default function Lobby() {
             </button>
 
             <button
+              onClick={() => { playClickSound(); setLocation("/leaderboard"); }}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              title="Leaderboard"
+              aria-label="Leaderboard"
+            >
+              <Trophy className="w-4 h-4" />
+            </button>
+
+            <button
               onClick={() => { playClickSound(); setLocation("/questions"); }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Survey Questions"
@@ -948,6 +957,7 @@ export default function Lobby() {
             <a href="/about" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/about"); }} className="hover:text-slate-400 transition-colors">About</a>
             <a href="/rules" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/rules"); }} className="hover:text-slate-400 transition-colors">How to Play</a>
             <a href="/questions" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/questions"); }} className="hover:text-slate-400 transition-colors">Survey Questions</a>
+            <a href="/leaderboard" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/leaderboard"); }} className="hover:text-slate-400 transition-colors">Leaderboard</a>
             <a href="/feedback" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/feedback"); }} className="hover:text-slate-400 transition-colors">Contact</a>
             <a href="/privacy" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</a>
             <a href="/terms" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/terms"); }} className="hover:text-slate-400 transition-colors">Terms of Service</a>

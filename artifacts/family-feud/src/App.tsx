@@ -13,6 +13,7 @@ const Feedback = lazy(() => import("./pages/Feedback"));
 const About = lazy(() => import("./pages/About"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +39,7 @@ function Router() {
         <Route path="/feedback" component={Feedback} />
         <Route path="/privacy" component={Privacy} />
         <Route path="/terms" component={Terms} />
+        <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/room/:roomId" component={GameRoom} />
         <Route>
           <div className="min-h-screen bg-blue-950 flex items-center justify-center text-white">
