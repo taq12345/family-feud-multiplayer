@@ -237,6 +237,7 @@ async function aiSemanticMatch(submitted: string, canonical: string, question: s
         },
       ],
       max_completion_tokens: 5,
+      temperature: 0,
     });
     const timeout = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("AI match timeout")), AI_TIMEOUT_MS)

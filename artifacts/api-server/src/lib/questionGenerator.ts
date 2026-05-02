@@ -68,12 +68,13 @@ async function validateTopic(topic: string, parentSignal?: AbortSignal): Promise
   try {
     const response = await Promise.race([
       openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: [{
           role: "user",
           content: `Is "${topic}" a real, meaningful topic suitable for Family Feud survey questions? It must be a recognisable concept, object, activity, place, person, or theme that most people know and could be meaningfully surveyed about. Reject nonsense strings, gibberish, random characters, inappropriate adult content, or anything so obscure that no one could survey about it. Reply ONLY with JSON: {"valid":true} or {"valid":false,"reason":"brief reason"}`,
         }],
         max_tokens: 500,
+        response_format: { type: "json_object" },
       }),
       timeoutPromise,
     ]);
@@ -142,11 +143,11 @@ Requirements:
 - Answer text must be VERY SHORT: 1–4 words max (e.g. "Imran Khan", "Fast bowling", "1992 World Cup", "Six")
 - Family-friendly only
 
-Reply ONLY with a JSON array, no extra text:
-[
+Reply ONLY with a JSON object of this exact shape, no extra text:
+{"questions":[
   {"question":"...","answers":[{"text":"...","points":40},{"text":"...","points":30},{"text":"...","points":20},{"text":"...","points":10}]},
   ...
-]`;
+]}`;
 
   for (let attempt = 0; attempt < 3; attempt++) {
     if (parentSignal?.aborted) return null;
@@ -159,6 +160,7 @@ Reply ONLY with a JSON array, no extra text:
           messages: [{ role: "user", content: prompt }],
           max_tokens: 2500,
           temperature: 1.1,
+          response_format: { type: "json_object" },
         }),
         timeoutPromise,
       ]);
@@ -169,17 +171,16 @@ Reply ONLY with a JSON array, no extra text:
 
       if (!rawContent.trim()) continue;
 
-      const arrayMatch = rawContent.match(/\[[\s\S]*\]/);
-      if (!arrayMatch) continue;
-
       let parsed: Array<{ question?: string; answers?: Array<{ text?: string; points?: number }> }>;
       try {
-        parsed = JSON.parse(arrayMatch[0]);
+        const parsedObj = JSON.parse(rawContent) as { questions?: unknown };
+        if (!Array.isArray(parsedObj.questions)) continue;
+        parsed = parsedObj.questions as Array<{ question?: string; answers?: Array<{ text?: string; points?: number }> }>;
       } catch {
         continue;
       }
 
-      if (!Array.isArray(parsed) || parsed.length < count) continue;
+      if (parsed.length < count) continue;
 
       const questions: SurveyQuestion[] = [];
       for (let i = 0; i < count; i++) {
