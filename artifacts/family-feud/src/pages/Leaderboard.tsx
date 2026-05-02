@@ -16,6 +16,7 @@ import {
   Star,
 } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
+import AdsterraWidget from "../components/AdsterraWidget";
 
 type Player = {
   rank: number;
@@ -175,6 +176,10 @@ export default function Leaderboard() {
             launch soon.
           </p>
         </section>
+
+        <div className="mb-10">
+          <AdsterraWidget />
+        </div>
 
         <section aria-labelledby="leaderboard-heading">
           <div className="flex items-center justify-between mb-4 px-1">

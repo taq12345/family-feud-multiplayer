@@ -450,7 +450,7 @@ export default function Lobby() {
 
             <button
               onClick={() => { playClickSound(); setLocation("/leaderboard"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
               title="Leaderboard"
               aria-label="Leaderboard"
             >
@@ -477,7 +477,7 @@ export default function Lobby() {
                 setRefreshSpinKey(key => key + 1);
                 void loadRooms();
               }}
-              className="p-2 rounded-lg bg-white/8 border border-white/20 text-slate-300 hover:text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/40 transition-all"
+              className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 hover:text-white hover:bg-emerald-500/25 hover:border-emerald-400/60 hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] transition-all"
               title="Refresh"
             >
               <RefreshCw
