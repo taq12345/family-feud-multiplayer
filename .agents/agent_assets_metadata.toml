@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "CoU6zR_DEqecRjf14vf5Z"
+uri = "file://artifacts/family-feud-mobile/dist-apk/friendly-feud-android.tar.gz"
+type = "unspecified"
+title = "Friendly Feud Android APK (extract to install)"

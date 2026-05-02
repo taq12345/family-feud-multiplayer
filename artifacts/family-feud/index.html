@@ -129,9 +129,19 @@
     }
     </script>
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6881665602687563"
-         crossorigin="anonymous"></script>
+    <!-- Google AdSense — skipped inside the Capacitor Android wrapper
+         (the wrapper sets "FriendlyFeudApp" in the User-Agent) to comply
+         with AdSense/AdMob's no-WebView-ads policy. -->
+    <script>
+      (function () {
+        if (/FriendlyFeudApp/i.test(navigator.userAgent)) return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6881665602687563';
+        document.head.appendChild(s);
+      })();
+    </script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNRQ0EBW1N"></script>

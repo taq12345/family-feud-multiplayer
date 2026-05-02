@@ -1,11 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-
-// Hide all ads when the page is loaded inside the Capacitor Android wrapper.
-// The wrapper appends "FriendlyFeudApp" to the User-Agent (see
-// artifacts/family-feud-mobile/capacitor.config.ts). Mobile-app ads are
-// blocked separately via Play Store policy and AdMob will be added later.
-const isMobileApp = typeof navigator !== "undefined" &&
-  /FriendlyFeudApp/i.test(navigator.userAgent);
+import { isMobileApp } from "@/lib/isMobileApp";
 
 const AD_HTML = `<!DOCTYPE html>
 <html>
