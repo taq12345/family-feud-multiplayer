@@ -1,5 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 
+// Hide all ads when the page is loaded inside the Capacitor Android wrapper.
+// The wrapper appends "FriendlyFeudApp" to the User-Agent (see
+// artifacts/family-feud-mobile/capacitor.config.ts). Mobile-app ads are
+// blocked separately via Play Store policy and AdMob will be added later.
+const isMobileApp = typeof navigator !== "undefined" &&
+  /FriendlyFeudApp/i.test(navigator.userAgent);
+
 const AD_HTML = `<!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +23,7 @@ export default function AdsterraWidget() {
   const [height, setHeight] = useState(120);
 
   useEffect(() => {
+    if (isMobileApp) return;
     const iframe = iframeRef.current;
     if (!iframe) return;
 
@@ -34,6 +42,8 @@ export default function AdsterraWidget() {
       clearInterval(interval);
     };
   }, []);
+
+  if (isMobileApp) return null;
 
   return (
     <iframe
