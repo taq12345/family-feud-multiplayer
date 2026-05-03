@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Show, useUser, useClerk } from "@clerk/react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
@@ -12,7 +12,7 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-import { CheckCircle2, AlertCircle, Loader2, LogOut, User as UserIcon, LogIn } from "lucide-react";
+import { CheckCircle2, AlertCircle, Loader2, LogOut, User as UserIcon, LogIn, Camera } from "lucide-react";
 import { useLocation } from "wouter";
 import { playClickSound } from "../lib/sounds";
 
@@ -38,6 +38,9 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
   const { signOut } = useClerk();
   const { user, isLoaded } = useUser();
   const [me, setMe] = useState<MeResponse | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) { setMe(null); return; }
@@ -52,11 +55,63 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
     // Refetch when the nickname is set elsewhere (e.g. NicknameSetupDialog)
     // so the header pill updates immediately without a page reload.
     window.addEventListener("nickname:set", refetch);
+    window.addEventListener("avatar:set", refetch);
     return () => {
       cancelled = true;
       window.removeEventListener("nickname:set", refetch);
+      window.removeEventListener("avatar:set", refetch);
     };
   }, [user?.id]);
+
+  // Auto-dismiss avatar errors after 5s so the dropdown stays clean.
+  useEffect(() => {
+    if (!avatarError) return;
+    const t = setTimeout(() => setAvatarError(null), 5000);
+    return () => clearTimeout(t);
+  }, [avatarError]);
+
+  async function handleAvatarFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    // Reset the input so the same file can be re-selected later if needed.
+    e.target.value = "";
+    if (!file || !user) return;
+
+    if (!file.type.startsWith("image/")) {
+      setAvatarError("Please choose an image file (JPG, PNG, GIF, or WebP).");
+      return;
+    }
+    // Clerk caps profile images at 10 MB.
+    const MAX_BYTES = 10 * 1024 * 1024;
+    if (file.size > MAX_BYTES) {
+      setAvatarError("Image is too large. Max size is 10 MB.");
+      return;
+    }
+
+    setAvatarError(null);
+    setAvatarUploading(true);
+    try {
+      // Clerk hosts the image and updates user.imageUrl.
+      await user.setProfileImage({ file });
+      // Mirror the new URL into our DB so the leaderboard / game rooms see it.
+      await fetch("/api/users/me/sync-avatar", { method: "POST", credentials: "include" });
+      // Refresh local Clerk + /me state so the header pill updates instantly.
+      await user.reload();
+      try {
+        window.dispatchEvent(new CustomEvent("avatar:set"));
+      } catch { /* ignore */ }
+    } catch (err) {
+      console.error("[avatar] upload failed", err);
+      setAvatarError("Couldn't update profile picture. Try again.");
+    } finally {
+      setAvatarUploading(false);
+    }
+  }
+
+  function triggerAvatarPicker() {
+    playClickSound();
+    setAvatarError(null);
+    fileInputRef.current?.click();
+  }
 
   async function handleSignOut() {
     playClickSound();
@@ -133,6 +188,24 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-white/10" />
             <DropdownMenuItem
+              disabled={avatarUploading}
+              onSelect={(e) => { e.preventDefault(); triggerAvatarPicker(); }}
+              className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+            >
+              {avatarUploading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Camera className="w-4 h-4 mr-2" />
+              )}
+              {avatarUploading ? "Uploading…" : "Change profile picture"}
+            </DropdownMenuItem>
+            {avatarError && (
+              <p className="px-3 pb-2 -mt-1 text-[11px] text-red-400 leading-tight">
+                {avatarError}
+              </p>
+            )}
+            <DropdownMenuSeparator className="bg-white/10" />
+            <DropdownMenuItem
               onSelect={(e) => { e.preventDefault(); void handleSignOut(); }}
               className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
             >
@@ -140,6 +213,15 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        {/* Hidden file picker — opened by the "Change profile picture" item.
+            `accept="image/*"` lets phones surface camera + gallery options. */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleAvatarFileChange}
+        />
       </Show>
       {!isLoaded && null}
     </>

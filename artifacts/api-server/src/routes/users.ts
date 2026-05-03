@@ -71,6 +71,36 @@ async function ensureUserRow(clerkUserId: string) {
   return refetch[0]!;
 }
 
+/**
+ * Re-pull the user's avatar URL from Clerk and persist it to our DB.
+ * Called by the client after it uploads a new profile picture via Clerk's
+ * `user.setProfileImage({ file })` — Clerk hosts the image, we just mirror
+ * the resulting URL so leaderboards / room headers update right away.
+ */
+router.post("/users/me/sync-avatar", requireAuth, async (req: AuthedRequest, res) => {
+  try {
+    await ensureUserRow(req.userId!);
+    let avatarUrl: string | null = null;
+    try {
+      const cu = await clerkClient.users.getUser(req.userId!);
+      avatarUrl = cu.imageUrl ?? null;
+    } catch (err) {
+      console.error("[users/me/sync-avatar] clerk fetch failed", err);
+      res.status(502).json({ error: "Could not fetch profile from Clerk" });
+      return;
+    }
+    const updated = await db
+      .update(usersTable)
+      .set({ avatarUrl })
+      .where(eq(usersTable.clerkUserId, req.userId!))
+      .returning();
+    res.json({ avatarUrl: updated[0]?.avatarUrl ?? null });
+  } catch (err) {
+    console.error("[users/me/sync-avatar]", err);
+    res.status(500).json({ error: "Failed to sync avatar" });
+  }
+});
+
 router.get("/users/me", requireAuth, async (req: AuthedRequest, res) => {
   try {
     const row = await ensureUserRow(req.userId!);
