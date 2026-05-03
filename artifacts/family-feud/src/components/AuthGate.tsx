@@ -52,8 +52,6 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
         .catch(() => {});
     };
     refetch();
-    // Refetch when the nickname is set elsewhere (e.g. NicknameSetupDialog)
-    // so the header pill updates immediately without a page reload.
     window.addEventListener("nickname:set", refetch);
     window.addEventListener("avatar:set", refetch);
     return () => {
@@ -63,7 +61,6 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
     };
   }, [user?.id]);
 
-  // Auto-dismiss avatar errors after 5s so the dropdown stays clean.
   useEffect(() => {
     if (!avatarError) return;
     const t = setTimeout(() => setAvatarError(null), 5000);
@@ -72,15 +69,13 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
 
   async function handleAvatarFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    // Reset the input so the same file can be re-selected later if needed.
     e.target.value = "";
     if (!file || !user) return;
 
     if (!file.type.startsWith("image/")) {
-      setAvatarError("Please choose an image file (JPG, PNG, GIF, or WebP).");
+      setAvatarError("Please choose an image file.");
       return;
     }
-    // Clerk caps profile images at 10 MB.
     const MAX_BYTES = 10 * 1024 * 1024;
     if (file.size > MAX_BYTES) {
       setAvatarError("Image is too large. Max size is 10 MB.");
@@ -90,11 +85,8 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
     setAvatarError(null);
     setAvatarUploading(true);
     try {
-      // Clerk hosts the image and updates user.imageUrl.
       await user.setProfileImage({ file });
-      // Mirror the new URL into our DB so the leaderboard / game rooms see it.
       await fetch("/api/users/me/sync-avatar", { method: "POST", credentials: "include" });
-      // Refresh local Clerk + /me state so the header pill updates instantly.
       await user.reload();
       try {
         window.dispatchEvent(new CustomEvent("avatar:set"));
@@ -117,8 +109,6 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
     playClickSound();
     try {
       localStorage.removeItem("playerName");
-      // Treat sign-out as a fresh-visitor reset so the sign-in screen
-      // returns to its guest-first view.
       sessionStorage.removeItem("cameFromLobby");
     } catch { /* ignore */ }
     try {
@@ -213,8 +203,6 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        {/* Hidden file picker — opened by the "Change profile picture" item.
-            `accept="image/*"` lets phones surface camera + gallery options. */}
         <input
           ref={fileInputRef}
           type="file"
@@ -246,7 +234,6 @@ export function NicknameSetupDialog({
   const [checking, setChecking] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Load /me whenever auth changes
   useEffect(() => {
     if (!isLoaded || !isSignedIn) { setMe(null); setMeChecked(false); return; }
     let cancelled = false;
@@ -262,7 +249,6 @@ export function NicknameSetupDialog({
     return () => { cancelled = true; };
   }, [isLoaded, isSignedIn]);
 
-  // Live availability check
   useEffect(() => {
     if (!nick) { setAvailable(null); setChecking(false); return; }
     if (!NICKNAME_PATTERN.test(nick)) {
@@ -306,10 +292,8 @@ export function NicknameSetupDialog({
         setSubmitting(false);
         return;
       }
-      // Mirror to localStorage so the rest of the lobby uses it
       localStorage.setItem("playerName", data.nickname);
       setMe((prev) => (prev ? { ...prev, nickname: data.nickname, hasNickname: true } : prev));
-      // Notify other components (e.g. AuthHeaderButton) to refresh.
       try {
         window.dispatchEvent(
           new CustomEvent("nickname:set", { detail: { nickname: data.nickname } }),
@@ -331,14 +315,12 @@ export function NicknameSetupDialog({
       >
         <DialogHeader>
           <DialogTitle className="text-xl font-bold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
-            Choose your permanent nickname
+            Choose your nickname
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <p className="text-sm text-slate-400">
-            This nickname will be linked to your account and{" "}
-            <strong className="text-amber-400">cannot be changed later</strong>.
-            Choose carefully — 2-16 characters, letters/numbers/_/-.
+            Pick the name you want to use in games. It cannot be changed later.
           </p>
           <div>
             <Label className="text-slate-300 text-sm font-medium">Nickname</Label>
