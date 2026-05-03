@@ -93,7 +93,16 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
                   onClick={async () => {
                     playClickSound();
                     setMenuOpen(false);
-                    await signOut();
+                    // Clear cached guest nickname so the user isn't auto-logged
+                    // back in as a guest using their registered nickname.
+                    try { localStorage.removeItem("playerName"); } catch { /* ignore */ }
+                    try {
+                      await signOut({ redirectUrl: `${basePath}/sign-in` });
+                    } catch (err) {
+                      console.error("[signOut] failed", err);
+                      // Hard fallback so the UI never gets stuck.
+                      window.location.href = `${basePath}/sign-in`;
+                    }
                   }}
                   className="w-full flex items-center gap-2 px-4 py-3 text-sm text-slate-200 hover:bg-white/10 transition-colors"
                 >

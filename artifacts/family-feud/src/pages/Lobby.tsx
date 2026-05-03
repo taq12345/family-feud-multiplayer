@@ -463,7 +463,7 @@ export default function Lobby() {
                 </span>
               </div>
             )}
-            {nickname && (
+            {nickname && !isSignedIn && (
               <span title="Change nickname" className="hidden sm:inline-flex">
                 <button
                   onClick={() => {
@@ -552,17 +552,19 @@ export default function Lobby() {
                         </span>
                       </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        playClickSound();
-                        setChangeNicknameInput("");
-                        setChangeNicknameError(null);
-                        setChangeNicknameOpen(true);
-                      }}
-                      className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
-                    >
-                      <Pencil className="w-4 h-4 mr-2" /> Change nickname
-                    </DropdownMenuItem>
+                    {!isSignedIn && (
+                      <DropdownMenuItem
+                        onClick={() => {
+                          playClickSound();
+                          setChangeNicknameInput("");
+                          setChangeNicknameError(null);
+                          setChangeNicknameOpen(true);
+                        }}
+                        className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                      >
+                        <Pencil className="w-4 h-4 mr-2" /> Change nickname
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator className="bg-white/10" />
                   </>
                 )}
