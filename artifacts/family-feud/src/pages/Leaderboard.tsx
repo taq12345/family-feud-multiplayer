@@ -16,6 +16,9 @@ import {
   Swords,
   Star,
   Loader2,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
 } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import AdsterraWidget from "../components/AdsterraWidget";
@@ -118,10 +121,35 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
+type SortKey =
+  | "totalPoints"
+  | "gamesWon"
+  | "gamesLost"
+  | "roundsWon"
+  | "roundsLost"
+  | "correctGuesses"
+  | "wrongGuesses"
+  | "successfulSteals";
+type SortDir = "asc" | "desc";
+
 export default function Leaderboard() {
   const [, setLocation] = useLocation();
   const [rows, setRows] = useState<LeaderboardRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>("totalPoints");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+
+  function handleSort(key: SortKey) {
+    playClickSound();
+    if (sortKey === key) {
+      setSortDir(d => (d === "desc" ? "asc" : "desc"));
+    } else {
+      setSortKey(key);
+      // Default direction: "wins/points/etc" → desc; "losses" → desc as well
+      // (people usually want to see the highest count first regardless).
+      setSortDir("desc");
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -147,6 +175,64 @@ export default function Leaderboard() {
 
   const loading = rows === null;
   const isEmpty = !loading && rows && rows.length === 0;
+
+  const sortedRows = rows
+    ? [...rows].sort((a, b) => {
+        const av = a[sortKey];
+        const bv = b[sortKey];
+        const diff = bv - av; // desc by default
+        const primary = sortDir === "desc" ? diff : -diff;
+        if (primary !== 0) return primary;
+        // Stable tiebreaker: total points desc, then nickname asc
+        if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+        return a.nickname.localeCompare(b.nickname);
+      })
+    : null;
+
+  function SortIcon({ k }: { k: SortKey }) {
+    if (sortKey !== k) {
+      return <ArrowUpDown className="w-3 h-3 text-slate-600 opacity-60" />;
+    }
+    return sortDir === "desc" ? (
+      <ArrowDown className="w-3 h-3 text-amber-400" />
+    ) : (
+      <ArrowUp className="w-3 h-3 text-amber-400" />
+    );
+  }
+
+  function SortableTh({
+    k,
+    label,
+    shortLabel,
+    icon,
+  }: {
+    k: SortKey;
+    label: string;
+    shortLabel?: string;
+    icon: React.ReactNode;
+  }) {
+    const active = sortKey === k;
+    return (
+      <th
+        className={`px-3 py-4 font-semibold text-xs tracking-wider uppercase select-none ${
+          active ? "text-amber-300" : "text-slate-400"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => handleSort(k)}
+          className="inline-flex items-center gap-1.5 justify-center w-full hover:text-white transition-colors cursor-pointer"
+          aria-label={`Sort by ${label}`}
+          aria-sort={active ? (sortDir === "desc" ? "descending" : "ascending") : "none"}
+        >
+          {icon}
+          <span className="hidden sm:inline">{label}</span>
+          {shortLabel && <span className="sm:hidden">{shortLabel}</span>}
+          <SortIcon k={k} />
+        </button>
+      </th>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
@@ -245,64 +331,18 @@ export default function Leaderboard() {
                       <th className="text-left px-4 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
                         Player
                       </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <Trophy className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="hidden sm:inline">Games W</span>
-                          <span className="sm:hidden">GW</span>
-                        </span>
-                      </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <XCircle className="w-3.5 h-3.5 text-rose-400" />
-                          <span className="hidden sm:inline">Games L</span>
-                          <span className="sm:hidden">GL</span>
-                        </span>
-                      </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <Target className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="hidden sm:inline">Rounds W</span>
-                          <span className="sm:hidden">RW</span>
-                        </span>
-                      </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <Target className="w-3.5 h-3.5 text-rose-400" />
-                          <span className="hidden sm:inline">Rounds L</span>
-                          <span className="sm:hidden">RL</span>
-                        </span>
-                      </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="hidden sm:inline">Correct</span>
-                          <span className="sm:hidden">✓</span>
-                        </span>
-                      </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <XCircle className="w-3.5 h-3.5 text-rose-400" />
-                          <span className="hidden sm:inline">Wrong</span>
-                          <span className="sm:hidden">✗</span>
-                        </span>
-                      </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <Swords className="w-3.5 h-3.5 text-purple-400" />
-                          Steals
-                        </span>
-                      </th>
-                      <th className="px-3 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
-                        <span className="inline-flex items-center gap-1.5 justify-center">
-                          <Star className="w-3.5 h-3.5 text-amber-400" />
-                          Points
-                        </span>
-                      </th>
+                      <SortableTh k="gamesWon" label="Games W" shortLabel="GW" icon={<Trophy className="w-3.5 h-3.5 text-emerald-400" />} />
+                      <SortableTh k="gamesLost" label="Games L" shortLabel="GL" icon={<XCircle className="w-3.5 h-3.5 text-rose-400" />} />
+                      <SortableTh k="roundsWon" label="Rounds W" shortLabel="RW" icon={<Target className="w-3.5 h-3.5 text-emerald-400" />} />
+                      <SortableTh k="roundsLost" label="Rounds L" shortLabel="RL" icon={<Target className="w-3.5 h-3.5 text-rose-400" />} />
+                      <SortableTh k="correctGuesses" label="Correct" shortLabel="✓" icon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />} />
+                      <SortableTh k="wrongGuesses" label="Wrong" shortLabel="✗" icon={<XCircle className="w-3.5 h-3.5 text-rose-400" />} />
+                      <SortableTh k="successfulSteals" label="Steals" icon={<Swords className="w-3.5 h-3.5 text-purple-400" />} />
+                      <SortableTh k="totalPoints" label="Points" icon={<Star className="w-3.5 h-3.5 text-amber-400" />} />
                     </tr>
                   </thead>
                   <tbody>
-                    {rows!.map((p, idx) => {
+                    {sortedRows!.map((p, idx) => {
                       const rank = idx + 1;
                       const totalGames = p.gamesWon + p.gamesLost;
                       const winRate = totalGames > 0 ? Math.round((p.gamesWon / totalGames) * 100) : null;
