@@ -33,10 +33,11 @@ async function resolveUserIdByNickname(nickname: string): Promise<string | null>
   }
 }
 
-/** True if at least 2 distinct human-named players are in the room (i.e. real multiplayer). */
+/** True if at least 2 distinct players participated in this game (i.e. real multiplayer).
+ *  Uses allParticipants (a permanent roster) so late disconnects don't produce false negatives. */
 function isMultiplayerGame(state: GameState): boolean {
   if (state.isSolo) return false;
-  return state.players.size >= 2;
+  return state.allParticipants.size >= 2;
 }
 
 /** True if this is a real solo-mode game (single player against the survey). */
@@ -118,11 +119,11 @@ export async function creditSteal(state: GameState, player: Player, points: numb
   await creditStats(player.name, { successfulSteals: 1, totalPoints: points, correctGuesses: 1 });
 }
 
-/** Credit round win/loss to every player on each team. */
+/** Credit round win/loss to every player who participated in the round. */
 export async function creditRoundEnd(state: GameState, winningTeam: 1 | 2): Promise<void> {
   if (!isMultiplayerGame(state)) return;
   const promises: Promise<void>[] = [];
-  for (const p of state.players.values()) {
+  for (const p of state.allParticipants.values()) {
     if (p.team === winningTeam) {
       promises.push(creditStats(p.name, { roundsWon: 1 }));
     } else {
@@ -135,10 +136,17 @@ export async function creditRoundEnd(state: GameState, winningTeam: 1 | 2): Prom
 /** Credit game win/loss when the final round is over. */
 export async function creditGameEnd(state: GameState): Promise<void> {
   if (!isMultiplayerGame(state)) return;
-  if (state.team1Score === state.team2Score) return; // tie — no credit
+  if (state.team1Score === state.team2Score) {
+    console.log(`[stats] creditGameEnd room=${state.roomId} — tie, no credit`);
+    return;
+  }
   const winningTeam: 1 | 2 = state.team1Score > state.team2Score ? 1 : 2;
+  console.log(
+    `[stats] creditGameEnd room=${state.roomId} winningTeam=${winningTeam} ` +
+    `score=${state.team1Score}-${state.team2Score} participants=${state.allParticipants.size}`,
+  );
   const promises: Promise<void>[] = [];
-  for (const p of state.players.values()) {
+  for (const p of state.allParticipants.values()) {
     if (p.team === winningTeam) {
       promises.push(creditStats(p.name, { gamesWon: 1 }));
     } else {
