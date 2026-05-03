@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { createSoloGame } from "../hooks/useGameSocket";
 import AdsterraWidget from "../components/AdsterraWidget";
 import { AuthHeaderButton } from "../components/AuthGate";
+import { useUser } from "@clerk/react";
 
 interface Room {
   id: string;
@@ -79,12 +80,47 @@ async function createRoomApi(body: {
 
 export default function Lobby() {
   const [, setLocation] = useLocation();
+  const { isSignedIn, isLoaded: authLoaded } = useUser();
   const roomsRequestInFlight = useRef(false);
   const [nickname, setNickname] = useState(() => {
     const stored = localStorage.getItem("playerName") ?? "";
     return stored.length > 16 ? stored.slice(0, 16) : stored;
   });
-  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(() => !localStorage.getItem("playerName"));
+  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(false);
+
+  // First-visit redirect: if the user has neither set a guest nickname nor
+  // signed in, send them to the sign-in screen. From there they can choose
+  // to authenticate or click "Back to lobby" to play as a guest.
+  useEffect(() => {
+    if (!authLoaded) return;
+    if (localStorage.getItem("playerName")) return;
+    if (isSignedIn) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("join")) return; // honor invite links — let them play as guest
+    setLocation("/sign-in");
+  }, [authLoaded, isSignedIn, setLocation]);
+
+  // If they choose to play as guest (returned from /sign-in without auth and
+  // still no name), open the guest nickname dialog.
+  useEffect(() => {
+    if (!authLoaded) return;
+    if (isSignedIn) return;
+    if (localStorage.getItem("playerName")) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("join")) {
+      setNicknameDialogOpen(true);
+      return;
+    }
+    // Only open dialog if we're not about to redirect (i.e. we already came
+    // back from sign-in). The redirect effect above guards this — give it a
+    // tick.
+    const t = setTimeout(() => {
+      if (!localStorage.getItem("playerName") && !isSignedIn) {
+        setNicknameDialogOpen(true);
+      }
+    }, 50);
+    return () => clearTimeout(t);
+  }, [authLoaded, isSignedIn]);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);

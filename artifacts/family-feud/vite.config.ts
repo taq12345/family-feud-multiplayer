@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import { execSync } from "node:child_process";
 
 const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 5173;
@@ -19,6 +20,22 @@ const PRERENDER_ROUTES = [
 ];
 
 const isProductionBuild = process.env.NODE_ENV === "production";
+
+function resolveChromiumPath(): string | undefined {
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) return process.env.PUPPETEER_EXECUTABLE_PATH;
+  // Prefer a system / Nix-provided chromium (has all required shared libs);
+  // fall back to puppeteer's bundled binary if none is found on PATH.
+  try {
+    const out = execSync(
+      "command -v chromium 2>/dev/null || command -v chromium-browser 2>/dev/null || command -v google-chrome 2>/dev/null || true",
+      { encoding: "utf8" },
+    ).trim();
+    if (out) return out;
+  } catch {
+    /* ignore */
+  }
+  return undefined;
+}
 
 export default defineConfig({
   base: basePath,
@@ -48,9 +65,7 @@ export default defineConfig({
               maxConcurrentRoutes: 2,
               renderAfterTime: 2500,
               headless: true,
-              executablePath:
-                process.env.PUPPETEER_EXECUTABLE_PATH ??
-                "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium",
+              executablePath: resolveChromiumPath(),
               args: ["--no-sandbox", "--disable-setuid-sandbox"],
             },
             postProcess(renderedRoute: { html: string }) {
