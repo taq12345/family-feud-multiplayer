@@ -47,22 +47,33 @@ const ALLOWED_TOTAL_ROUNDS = [2, 4, 6, 8, 10] as const;
 const VISIBLE_ROOMS_REFRESH_MS = 15000;
 const HIDDEN_ROOMS_REFRESH_MS = 60000;
 
-async function checkNickname(name: string): Promise<boolean> {
-  const result = await checkNicknameDetailed(name);
+async function checkNickname(name: string, ownLockedNickname?: string | null): Promise<boolean> {
+  const result = await checkNicknameDetailed(name, ownLockedNickname);
   return result.taken;
 }
 
 /**
- * Check whether a nickname is usable for a guest. Validates against BOTH:
+ * Check whether a nickname is usable. Validates against BOTH:
  *   1. Registered (Clerk-linked) nicknames in the users table — guests cannot
  *      claim a name that a signed-up player has reserved.
  *   2. Active in-memory room players — avoids two players in the same room
  *      colliding.
+ *
+ * If `ownLockedNickname` is provided and matches (case-insensitive), the
+ * checks are skipped: a signed-in player always owns their own locked name,
+ * so the registered-name and active-socket lookups would falsely flag it.
  */
 async function checkNicknameDetailed(
   name: string,
+  ownLockedNickname?: string | null,
 ): Promise<{ taken: boolean; reason?: string }> {
   const trimmed = name.trim();
+  if (
+    ownLockedNickname &&
+    trimmed.toLowerCase() === ownLockedNickname.trim().toLowerCase()
+  ) {
+    return { taken: false };
+  }
   try {
     const [usersRes, roomsRes] = await Promise.all([
       fetch(`/api/users/check-nickname?name=${encodeURIComponent(trimmed)}`),
@@ -113,6 +124,9 @@ export default function Lobby() {
     return stored.length > 16 ? stored.slice(0, 16) : stored;
   });
   const [nicknameDialogOpen, setNicknameDialogOpen] = useState(false);
+  // The signed-in user's locked Clerk nickname (null for guests). Used to
+  // short-circuit the "is this nickname taken?" checks against your own name.
+  const [lockedNickname, setLockedNickname] = useState<string | null>(null);
 
   // When the user signs in, the locked Clerk-linked nickname is the source of
   // truth — override any leftover guest nickname so the lobby/header don't
@@ -124,6 +138,7 @@ export default function Lobby() {
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (cancelled || !data?.nickname) return;
+        setLockedNickname(data.nickname);
         if (nickname !== data.nickname) {
           setNickname(data.nickname);
           try { localStorage.setItem("playerName", data.nickname); } catch { /* ignore */ }
@@ -132,6 +147,11 @@ export default function Lobby() {
       .catch(() => {});
     return () => { cancelled = true; };
   }, [authLoaded, isSignedIn, nickname]);
+
+  // Clear locked nickname when user signs out
+  useEffect(() => {
+    if (authLoaded && !isSignedIn) setLockedNickname(null);
+  }, [authLoaded, isSignedIn]);
 
   // First-visit redirect: if the user has neither set a guest nickname nor
   // signed in, send them to the sign-in screen. From there they can choose
@@ -398,8 +418,8 @@ export default function Lobby() {
     setCreateError(null);
     setCreateLoading(true);
     try {
-      const taken = await checkNickname(trimmedNickname);
-      if (taken) { setCreateError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
+      const { taken, reason } = await checkNicknameDetailed(trimmedNickname, lockedNickname);
+      if (taken) { setCreateError(reason || `Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
 
       const room = await createRoomApi({ ...form, name: trimmedRoomName, hostName: trimmedNickname });
       localStorage.setItem("playerName", trimmedNickname);
@@ -436,7 +456,7 @@ export default function Lobby() {
     setChangeNicknameError(null);
     setChangeNicknameLoading(true);
     try {
-      const { taken, reason } = await checkNicknameDetailed(trimmed);
+      const { taken, reason } = await checkNicknameDetailed(trimmed, lockedNickname);
       if (taken) {
         setChangeNicknameError(reason || `"${trimmed}" is already in use. Pick another.`);
         return;
@@ -457,7 +477,7 @@ export default function Lobby() {
     if (!trimmedNickname) return;
     if (trimmedNickname.length > 16) { setJoinError("Nickname must be 16 characters or fewer."); return; }
 
-    const { taken, reason } = await checkNicknameDetailed(trimmedNickname);
+    const { taken, reason } = await checkNicknameDetailed(trimmedNickname, lockedNickname);
     if (taken) {
       setJoinError(reason || `Nickname "${trimmedNickname}" is already in use. Change it first.`);
       return;
@@ -1053,7 +1073,7 @@ export default function Lobby() {
                     const trimmed = nickname.trim();
                     if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                     setNicknameError(null);
-                    const taken = await checkNickname(trimmed);
+                    const taken = await checkNickname(trimmed, lockedNickname);
                     if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
                     setNickname(trimmed);
                     localStorage.setItem("playerName", trimmed);
@@ -1076,7 +1096,7 @@ export default function Lobby() {
                 const trimmed = nickname.trim();
                 if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                 setNicknameError(null);
-                const taken = await checkNickname(trimmed);
+                const taken = await checkNickname(trimmed, lockedNickname);
                 if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
