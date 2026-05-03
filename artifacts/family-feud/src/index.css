@@ -197,12 +197,9 @@
   }
 }
 
-/* Hide Clerk's "Development mode" / "Secured by Clerk" badges */
-.cl-badge,
-.cl-internal-badge,
-[data-clerk-development-mode],
-.cl-development-mode,
-.cl-internal-1g8aatp,
-.cl-footer + div:has(.cl-badge) {
+/* Hide Clerk's "Development mode" badge.
+   The localization-key attribute is the only stable selector across Clerk
+   versions; class names are hashed and change between releases. */
+[data-localization-key="badge__developmentMode"] {
   display: none !important;
 }
