@@ -171,32 +171,29 @@ export default function Lobby() {
   // First-visit redirect: if the user has neither set a guest nickname nor
   // signed in, send them to the sign-in screen. From there they can choose
   // to authenticate or click "Back to lobby" to play as a guest.
+  // Invite-link users (?join=ROOM_ID) are treated the same — the room ID is
+  // preserved in sessionStorage so it survives the round-trip to /sign-in.
   useEffect(() => {
     if (!authLoaded) return;
     if (localStorage.getItem("playerName")) return;
     if (isSignedIn) return;
-    if (pendingInviteRoom) return; // honor invite links — let them choose guest/sign-in
     setLocation("/sign-in");
-  }, [authLoaded, isSignedIn, pendingInviteRoom, setLocation]);
+  }, [authLoaded, isSignedIn, setLocation]);
 
-  // If they arrived via an invite link without a nickname, open the guest nickname dialog.
+  // Open the guest nickname dialog only when the user has returned from
+  // /sign-in without signing in (i.e. they clicked "Back to lobby").
   useEffect(() => {
     if (!authLoaded) return;
     if (isSignedIn) return;
     if (localStorage.getItem("playerName")) return;
-    if (pendingInviteRoom) {
-      setNicknameDialogOpen(true);
-      return;
-    }
-    // Only open dialog if we're not about to redirect (i.e. we already came
-    // back from sign-in). The redirect effect above guards this — give it a tick.
+    // Give the redirect effect a tick to fire first.
     const t = setTimeout(() => {
       if (!localStorage.getItem("playerName") && !isSignedIn) {
         setNicknameDialogOpen(true);
       }
     }, 50);
     return () => clearTimeout(t);
-  }, [authLoaded, isSignedIn, pendingInviteRoom]);
+  }, [authLoaded, isSignedIn]);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
