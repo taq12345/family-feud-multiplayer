@@ -13,6 +13,11 @@ export const userStatsTable = pgTable("user_stats", {
   wrongGuesses: integer("wrong_guesses").notNull().default(0),
   successfulSteals: integer("successful_steals").notNull().default(0),
   totalPoints: integer("total_points").notNull().default(0),
+  // Solo-mode counters (kept separate so the multiplayer leaderboard isn't
+  // inflated by single-player practice runs).
+  soloCorrectGuesses: integer("solo_correct_guesses").notNull().default(0),
+  soloWrongGuesses: integer("solo_wrong_guesses").notNull().default(0),
+  soloTotalPoints: integer("solo_total_points").notNull().default(0),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

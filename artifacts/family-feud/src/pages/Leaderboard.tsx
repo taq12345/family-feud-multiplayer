@@ -23,7 +23,7 @@ import {
 import { playClickSound } from "../lib/sounds";
 import AdsterraWidget from "../components/AdsterraWidget";
 
-type LeaderboardRow = {
+type MultiplayerRow = {
   userId: string;
   nickname: string;
   avatarUrl: string | null;
@@ -36,6 +36,17 @@ type LeaderboardRow = {
   successfulSteals: number;
   totalPoints: number;
 };
+
+type SoloRow = {
+  userId: string;
+  nickname: string;
+  avatarUrl: string | null;
+  correctGuesses: number;
+  wrongGuesses: number;
+  totalPoints: number;
+};
+
+type Mode = "multiplayer" | "solo";
 
 const formatNumber = (n: number) => n.toLocaleString();
 
@@ -121,7 +132,7 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-type SortKey =
+type MultiSortKey =
   | "totalPoints"
   | "gamesWon"
   | "gamesLost"
@@ -130,11 +141,15 @@ type SortKey =
   | "correctGuesses"
   | "wrongGuesses"
   | "successfulSteals";
+type SoloSortKey = "totalPoints" | "correctGuesses" | "wrongGuesses";
+type SortKey = MultiSortKey;
 type SortDir = "asc" | "desc";
 
 export default function Leaderboard() {
   const [, setLocation] = useLocation();
-  const [rows, setRows] = useState<LeaderboardRow[] | null>(null);
+  const [mode, setMode] = useState<Mode>("multiplayer");
+  const [multiRows, setMultiRows] = useState<MultiplayerRow[] | null>(null);
+  const [soloRows, setSoloRows] = useState<SoloRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("totalPoints");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
@@ -145,45 +160,62 @@ export default function Leaderboard() {
       setSortDir(d => (d === "desc" ? "asc" : "desc"));
     } else {
       setSortKey(key);
-      // Default direction: "wins/points/etc" → desc; "losses" → desc as well
-      // (people usually want to see the highest count first regardless).
       setSortDir("desc");
     }
   }
 
+  function handleModeChange(next: Mode) {
+    if (next === mode) return;
+    playClickSound();
+    setMode(next);
+    // Reset sort to "Points desc" so users land on the most useful default
+    // for whichever board they switched into.
+    setSortKey("totalPoints");
+    setSortDir("desc");
+  }
+
+  // Fetch the current mode's leaderboard if we don't already have it cached.
   useEffect(() => {
+    const haveData = mode === "multiplayer" ? multiRows !== null : soloRows !== null;
+    if (haveData) return;
     let cancelled = false;
-    fetch("/api/leaderboard")
+    setError(null);
+    fetch(`/api/leaderboard?mode=${mode}`)
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
       .then(data => {
         if (cancelled) return;
-        setRows(Array.isArray(data?.leaderboard) ? data.leaderboard : []);
+        const list = Array.isArray(data?.leaderboard) ? data.leaderboard : [];
+        if (mode === "multiplayer") setMultiRows(list);
+        else setSoloRows(list);
       })
       .catch(err => {
         if (cancelled) return;
         console.error("[leaderboard] fetch failed", err);
         setError("Couldn't load the leaderboard. Try again in a moment.");
-        setRows([]);
+        if (mode === "multiplayer") setMultiRows([]);
+        else setSoloRows([]);
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [mode, multiRows, soloRows]);
 
+  const rows: (MultiplayerRow | SoloRow)[] | null =
+    mode === "multiplayer" ? multiRows : soloRows;
   const loading = rows === null;
   const isEmpty = !loading && rows && rows.length === 0;
 
   const sortedRows = rows
     ? [...rows].sort((a, b) => {
-        const av = a[sortKey];
-        const bv = b[sortKey];
-        const diff = bv - av; // desc by default
+        // sortKey may not exist on solo rows (e.g. gamesWon); fall back to 0.
+        const av = (a as Record<string, number>)[sortKey] ?? 0;
+        const bv = (b as Record<string, number>)[sortKey] ?? 0;
+        const diff = bv - av;
         const primary = sortDir === "desc" ? diff : -diff;
         if (primary !== 0) return primary;
-        // Stable tiebreaker: total points desc, then nickname asc
         if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
         return a.nickname.localeCompare(b.nickname);
       })
@@ -280,8 +312,35 @@ export default function Leaderboard() {
           </h1>
           <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
             Climb the ranks, rack up points, and prove you're the ultimate survey-savvy player. Stats are tracked
-            for registered players in multiplayer games.
+            for registered players only.
           </p>
+
+          <div className="mt-6 inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-sm">
+            <button
+              type="button"
+              onClick={() => handleModeChange("multiplayer")}
+              className={`px-4 sm:px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all ${
+                mode === "multiplayer"
+                  ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              aria-pressed={mode === "multiplayer"}
+            >
+              Multiplayer
+            </button>
+            <button
+              type="button"
+              onClick={() => handleModeChange("solo")}
+              className={`px-4 sm:px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all ${
+                mode === "solo"
+                  ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              aria-pressed={mode === "solo"}
+            >
+              Solo
+            </button>
+          </div>
         </section>
 
         <div className="mb-10">
@@ -317,10 +376,12 @@ export default function Leaderboard() {
                 <Sparkles className="w-10 h-10 text-amber-400 mx-auto mb-4 opacity-60" />
                 <h3 className="text-lg font-bold text-white mb-2">No ranked players yet</h3>
                 <p className="text-slate-400 text-sm max-w-md mx-auto">
-                  Sign in, lock in your nickname, and play a multiplayer game to be the first on the board.
+                  {mode === "multiplayer"
+                    ? "Sign in, lock in your nickname, and play a multiplayer game to be the first on the board."
+                    : "Sign in, lock in your nickname, and play a solo game to be the first on the board."}
                 </p>
               </div>
-            ) : (
+            ) : mode === "multiplayer" ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm min-w-[900px]">
                   <thead>
@@ -342,7 +403,7 @@ export default function Leaderboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedRows!.map((p, idx) => {
+                    {(sortedRows as MultiplayerRow[]).map((p, idx) => {
                       const rank = idx + 1;
                       const totalGames = p.gamesWon + p.gamesLost;
                       const winRate = totalGames > 0 ? Math.round((p.gamesWon / totalGames) * 100) : null;
@@ -399,11 +460,72 @@ export default function Leaderboard() {
                   </tbody>
                 </table>
               </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm min-w-[520px]">
+                  <thead>
+                    <tr className="border-b border-white/10 bg-white/[0.02]">
+                      <th className="text-left px-4 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
+                        Rank
+                      </th>
+                      <th className="text-left px-4 py-4 font-semibold text-slate-400 text-xs tracking-wider uppercase">
+                        Player
+                      </th>
+                      <SortableTh k="correctGuesses" label="Correct" shortLabel="✓" icon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />} />
+                      <SortableTh k="wrongGuesses" label="Wrong" shortLabel="✗" icon={<XCircle className="w-3.5 h-3.5 text-rose-400" />} />
+                      <SortableTh k="totalPoints" label="Points" icon={<Star className="w-3.5 h-3.5 text-amber-400" />} />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(sortedRows as SoloRow[]).map((p, idx) => {
+                      const rank = idx + 1;
+                      const totalGuesses = p.correctGuesses + p.wrongGuesses;
+                      const accuracy = totalGuesses > 0 ? Math.round((p.correctGuesses / totalGuesses) * 100) : null;
+                      return (
+                        <tr
+                          key={p.userId}
+                          className={`border-b border-white/5 last:border-b-0 hover:bg-white/[0.02] transition-colors ${
+                            rank === 1 ? "bg-amber-500/[0.04]" : ""
+                          }`}
+                        >
+                          <td className="px-4 py-4">
+                            <RankBadge rank={rank} />
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-3">
+                              <Avatar name={p.nickname} avatarUrl={p.avatarUrl} />
+                              <div className="min-w-0">
+                                <div className="font-bold text-white truncate">{p.nickname}</div>
+                                {accuracy !== null && (
+                                  <div className="text-[11px] text-slate-500">{accuracy}% accuracy</div>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 text-center text-slate-200 font-semibold tabular-nums">
+                            {formatNumber(p.correctGuesses)}
+                          </td>
+                          <td className="px-3 py-4 text-center text-slate-400 font-semibold tabular-nums">
+                            {formatNumber(p.wrongGuesses)}
+                          </td>
+                          <td className="px-3 py-4 text-center">
+                            <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/30 text-amber-200 font-bold tabular-nums">
+                              {formatNumber(p.totalPoints)}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
 
           <p className="text-center text-xs text-slate-600 mt-4 italic">
-            Stats only count for registered players in multiplayer games (2+ players).
+            {mode === "multiplayer"
+              ? "Stats only count for registered players in multiplayer games (2+ players)."
+              : "Stats only count for registered players in solo games."}
           </p>
         </section>
 

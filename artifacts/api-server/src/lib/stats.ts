@@ -12,6 +12,9 @@ export interface StatsDelta {
   wrongGuesses?: number;
   successfulSteals?: number;
   totalPoints?: number;
+  soloCorrectGuesses?: number;
+  soloWrongGuesses?: number;
+  soloTotalPoints?: number;
 }
 
 /** Resolve a player nickname to a registered user id (or null if guest). */
@@ -36,6 +39,11 @@ function isMultiplayerGame(state: GameState): boolean {
   return state.players.size >= 2;
 }
 
+/** True if this is a real solo-mode game (single player against the survey). */
+function isSoloGame(state: GameState): boolean {
+  return !!state.isSolo;
+}
+
 /** Increment stats for a registered user. No-op for guests / unknown nicknames. */
 export async function creditStats(nickname: string, delta: StatsDelta): Promise<void> {
   const userId = await resolveUserIdByNickname(nickname);
@@ -55,6 +63,9 @@ export async function creditStats(nickname: string, delta: StatsDelta): Promise<
         wrongGuesses: delta.wrongGuesses ?? 0,
         successfulSteals: delta.successfulSteals ?? 0,
         totalPoints: delta.totalPoints ?? 0,
+        soloCorrectGuesses: delta.soloCorrectGuesses ?? 0,
+        soloWrongGuesses: delta.soloWrongGuesses ?? 0,
+        soloTotalPoints: delta.soloTotalPoints ?? 0,
       })
       .onConflictDoUpdate({
         target: userStatsTable.userId,
@@ -67,6 +78,9 @@ export async function creditStats(nickname: string, delta: StatsDelta): Promise<
           wrongGuesses: sql`${userStatsTable.wrongGuesses} + ${delta.wrongGuesses ?? 0}`,
           successfulSteals: sql`${userStatsTable.successfulSteals} + ${delta.successfulSteals ?? 0}`,
           totalPoints: sql`${userStatsTable.totalPoints} + ${delta.totalPoints ?? 0}`,
+          soloCorrectGuesses: sql`${userStatsTable.soloCorrectGuesses} + ${delta.soloCorrectGuesses ?? 0}`,
+          soloWrongGuesses: sql`${userStatsTable.soloWrongGuesses} + ${delta.soloWrongGuesses ?? 0}`,
+          soloTotalPoints: sql`${userStatsTable.soloTotalPoints} + ${delta.soloTotalPoints ?? 0}`,
           updatedAt: sql`now()`,
         },
       });
@@ -75,13 +89,21 @@ export async function creditStats(nickname: string, delta: StatsDelta): Promise<
   }
 }
 
-/** Credit a single guess outcome. */
+/** Credit a single guess outcome (multiplayer or solo, routed to separate columns). */
 export async function creditGuess(
   state: GameState,
   player: Player,
   outcome: "correct" | "wrong",
   points: number = 0,
 ): Promise<void> {
+  if (isSoloGame(state)) {
+    if (outcome === "correct") {
+      await creditStats(player.name, { soloCorrectGuesses: 1, soloTotalPoints: points });
+    } else {
+      await creditStats(player.name, { soloWrongGuesses: 1 });
+    }
+    return;
+  }
   if (!isMultiplayerGame(state)) return;
   if (outcome === "correct") {
     await creditStats(player.name, { correctGuesses: 1, totalPoints: points });
@@ -90,7 +112,7 @@ export async function creditGuess(
   }
 }
 
-/** Credit a successful steal to the player who stole. */
+/** Credit a successful steal to the player who stole. Multiplayer only. */
 export async function creditSteal(state: GameState, player: Player, points: number): Promise<void> {
   if (!isMultiplayerGame(state)) return;
   await creditStats(player.name, { successfulSteals: 1, totalPoints: points, correctGuesses: 1 });
@@ -126,7 +148,7 @@ export async function creditGameEnd(state: GameState): Promise<void> {
   await Promise.all(promises);
 }
 
-export interface LeaderboardRow {
+export interface MultiplayerLeaderboardRow {
   userId: string;
   nickname: string;
   avatarUrl: string | null;
@@ -140,7 +162,16 @@ export interface LeaderboardRow {
   totalPoints: number;
 }
 
-export async function getLeaderboard(limit = 100): Promise<LeaderboardRow[]> {
+export interface SoloLeaderboardRow {
+  userId: string;
+  nickname: string;
+  avatarUrl: string | null;
+  correctGuesses: number;
+  wrongGuesses: number;
+  totalPoints: number;
+}
+
+export async function getMultiplayerLeaderboard(limit = 100): Promise<MultiplayerLeaderboardRow[]> {
   const rows = await db
     .select({
       userId: usersTable.id,
@@ -157,7 +188,16 @@ export async function getLeaderboard(limit = 100): Promise<LeaderboardRow[]> {
     })
     .from(usersTable)
     .innerJoin(userStatsTable, eq(userStatsTable.userId, usersTable.id))
-    .where(sql`${usersTable.nickname} IS NOT NULL`)
+    .where(sql`${usersTable.nickname} IS NOT NULL AND (
+      ${userStatsTable.totalPoints} > 0
+      OR ${userStatsTable.gamesWon} > 0
+      OR ${userStatsTable.gamesLost} > 0
+      OR ${userStatsTable.roundsWon} > 0
+      OR ${userStatsTable.roundsLost} > 0
+      OR ${userStatsTable.correctGuesses} > 0
+      OR ${userStatsTable.wrongGuesses} > 0
+      OR ${userStatsTable.successfulSteals} > 0
+    )`)
     .orderBy(desc(userStatsTable.totalPoints), desc(userStatsTable.gamesWon))
     .limit(limit);
 
@@ -172,6 +212,36 @@ export async function getLeaderboard(limit = 100): Promise<LeaderboardRow[]> {
     correctGuesses: r.correctGuesses,
     wrongGuesses: r.wrongGuesses,
     successfulSteals: r.successfulSteals,
+    totalPoints: r.totalPoints,
+  }));
+}
+
+export async function getSoloLeaderboard(limit = 100): Promise<SoloLeaderboardRow[]> {
+  const rows = await db
+    .select({
+      userId: usersTable.id,
+      nickname: usersTable.nickname,
+      avatarUrl: usersTable.avatarUrl,
+      correctGuesses: userStatsTable.soloCorrectGuesses,
+      wrongGuesses: userStatsTable.soloWrongGuesses,
+      totalPoints: userStatsTable.soloTotalPoints,
+    })
+    .from(usersTable)
+    .innerJoin(userStatsTable, eq(userStatsTable.userId, usersTable.id))
+    .where(sql`${usersTable.nickname} IS NOT NULL AND (
+      ${userStatsTable.soloTotalPoints} > 0
+      OR ${userStatsTable.soloCorrectGuesses} > 0
+      OR ${userStatsTable.soloWrongGuesses} > 0
+    )`)
+    .orderBy(desc(userStatsTable.soloTotalPoints), desc(userStatsTable.soloCorrectGuesses))
+    .limit(limit);
+
+  return rows.map(r => ({
+    userId: r.userId,
+    nickname: r.nickname ?? "",
+    avatarUrl: r.avatarUrl,
+    correctGuesses: r.correctGuesses,
+    wrongGuesses: r.wrongGuesses,
     totalPoints: r.totalPoints,
   }));
 }
