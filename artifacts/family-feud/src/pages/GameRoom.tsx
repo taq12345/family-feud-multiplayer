@@ -1,8 +1,11 @@
 import { SEO } from "../components/SEO";
+import AdsterraWidget from "../components/AdsterraWidget";
+import { isMobileApp } from "../lib/isMobileApp";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
-import { useGameSocket, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
+import { useGameSocket, createSoloGame, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
+import { trackEvent } from "../lib/analytics";
 import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
@@ -73,8 +76,32 @@ function AnswerBoard({ question, answers }: {
   );
 }
 
+function PlayerAvatar({ name, avatarUrl, ringClass, sizeClass = "w-4 h-4" }: {
+  name: string; avatarUrl?: string | null; ringClass?: string; sizeClass?: string;
+}) {
+  const initial = (name?.trim()?.[0] ?? "?").toUpperCase();
+  const ring = ringClass ?? "ring-1 ring-white/10";
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt=""
+        loading="lazy"
+        className={`${sizeClass} rounded-full object-cover shrink-0 ${ring}`}
+      />
+    );
+  }
+  return (
+    <span
+      className={`${sizeClass} rounded-full shrink-0 bg-white/10 text-slate-300 ${ring} inline-flex items-center justify-center text-[8px] font-bold uppercase`}
+    >
+      {initial}
+    </span>
+  );
+}
+
 function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, myName, onKick }: {
-  players: Array<{ name: string; team: 1 | 2; isHost: boolean; contributedPoints: number }>;
+  players: Array<{ name: string; team: 1 | 2; isHost: boolean; contributedPoints: number; avatarUrl?: string | null }>;
   team1Name: string; team2Name: string; activePlayerName: string | null;
   isHost: boolean; myName: string; onKick: (name: string) => void;
 }) {
@@ -86,8 +113,8 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
         const members = team === 1 ? t1 : t2;
         const name = team === 1 ? team1Name : team2Name;
         const color = team === 1
-          ? { border: "border-rose-500/20", label: "text-rose-400", dot: "bg-rose-400", active: "bg-rose-500/20 border-rose-500/30 text-rose-300" }
-          : { border: "border-blue-500/20", label: "text-blue-400", dot: "bg-blue-400", active: "bg-blue-500/20 border-blue-500/30 text-blue-300" };
+          ? { border: "border-rose-500/20", label: "text-rose-400", ring: "ring-1 ring-rose-400", active: "bg-rose-500/20 border-rose-500/30 text-rose-300" }
+          : { border: "border-blue-500/20", label: "text-blue-400", ring: "ring-1 ring-blue-400", active: "bg-blue-500/20 border-blue-500/30 text-blue-300" };
         return (
           <div key={team} className={`rounded-xl bg-white/[0.02] border ${color.border} p-2`}>
             <div className={`text-[9px] font-bold uppercase tracking-widest ${color.label} mb-1.5 truncate`}>{name}</div>
@@ -96,8 +123,13 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
               {members.map(p => {
                 const isActive = p.name === activePlayerName;
                 return (
-                  <div key={p.name} className={`inline-flex items-center gap-1 text-[10px] rounded-full px-1.5 py-0.5 border ${isActive ? color.active : "border-white/5 text-slate-400"}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-30"}`} />
+                  <div key={p.name} className={`inline-flex items-center gap-1 text-[10px] rounded-full pl-0.5 pr-1.5 py-0.5 border ${isActive ? color.active : "border-white/5 text-slate-400"}`}>
+                    <PlayerAvatar
+                      name={p.name}
+                      avatarUrl={p.avatarUrl}
+                      ringClass={isActive ? color.ring : "ring-1 ring-white/10"}
+                      sizeClass="w-4 h-4"
+                    />
                     <span className="font-medium max-w-[60px] truncate">{p.name}</span>
                     <span className={`rounded-full px-1 py-0.5 text-[9px] font-bold tabular-nums ${isActive ? "bg-black/20 text-white/90" : "bg-white/5 text-slate-300"}`}>
                       {p.contributedPoints ?? 0} pts
@@ -204,6 +236,12 @@ export default function GameRoom() {
   const [stealAttempt, setStealAttempt] = useState<{ playerName: string; answer: string; correct: boolean } | null>(null);
   const [currentStealGuess, setCurrentStealGuess] = useState<{ playerName: string; answer: string } | null>(null);
   const [lastRoundResult, setLastRoundResult] = useState<{ winningTeam: 1 | 2; points: number } | null>(null);
+  const [soloReplayOpen, setSoloReplayOpen] = useState(false);
+  const [soloReplayRounds, setSoloReplayRounds] = useState(4);
+  const [soloReplayMode, setSoloReplayMode] = useState<"classic" | "custom">("classic");
+  const [soloReplayTopic, setSoloReplayTopic] = useState("");
+  const [soloReplayError, setSoloReplayError] = useState<string | null>(null);
+  const [soloReplayLoading, setSoloReplayLoading] = useState(false);
   const [boardRevealStagger, setBoardRevealStagger] = useState<{
     canonical: CanonicalAnswerSlot[];
     visible: Set<number>;
@@ -229,6 +267,33 @@ export default function GameRoom() {
     setNotification(msg);
     setTimeout(() => setNotification(null), 3000);
   }, []);
+
+  const handleSoloReplay = () => {
+    if (soloReplayMode === "custom") {
+      const trimmed = soloReplayTopic.trim();
+      if (trimmed.length < 2) {
+        setSoloReplayError("Please enter a valid topic (at least 2 characters).");
+        return;
+      }
+    }
+    setSoloReplayError(null);
+    setSoloReplayLoading(true);
+    playClickSound();
+    createSoloGame(
+      playerName,
+      soloReplayRounds,
+      soloReplayMode === "custom" ? soloReplayTopic.trim() : undefined,
+      (newRoomId) => {
+        setSoloReplayLoading(false);
+        setSoloReplayOpen(false);
+        setLocation(`/room/${newRoomId}?name=${encodeURIComponent(playerName)}&team=1`);
+      },
+      (error) => {
+        setSoloReplayLoading(false);
+        setSoloReplayError(error);
+      }
+    );
+  };
 
   function clearRevealStaggerTimers() {
     revealStaggerTimersRef.current.forEach(clearTimeout);
@@ -265,7 +330,7 @@ export default function GameRoom() {
     revealChain(queue);
   }
 
-  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions } = useGameSocket(
+  const { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions, setPendingAnswer, clearPendingAnswer } = useGameSocket(
     roomId,
     playerName,
     team,
@@ -330,7 +395,12 @@ export default function GameRoom() {
         setChatMessages(prev => [...prev.slice(-99), msg]);
         setUnreadChats(prev => mobileTab === "game" ? prev + 1 : 0);
       },
-      onChatHistory: (msgs) => setChatMessages(msgs),
+      onChatHistory: (msgs) => {
+        // chat_history is only sent on join/reconnect — safe to clear the verifying overlay
+        // here so a reconnect mid-answer doesn't leave the player permanently blocked.
+        setVerifyingAnswer(false);
+        setChatMessages(msgs);
+      },
       onPlayerJoined: (data) => {
         playPlayerJoinSound();
         showNotification(`${data.playerName} joined Team ${data.team}`);
@@ -372,6 +442,7 @@ export default function GameRoom() {
       },
       onAnswerCorrect: (data) => {
         setVerifyingAnswer(false);
+        clearPendingAnswer();
         const key = data.playerName.trim().toLowerCase();
         const nextContributionPoints = (localContributionPointsRef.current[key] ?? 0) + data.points;
         localContributionPointsRef.current = {
@@ -421,6 +492,7 @@ export default function GameRoom() {
       },
       onAnswerWrong: (data) => {
         setVerifyingAnswer(false);
+        clearPendingAnswer();
         playBuzzerSound();
         // Synthetic chat message (italic, red) — pushed immediately so it's always visible
         setChatMessages(prev => [...prev.slice(-99), {
@@ -499,6 +571,9 @@ export default function GameRoom() {
       onCustomQuestionsError: (data) => {
         setCustomQuestionsError(data.message);
         setCustomQuestionsLoading(false);
+      },
+      onNextRoundError: (data) => {
+        showNotification(`⚠️ ${data.message}`);
       },
     }
   );
@@ -756,6 +831,12 @@ export default function GameRoom() {
     e.preventDefault();
     if (!answerInput.trim()) return;
     setVerifyingAnswer(true);
+    trackEvent("answer_submitted", {
+      game_mode: gameState?.isSolo ? "solo" : "multiplayer",
+    });
+    // Store the answer so it can be re-emitted automatically if the socket drops
+    // before the server responds with answer_correct or answer_wrong.
+    setPendingAnswer(answerInput, isMyTurnToFaceoff ? "faceoff" : "submit");
     if (isMyTurnToFaceoff) {
       setFaceoffCountdown(null);
       faceoffAnswer(answerInput);
@@ -810,7 +891,7 @@ export default function GameRoom() {
   const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
 
   return (
-    <div className="h-svh overflow-hidden bg-[#070d1f] text-white flex flex-col">
+    <div className={`${isSolo ? "min-h-svh overflow-y-auto" : "h-svh overflow-hidden"} bg-[#070d1f] text-white flex flex-col`}>
       {/* Answer verification overlay */}
       {verifyingAnswer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -923,9 +1004,9 @@ export default function GameRoom() {
         </div>
       )}
 
-      <div className="flex flex-1 overflow-hidden relative z-10">
+      <div className={`flex ${isSolo ? "flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
         {/* Main game area */}
-        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 overflow-hidden ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
+        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
           {/* Round info bar */}
           <div className="shrink-0 flex items-center justify-center gap-3 py-0.5">
@@ -978,7 +1059,7 @@ export default function GameRoom() {
 
           {/* Answer board — grows to fill remaining space */}
           {gameState.currentQuestion && answerBoardAnswers && (
-            <div className="flex-1 min-h-0">
+            <div className={`min-h-0 ${isSolo ? "max-h-[38vh]" : "flex-1"}`}>
               <AnswerBoard
                 question={gameState.currentQuestion.question}
                 answers={answerBoardAnswers}
@@ -1002,7 +1083,8 @@ export default function GameRoom() {
                         {t === 1 ? gameState.team1Name : gameState.team2Name}
                       </div>
                       {gameState.players.filter(p => p.team === t).map(p => (
-                        <div key={p.id} className="flex items-center gap-1 text-xs text-slate-300 mb-0.5">
+                        <div key={p.id} className="flex items-center gap-1.5 text-xs text-slate-300 mb-0.5">
+                          <PlayerAvatar name={p.name} avatarUrl={p.avatarUrl} sizeClass="w-5 h-5" />
                           {p.isHost && <Crown className="w-3 h-3 text-amber-400 shrink-0" />}
                           <span className="truncate">{p.name}</span>
                           {isHost && p.name !== playerName && !p.isHost && (
@@ -1068,6 +1150,17 @@ export default function GameRoom() {
                     >
                       <Wand2 className="w-4 h-4 mr-2" /> Custom Questions (Beta)
                     </Button>
+                  </div>
+                )}
+                {!isMobileApp && (
+                  <div className="flex justify-center mt-3">
+                    <iframe
+                      srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
+                      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                      scrolling="no"
+                      style={{ width: 300, height: 250, border: "none", display: "block" }}
+                      title="Advertisement"
+                    />
                   </div>
                 )}
               </div>
@@ -1347,10 +1440,10 @@ export default function GameRoom() {
                     isGameOver ? (
                       isSolo ? (
                         <Button
-                          onClick={() => { playClickSound(); setLocation("/"); }}
+                          onClick={() => { playClickSound(); setSoloReplayOpen(true); }}
                           className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-8 h-11 border-0 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all"
                         >
-                          Back to Lobby
+                          Play Again
                         </Button>
                       ) : (
                         <Button
@@ -1379,6 +1472,7 @@ export default function GameRoom() {
             })()}
 
           </div>
+
         </div>
 
         {/* Chat panel — hidden in solo mode */}
@@ -1388,6 +1482,17 @@ export default function GameRoom() {
             <MessageCircle className="w-3.5 h-3.5 text-slate-500" />
             <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Live Chat</span>
           </div>
+          {!isMobileApp && (
+            <div className="shrink-0 overflow-hidden border-b border-white/5 flex items-center justify-center bg-black/20" style={{ height: 250 }}>
+              <iframe
+                key={`chat-ad-${gameState?.currentRound ?? 0}`}
+                srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
+                sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                style={{ width: 300, height: 250, border: "none", display: "block" }}
+                title="Advertisement"
+              />
+            </div>
+          )}
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {chatMessages.length === 0 && (
               <p className="text-slate-600 text-xs text-center mt-6">No messages yet. Say hello!</p>
@@ -1436,6 +1541,12 @@ export default function GameRoom() {
         </div>
         )}
       </div>
+
+      {isSolo && (
+        <div className="w-full max-w-2xl mx-auto">
+          <AdsterraWidget key={`solo-ad-${gameState?.currentRound ?? 0}`} />
+        </div>
+      )}
 
       {/* Mobile bottom tab bar — hidden in solo mode */}
       <div className={`${isSolo ? "hidden" : ""} md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10`}>
@@ -1560,6 +1671,87 @@ export default function GameRoom() {
               disabled={customQuestionsLoading || !customTopic.trim()}
             >
               {customQuestionsLoading ? "Generating…" : "Generate & Start"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Solo Play Again Dialog */}
+      <Dialog
+        open={soloReplayOpen}
+        onOpenChange={(open) => {
+          setSoloReplayOpen(open);
+          if (!open) { setSoloReplayError(null); setSoloReplayLoading(false); }
+        }}
+      >
+        <DialogContent className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white max-w-sm shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-white font-bold">Play Again</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex bg-[#070d1f] p-1 rounded-lg border border-white/5">
+              <button
+                onClick={() => { playClickSound(); setSoloReplayMode("classic"); setSoloReplayError(null); }}
+                className={`flex-1 py-1.5 text-sm font-semibold rounded-md transition-all ${soloReplayMode === "classic" ? "bg-emerald-500/20 text-emerald-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                Classic
+              </button>
+              <button
+                onClick={() => { playClickSound(); setSoloReplayMode("custom"); setSoloReplayError(null); }}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-sm font-semibold rounded-md transition-all ${soloReplayMode === "custom" ? "bg-pink-500/20 text-pink-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                <Wand2 className="w-4 h-4" /> <span className="text-pink-400">Custom Topic</span>
+              </button>
+            </div>
+            <div>
+              <label className="text-slate-300 text-sm font-medium mb-2 block">Number of Rounds</label>
+              <select
+                value={soloReplayRounds}
+                onChange={e => setSoloReplayRounds(parseInt(e.target.value))}
+                className="w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-emerald-500/50"
+                disabled={soloReplayLoading}
+              >
+                <option value={2} className="bg-[#0d1525]">2 rounds</option>
+                <option value={4} className="bg-[#0d1525]">4 rounds</option>
+                <option value={6} className="bg-[#0d1525]">6 rounds</option>
+                <option value={8} className="bg-[#0d1525]">8 rounds</option>
+                <option value={10} className="bg-[#0d1525]">10 rounds</option>
+              </select>
+            </div>
+            {soloReplayMode === "custom" && (
+              <div className="animate-in fade-in slide-in-from-top-2">
+                <label className="text-pink-300/90 text-sm font-medium mb-2 flex items-center gap-1.5">
+                  <Wand2 className="w-3.5 h-3.5" />
+                  Custom Topic
+                </label>
+                <Input
+                  placeholder="e.g. 90s Action Movies, Fast Food, etc."
+                  value={soloReplayTopic}
+                  onChange={e => setSoloReplayTopic(e.target.value)}
+                  className="w-full bg-white/5 border-pink-500/30 text-white placeholder:text-slate-500 focus:border-pink-500/60 focus:ring-pink-500/20"
+                  disabled={soloReplayLoading}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && !soloReplayLoading) {
+                      e.preventDefault();
+                      handleSoloReplay();
+                    }
+                  }}
+                />
+              </div>
+            )}
+            {soloReplayError && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 text-red-400 text-sm animate-in fade-in">
+                {soloReplayError}
+              </div>
+            )}
+            <Button
+              onClick={handleSoloReplay}
+              disabled={soloReplayLoading}
+              className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all disabled:opacity-50"
+            >
+              {soloReplayLoading
+                ? (soloReplayMode === "custom" ? <><Loader2 className="w-4 h-4 animate-spin inline mr-2" />Generating...</> : "Starting...")
+                : "Start Game"}
             </Button>
           </div>
         </DialogContent>

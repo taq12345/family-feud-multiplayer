@@ -1,10 +1,11 @@
 import { Server as SocketServer, Socket } from "socket.io";
 import { db } from "@workspace/db";
-import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
+import { roomsTable, chatMessagesTable, usersTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
 import { findMatchIndex, normalizeSubmittedAnswer } from "./answerMatcher.js";
 import { generateCustomQuestions } from "./questionGenerator.js";
+import { creditGuess, creditSteal, creditRoundEnd, creditGameEnd } from "./stats.js";
 
 const gameStates = new Map<string, GameState>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -28,7 +29,7 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
   return existing !== excludeSocketId;
 }
 
-const PLAYER_DISCONNECT_GRACE_MS = 30 * 60 * 1000; // 30 minutes per-player reconnect window
+const PLAYER_DISCONNECT_GRACE_MS = 10 * 60 * 1000; // 10 minutes per-player reconnect window
 const FACEOFF_ANSWER_MS = 25 * 1000; // 25 seconds per faceoff guess
 const ROUND_ANSWER_MS = 25 * 1000; // 25 seconds per guess
 
@@ -83,15 +84,15 @@ function clearAutoAdvanceTimer(roomId: string) {
 
 const AUTO_ADVANCE_MS = 60 * 1000; // 60 seconds between rounds before auto-advancing
 
-async function advanceToNextRound(io: SocketServer, roomId: string) {
+async function advanceToNextRound(io: SocketServer, roomId: string): Promise<string | null> {
   const state = gameStates.get(roomId);
-  if (!state || state.status !== "between_rounds") return;
+  if (!state || state.status !== "between_rounds") return "Game is not between rounds.";
 
   // Don't advance if the game is over (last round done or out of questions)
-  if (state.currentRound >= state.totalRounds) return;
+  if (state.currentRound >= state.totalRounds) return "The game is already over.";
 
   const question = getNextQuestion(state);
-  if (!question) return;
+  if (!question) return "No more questions available.";
 
   // Solo rooms: skip faceoff entirely, go straight to playing
   if (state.isSolo) {
@@ -111,14 +112,16 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
     initPlayingTurn(state, 1);
     startAnswerTimer(io, state, roomId);
     io.to(roomId).emit("game_state", serializeGameState(state));
-    return;
+    return null;
   }
 
   // Don't advance if a team is empty — the game would freeze at faceoff
   const players = Array.from(state.players.values());
   const team1Count = players.filter(p => p.team === 1).length;
   const team2Count = players.filter(p => p.team === 2).length;
-  if (team1Count === 0 || team2Count === 0) return;
+  if (team1Count === 0 || team2Count === 0) {
+    return "One team has no players — waiting for someone to join before starting.";
+  }
 
   state.usedQuestionIds.add(question.id);
   state.currentQuestion = question;
@@ -140,6 +143,7 @@ async function advanceToNextRound(io: SocketServer, roomId: string) {
   } catch { /* ignore */ }
 
   io.to(roomId).emit("game_state", serializeGameState(state));
+  return null;
 }
 
 function scheduleAutoAdvance(io: SocketServer, roomId: string) {
@@ -187,17 +191,20 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
     if (!state || state.status !== "faceoff" || !state.faceoffDesignatedPlayerId) return;
     const player = state.players.get(state.faceoffDesignatedPlayerId);
     if (!player) return;
+    const teamName = player.team === 1 ? state.team1Name : state.team2Name;
 
+    console.log(`${player.name} (${teamName}) failed to submit answer in time [game_mode=${state.isSolo ? "solo" : "multiplayer"}]`);
     io.to(roomId).emit("answer_wrong", {
       playerName: player.name,
       team: player.team,
       answer: "(no answer in time)",
     });
+    creditGuess(state, player, "wrong").catch(() => {});
 
     state.faceoffUsedPlayerIds.add(player.id);
     state.faceoffAttempts++;
 
-    if (state.faceoffAttempts >= 8) {
+    if (state.faceoffAttempts >= 4) {
       await skipFaceoffRound(io, state, roomId);
       return;
     }
@@ -323,11 +330,14 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
       : null;
 
     if (designatedPlayer) {
+      const teamName = designatedPlayer.team === 1 ? current.team1Name : current.team2Name;
+      console.log(`${designatedPlayer.name} (${teamName}) failed to submit answer in time [game_mode=${current.isSolo ? "solo" : "multiplayer"}]`);
       io.to(roomId).emit("answer_wrong", {
         playerName: designatedPlayer.name,
         team: designatedPlayer.team,
         answer: "(no answer in time)",
       });
+      creditGuess(current, designatedPlayer, "wrong").catch(() => {});
     }
 
     if (current.status === "playing") {
@@ -490,12 +500,29 @@ export function setupSocketHandlers(io: SocketServer) {
       // ── Normal (first-time) join path ────────────────────────────────
       if (state) {
         const isHost = !Array.from(state.players.values()).some(p => p.isHost);
+
+        // Look up the registered user's avatar (if any) by their permanent
+        // nickname so it can be shown next to their name in the game UI.
+        // Guests don't have a row here → avatarUrl stays null.
+        let avatarUrl: string | null = null;
+        try {
+          const [u] = await db
+            .select({ avatarUrl: usersTable.avatarUrl })
+            .from(usersTable)
+            .where(eq(usersTable.nicknameLower, nameKey))
+            .limit(1);
+          avatarUrl = u?.avatarUrl ?? null;
+        } catch {
+          // ignore — non-fatal, name-only display is fine
+        }
+
         state.players.set(socket.id, {
           id: socket.id,
           name: trimmedPlayerName,
           team,
           isHost,
           contributedPoints: 0,
+          avatarUrl,
         });
 
         await db.update(roomsTable)
@@ -571,10 +598,10 @@ export function setupSocketHandlers(io: SocketServer) {
       }
     });
 
-    socket.on("create_solo_game", ({ playerName, rounds = 4 }: { playerName: string; rounds?: number }) => {
+    socket.on("create_solo_game", async ({ playerName, rounds = 4, topic }: { playerName: string; rounds?: number; topic?: string }) => {
       const trimmedName = (playerName ?? "").trim();
       if (!trimmedName || trimmedName.length > 16) {
-        socket.emit("join_rejected", { reason: "Nickname must be 1–16 characters." });
+        socket.emit("solo_game_error", { message: "Nickname must be 1–16 characters." });
         return;
       }
       // For solo games, allow the same nickname to start multiple games (e.g., different browser tabs).
@@ -591,18 +618,54 @@ export function setupSocketHandlers(io: SocketServer) {
       const state = createGameState(roomId, "Solo Play", "You", "CPU", numRounds);
       state.isSolo = true;
 
+      let soloAvatarUrl: string | null = null;
+      try {
+        const [u] = await db
+          .select({ avatarUrl: usersTable.avatarUrl })
+          .from(usersTable)
+          .where(eq(usersTable.nicknameLower, nameKey))
+          .limit(1);
+        soloAvatarUrl = u?.avatarUrl ?? null;
+      } catch {
+        // ignore — non-fatal
+      }
+
       const soloPlayer: import("./gameState.js").Player = {
         id: socket.id,
         name: trimmedName,
         team: 1,
         isHost: true,
         contributedPoints: 0,
+        avatarUrl: soloAvatarUrl,
       };
       state.players.set(socket.id, soloPlayer);
 
+      if (topic) {
+        const trimmedTopic = topic.trim();
+        if (trimmedTopic.length < 2) {
+          socket.emit("solo_game_error", { message: "Please enter a valid topic (at least 2 characters)." });
+          return;
+        }
+
+        const result = await generateCustomQuestions(trimmedTopic, numRounds);
+        if (!result.valid) {
+          socket.emit("solo_game_error", { message: result.reason });
+          return;
+        }
+
+        if (result.questions.length !== numRounds) {
+          socket.emit("solo_game_error", {
+            message: `Expected ${numRounds} questions but only ${result.questions.length} were generated. Please try again.`,
+          });
+          return;
+        }
+
+        state.questions = result.questions;
+      }
+
       const question = getNextQuestion(state);
       if (!question) {
-        socket.emit("join_rejected", { reason: "No questions available." });
+        socket.emit("solo_game_error", { message: "No questions available." });
         return;
       }
       state.usedQuestionIds.add(question.id);
@@ -786,6 +849,8 @@ export function setupSocketHandlers(io: SocketServer) {
       if (state.faceoffDesignatedPlayerId !== socket.id) return;
       const player = state.players.get(socket.id);
       if (!player) return;
+    const teamName = player.team === 1 ? state.team1Name : state.team2Name;
+    console.log(`${player.name} (${teamName}) submitted answer ${answer} [game_mode=${state.isSolo ? "solo" : "multiplayer"}]`);
 
       // Mutex: reject if another answer is already being processed for this room
       if (answerProcessing.get(roomId)) return;
@@ -802,7 +867,7 @@ export function setupSocketHandlers(io: SocketServer) {
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
-          if (state.faceoffAttempts >= 8) {
+          if (state.faceoffAttempts >= 4) {
             await skipFaceoffRound(io, state, roomId);
           } else {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
@@ -848,15 +913,17 @@ export function setupSocketHandlers(io: SocketServer) {
             points: pts,
             contributedPoints: player.contributedPoints,
           });
+          creditGuess(state, player, "correct", pts).catch(() => {});
           startAnswerTimer(io, state, roomId);
           io.to(roomId).emit("game_state", serializeGameState(state));
         } else {
           if (normSub) state.wrongAnswers.add(normSub);
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+          creditGuess(state, player, "wrong").catch(() => {});
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
 
-          if (state.faceoffAttempts >= 8) {
+          if (state.faceoffAttempts >= 4) {
             await skipFaceoffRound(io, state, roomId);
           } else {
             const nextTeam: 1 | 2 = player.team === 1 ? 2 : 1;
@@ -876,6 +943,8 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!state || (state.status !== "playing" && state.status !== "stealing") || !state.currentQuestion) return;
       const player = state.players.get(socket.id);
       if (!player) return;
+    const teamName = player.team === 1 ? state.team1Name : state.team2Name;
+    console.log(`${player.name} (${teamName}) submitted answer ${answer} [game_mode=${state.isSolo ? "solo" : "multiplayer"}]`);
       if (state.status === "playing" && player.team !== state.playingTeam) return;
       if (state.status === "stealing" && player.team === state.playingTeam) return;
       // Only the designated player may answer
@@ -898,6 +967,7 @@ export function setupSocketHandlers(io: SocketServer) {
         if (normSub && state.wrongAnswers.has(normSub)) {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
             if (state.strikes >= 3) {
@@ -922,6 +992,7 @@ export function setupSocketHandlers(io: SocketServer) {
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             await endRound(io, state, roomId, state.playingTeam!);
           }
           return;
@@ -956,6 +1027,11 @@ export function setupSocketHandlers(io: SocketServer) {
             points: pts,
             contributedPoints: player.contributedPoints,
           });
+          if (state.status === "stealing") {
+            creditSteal(state, player, pts).catch(() => {});
+          } else {
+            creditGuess(state, player, "correct", pts).catch(() => {});
+          }
 
           // Check if all answers revealed
           const allRevealed = state.currentQuestion.answers.every((_, i) => state.revealedAnswers.has(i));
@@ -971,6 +1047,7 @@ export function setupSocketHandlers(io: SocketServer) {
           if (normSub) state.wrongAnswers.add(normSub);
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
 
@@ -996,6 +1073,7 @@ export function setupSocketHandlers(io: SocketServer) {
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             // Failed steal — playing team gets points
             await endRound(io, state, roomId, state.playingTeam!);
           }
@@ -1029,11 +1107,25 @@ export function setupSocketHandlers(io: SocketServer) {
     socket.on("next_round", async ({ roomId }: { roomId: string }) => {
       const state = gameStates.get(roomId);
       if (!state || state.status !== "between_rounds") return;
-      const player = state.players.get(socket.id);
+
+      // Primary lookup by current socket.id; fall back to name-based scan so a
+      // recently-reconnected host (whose socket.id was just swapped in join_room)
+      // is still recognized if join_room hasn't fully processed yet.
+      let player = state.players.get(socket.id);
+      if (!player && socket.data.playerName) {
+        const nameKey = (socket.data.playerName as string).trim().toLowerCase();
+        for (const p of state.players.values()) {
+          if (p.name.trim().toLowerCase() === nameKey) { player = p; break; }
+        }
+      }
       if (!player?.isHost) return;
+
       // Cancel the auto-advance timer — host is manually advancing
       clearAutoAdvanceTimer(roomId);
-      await advanceToNextRound(io, roomId);
+      const error = await advanceToNextRound(io, roomId);
+      if (error) {
+        socket.emit("next_round_error", { message: error });
+      }
     });
 
     socket.on("delete_room", async ({ roomId }: { roomId: string }) => {
@@ -1321,6 +1413,13 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
     canonicalAnswers,
   });
   io.to(roomId).emit("game_state", serializeGameState(state));
+
+  // Stats: credit each player with a round W or L. If this was the final round,
+  // also credit the game W/L based on aggregate score.
+  creditRoundEnd(state, winningTeam).catch(() => {});
+  if (state.currentRound >= state.totalRounds) {
+    creditGameEnd(state).catch(() => {});
+  }
 
   // Auto-advance to next round if host doesn't click within 60 seconds.
   // Always schedule when there are more rounds — advanceToNextRound guards against advancing

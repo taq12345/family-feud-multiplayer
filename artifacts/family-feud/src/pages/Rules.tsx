@@ -3,6 +3,7 @@ import { SEO } from "../components/SEO";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { Tv2, ArrowLeft, Users, Zap, Shield, Trophy, RotateCcw, Star, Clock, Target } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
+import AdsterraWidget from "../components/AdsterraWidget";
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -97,6 +98,10 @@ export default function Rules() {
               Friendly Feud is a free online multiplayer survey game inspired by Family Feud. Two teams compete to guess the most popular survey answers — fastest fingers and sharpest minds win!
             </p>
           </header>
+
+          <div className="mb-10">
+            <AdsterraWidget />
+          </div>
 
           <section className="mb-10" aria-labelledby="overview-heading">
             <h2 id="overview-heading" className="text-xl font-bold text-white mb-4 flex items-center gap-2">
@@ -271,6 +276,7 @@ export default function Rules() {
             </button>
           </div>
         </article>
+
       </main>
     </div>
   );

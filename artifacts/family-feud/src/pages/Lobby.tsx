@@ -7,8 +7,12 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
-import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion } from "lucide-react";
+import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion, Wand2, MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../components/ui/dropdown-menu";
 import { createSoloGame } from "../hooks/useGameSocket";
+import AdsterraWidget from "../components/AdsterraWidget";
+import { AuthHeaderButton } from "../components/AuthGate";
+import { useUser } from "@clerk/react";
 
 interface Room {
   id: string;
@@ -43,14 +47,51 @@ const ALLOWED_TOTAL_ROUNDS = [2, 4, 6, 8, 10] as const;
 const VISIBLE_ROOMS_REFRESH_MS = 15000;
 const HIDDEN_ROOMS_REFRESH_MS = 60000;
 
-async function checkNickname(name: string): Promise<boolean> {
+async function checkNickname(name: string, ownLockedNickname?: string | null): Promise<boolean> {
+  const result = await checkNicknameDetailed(name, ownLockedNickname);
+  return result.taken;
+}
+
+/**
+ * Check whether a nickname is usable. Validates against BOTH:
+ *   1. Registered (Clerk-linked) nicknames in the users table — guests cannot
+ *      claim a name that a signed-up player has reserved.
+ *   2. Active in-memory room players — avoids two players in the same room
+ *      colliding.
+ *
+ * If `ownLockedNickname` is provided and matches (case-insensitive), the
+ * checks are skipped: a signed-in player always owns their own locked name,
+ * so the registered-name and active-socket lookups would falsely flag it.
+ */
+async function checkNicknameDetailed(
+  name: string,
+  ownLockedNickname?: string | null,
+): Promise<{ taken: boolean; reason?: string }> {
+  const trimmed = name.trim();
+  if (
+    ownLockedNickname &&
+    trimmed.toLowerCase() === ownLockedNickname.trim().toLowerCase()
+  ) {
+    return { taken: false };
+  }
   try {
-    const res = await fetch(`/api/nicknames/${encodeURIComponent(name.trim())}/check`);
-    if (!res.ok) return false;
-    const { taken } = await res.json();
-    return taken as boolean;
+    const [usersRes, roomsRes] = await Promise.all([
+      fetch(`/api/users/check-nickname?name=${encodeURIComponent(trimmed)}`),
+      fetch(`/api/nicknames/${encodeURIComponent(trimmed)}/check`),
+    ]);
+    if (usersRes.ok) {
+      const data = await usersRes.json();
+      if (data.available === false) {
+        return { taken: true, reason: data.reason };
+      }
+    }
+    if (roomsRes.ok) {
+      const { taken } = await roomsRes.json();
+      if (taken) return { taken: true, reason: "Currently in use in a live room" };
+    }
+    return { taken: false };
   } catch {
-    return false;
+    return { taken: false };
   }
 }
 
@@ -76,12 +117,75 @@ async function createRoomApi(body: {
 
 export default function Lobby() {
   const [, setLocation] = useLocation();
+  const { isSignedIn, isLoaded: authLoaded } = useUser();
   const roomsRequestInFlight = useRef(false);
   const [nickname, setNickname] = useState(() => {
     const stored = localStorage.getItem("playerName") ?? "";
     return stored.length > 16 ? stored.slice(0, 16) : stored;
   });
-  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(() => !localStorage.getItem("playerName"));
+  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(false);
+  // The signed-in user's locked Clerk nickname (null for guests). Used to
+  // short-circuit the "is this nickname taken?" checks against your own name.
+  const [lockedNickname, setLockedNickname] = useState<string | null>(null);
+
+  // When the user signs in, the locked Clerk-linked nickname is the source of
+  // truth — override any leftover guest nickname so the lobby/header don't
+  // display two identities at once.
+  useEffect(() => {
+    if (!authLoaded || !isSignedIn) return;
+    let cancelled = false;
+    fetch("/api/users/me", { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.nickname) return;
+        setLockedNickname(data.nickname);
+        if (nickname !== data.nickname) {
+          setNickname(data.nickname);
+          try { localStorage.setItem("playerName", data.nickname); } catch { /* ignore */ }
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [authLoaded, isSignedIn, nickname]);
+
+  // Clear locked nickname when user signs out
+  useEffect(() => {
+    if (authLoaded && !isSignedIn) setLockedNickname(null);
+  }, [authLoaded, isSignedIn]);
+
+  // First-visit redirect: if the user has neither set a guest nickname nor
+  // signed in, send them to the sign-in screen. From there they can choose
+  // to authenticate or click "Back to lobby" to play as a guest.
+  useEffect(() => {
+    if (!authLoaded) return;
+    if (localStorage.getItem("playerName")) return;
+    if (isSignedIn) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("join")) return; // honor invite links — let them play as guest
+    setLocation("/sign-in");
+  }, [authLoaded, isSignedIn, setLocation]);
+
+  // If they choose to play as guest (returned from /sign-in without auth and
+  // still no name), open the guest nickname dialog.
+  useEffect(() => {
+    if (!authLoaded) return;
+    if (isSignedIn) return;
+    if (localStorage.getItem("playerName")) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("join")) {
+      setNicknameDialogOpen(true);
+      return;
+    }
+    // Only open dialog if we're not about to redirect (i.e. we already came
+    // back from sign-in). The redirect effect above guards this — give it a
+    // tick.
+    const t = setTimeout(() => {
+      if (!localStorage.getItem("playerName") && !isSignedIn) {
+        setNicknameDialogOpen(true);
+      }
+    }, 50);
+    return () => clearTimeout(t);
+  }, [authLoaded, isSignedIn]);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -93,7 +197,6 @@ export default function Lobby() {
   const [joinRoomPlayers, setJoinRoomPlayers] = useState<Array<{ id: string; name: string; team: 1 | 2; isHost: boolean }> | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isInGame, setIsInGame] = useState(false);
   const [changeNicknameOpen, setChangeNicknameOpen] = useState(false);
   const [changeNicknameInput, setChangeNicknameInput] = useState("");
   const [changeNicknameError, setChangeNicknameError] = useState<string | null>(null);
@@ -131,13 +234,40 @@ export default function Lobby() {
 
   const [soloOpen, setSoloOpen] = useState(false);
   const [soloRounds, setSoloRounds] = useState(4);
+  const [soloMode, setSoloMode] = useState<"classic" | "custom">("classic");
+  const [soloTopic, setSoloTopic] = useState("");
+  const [soloError, setSoloError] = useState<string | null>(null);
+  const [soloLoading, setSoloLoading] = useState(false);
 
   const handleSoloPlay = () => {
     if (!nickname) return;
+    
+    if (soloMode === "custom") {
+      const trimmed = soloTopic.trim();
+      if (trimmed.length < 2) {
+        setSoloError("Please enter a valid topic (at least 2 characters).");
+        return;
+      }
+    }
+    
+    setSoloError(null);
+    setSoloLoading(true);
     playClickSound();
-    createSoloGame(nickname, soloRounds, (roomId) => {
-      setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
-    });
+    
+    createSoloGame(
+      nickname, 
+      soloRounds, 
+      soloMode === "custom" ? soloTopic.trim() : undefined,
+      (roomId) => {
+        setSoloLoading(false);
+        setSoloOpen(false);
+        setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
+      },
+      (error) => {
+        setSoloLoading(false);
+        setSoloError(error);
+      }
+    );
   };
 
   const [form, setForm] = useState({
@@ -214,15 +344,6 @@ export default function Lobby() {
     if (nickname) localStorage.setItem("playerName", nickname);
   }, [nickname]);
 
-  // Check whether the current nickname is active in a game room.
-  // On the lobby page the user has no socket open, so "taken" → they're in a game elsewhere.
-  useEffect(() => {
-    if (!nickname) { setIsInGame(false); return; }
-    let cancelled = false;
-    checkNickname(nickname).then(taken => { if (!cancelled) setIsInGame(taken); });
-    return () => { cancelled = true; };
-  }, [nickname]);
-
   // Poll for an existing player slot so we can show "Reconnect" on the matching room card.
   useEffect(() => {
     if (!nickname) { setReconnectSlot(null); return; }
@@ -297,8 +418,8 @@ export default function Lobby() {
     setCreateError(null);
     setCreateLoading(true);
     try {
-      const taken = await checkNickname(trimmedNickname);
-      if (taken) { setCreateError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
+      const { taken, reason } = await checkNicknameDetailed(trimmedNickname, lockedNickname);
+      if (taken) { setCreateError(reason || `Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
 
       const room = await createRoomApi({ ...form, name: trimmedRoomName, hostName: trimmedNickname });
       localStorage.setItem("playerName", trimmedNickname);
@@ -335,11 +456,13 @@ export default function Lobby() {
     setChangeNicknameError(null);
     setChangeNicknameLoading(true);
     try {
-      const taken = await checkNickname(trimmed);
-      if (taken) { setChangeNicknameError(`"${trimmed}" is already in use. Pick another.`); return; }
+      const { taken, reason } = await checkNicknameDetailed(trimmed, lockedNickname);
+      if (taken) {
+        setChangeNicknameError(reason || `"${trimmed}" is already in use. Pick another.`);
+        return;
+      }
       setNickname(trimmed);
       localStorage.setItem("playerName", trimmed);
-      setIsInGame(false);
       setChangeNicknameOpen(false);
       setChangeNicknameInput("");
     } finally {
@@ -354,8 +477,11 @@ export default function Lobby() {
     if (!trimmedNickname) return;
     if (trimmedNickname.length > 16) { setJoinError("Nickname must be 16 characters or fewer."); return; }
 
-    const taken = await checkNickname(trimmedNickname);
-    if (taken) { setJoinError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
+    const { taken, reason } = await checkNicknameDetailed(trimmedNickname, lockedNickname);
+    if (taken) {
+      setJoinError(reason || `Nickname "${trimmedNickname}" is already in use. Change it first.`);
+      return;
+    }
 
     localStorage.setItem("playerName", trimmedNickname);
     setJoinDialogOpen(false);
@@ -399,20 +525,17 @@ export default function Lobby() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            {nickname && (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {nickname && !isSignedIn && (
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="text-xs text-slate-300">
                   Playing as <span className="font-semibold text-amber-400">{nickname}</span>
                 </span>
               </div>
             )}
-            {nickname && (
-              <span
-                title={isInGame ? "Leave your current game before changing your nickname" : "Change nickname"}
-                className="inline-flex"
-              >
+            {nickname && !isSignedIn && (
+              <span title="Change nickname" className="hidden sm:inline-flex">
                 <button
                   onClick={() => {
                     playClickSound();
@@ -420,8 +543,7 @@ export default function Lobby() {
                     setChangeNicknameError(null);
                     setChangeNicknameOpen(true);
                   }}
-                  disabled={isInGame}
-                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/5 disabled:hover:text-slate-400 pointer-events-auto"
+                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all pointer-events-auto"
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
@@ -429,22 +551,31 @@ export default function Lobby() {
             )}
             <button
               onClick={() => { playClickSound(); setLocation("/rules"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="How to Play"
             >
               <BookOpen className="w-4 h-4" />
             </button>
 
             <button
+              onClick={() => { playClickSound(); setLocation("/leaderboard"); }}
+              className="p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
+              title="Leaderboard"
+              aria-label="Leaderboard"
+            >
+              <Trophy className="w-4 h-4" />
+            </button>
+
+            <button
               onClick={() => { playClickSound(); setLocation("/questions"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Survey Questions"
             >
               <FileQuestion className="w-4 h-4" />
             </button>
             <button
               onClick={() => { playClickSound(); setLocation("/feedback"); }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
               title="Feedback & Bug Reports"
             >
               <MessageSquare className="w-4 h-4" />
@@ -455,7 +586,7 @@ export default function Lobby() {
                 setRefreshSpinKey(key => key + 1);
                 void loadRooms();
               }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 hover:text-white hover:bg-emerald-500/25 hover:border-emerald-400/60 hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] transition-all"
               title="Refresh"
             >
               <RefreshCw
@@ -463,6 +594,73 @@ export default function Lobby() {
                 className={refreshSpinKey === 0 ? "w-4 h-4" : "w-4 h-4 animate-[spin_0.65s_cubic-bezier(0.22,1,0.36,1)]"}
               />
             </button>
+
+            <AuthHeaderButton />
+
+            {/* Mobile-only "More" menu — collapses secondary buttons that are hidden on small screens */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  onClick={() => playClickSound()}
+                  className="sm:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                  title="More"
+                  aria-label="More"
+                >
+                  <MoreVertical className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white min-w-[200px]"
+              >
+                {nickname && (
+                  <>
+                    {!isSignedIn && (
+                      <DropdownMenuItem disabled className="opacity-100 focus:bg-transparent">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                          <span className="text-xs text-slate-400">
+                            Playing as <span className="font-semibold text-amber-400">{nickname}</span>
+                          </span>
+                        </div>
+                      </DropdownMenuItem>
+                    )}
+                    {!isSignedIn && (
+                      <DropdownMenuItem
+                        onClick={() => {
+                          playClickSound();
+                          setChangeNicknameInput("");
+                          setChangeNicknameError(null);
+                          setChangeNicknameOpen(true);
+                        }}
+                        className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                      >
+                        <Pencil className="w-4 h-4 mr-2" /> Change nickname
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator className="bg-white/10" />
+                  </>
+                )}
+                <DropdownMenuItem
+                  onClick={() => { playClickSound(); setLocation("/rules"); }}
+                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                >
+                  <BookOpen className="w-4 h-4 mr-2" /> How to Play
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => { playClickSound(); setLocation("/questions"); }}
+                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                >
+                  <FileQuestion className="w-4 h-4 mr-2" /> Survey Questions
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => { playClickSound(); setLocation("/feedback"); }}
+                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" /> Feedback
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all border-0 px-3 sm:px-4">
@@ -561,7 +759,7 @@ export default function Lobby() {
             Find Friends
           </a>
           {nickname && (
-            <Dialog open={soloOpen} onOpenChange={setSoloOpen}>
+            <Dialog open={soloOpen} onOpenChange={v => { setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-br from-emerald-500/40 to-teal-600/40 border border-emerald-400/50 text-emerald-300 hover:from-emerald-500/50 hover:to-teal-600/50 hover:border-emerald-300/60 hover:text-emerald-200 transition-all text-sm font-bold shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_24px_rgba(16,185,129,0.35)]">
                   <Gamepad2 className="w-5 h-5" />
@@ -573,6 +771,20 @@ export default function Lobby() {
                   <DialogTitle className="text-white">Play Solo</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
+                  <div className="flex bg-[#070d1f] p-1 rounded-lg border border-white/5">
+                    <button
+                      onClick={() => { playClickSound(); setSoloMode("classic"); setSoloError(null); }}
+                      className={`flex-1 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "classic" ? "bg-emerald-500/20 text-emerald-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                    >
+                      Classic
+                    </button>
+                    <button
+                      onClick={() => { playClickSound(); setSoloMode("custom"); setSoloError(null); }}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-sm font-semibold rounded-md transition-all ${soloMode === "custom" ? "bg-pink-500/20 text-pink-400 shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                    >
+                      <Wand2 className="w-4 h-4" /> <span className="text-pink-400">Custom Topic</span>
+                    </button>
+                  </div>
                   <div>
                     <Label htmlFor="solo-rounds" className="text-slate-300 text-sm font-medium mb-2 block">Number of Rounds</Label>
                     <select
@@ -580,6 +792,7 @@ export default function Lobby() {
                       value={soloRounds}
                       onChange={e => setSoloRounds(parseInt(e.target.value))}
                       className="w-full h-10 rounded-md bg-white/5 border border-white/10 text-white text-sm px-3 focus:outline-none focus:border-emerald-500/50"
+                      disabled={soloLoading}
                     >
                       <option value={2} className="bg-[#0d1525]">2 rounds</option>
                       <option value={4} className="bg-[#0d1525]">4 rounds</option>
@@ -588,15 +801,39 @@ export default function Lobby() {
                       <option value={10} className="bg-[#0d1525]">10 rounds</option>
                     </select>
                   </div>
+                  {soloMode === "custom" && (
+                    <div className="animate-in fade-in slide-in-from-top-2">
+                      <Label htmlFor="solo-topic" className="text-pink-300/90 text-sm font-medium mb-2 flex items-center gap-1.5">
+                        <Wand2 className="w-3.5 h-3.5" />
+                        Custom Topic
+                      </Label>
+                      <Input
+                        id="solo-topic"
+                        placeholder="e.g. 90s Action Movies, Fast Food, etc."
+                        value={soloTopic}
+                        onChange={e => setSoloTopic(e.target.value)}
+                        className="w-full bg-white/5 border-pink-500/30 text-white placeholder:text-slate-500 focus:border-pink-500/60 focus:ring-pink-500/20"
+                        disabled={soloLoading}
+                        onKeyDown={e => {
+                          if (e.key === "Enter" && !soloLoading) {
+                            e.preventDefault();
+                            handleSoloPlay();
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                  {soloError && (
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 text-red-400 text-sm animate-in fade-in">
+                      {soloError}
+                    </div>
+                  )}
                   <Button
-                    onClick={() => {
-                      playClickSound();
-                      setSoloOpen(false);
-                      handleSoloPlay();
-                    }}
+                    onClick={handleSoloPlay}
+                    disabled={soloLoading}
                     className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all"
                   >
-                    Start Solo Game
+                    {soloLoading ? (soloMode === "custom" ? "Generating..." : "Starting...") : "Start Solo Game"}
                   </Button>
                 </div>
               </DialogContent>
@@ -620,13 +857,13 @@ export default function Lobby() {
             <p className="text-slate-500 text-sm">Loading rooms…</p>
           </div>
         ) : rooms.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-4 rounded-3xl bg-white/[0.02] border border-white/5">
+          <div className="flex flex-col items-center justify-center py-10 gap-4 rounded-3xl bg-white/[0.02] border border-white/5">
             <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
               <Tv2 className="w-8 h-8 text-slate-600" />
             </div>
             <div className="text-center">
-              <p className="text-slate-300 font-semibold">No rooms yet</p>
-              <p className="text-slate-500 text-sm mt-1">Be the first to create one!</p>
+              <p className="text-slate-300 font-semibold">Play with friends!</p>
+              <p className="text-slate-500 text-sm mt-1">Create a room and invite your friends!</p>
             </div>
             <Button
               onClick={() => setCreateOpen(true)}
@@ -836,7 +1073,7 @@ export default function Lobby() {
                     const trimmed = nickname.trim();
                     if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                     setNicknameError(null);
-                    const taken = await checkNickname(trimmed);
+                    const taken = await checkNickname(trimmed, lockedNickname);
                     if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
                     setNickname(trimmed);
                     localStorage.setItem("playerName", trimmed);
@@ -859,7 +1096,7 @@ export default function Lobby() {
                 const trimmed = nickname.trim();
                 if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                 setNicknameError(null);
-                const taken = await checkNickname(trimmed);
+                const taken = await checkNickname(trimmed, lockedNickname);
                 if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
@@ -877,8 +1114,13 @@ export default function Lobby() {
       </Dialog>
 
       <div className="max-w-4xl mx-auto px-4 mt-12 mb-4">
-        <p className="text-sm text-slate-500 text-center leading-relaxed">
-          Friendly Feud is a free online multiplayer survey game inspired by classic TV game shows like Family Feud. Create a room, invite friends, and compete to guess the top answers — no downloads or sign-ups needed.
+        <AdsterraWidget />
+      </div>
+
+      <div className="max-w-3xl mx-auto px-4 mb-8 text-center">
+        <h2 className="text-base font-semibold text-slate-400 mb-2">Play Family Feud Online With Friends — Free</h2>
+        <p className="text-sm text-slate-500 leading-relaxed">
+          Friendly Feud is the fastest way to play Family Feud online with friends — no download, no account, no cost. Create a private room, share the link, and your friends join instantly. Split into two teams and race to guess the top survey answers before the other side does. With 8,700+ classic questions and AI-powered custom rounds, every game is different.
         </p>
       </div>
 
@@ -891,6 +1133,7 @@ export default function Lobby() {
             <a href="/about" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/about"); }} className="hover:text-slate-400 transition-colors">About</a>
             <a href="/rules" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/rules"); }} className="hover:text-slate-400 transition-colors">How to Play</a>
             <a href="/questions" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/questions"); }} className="hover:text-slate-400 transition-colors">Survey Questions</a>
+            <a href="/leaderboard" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/leaderboard"); }} className="hover:text-slate-400 transition-colors">Leaderboard</a>
             <a href="/feedback" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/feedback"); }} className="hover:text-slate-400 transition-colors">Contact</a>
             <a href="/privacy" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</a>
             <a href="/terms" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/terms"); }} className="hover:text-slate-400 transition-colors">Terms of Service</a>

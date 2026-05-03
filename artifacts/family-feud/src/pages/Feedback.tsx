@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { ArrowLeft, Send, CheckCircle, MessageSquare } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -81,6 +82,10 @@ export default function Feedback() {
           <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto">
             Found a bug or have a suggestion? We'd love to hear from you. Fill out the form below and we'll get back to you.
           </p>
+        </div>
+
+        <div className="mb-8">
+          <AdsterraWidget />
         </div>
 
         {success ? (
@@ -167,6 +172,7 @@ export default function Feedback() {
             </Button>
           </form>
         )}
+
       </main>
     </div>
   );

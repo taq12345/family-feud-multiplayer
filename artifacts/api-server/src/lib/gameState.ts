@@ -1,4 +1,5 @@
-import { surveyQuestions, SurveyQuestion } from "../data/questions.js";
+import { surveyQuestions } from "./questionsBank.js";
+import type { SurveyQuestion } from "../data/questions.js";
 export { surveyQuestions };
 
 export interface Player {
@@ -7,6 +8,8 @@ export interface Player {
   team: 1 | 2;
   isHost: boolean;
   contributedPoints: number;
+  /** Clerk-hosted avatar URL for registered players; null for guests. */
+  avatarUrl: string | null;
 }
 
 export interface GameState {

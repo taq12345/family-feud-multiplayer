@@ -14,8 +14,8 @@ export const SEO: React.FC<SEOProps> = ({
   canonical, 
   schema 
 }) => {
-  const defaultTitle = "Friendly Feud – Play a Family Feud-Style Game Online Free with Friends";
-  const defaultDescription = "Play a free Family Feud-style survey game online with friends! Friendly Feud lets you create a room, split into two teams, and compete to guess the top answers. No download or sign-up needed.";
+  const defaultTitle = "Friendly Feud – Free Multiplayer & Solo Family Feud-Style Game";
+  const defaultDescription = "Free, no account needed. Challenge friends in multiplayer or play solo — split into teams & guess the top answers. 8,700+ questions & AI rounds included.";
   
   const siteTitle = title ? `${title} | Friendly Feud` : defaultTitle;
   const siteDescription = description || defaultDescription;

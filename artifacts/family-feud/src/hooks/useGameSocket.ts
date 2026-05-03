@@ -7,6 +7,7 @@ export interface Player {
   team: 1 | 2;
   isHost: boolean;
   contributedPoints: number;
+  avatarUrl?: string | null;
 }
 
 export interface AnswerSlot {
@@ -59,12 +60,23 @@ export interface CanonicalAnswerSlot {
   points: number;
 }
 
-export function createSoloGame(playerName: string, rounds: number, onCreated: (roomId: string) => void) {
+export function createSoloGame(
+  playerName: string, 
+  rounds: number, 
+  topic: string | undefined,
+  onCreated: (roomId: string) => void,
+  onError: (error: string) => void
+) {
   const socket = getSocket();
   socket.once("solo_game_created", ({ roomId }: { roomId: string }) => {
+    socket.off("solo_game_error");
     onCreated(roomId);
   });
-  socket.emit("create_solo_game", { playerName, rounds });
+  socket.once("solo_game_error", ({ message }: { message: string }) => {
+    socket.off("solo_game_created");
+    onError(message);
+  });
+  socket.emit("create_solo_game", { playerName, rounds, topic });
 }
 
 export function useGameSocket(
@@ -97,10 +109,17 @@ export function useGameSocket(
     onKicked?: () => void;
     onPlayerKicked?: (data: { playerName: string; hostName: string }) => void;
     onCustomQuestionsError?: (data: { message: string }) => void;
+    onNextRoundError?: (data: { message: string }) => void;
   }
 ) {
   const callbacksRef = useRef(callbacks);
   callbacksRef.current = callbacks;
+
+  // Tracks an in-flight answer that has been emitted but not yet confirmed by the server.
+  // If the socket reconnects before answer_correct/answer_wrong arrives, the answer is
+  // re-emitted so the server gets a second chance to process it.
+  const pendingAnswerRef = useRef<{ answer: string; type: "faceoff" | "submit" } | null>(null);
+  const reemitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!roomId || !playerName || !team) return;
@@ -112,8 +131,15 @@ export function useGameSocket(
       chat_history: (msgs: ChatMsg[]) => callbacksRef.current.onChatHistory?.(msgs),
       player_joined: (data: { playerName: string; team: 1 | 2 }) => callbacksRef.current.onPlayerJoined?.(data),
       player_left: (data: { playerName: string }) => callbacksRef.current.onPlayerLeft?.(data),
-      answer_correct: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; playedAnswer: string; points: number; contributedPoints: number }) => callbacksRef.current.onAnswerCorrect?.(data),
-      answer_wrong: (data: { playerName: string; team: 1 | 2; answer: string }) => callbacksRef.current.onAnswerWrong?.(data),
+      // Clear pending answer as soon as the server confirms or rejects — whichever arrives first.
+      answer_correct: (data: { playerName: string; team: 1 | 2; answerIndex: number; answerText: string; playedAnswer: string; points: number; contributedPoints: number }) => {
+        pendingAnswerRef.current = null;
+        callbacksRef.current.onAnswerCorrect?.(data);
+      },
+      answer_wrong: (data: { playerName: string; team: 1 | 2; answer: string }) => {
+        pendingAnswerRef.current = null;
+        callbacksRef.current.onAnswerWrong?.(data);
+      },
       strike: (data: { strikes: number }) => callbacksRef.current.onStrike?.(data),
       steal_chance: (data: { team: 1 | 2 }) => callbacksRef.current.onStealChance?.(data),
       round_over: (data: {
@@ -133,6 +159,7 @@ export function useGameSocket(
       kicked: () => callbacksRef.current.onKicked?.(),
       player_kicked: (data: { playerName: string; hostName: string }) => callbacksRef.current.onPlayerKicked?.(data),
       custom_questions_error: (data: { message: string }) => callbacksRef.current.onCustomQuestionsError?.(data),
+      next_round_error: (data: { message: string }) => callbacksRef.current.onNextRoundError?.(data),
     };
 
     Object.entries(handlers).forEach(([event, handler]) => {
@@ -143,6 +170,25 @@ export function useGameSocket(
     // The server detects whether this is a fresh join or a session restoration.
     const handleConnect = () => {
       socket.emit("join_room", { roomId, playerName, team });
+
+      // If an answer was in-flight when the socket dropped, re-emit it after a short delay.
+      // The delay allows the server to finish processing join_room and restore the player's
+      // designated-player slot before the answer arrives.
+      // Server guards (answerProcessing mutex + designated-player check) safely reject
+      // the re-emit if the round has already moved on.
+      if (pendingAnswerRef.current) {
+        const pending = pendingAnswerRef.current;
+        if (reemitTimerRef.current) clearTimeout(reemitTimerRef.current);
+        reemitTimerRef.current = setTimeout(() => {
+          reemitTimerRef.current = null;
+          if (!pendingAnswerRef.current) return; // Cleared by answer_correct/answer_wrong — no need to re-emit
+          if (pending.type === "faceoff") {
+            socket.emit("faceoff_answer", { roomId, answer: pending.answer });
+          } else {
+            socket.emit("submit_answer", { roomId, answer: pending.answer });
+          }
+        }, 300);
+      }
     };
 
     socket.on("connect", handleConnect);
@@ -157,8 +203,20 @@ export function useGameSocket(
         socket.off(event, handler as (...args: unknown[]) => void);
       });
       socket.off("connect", handleConnect);
+      if (reemitTimerRef.current) {
+        clearTimeout(reemitTimerRef.current);
+        reemitTimerRef.current = null;
+      }
     };
   }, [roomId, playerName, team]);
+
+  const setPendingAnswer = useCallback((answer: string, type: "faceoff" | "submit") => {
+    pendingAnswerRef.current = { answer, type };
+  }, []);
+
+  const clearPendingAnswer = useCallback(() => {
+    pendingAnswerRef.current = null;
+  }, []);
 
   const startGame = useCallback(() => {
     if (!roomId) return;
@@ -215,5 +273,5 @@ export function useGameSocket(
     getSocket().emit("cancel_custom_questions", { roomId });
   }, [roomId]);
 
-  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions };
+  return { startGame, faceoffAnswer, submitAnswer, sendChat, nextRound, leaveRoom, deleteRoom, restartGame, kickPlayer, generateCustomQuestions, cancelCustomQuestions, setPendingAnswer, clearPendingAnswer };
 }

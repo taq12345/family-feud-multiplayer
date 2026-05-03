@@ -219,9 +219,24 @@ function stemmedMatch(normSubmitted: string, normCanonical: string): boolean {
   return true;
 }
 
-/** Ask AI whether submitted and canonical mean the same thing in context */
-async function aiSemanticMatch(submitted: string, canonical: string, question: string): Promise<boolean> {
-  const AI_TIMEOUT_MS = 15000;
+/**
+ * Ask AI whether the submitted answer matches ANY of the candidate canonical answers.
+ * Single batched call instead of N parallel calls — same system prompt is sent once,
+ * cutting input tokens dramatically when a question has many unrevealed answers.
+ *
+ * Returns the position (in the `candidates` array passed in) of the lowest-index
+ * matching candidate, or -1 if none match.
+ */
+async function aiSemanticMatchBatch(
+  submitted: string,
+  candidates: string[],
+  question: string,
+): Promise<number> {
+  const AI_TIMEOUT_MS = 6000;
+  if (candidates.length === 0) return -1;
+
+  const numbered = candidates.map((c, i) => `${i}: "${c}"`).join("\n");
+
   try {
     const aiCall = openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -229,24 +244,29 @@ async function aiSemanticMatch(submitted: string, canonical: string, question: s
         {
           role: "system",
           content:
-            "You are a Family Feud judge. Your job is to decide if a player's answer means essentially the same thing as the official survey answer, given the survey question. Consider synonyms, related concepts, alternate phrasings, and cultural equivalents. Respond ONLY with YES or NO.",
+            "Family Feud judge: does the player's answer mean the same as any official answer? Count synonyms, related concepts, alternate phrasings, and cultural equivalents as matches. Reply with ONLY the lowest matching index, or -1 if none match.",
         },
         {
           role: "user",
-          content: `Survey question: "${question}"\nOfficial answer: "${canonical}"\nPlayer's answer: "${submitted}"\n\nDoes the player's answer mean essentially the same thing as the official answer? YES or NO.`,
+          content: `Question: "${question}"\nPlayer's answer: "${submitted}"\nOfficial answers:\n${numbered}\n\nReply with ONLY the index number (lowest if multiple match) or -1.`,
         },
       ],
-      max_completion_tokens: 1000,
+      max_completion_tokens: 5,
+      temperature: 0,
     });
     const timeout = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("AI match timeout")), AI_TIMEOUT_MS)
+      setTimeout(() => reject(new Error("AI batch match timeout")), AI_TIMEOUT_MS)
     );
     const response = await Promise.race([aiCall, timeout]);
-    const verdict = response.choices[0]?.message?.content?.trim().toUpperCase() ?? "";
-    return verdict.startsWith("YES");
+    const text = response.choices[0]?.message?.content?.trim() ?? "";
+    const numMatch = text.match(/-?\d+/);
+    if (!numMatch) return -1;
+    const num = parseInt(numMatch[0], 10);
+    if (!Number.isInteger(num) || num < 0 || num >= candidates.length) return -1;
+    return num;
   } catch (err) {
-    console.error("[answerMatcher] AI call failed or timed out:", err);
-    return false;
+    console.error("[answerMatcher] AI batch call failed or timed out:", err);
+    return -1;
   }
 }
 
@@ -325,7 +345,7 @@ export async function findMatchIndex(
     }
   }
 
-  // === Slow pass (layer 3: AI — all in parallel) ===
+  // === Slow pass (layer 3: AI — single batched call) ===
   const aiCandidates: Array<{ index: number; key: string }> = [];
   for (let i = 0; i < answers.length; i++) {
     if (revealedIncludesIndex(revealedAnswers, i)) continue;
@@ -337,26 +357,32 @@ export async function findMatchIndex(
 
   if (aiCandidates.length === 0) return -1;
 
-  // Fire all AI checks simultaneously; for slash-variant answers check each part
-  // independently — answer matches if ANY variant matches (e.g. "Life/Fossils"
-  // means "Life" OR "Fossils", so "people" can match "Life" → accept)
-  const results = await Promise.all(
-    aiCandidates.map(({ index, key }) => {
-      const variants = splitVariants(answers[index].text);
-      return Promise.all(
-        variants.map(variant => aiSemanticMatch(submitted.trim(), variant, question))
-      ).then(variantResults => {
-        const result = variantResults.some(r => r);
-        cacheSet(key, result);
-        return { index, result };
-      });
-    })
+  // Expand slash-variants into a flat list, preserving original-answer order so
+  // "lowest index wins" still resolves to the lowest original answer index.
+  // ("Life/Fossils" becomes two entries that both map back to the same answer.)
+  const flatCandidates: Array<{ originalIndex: number; key: string; canonical: string }> = [];
+  for (const { index, key } of aiCandidates) {
+    const variants = splitVariants(answers[index].text);
+    for (const variant of variants) {
+      flatCandidates.push({ originalIndex: index, key, canonical: variant });
+    }
+  }
+
+  const matchedFlatIdx = await aiSemanticMatchBatch(
+    submitted.trim(),
+    flatCandidates.map(c => c.canonical),
+    question,
   );
 
-  // Return first (lowest-index) match
-  results.sort((a, b) => a.index - b.index);
-  for (const { index, result } of results) {
-    if (result) return index;
+  if (matchedFlatIdx === -1) {
+    // AI explicitly rejected ALL candidates — safe to cache every one as false.
+    for (const { key } of aiCandidates) {
+      cacheSet(key, false);
+    }
+    return -1;
   }
-  return -1;
+
+  const winner = flatCandidates[matchedFlatIdx];
+  cacheSet(winner.key, true);
+  return winner.originalIndex;
 }
