@@ -19,7 +19,11 @@ const PRERENDER_ROUTES = [
   "/terms",
 ];
 
-const isProductionBuild = process.env.NODE_ENV === "production";
+// Prerendering runs on every `vite build` (dev + production). It does NOT
+// run during `vite dev` — the rollup plugin only kicks in at build time, so
+// HMR is unaffected. Set DISABLE_PRERENDER=1 to skip it (useful for CI
+// environments without Chromium).
+const shouldPrerender = process.env.DISABLE_PRERENDER !== "1";
 
 function resolveChromiumPath(): string | undefined {
   if (process.env.PUPPETEER_EXECUTABLE_PATH) return process.env.PUPPETEER_EXECUTABLE_PATH;
@@ -56,7 +60,7 @@ export default defineConfig({
           ),
         ]
       : []),
-    ...(isProductionBuild
+    ...(shouldPrerender
       ? [
           (await import("@prerenderer/rollup-plugin")).default({
             routes: PRERENDER_ROUTES,
