@@ -314,33 +314,6 @@ export default function Leaderboard() {
             Climb the ranks, rack up points, and prove you're the ultimate survey-savvy player. Stats are tracked
             for registered players only.
           </p>
-
-          <div className="mt-6 inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-sm">
-            <button
-              type="button"
-              onClick={() => handleModeChange("multiplayer")}
-              className={`px-4 sm:px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all ${
-                mode === "multiplayer"
-                  ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
-                  : "text-slate-400 hover:text-white"
-              }`}
-              aria-pressed={mode === "multiplayer"}
-            >
-              Multiplayer
-            </button>
-            <button
-              type="button"
-              onClick={() => handleModeChange("solo")}
-              className={`px-4 sm:px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all ${
-                mode === "solo"
-                  ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
-                  : "text-slate-400 hover:text-white"
-              }`}
-              aria-pressed={mode === "solo"}
-            >
-              Solo
-            </button>
-          </div>
         </section>
 
         <div className="mb-10">
@@ -348,12 +321,38 @@ export default function Leaderboard() {
         </div>
 
         <section aria-labelledby="leaderboard-heading">
-          <div className="flex items-center justify-between mb-4 px-1">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4 px-1">
             <h2 id="leaderboard-heading" className="text-sm font-bold tracking-wider uppercase text-slate-500">
               Top Players
             </h2>
+            <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-sm">
+              <button
+                type="button"
+                onClick={() => handleModeChange("multiplayer")}
+                className={`px-4 sm:px-5 py-1.5 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all ${
+                  mode === "multiplayer"
+                    ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+                aria-pressed={mode === "multiplayer"}
+              >
+                Multiplayer
+              </button>
+              <button
+                type="button"
+                onClick={() => handleModeChange("solo")}
+                className={`px-4 sm:px-5 py-1.5 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all ${
+                  mode === "solo"
+                    ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+                aria-pressed={mode === "solo"}
+              >
+                Solo
+              </button>
+            </div>
             {!loading && rows && rows.length > 0 && (
-              <span className="text-[10px] sm:text-xs text-slate-600">
+              <span className="text-[10px] sm:text-xs text-slate-600 ml-auto">
                 {rows.length} player{rows.length === 1 ? "" : "s"}
               </span>
             )}
