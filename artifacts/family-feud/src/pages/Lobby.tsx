@@ -11,6 +11,7 @@ import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, Me
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../components/ui/dropdown-menu";
 import { createSoloGame } from "../hooks/useGameSocket";
 import AdsterraWidget from "../components/AdsterraWidget";
+import { AuthHeaderButton } from "../components/AuthGate";
 
 interface Room {
   id: string;
@@ -486,6 +487,8 @@ export default function Lobby() {
                 className={refreshSpinKey === 0 ? "w-4 h-4" : "w-4 h-4 animate-[spin_0.65s_cubic-bezier(0.22,1,0.36,1)]"}
               />
             </button>
+
+            <AuthHeaderButton />
 
             {/* Mobile-only "More" menu — collapses secondary buttons that are hidden on small screens */}
             <DropdownMenu>
