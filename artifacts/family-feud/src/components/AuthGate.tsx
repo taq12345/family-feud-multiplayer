@@ -41,10 +41,21 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
 
   useEffect(() => {
     if (!user) { setMe(null); return; }
-    fetch("/api/users/me", { credentials: "include" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => setMe(data))
-      .catch(() => {});
+    let cancelled = false;
+    const refetch = () => {
+      fetch("/api/users/me", { credentials: "include" })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => { if (!cancelled) setMe(data); })
+        .catch(() => {});
+    };
+    refetch();
+    // Refetch when the nickname is set elsewhere (e.g. NicknameSetupDialog)
+    // so the header pill updates immediately without a page reload.
+    window.addEventListener("nickname:set", refetch);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("nickname:set", refetch);
+    };
   }, [user?.id]);
 
   async function handleSignOut() {
@@ -211,6 +222,12 @@ export function NicknameSetupDialog({
       // Mirror to localStorage so the rest of the lobby uses it
       localStorage.setItem("playerName", data.nickname);
       setMe((prev) => (prev ? { ...prev, nickname: data.nickname, hasNickname: true } : prev));
+      // Notify other components (e.g. AuthHeaderButton) to refresh.
+      try {
+        window.dispatchEvent(
+          new CustomEvent("nickname:set", { detail: { nickname: data.nickname } }),
+        );
+      } catch { /* ignore */ }
       onSet?.(data.nickname);
     } catch {
       setError("Network error. Try again.");
