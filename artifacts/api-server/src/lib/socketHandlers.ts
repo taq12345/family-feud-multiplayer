@@ -1,6 +1,6 @@
 import { Server as SocketServer, Socket } from "socket.io";
 import { db } from "@workspace/db";
-import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
+import { roomsTable, chatMessagesTable, usersTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
 import { findMatchIndex, normalizeSubmittedAnswer } from "./answerMatcher.js";
@@ -500,12 +500,29 @@ export function setupSocketHandlers(io: SocketServer) {
       // ── Normal (first-time) join path ────────────────────────────────
       if (state) {
         const isHost = !Array.from(state.players.values()).some(p => p.isHost);
+
+        // Look up the registered user's avatar (if any) by their permanent
+        // nickname so it can be shown next to their name in the game UI.
+        // Guests don't have a row here → avatarUrl stays null.
+        let avatarUrl: string | null = null;
+        try {
+          const [u] = await db
+            .select({ avatarUrl: usersTable.avatarUrl })
+            .from(usersTable)
+            .where(eq(usersTable.nicknameLower, nameKey))
+            .limit(1);
+          avatarUrl = u?.avatarUrl ?? null;
+        } catch {
+          // ignore — non-fatal, name-only display is fine
+        }
+
         state.players.set(socket.id, {
           id: socket.id,
           name: trimmedPlayerName,
           team,
           isHost,
           contributedPoints: 0,
+          avatarUrl,
         });
 
         await db.update(roomsTable)
@@ -601,12 +618,25 @@ export function setupSocketHandlers(io: SocketServer) {
       const state = createGameState(roomId, "Solo Play", "You", "CPU", numRounds);
       state.isSolo = true;
 
+      let soloAvatarUrl: string | null = null;
+      try {
+        const [u] = await db
+          .select({ avatarUrl: usersTable.avatarUrl })
+          .from(usersTable)
+          .where(eq(usersTable.nicknameLower, nameKey))
+          .limit(1);
+        soloAvatarUrl = u?.avatarUrl ?? null;
+      } catch {
+        // ignore — non-fatal
+      }
+
       const soloPlayer: import("./gameState.js").Player = {
         id: socket.id,
         name: trimmedName,
         team: 1,
         isHost: true,
         contributedPoints: 0,
+        avatarUrl: soloAvatarUrl,
       };
       state.players.set(socket.id, soloPlayer);
 

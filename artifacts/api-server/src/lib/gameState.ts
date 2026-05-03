@@ -8,6 +8,8 @@ export interface Player {
   team: 1 | 2;
   isHost: boolean;
   contributedPoints: number;
+  /** Clerk-hosted avatar URL for registered players; null for guests. */
+  avatarUrl: string | null;
 }
 
 export interface GameState {
