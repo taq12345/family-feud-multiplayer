@@ -178,6 +178,9 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
 
   if (state.currentRound < state.totalRounds) {
     scheduleAutoAdvance(io, roomId);
+  } else {
+    // Final round ended as a skipped faceoff — still credit the overall game winner.
+    creditGameEnd(state).catch(() => {});
   }
 }
 
@@ -525,6 +528,9 @@ export function setupSocketHandlers(io: SocketServer) {
           avatarUrl,
         });
 
+        // Track permanent participant roster for stats (never shrinks during play).
+        state.allParticipants.set(nameKey, { name: trimmedPlayerName, team });
+
         await db.update(roomsTable)
           .set({ playerCount: state.players.size })
           .where(eq(roomsTable.id, roomId));
@@ -814,6 +820,11 @@ export function setupSocketHandlers(io: SocketServer) {
       state.team1Score = 0;
       state.team2Score = 0;
       state.players.forEach(p => { p.contributedPoints = 0; });
+      // Rebuild allParticipants from the current live players so a new game
+      // starts with a clean slate (no stale names from the previous game).
+      state.allParticipants = new Map(
+        Array.from(state.players.values()).map(p => [p.name.toLowerCase(), { name: p.name, team: p.team }])
+      );
       state.status = "waiting";
       state.currentRound = 0;
       state.currentQuestion = null;
@@ -1268,6 +1279,9 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
     // Guard: if already removed (e.g. kicked then leave_room fires), do nothing
     if (!departing) return;
     state.players.delete(socket.id);
+    // Real departure (explicit leave or 10-min grace expiry) — purge from the
+    // permanent participant roster so future credits don't include them.
+    state.allParticipants.delete(departing.name.toLowerCase());
     try {
       await db.update(roomsTable)
         .set({ playerCount: state.players.size })
