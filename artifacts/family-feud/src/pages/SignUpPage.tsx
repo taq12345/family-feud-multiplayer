@@ -36,6 +36,7 @@ export default function SignUpPage() {
           path={`${basePath}/sign-up`}
           signInUrl={`${basePath}/sign-in`}
           fallbackRedirectUrl={basePath || "/"}
+          appearance={{ elements: { badge: "hidden", logoBox: "hidden" } }}
         />
       </div>
     </div>

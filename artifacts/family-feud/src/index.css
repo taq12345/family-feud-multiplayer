@@ -196,3 +196,13 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* Hide Clerk's "Development mode" / "Secured by Clerk" badges */
+.cl-badge,
+.cl-internal-badge,
+[data-clerk-development-mode],
+.cl-development-mode,
+.cl-internal-1g8aatp,
+.cl-footer + div:has(.cl-badge) {
+  display: none !important;
+}

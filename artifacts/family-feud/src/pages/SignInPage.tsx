@@ -170,6 +170,7 @@ export default function SignInPage() {
               path={`${basePath}/sign-in`}
               signUpUrl={`${basePath}/sign-up`}
               fallbackRedirectUrl={basePath || "/"}
+              appearance={{ elements: { badge: "hidden", logoBox: "hidden" } }}
             />
             {!showBackToLobby && (
               <button
