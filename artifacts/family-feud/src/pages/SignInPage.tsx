@@ -19,7 +19,8 @@ export default function SignInPage() {
   // "Back to lobby" only makes sense if the visitor already has a way back —
   // either they came from clicking the header sign-in button (cameFromLobby
   // sessionStorage flag) or they already have a guest nickname stored.
-  const showBackToLobby = useMemo(() => {
+  // Stored as state so toggling "Continue as guest instead" can clear it.
+  const [showBackToLobby, setShowBackToLobby] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
       return (
@@ -29,12 +30,18 @@ export default function SignInPage() {
     } catch {
       return false;
     }
-  }, []);
+  });
 
   // First-time visitors land on the guest-first view; returning visitors
   // (back-to-lobby crowd) and anyone who clicks "Sign in instead" see the
   // Clerk widget directly.
   const renderSignIn = showBackToLobby || showSignIn;
+
+  function backToGuestView() {
+    try { sessionStorage.removeItem("cameFromLobby"); } catch { /* ignore */ }
+    setShowSignIn(false);
+    setShowBackToLobby(false);
+  }
 
   async function handleGuestSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -172,14 +179,12 @@ export default function SignInPage() {
               fallbackRedirectUrl={basePath || "/"}
               appearance={{ elements: { badge: "hidden", logoBox: "hidden" } }}
             />
-            {!showBackToLobby && (
-              <button
-                onClick={() => setShowSignIn(false)}
-                className="text-sm text-slate-400 hover:text-white underline-offset-2 hover:underline"
-              >
-                ← Back to guest play
-              </button>
-            )}
+            <button
+              onClick={backToGuestView}
+              className="text-sm text-slate-400 hover:text-white underline-offset-2 hover:underline"
+            >
+              ← Continue as guest instead
+            </button>
           </>
         )}
       </div>

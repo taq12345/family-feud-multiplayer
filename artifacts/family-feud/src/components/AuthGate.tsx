@@ -60,7 +60,12 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
 
   async function handleSignOut() {
     playClickSound();
-    try { localStorage.removeItem("playerName"); } catch { /* ignore */ }
+    try {
+      localStorage.removeItem("playerName");
+      // Treat sign-out as a fresh-visitor reset so the sign-in screen
+      // returns to its guest-first view.
+      sessionStorage.removeItem("cameFromLobby");
+    } catch { /* ignore */ }
     try {
       await signOut({ redirectUrl: `${basePath}/sign-in` });
     } catch (err) {
