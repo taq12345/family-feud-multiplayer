@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SignIn } from "@clerk/react";
 import { Link, useLocation } from "wouter";
-import { ArrowLeft, CheckCircle2, AlertCircle, Loader2, UserCircle2 } from "lucide-react";
+import { ArrowLeft, UserCircle2 } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
@@ -13,8 +13,6 @@ export default function SignInPage() {
   const [, setLocation] = useLocation();
   const [showGuest, setShowGuest] = useState(false);
   const [guestName, setGuestName] = useState("");
-  const [available, setAvailable] = useState<boolean | null>(null);
-  const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -33,40 +31,34 @@ export default function SignInPage() {
     }
   }, []);
 
-  // Live nickname availability check
-  useEffect(() => {
-    if (!showGuest) return;
-    if (!guestName) { setAvailable(null); setChecking(false); setError(null); return; }
-    if (!NICKNAME_PATTERN.test(guestName)) {
-      setAvailable(false);
-      setChecking(false);
+  async function handleGuestSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const name = guestName.trim();
+    if (!NICKNAME_PATTERN.test(name)) {
       setError("Nicknames must be 2–16 characters: letters, numbers, _ or -");
       return;
     }
-    setChecking(true);
-    setError(null);
-    const t = setTimeout(() => {
-      fetch(`/api/users/check-nickname?name=${encodeURIComponent(guestName)}`)
-        .then((r) => r.json())
-        .then((data) => {
-          setAvailable(!!data.available);
-          if (!data.available && data.reason) setError(data.reason);
-        })
-        .catch(() => setAvailable(null))
-        .finally(() => setChecking(false));
-    }, 350);
-    return () => clearTimeout(t);
-  }, [guestName, showGuest]);
-
-  function handleGuestSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!NICKNAME_PATTERN.test(guestName) || available === false) return;
     setSubmitting(true);
+    setError(null);
     try {
-      localStorage.setItem("playerName", guestName.trim());
-      sessionStorage.removeItem("cameFromLobby");
-    } catch { /* ignore */ }
-    setLocation("/");
+      const res = await fetch(
+        `/api/users/check-nickname?name=${encodeURIComponent(name)}`,
+      );
+      const data = await res.json();
+      if (!data.available) {
+        setError(data.reason || "That nickname is taken.");
+        setSubmitting(false);
+        return;
+      }
+      try {
+        localStorage.setItem("playerName", name);
+        sessionStorage.removeItem("cameFromLobby");
+      } catch { /* ignore */ }
+      setLocation("/");
+    } catch {
+      setError("Couldn't check that nickname. Try again.");
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -130,25 +122,14 @@ export default function SignInPage() {
             </p>
             <div>
               <Label className="text-slate-300 text-sm font-medium">Nickname</Label>
-              <div className="relative mt-1">
-                <Input
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  placeholder="e.g. SurveySays"
-                  maxLength={16}
-                  autoFocus
-                  className="bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20 pr-9"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2">
-                  {checking && <Loader2 className="w-4 h-4 animate-spin text-slate-400" />}
-                  {!checking && guestName && available === true && (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  )}
-                  {!checking && guestName && available === false && (
-                    <AlertCircle className="w-4 h-4 text-red-400" />
-                  )}
-                </span>
-              </div>
+              <Input
+                value={guestName}
+                onChange={(e) => { setGuestName(e.target.value); if (error) setError(null); }}
+                placeholder="e.g. SurveySays"
+                maxLength={16}
+                autoFocus
+                className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20"
+              />
             </div>
             {error && (
               <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
@@ -157,10 +138,10 @@ export default function SignInPage() {
             )}
             <Button
               type="submit"
-              disabled={submitting || checking || available !== true}
+              disabled={submitting || !guestName.trim()}
               className="w-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold h-11 shadow-[0_0_20px_rgba(251,191,36,0.3)] border-0 disabled:opacity-50"
             >
-              {submitting ? "Entering…" : "Play as guest"}
+              {submitting ? "Checking…" : "Play as guest"}
             </Button>
           </form>
         )}
