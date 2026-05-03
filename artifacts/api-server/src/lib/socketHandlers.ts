@@ -1276,6 +1276,9 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
     // Guard: if already removed (e.g. kicked then leave_room fires), do nothing
     if (!departing) return;
     state.players.delete(socket.id);
+    // Real departure (explicit leave or 10-min grace expiry) — purge from the
+    // permanent participant roster so future credits don't include them.
+    state.allParticipants.delete(departing.name.toLowerCase());
     try {
       await db.update(roomsTable)
         .set({ playerCount: state.players.size })
