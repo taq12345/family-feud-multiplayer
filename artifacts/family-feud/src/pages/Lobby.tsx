@@ -48,13 +48,39 @@ const VISIBLE_ROOMS_REFRESH_MS = 15000;
 const HIDDEN_ROOMS_REFRESH_MS = 60000;
 
 async function checkNickname(name: string): Promise<boolean> {
+  const result = await checkNicknameDetailed(name);
+  return result.taken;
+}
+
+/**
+ * Check whether a nickname is usable for a guest. Validates against BOTH:
+ *   1. Registered (Clerk-linked) nicknames in the users table — guests cannot
+ *      claim a name that a signed-up player has reserved.
+ *   2. Active in-memory room players — avoids two players in the same room
+ *      colliding.
+ */
+async function checkNicknameDetailed(
+  name: string,
+): Promise<{ taken: boolean; reason?: string }> {
+  const trimmed = name.trim();
   try {
-    const res = await fetch(`/api/nicknames/${encodeURIComponent(name.trim())}/check`);
-    if (!res.ok) return false;
-    const { taken } = await res.json();
-    return taken as boolean;
+    const [usersRes, roomsRes] = await Promise.all([
+      fetch(`/api/users/check-nickname?name=${encodeURIComponent(trimmed)}`),
+      fetch(`/api/nicknames/${encodeURIComponent(trimmed)}/check`),
+    ]);
+    if (usersRes.ok) {
+      const data = await usersRes.json();
+      if (data.available === false) {
+        return { taken: true, reason: data.reason };
+      }
+    }
+    if (roomsRes.ok) {
+      const { taken } = await roomsRes.json();
+      if (taken) return { taken: true, reason: "Currently in use in a live room" };
+    }
+    return { taken: false };
   } catch {
-    return false;
+    return { taken: false };
   }
 }
 
@@ -410,8 +436,11 @@ export default function Lobby() {
     setChangeNicknameError(null);
     setChangeNicknameLoading(true);
     try {
-      const taken = await checkNickname(trimmed);
-      if (taken) { setChangeNicknameError(`"${trimmed}" is already in use. Pick another.`); return; }
+      const { taken, reason } = await checkNicknameDetailed(trimmed);
+      if (taken) {
+        setChangeNicknameError(reason || `"${trimmed}" is already in use. Pick another.`);
+        return;
+      }
       setNickname(trimmed);
       localStorage.setItem("playerName", trimmed);
       setChangeNicknameOpen(false);
@@ -428,8 +457,11 @@ export default function Lobby() {
     if (!trimmedNickname) return;
     if (trimmedNickname.length > 16) { setJoinError("Nickname must be 16 characters or fewer."); return; }
 
-    const taken = await checkNickname(trimmedNickname);
-    if (taken) { setJoinError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
+    const { taken, reason } = await checkNicknameDetailed(trimmedNickname);
+    if (taken) {
+      setJoinError(reason || `Nickname "${trimmedNickname}" is already in use. Change it first.`);
+      return;
+    }
 
     localStorage.setItem("playerName", trimmedNickname);
     setJoinDialogOpen(false);
