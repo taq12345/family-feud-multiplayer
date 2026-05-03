@@ -19,6 +19,7 @@ import {
   ArrowUp,
   ArrowDown,
   ArrowUpDown,
+  RefreshCw,
 } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import AdsterraWidget from "../components/AdsterraWidget";
@@ -153,6 +154,7 @@ export default function Leaderboard() {
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("totalPoints");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [refreshing, setRefreshing] = useState(false);
 
   function handleSort(key: SortKey) {
     playClickSound();
@@ -174,23 +176,26 @@ export default function Leaderboard() {
     setSortDir("desc");
   }
 
+  async function fetchLeaderboard(nextMode: Mode, force = false) {
+    const haveData = nextMode === "multiplayer" ? multiRows !== null : soloRows !== null;
+    if (!force && haveData) return;
+
+    setError(null);
+    if (force) setRefreshing(true);
+    const res = await fetch(`/api/leaderboard?mode=${nextMode}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const list = Array.isArray(data?.leaderboard) ? data.leaderboard : [];
+    if (nextMode === "multiplayer") setMultiRows(list);
+    else setSoloRows(list);
+  }
+
   // Fetch the current mode's leaderboard if we don't already have it cached.
   useEffect(() => {
     const haveData = mode === "multiplayer" ? multiRows !== null : soloRows !== null;
     if (haveData) return;
     let cancelled = false;
-    setError(null);
-    fetch(`/api/leaderboard?mode=${mode}`)
-      .then(r => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then(data => {
-        if (cancelled) return;
-        const list = Array.isArray(data?.leaderboard) ? data.leaderboard : [];
-        if (mode === "multiplayer") setMultiRows(list);
-        else setSoloRows(list);
-      })
+    fetchLeaderboard(mode)
       .catch(err => {
         if (cancelled) return;
         console.error("[leaderboard] fetch failed", err);
@@ -202,6 +207,18 @@ export default function Leaderboard() {
       cancelled = true;
     };
   }, [mode, multiRows, soloRows]);
+
+  async function handleRefresh() {
+    playClickSound();
+    try {
+      await fetchLeaderboard(mode, true);
+    } catch (err) {
+      console.error("[leaderboard] refresh failed", err);
+      setError("Couldn't refresh the leaderboard. Try again in a moment.");
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   const rows: (MultiplayerRow | SoloRow)[] | null =
     mode === "multiplayer" ? multiRows : soloRows;
@@ -351,6 +368,17 @@ export default function Leaderboard() {
                 Solo
               </button>
             </div>
+            <button
+              type="button"
+              onClick={() => void handleRefresh()}
+              disabled={refreshing}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 disabled:opacity-60 disabled:cursor-not-allowed transition-all text-xs sm:text-sm font-semibold"
+              aria-label="Refresh leaderboard"
+              title="Refresh leaderboard"
+            >
+              <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+              Refresh
+            </button>
             {!loading && rows && rows.length > 0 && (
               <span className="text-[10px] sm:text-xs text-slate-600 ml-auto">
                 {rows.length} player{rows.length === 1 ? "" : "s"}
