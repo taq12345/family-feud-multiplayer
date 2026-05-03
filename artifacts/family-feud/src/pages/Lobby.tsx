@@ -11,8 +11,6 @@ import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, Me
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../components/ui/dropdown-menu";
 import { createSoloGame } from "../hooks/useGameSocket";
 import AdsterraWidget from "../components/AdsterraWidget";
-import { AuthHeaderButton } from "../components/AuthGate";
-import { useUser } from "@clerk/react";
 
 interface Room {
   id: string;
@@ -47,51 +45,14 @@ const ALLOWED_TOTAL_ROUNDS = [2, 4, 6, 8, 10] as const;
 const VISIBLE_ROOMS_REFRESH_MS = 15000;
 const HIDDEN_ROOMS_REFRESH_MS = 60000;
 
-async function checkNickname(name: string, ownLockedNickname?: string | null): Promise<boolean> {
-  const result = await checkNicknameDetailed(name, ownLockedNickname);
-  return result.taken;
-}
-
-/**
- * Check whether a nickname is usable. Validates against BOTH:
- *   1. Registered (Clerk-linked) nicknames in the users table — guests cannot
- *      claim a name that a signed-up player has reserved.
- *   2. Active in-memory room players — avoids two players in the same room
- *      colliding.
- *
- * If `ownLockedNickname` is provided and matches (case-insensitive), the
- * checks are skipped: a signed-in player always owns their own locked name,
- * so the registered-name and active-socket lookups would falsely flag it.
- */
-async function checkNicknameDetailed(
-  name: string,
-  ownLockedNickname?: string | null,
-): Promise<{ taken: boolean; reason?: string }> {
-  const trimmed = name.trim();
-  if (
-    ownLockedNickname &&
-    trimmed.toLowerCase() === ownLockedNickname.trim().toLowerCase()
-  ) {
-    return { taken: false };
-  }
+async function checkNickname(name: string): Promise<boolean> {
   try {
-    const [usersRes, roomsRes] = await Promise.all([
-      fetch(`/api/users/check-nickname?name=${encodeURIComponent(trimmed)}`),
-      fetch(`/api/nicknames/${encodeURIComponent(trimmed)}/check`),
-    ]);
-    if (usersRes.ok) {
-      const data = await usersRes.json();
-      if (data.available === false) {
-        return { taken: true, reason: data.reason };
-      }
-    }
-    if (roomsRes.ok) {
-      const { taken } = await roomsRes.json();
-      if (taken) return { taken: true, reason: "Currently in use in a live room" };
-    }
-    return { taken: false };
+    const res = await fetch(`/api/nicknames/${encodeURIComponent(name.trim())}/check`);
+    if (!res.ok) return false;
+    const { taken } = await res.json();
+    return taken as boolean;
   } catch {
-    return { taken: false };
+    return false;
   }
 }
 
@@ -117,75 +78,12 @@ async function createRoomApi(body: {
 
 export default function Lobby() {
   const [, setLocation] = useLocation();
-  const { isSignedIn, isLoaded: authLoaded } = useUser();
   const roomsRequestInFlight = useRef(false);
   const [nickname, setNickname] = useState(() => {
     const stored = localStorage.getItem("playerName") ?? "";
     return stored.length > 16 ? stored.slice(0, 16) : stored;
   });
-  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(false);
-  // The signed-in user's locked Clerk nickname (null for guests). Used to
-  // short-circuit the "is this nickname taken?" checks against your own name.
-  const [lockedNickname, setLockedNickname] = useState<string | null>(null);
-
-  // When the user signs in, the locked Clerk-linked nickname is the source of
-  // truth — override any leftover guest nickname so the lobby/header don't
-  // display two identities at once.
-  useEffect(() => {
-    if (!authLoaded || !isSignedIn) return;
-    let cancelled = false;
-    fetch("/api/users/me", { credentials: "include" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (cancelled || !data?.nickname) return;
-        setLockedNickname(data.nickname);
-        if (nickname !== data.nickname) {
-          setNickname(data.nickname);
-          try { localStorage.setItem("playerName", data.nickname); } catch { /* ignore */ }
-        }
-      })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [authLoaded, isSignedIn, nickname]);
-
-  // Clear locked nickname when user signs out
-  useEffect(() => {
-    if (authLoaded && !isSignedIn) setLockedNickname(null);
-  }, [authLoaded, isSignedIn]);
-
-  // First-visit redirect: if the user has neither set a guest nickname nor
-  // signed in, send them to the sign-in screen. From there they can choose
-  // to authenticate or click "Back to lobby" to play as a guest.
-  useEffect(() => {
-    if (!authLoaded) return;
-    if (localStorage.getItem("playerName")) return;
-    if (isSignedIn) return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("join")) return; // honor invite links — let them play as guest
-    setLocation("/sign-in");
-  }, [authLoaded, isSignedIn, setLocation]);
-
-  // If they choose to play as guest (returned from /sign-in without auth and
-  // still no name), open the guest nickname dialog.
-  useEffect(() => {
-    if (!authLoaded) return;
-    if (isSignedIn) return;
-    if (localStorage.getItem("playerName")) return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("join")) {
-      setNicknameDialogOpen(true);
-      return;
-    }
-    // Only open dialog if we're not about to redirect (i.e. we already came
-    // back from sign-in). The redirect effect above guards this — give it a
-    // tick.
-    const t = setTimeout(() => {
-      if (!localStorage.getItem("playerName") && !isSignedIn) {
-        setNicknameDialogOpen(true);
-      }
-    }, 50);
-    return () => clearTimeout(t);
-  }, [authLoaded, isSignedIn]);
+  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(() => !localStorage.getItem("playerName"));
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -418,8 +316,8 @@ export default function Lobby() {
     setCreateError(null);
     setCreateLoading(true);
     try {
-      const { taken, reason } = await checkNicknameDetailed(trimmedNickname, lockedNickname);
-      if (taken) { setCreateError(reason || `Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
+      const taken = await checkNickname(trimmedNickname);
+      if (taken) { setCreateError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
 
       const room = await createRoomApi({ ...form, name: trimmedRoomName, hostName: trimmedNickname });
       localStorage.setItem("playerName", trimmedNickname);
@@ -456,11 +354,8 @@ export default function Lobby() {
     setChangeNicknameError(null);
     setChangeNicknameLoading(true);
     try {
-      const { taken, reason } = await checkNicknameDetailed(trimmed, lockedNickname);
-      if (taken) {
-        setChangeNicknameError(reason || `"${trimmed}" is already in use. Pick another.`);
-        return;
-      }
+      const taken = await checkNickname(trimmed);
+      if (taken) { setChangeNicknameError(`"${trimmed}" is already in use. Pick another.`); return; }
       setNickname(trimmed);
       localStorage.setItem("playerName", trimmed);
       setChangeNicknameOpen(false);
@@ -477,11 +372,8 @@ export default function Lobby() {
     if (!trimmedNickname) return;
     if (trimmedNickname.length > 16) { setJoinError("Nickname must be 16 characters or fewer."); return; }
 
-    const { taken, reason } = await checkNicknameDetailed(trimmedNickname, lockedNickname);
-    if (taken) {
-      setJoinError(reason || `Nickname "${trimmedNickname}" is already in use. Change it first.`);
-      return;
-    }
+    const taken = await checkNickname(trimmedNickname);
+    if (taken) { setJoinError(`Nickname "${trimmedNickname}" is already in use. Change it first.`); return; }
 
     localStorage.setItem("playerName", trimmedNickname);
     setJoinDialogOpen(false);
@@ -526,7 +418,7 @@ export default function Lobby() {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {nickname && !isSignedIn && (
+            {nickname && (
               <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="text-xs text-slate-300">
@@ -534,7 +426,7 @@ export default function Lobby() {
                 </span>
               </div>
             )}
-            {nickname && !isSignedIn && (
+            {nickname && (
               <span title="Change nickname" className="hidden sm:inline-flex">
                 <button
                   onClick={() => {
@@ -595,8 +487,6 @@ export default function Lobby() {
               />
             </button>
 
-            <AuthHeaderButton />
-
             {/* Mobile-only "More" menu — collapses secondary buttons that are hidden on small screens */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -615,29 +505,25 @@ export default function Lobby() {
               >
                 {nickname && (
                   <>
-                    {!isSignedIn && (
-                      <DropdownMenuItem disabled className="opacity-100 focus:bg-transparent">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                          <span className="text-xs text-slate-400">
-                            Playing as <span className="font-semibold text-amber-400">{nickname}</span>
-                          </span>
-                        </div>
-                      </DropdownMenuItem>
-                    )}
-                    {!isSignedIn && (
-                      <DropdownMenuItem
-                        onClick={() => {
-                          playClickSound();
-                          setChangeNicknameInput("");
-                          setChangeNicknameError(null);
-                          setChangeNicknameOpen(true);
-                        }}
-                        className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
-                      >
-                        <Pencil className="w-4 h-4 mr-2" /> Change nickname
-                      </DropdownMenuItem>
-                    )}
+                    <DropdownMenuItem disabled className="opacity-100 focus:bg-transparent">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                        <span className="text-xs text-slate-400">
+                          Playing as <span className="font-semibold text-amber-400">{nickname}</span>
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        playClickSound();
+                        setChangeNicknameInput("");
+                        setChangeNicknameError(null);
+                        setChangeNicknameOpen(true);
+                      }}
+                      className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+                    >
+                      <Pencil className="w-4 h-4 mr-2" /> Change nickname
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-white/10" />
                   </>
                 )}
@@ -1073,7 +959,7 @@ export default function Lobby() {
                     const trimmed = nickname.trim();
                     if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                     setNicknameError(null);
-                    const taken = await checkNickname(trimmed, lockedNickname);
+                    const taken = await checkNickname(trimmed);
                     if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
                     setNickname(trimmed);
                     localStorage.setItem("playerName", trimmed);
@@ -1096,7 +982,7 @@ export default function Lobby() {
                 const trimmed = nickname.trim();
                 if (trimmed.length > 16) { setNicknameError("Nickname must be 16 characters or fewer."); return; }
                 setNicknameError(null);
-                const taken = await checkNickname(trimmed, lockedNickname);
+                const taken = await checkNickname(trimmed);
                 if (taken) { setNicknameError(`"${trimmed}" is already taken. Pick another.`); return; }
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
