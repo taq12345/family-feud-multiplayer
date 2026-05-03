@@ -164,7 +164,7 @@ export default function SignInPage() {
               </ul>
               <button
                 onClick={() => setShowSignIn(true)}
-                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold text-sm transition-all"
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-400 hover:to-pink-500 text-white font-semibold text-sm shadow-[0_0_20px_rgba(236,72,153,0.35)] border-0 transition-all"
               >
                 Sign in or create a free account
               </button>
