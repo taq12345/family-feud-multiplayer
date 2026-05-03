@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
 import { findMatchIndex, normalizeSubmittedAnswer } from "./answerMatcher.js";
 import { generateCustomQuestions } from "./questionGenerator.js";
+import { creditGuess, creditSteal, creditRoundEnd, creditGameEnd } from "./stats.js";
 
 const gameStates = new Map<string, GameState>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -198,6 +199,7 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
       team: player.team,
       answer: "(no answer in time)",
     });
+    creditGuess(state, player, "wrong").catch(() => {});
 
     state.faceoffUsedPlayerIds.add(player.id);
     state.faceoffAttempts++;
@@ -335,6 +337,7 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
         team: designatedPlayer.team,
         answer: "(no answer in time)",
       });
+      creditGuess(current, designatedPlayer, "wrong").catch(() => {});
     }
 
     if (current.status === "playing") {
@@ -880,11 +883,13 @@ export function setupSocketHandlers(io: SocketServer) {
             points: pts,
             contributedPoints: player.contributedPoints,
           });
+          creditGuess(state, player, "correct", pts).catch(() => {});
           startAnswerTimer(io, state, roomId);
           io.to(roomId).emit("game_state", serializeGameState(state));
         } else {
           if (normSub) state.wrongAnswers.add(normSub);
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+          creditGuess(state, player, "wrong").catch(() => {});
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
 
@@ -932,6 +937,7 @@ export function setupSocketHandlers(io: SocketServer) {
         if (normSub && state.wrongAnswers.has(normSub)) {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
             if (state.strikes >= 3) {
@@ -956,6 +962,7 @@ export function setupSocketHandlers(io: SocketServer) {
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             await endRound(io, state, roomId, state.playingTeam!);
           }
           return;
@@ -990,6 +997,11 @@ export function setupSocketHandlers(io: SocketServer) {
             points: pts,
             contributedPoints: player.contributedPoints,
           });
+          if (state.status === "stealing") {
+            creditSteal(state, player, pts).catch(() => {});
+          } else {
+            creditGuess(state, player, "correct", pts).catch(() => {});
+          }
 
           // Check if all answers revealed
           const allRevealed = state.currentQuestion.answers.every((_, i) => state.revealedAnswers.has(i));
@@ -1005,6 +1017,7 @@ export function setupSocketHandlers(io: SocketServer) {
           if (normSub) state.wrongAnswers.add(normSub);
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
 
@@ -1030,6 +1043,7 @@ export function setupSocketHandlers(io: SocketServer) {
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
+            creditGuess(state, player, "wrong").catch(() => {});
             // Failed steal — playing team gets points
             await endRound(io, state, roomId, state.playingTeam!);
           }
@@ -1369,6 +1383,13 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
     canonicalAnswers,
   });
   io.to(roomId).emit("game_state", serializeGameState(state));
+
+  // Stats: credit each player with a round W or L. If this was the final round,
+  // also credit the game W/L based on aggregate score.
+  creditRoundEnd(state, winningTeam).catch(() => {});
+  if (state.currentRound >= state.totalRounds) {
+    creditGameEnd(state).catch(() => {});
+  }
 
   // Auto-advance to next round if host doesn't click within 60 seconds.
   // Always schedule when there are more rounds — advanceToNextRound guards against advancing
