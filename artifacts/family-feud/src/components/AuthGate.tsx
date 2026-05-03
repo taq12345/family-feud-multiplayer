@@ -64,6 +64,7 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
         <button
           onClick={() => {
             playClickSound();
+            try { sessionStorage.setItem("cameFromLobby", "1"); } catch { /* ignore */ }
             onLogin?.();
             setLocation("/sign-in");
           }}
