@@ -1,4 +1,4 @@
-modules = ["nodejs-24", "python-3.11", "java-graalvm22.3", "postgresql-16"]
+modules = ["nodejs-24", "postgresql-16", "python-3.11", "java-graalvm22.3"]
 
 [[artifacts]]
 id = "artifacts/api-server"
@@ -33,8 +33,3 @@ localPort = 5173
 [[ports]]
 localPort = 8080
 externalPort = 80
-
-[userenv]
-
-[userenv.shared]
-VITE_CLERK_PUBLISHABLE_KEY = "pk_test_YWJzb2x1dGUtYmFkZ2VyLTU4LmNsZXJrLmFjY291bnRzLmRldiQ"

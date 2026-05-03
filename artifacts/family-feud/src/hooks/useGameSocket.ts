@@ -7,7 +7,6 @@ export interface Player {
   team: 1 | 2;
   isHost: boolean;
   contributedPoints: number;
-  avatarUrl?: string | null;
 }
 
 export interface AnswerSlot {

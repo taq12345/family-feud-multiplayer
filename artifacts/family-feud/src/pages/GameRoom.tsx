@@ -76,32 +76,8 @@ function AnswerBoard({ question, answers }: {
   );
 }
 
-function PlayerAvatar({ name, avatarUrl, ringClass, sizeClass = "w-4 h-4" }: {
-  name: string; avatarUrl?: string | null; ringClass?: string; sizeClass?: string;
-}) {
-  const initial = (name?.trim()?.[0] ?? "?").toUpperCase();
-  const ring = ringClass ?? "ring-1 ring-white/10";
-  if (avatarUrl) {
-    return (
-      <img
-        src={avatarUrl}
-        alt=""
-        loading="lazy"
-        className={`${sizeClass} rounded-full object-cover shrink-0 ${ring}`}
-      />
-    );
-  }
-  return (
-    <span
-      className={`${sizeClass} rounded-full shrink-0 bg-white/10 text-slate-300 ${ring} inline-flex items-center justify-center text-[8px] font-bold uppercase`}
-    >
-      {initial}
-    </span>
-  );
-}
-
 function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, myName, onKick }: {
-  players: Array<{ name: string; team: 1 | 2; isHost: boolean; contributedPoints: number; avatarUrl?: string | null }>;
+  players: Array<{ name: string; team: 1 | 2; isHost: boolean; contributedPoints: number }>;
   team1Name: string; team2Name: string; activePlayerName: string | null;
   isHost: boolean; myName: string; onKick: (name: string) => void;
 }) {
@@ -113,8 +89,8 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
         const members = team === 1 ? t1 : t2;
         const name = team === 1 ? team1Name : team2Name;
         const color = team === 1
-          ? { border: "border-rose-500/20", label: "text-rose-400", ring: "ring-1 ring-rose-400", active: "bg-rose-500/20 border-rose-500/30 text-rose-300" }
-          : { border: "border-blue-500/20", label: "text-blue-400", ring: "ring-1 ring-blue-400", active: "bg-blue-500/20 border-blue-500/30 text-blue-300" };
+          ? { border: "border-rose-500/20", label: "text-rose-400", dot: "bg-rose-400", active: "bg-rose-500/20 border-rose-500/30 text-rose-300" }
+          : { border: "border-blue-500/20", label: "text-blue-400", dot: "bg-blue-400", active: "bg-blue-500/20 border-blue-500/30 text-blue-300" };
         return (
           <div key={team} className={`rounded-xl bg-white/[0.02] border ${color.border} p-2`}>
             <div className={`text-[9px] font-bold uppercase tracking-widest ${color.label} mb-1.5 truncate`}>{name}</div>
@@ -123,13 +99,8 @@ function TeamRoster({ players, team1Name, team2Name, activePlayerName, isHost, m
               {members.map(p => {
                 const isActive = p.name === activePlayerName;
                 return (
-                  <div key={p.name} className={`inline-flex items-center gap-1 text-[10px] rounded-full pl-0.5 pr-1.5 py-0.5 border ${isActive ? color.active : "border-white/5 text-slate-400"}`}>
-                    <PlayerAvatar
-                      name={p.name}
-                      avatarUrl={p.avatarUrl}
-                      ringClass={isActive ? color.ring : "ring-1 ring-white/10"}
-                      sizeClass="w-4 h-4"
-                    />
+                  <div key={p.name} className={`inline-flex items-center gap-1 text-[10px] rounded-full px-1.5 py-0.5 border ${isActive ? color.active : "border-white/5 text-slate-400"}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${color.dot} ${isActive ? "opacity-100" : "opacity-30"}`} />
                     <span className="font-medium max-w-[60px] truncate">{p.name}</span>
                     <span className={`rounded-full px-1 py-0.5 text-[9px] font-bold tabular-nums ${isActive ? "bg-black/20 text-white/90" : "bg-white/5 text-slate-300"}`}>
                       {p.contributedPoints ?? 0} pts
@@ -1083,8 +1054,7 @@ export default function GameRoom() {
                         {t === 1 ? gameState.team1Name : gameState.team2Name}
                       </div>
                       {gameState.players.filter(p => p.team === t).map(p => (
-                        <div key={p.id} className="flex items-center gap-1.5 text-xs text-slate-300 mb-0.5">
-                          <PlayerAvatar name={p.name} avatarUrl={p.avatarUrl} sizeClass="w-5 h-5" />
+                        <div key={p.id} className="flex items-center gap-1 text-xs text-slate-300 mb-0.5">
                           {p.isHost && <Crown className="w-3 h-3 text-amber-400 shrink-0" />}
                           <span className="truncate">{p.name}</span>
                           {isHost && p.name !== playerName && !p.isHost && (

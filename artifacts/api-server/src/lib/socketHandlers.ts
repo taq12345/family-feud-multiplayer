@@ -1,11 +1,10 @@
 import { Server as SocketServer, Socket } from "socket.io";
 import { db } from "@workspace/db";
-import { roomsTable, chatMessagesTable, usersTable } from "@workspace/db/schema";
+import { roomsTable, chatMessagesTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
 import { findMatchIndex, normalizeSubmittedAnswer } from "./answerMatcher.js";
 import { generateCustomQuestions } from "./questionGenerator.js";
-import { creditGuess, creditSteal, creditRoundEnd, creditGameEnd } from "./stats.js";
 
 const gameStates = new Map<string, GameState>();
 const answerTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -178,9 +177,6 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
 
   if (state.currentRound < state.totalRounds) {
     scheduleAutoAdvance(io, roomId);
-  } else {
-    // Final round ended as a skipped faceoff — still credit the overall game winner.
-    creditGameEnd(state).catch(() => {});
   }
 }
 
@@ -202,7 +198,6 @@ function startFaceoffAnswerTimer(io: SocketServer, roomId: string) {
       team: player.team,
       answer: "(no answer in time)",
     });
-    creditGuess(state, player, "wrong").catch(() => {});
 
     state.faceoffUsedPlayerIds.add(player.id);
     state.faceoffAttempts++;
@@ -340,7 +335,6 @@ function startAnswerTimer(io: SocketServer, state: GameState, roomId: string) {
         team: designatedPlayer.team,
         answer: "(no answer in time)",
       });
-      creditGuess(current, designatedPlayer, "wrong").catch(() => {});
     }
 
     if (current.status === "playing") {
@@ -503,33 +497,13 @@ export function setupSocketHandlers(io: SocketServer) {
       // ── Normal (first-time) join path ────────────────────────────────
       if (state) {
         const isHost = !Array.from(state.players.values()).some(p => p.isHost);
-
-        // Look up the registered user's avatar (if any) by their permanent
-        // nickname so it can be shown next to their name in the game UI.
-        // Guests don't have a row here → avatarUrl stays null.
-        let avatarUrl: string | null = null;
-        try {
-          const [u] = await db
-            .select({ avatarUrl: usersTable.avatarUrl })
-            .from(usersTable)
-            .where(eq(usersTable.nicknameLower, nameKey))
-            .limit(1);
-          avatarUrl = u?.avatarUrl ?? null;
-        } catch {
-          // ignore — non-fatal, name-only display is fine
-        }
-
         state.players.set(socket.id, {
           id: socket.id,
           name: trimmedPlayerName,
           team,
           isHost,
           contributedPoints: 0,
-          avatarUrl,
         });
-
-        // Track permanent participant roster for stats (never shrinks during play).
-        state.allParticipants.set(nameKey, { name: trimmedPlayerName, team });
 
         await db.update(roomsTable)
           .set({ playerCount: state.players.size })
@@ -624,25 +598,12 @@ export function setupSocketHandlers(io: SocketServer) {
       const state = createGameState(roomId, "Solo Play", "You", "CPU", numRounds);
       state.isSolo = true;
 
-      let soloAvatarUrl: string | null = null;
-      try {
-        const [u] = await db
-          .select({ avatarUrl: usersTable.avatarUrl })
-          .from(usersTable)
-          .where(eq(usersTable.nicknameLower, nameKey))
-          .limit(1);
-        soloAvatarUrl = u?.avatarUrl ?? null;
-      } catch {
-        // ignore — non-fatal
-      }
-
       const soloPlayer: import("./gameState.js").Player = {
         id: socket.id,
         name: trimmedName,
         team: 1,
         isHost: true,
         contributedPoints: 0,
-        avatarUrl: soloAvatarUrl,
       };
       state.players.set(socket.id, soloPlayer);
 
@@ -820,11 +781,6 @@ export function setupSocketHandlers(io: SocketServer) {
       state.team1Score = 0;
       state.team2Score = 0;
       state.players.forEach(p => { p.contributedPoints = 0; });
-      // Rebuild allParticipants from the current live players so a new game
-      // starts with a clean slate (no stale names from the previous game).
-      state.allParticipants = new Map(
-        Array.from(state.players.values()).map(p => [p.name.toLowerCase(), { name: p.name, team: p.team }])
-      );
       state.status = "waiting";
       state.currentRound = 0;
       state.currentQuestion = null;
@@ -924,13 +880,11 @@ export function setupSocketHandlers(io: SocketServer) {
             points: pts,
             contributedPoints: player.contributedPoints,
           });
-          creditGuess(state, player, "correct", pts).catch(() => {});
           startAnswerTimer(io, state, roomId);
           io.to(roomId).emit("game_state", serializeGameState(state));
         } else {
           if (normSub) state.wrongAnswers.add(normSub);
           io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-          creditGuess(state, player, "wrong").catch(() => {});
           state.faceoffUsedPlayerIds.add(socket.id);
           state.faceoffAttempts++;
 
@@ -978,7 +932,6 @@ export function setupSocketHandlers(io: SocketServer) {
         if (normSub && state.wrongAnswers.has(normSub)) {
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            creditGuess(state, player, "wrong").catch(() => {});
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
             if (state.strikes >= 3) {
@@ -1003,7 +956,6 @@ export function setupSocketHandlers(io: SocketServer) {
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            creditGuess(state, player, "wrong").catch(() => {});
             await endRound(io, state, roomId, state.playingTeam!);
           }
           return;
@@ -1038,11 +990,6 @@ export function setupSocketHandlers(io: SocketServer) {
             points: pts,
             contributedPoints: player.contributedPoints,
           });
-          if (state.status === "stealing") {
-            creditSteal(state, player, pts).catch(() => {});
-          } else {
-            creditGuess(state, player, "correct", pts).catch(() => {});
-          }
 
           // Check if all answers revealed
           const allRevealed = state.currentQuestion.answers.every((_, i) => state.revealedAnswers.has(i));
@@ -1058,7 +1005,6 @@ export function setupSocketHandlers(io: SocketServer) {
           if (normSub) state.wrongAnswers.add(normSub);
           if (state.status === "playing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            creditGuess(state, player, "wrong").catch(() => {});
             state.strikes++;
             io.to(roomId).emit("strike", { strikes: state.strikes });
 
@@ -1084,7 +1030,6 @@ export function setupSocketHandlers(io: SocketServer) {
             }
           } else if (state.status === "stealing") {
             io.to(roomId).emit("answer_wrong", { playerName: player.name, team: player.team, answer });
-            creditGuess(state, player, "wrong").catch(() => {});
             // Failed steal — playing team gets points
             await endRound(io, state, roomId, state.playingTeam!);
           }
@@ -1279,9 +1224,6 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
     // Guard: if already removed (e.g. kicked then leave_room fires), do nothing
     if (!departing) return;
     state.players.delete(socket.id);
-    // Real departure (explicit leave or 10-min grace expiry) — purge from the
-    // permanent participant roster so future credits don't include them.
-    state.allParticipants.delete(departing.name.toLowerCase());
     try {
       await db.update(roomsTable)
         .set({ playerCount: state.players.size })
@@ -1427,13 +1369,6 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
     canonicalAnswers,
   });
   io.to(roomId).emit("game_state", serializeGameState(state));
-
-  // Stats: credit each player with a round W or L. If this was the final round,
-  // also credit the game W/L based on aggregate score.
-  creditRoundEnd(state, winningTeam).catch(() => {});
-  if (state.currentRound >= state.totalRounds) {
-    creditGameEnd(state).catch(() => {});
-  }
 
   // Auto-advance to next round if host doesn't click within 60 seconds.
   // Always schedule when there are more rounds — advanceToNextRound guards against advancing
