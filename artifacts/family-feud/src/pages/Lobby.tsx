@@ -474,7 +474,7 @@ export default function Lobby() {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {nickname && (
+            {nickname && !isSignedIn && (
               <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="text-xs text-slate-300">
@@ -563,14 +563,16 @@ export default function Lobby() {
               >
                 {nickname && (
                   <>
-                    <DropdownMenuItem disabled className="opacity-100 focus:bg-transparent">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                        <span className="text-xs text-slate-400">
-                          Playing as <span className="font-semibold text-amber-400">{nickname}</span>
-                        </span>
-                      </div>
-                    </DropdownMenuItem>
+                    {!isSignedIn && (
+                      <DropdownMenuItem disabled className="opacity-100 focus:bg-transparent">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                          <span className="text-xs text-slate-400">
+                            Playing as <span className="font-semibold text-amber-400">{nickname}</span>
+                          </span>
+                        </div>
+                      </DropdownMenuItem>
+                    )}
                     {!isSignedIn && (
                       <DropdownMenuItem
                         onClick={() => {
