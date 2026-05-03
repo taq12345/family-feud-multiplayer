@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { Show, useUser, useClerk } from "@clerk/react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
@@ -30,7 +38,6 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
   const { signOut } = useClerk();
   const { user, isLoaded } = useUser();
   const [me, setMe] = useState<MeResponse | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!user) { setMe(null); return; }
@@ -39,6 +46,17 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
       .then((data) => setMe(data))
       .catch(() => {});
   }, [user?.id]);
+
+  async function handleSignOut() {
+    playClickSound();
+    try { localStorage.removeItem("playerName"); } catch { /* ignore */ }
+    try {
+      await signOut({ redirectUrl: `${basePath}/sign-in` });
+    } catch (err) {
+      console.error("[signOut] failed", err);
+      window.location.href = `${basePath}/sign-in`;
+    }
+  }
 
   return (
     <>
@@ -58,60 +76,53 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
         </button>
       </Show>
       <Show when="signed-in">
-        <div className="relative">
-          <button
-            onClick={() => { playClickSound(); setMenuOpen((o) => !o); }}
-            className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
-            title="Account"
-            aria-label="Account menu"
-          >
-            {user?.imageUrl ? (
-              <img src={user.imageUrl} alt="" className="w-7 h-7 rounded-full" />
-            ) : (
-              <span className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
-                <UserIcon className="w-4 h-4 text-amber-400" />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              onClick={() => playClickSound()}
+              className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+              title="Account"
+              aria-label="Account menu"
+            >
+              {user?.imageUrl ? (
+                <img src={user.imageUrl} alt="" className="w-7 h-7 rounded-full" />
+              ) : (
+                <span className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
+                  <UserIcon className="w-4 h-4 text-amber-400" />
+                </span>
+              )}
+              <span className="hidden sm:inline text-xs text-amber-400 font-semibold pr-1 max-w-[100px] truncate">
+                {me?.nickname ?? "Setup…"}
               </span>
-            )}
-            <span className="hidden sm:inline text-xs text-amber-400 font-semibold pr-1 max-w-[100px] truncate">
-              {me?.nickname ?? "Setup…"}
-            </span>
-          </button>
-          {menuOpen && (
-            <>
-              <div className="fixed inset-0 z-30" onClick={() => setMenuOpen(false)} />
-              <div className="absolute right-0 mt-2 z-40 w-56 rounded-xl bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
-                <div className="px-4 py-3 border-b border-white/5">
-                  <p className="text-[11px] uppercase tracking-wider text-slate-500">Signed in as</p>
-                  <p className="text-amber-400 font-bold truncate">{me?.nickname ?? "—"}</p>
-                  {user?.primaryEmailAddress?.emailAddress && (
-                    <p className="text-xs text-slate-500 truncate mt-0.5">
-                      {user.primaryEmailAddress.emailAddress}
-                    </p>
-                  )}
-                </div>
-                <button
-                  onClick={async () => {
-                    playClickSound();
-                    setMenuOpen(false);
-                    // Clear cached guest nickname so the user isn't auto-logged
-                    // back in as a guest using their registered nickname.
-                    try { localStorage.removeItem("playerName"); } catch { /* ignore */ }
-                    try {
-                      await signOut({ redirectUrl: `${basePath}/sign-in` });
-                    } catch (err) {
-                      console.error("[signOut] failed", err);
-                      // Hard fallback so the UI never gets stuck.
-                      window.location.href = `${basePath}/sign-in`;
-                    }
-                  }}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-slate-200 hover:bg-white/10 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" /> Sign out
-                </button>
-              </div>
-            </>
-          )}
-        </div>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            sideOffset={8}
+            className="bg-[#0d1525]/95 backdrop-blur-xl border border-white/10 text-white min-w-[220px] z-[60]"
+          >
+            <DropdownMenuLabel className="px-3 py-2">
+              <p className="text-[11px] uppercase tracking-wider text-slate-500 font-normal">
+                Signed in as
+              </p>
+              <p className="text-amber-400 font-bold truncate text-sm mt-0.5">
+                {me?.nickname ?? "—"}
+              </p>
+              {user?.primaryEmailAddress?.emailAddress && (
+                <p className="text-xs text-slate-500 truncate mt-0.5 font-normal">
+                  {user.primaryEmailAddress.emailAddress}
+                </p>
+              )}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-white/10" />
+            <DropdownMenuItem
+              onSelect={(e) => { e.preventDefault(); void handleSignOut(); }}
+              className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
+            >
+              <LogOut className="w-4 h-4 mr-2" /> Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </Show>
       {!isLoaded && null}
     </>
