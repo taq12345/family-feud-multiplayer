@@ -320,7 +320,7 @@ export function NicknameSetupDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <p className="text-sm text-slate-400">
-            Pick the name you want to use in games. It cannot be changed later.
+            Pick the name you want to use in games.
           </p>
           <div>
             <Label className="text-slate-300 text-sm font-medium">Nickname</Label>
