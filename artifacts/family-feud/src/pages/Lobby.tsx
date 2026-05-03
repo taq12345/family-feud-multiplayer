@@ -153,6 +153,21 @@ export default function Lobby() {
     if (authLoaded && !isSignedIn) setLockedNickname(null);
   }, [authLoaded, isSignedIn]);
 
+  // Capture ?join=ROOM_ID synchronously on first render — before auth-dependent
+  // effects run and before the URL is cleaned up.  Persisted in sessionStorage so
+  // the invite survives navigation to /sign-in and back.
+  const [pendingInviteRoom, setPendingInviteRoom] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const joinRoom = params.get("join");
+    if (joinRoom) {
+      try { sessionStorage.setItem("pendingInviteJoin", joinRoom); } catch { /* ignore */ }
+      window.history.replaceState({}, "", window.location.pathname);
+      return joinRoom;
+    }
+    // Pick up an invite left over from a previous page-load (e.g. user went to /sign-in)
+    return sessionStorage.getItem("pendingInviteJoin");
+  });
+
   // First-visit redirect: if the user has neither set a guest nickname nor
   // signed in, send them to the sign-in screen. From there they can choose
   // to authenticate or click "Back to lobby" to play as a guest.
@@ -160,32 +175,28 @@ export default function Lobby() {
     if (!authLoaded) return;
     if (localStorage.getItem("playerName")) return;
     if (isSignedIn) return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("join")) return; // honor invite links — let them play as guest
+    if (pendingInviteRoom) return; // honor invite links — let them choose guest/sign-in
     setLocation("/sign-in");
-  }, [authLoaded, isSignedIn, setLocation]);
+  }, [authLoaded, isSignedIn, pendingInviteRoom, setLocation]);
 
-  // If they choose to play as guest (returned from /sign-in without auth and
-  // still no name), open the guest nickname dialog.
+  // If they arrived via an invite link without a nickname, open the guest nickname dialog.
   useEffect(() => {
     if (!authLoaded) return;
     if (isSignedIn) return;
     if (localStorage.getItem("playerName")) return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("join")) {
+    if (pendingInviteRoom) {
       setNicknameDialogOpen(true);
       return;
     }
     // Only open dialog if we're not about to redirect (i.e. we already came
-    // back from sign-in). The redirect effect above guards this — give it a
-    // tick.
+    // back from sign-in). The redirect effect above guards this — give it a tick.
     const t = setTimeout(() => {
       if (!localStorage.getItem("playerName") && !isSignedIn) {
         setNicknameDialogOpen(true);
       }
     }, 50);
     return () => clearTimeout(t);
-  }, [authLoaded, isSignedIn]);
+  }, [authLoaded, isSignedIn, pendingInviteRoom]);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -205,8 +216,6 @@ export default function Lobby() {
   const [reconnectSlot, setReconnectSlot] = useState<{ roomId: string; team: 1 | 2 } | null>(null);
 
   const [kickedMessage, setKickedMessage] = useState<string | null>(null);
-  // Holds the room ID from an invite link so we can open the join dialog AFTER the user sets a nickname
-  const pendingInviteRoomId = useRef<string | null>(null);
 
   useEffect(() => {
     const msg = sessionStorage.getItem("kickedMessage");
@@ -216,20 +225,18 @@ export default function Lobby() {
     }
   }, []);
 
-  // Auto-open join dialog when arriving via an invite link (?join=ROOM_ID)
+  // Keep Lobby's nickname state in sync when NicknameSetupDialog (mounted in
+  // App.tsx) fires after a signed-in user sets their permanent nickname.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const inviteRoomId = params.get("join");
-    if (!inviteRoomId) return;
-    window.history.replaceState({}, "", window.location.pathname);
-    if (localStorage.getItem("playerName")) {
-      // Existing user — open join dialog immediately
-      handleJoin(inviteRoomId);
-    } else {
-      // New user — wait until they set a nickname, then open join dialog
-      pendingInviteRoomId.current = inviteRoomId;
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const handler = (e: Event) => {
+      const nick = (e as CustomEvent<{ nickname: string }>).detail?.nickname;
+      if (nick) {
+        setNickname(nick);
+        try { localStorage.setItem("playerName", nick); } catch { /* ignore */ }
+      }
+    };
+    window.addEventListener("nickname:set", handler);
+    return () => window.removeEventListener("nickname:set", handler);
   }, []);
 
   const [soloOpen, setSoloOpen] = useState(false);
@@ -448,6 +455,25 @@ export default function Lobby() {
       }
     } catch { /* ignore */ }
   }
+
+  // As soon as auth is loaded AND the user has a nickname AND there's a pending
+  // invite room, open the join dialog automatically.  This covers every path:
+  //   • guest sets nickname in the dialog above
+  //   • signed-in user already has a nickname (from localStorage or /api/users/me)
+  //   • new signed-in user sets nickname via NicknameSetupDialog (App.tsx)
+  //   • user navigated to /sign-in and came back (invite survives via sessionStorage)
+  const pendingInviteHandled = useRef(false);
+  useEffect(() => {
+    if (!pendingInviteRoom) return;
+    if (!authLoaded) return;
+    if (!nickname.trim()) return;
+    if (pendingInviteHandled.current) return;
+    pendingInviteHandled.current = true;
+    try { sessionStorage.removeItem("pendingInviteJoin"); } catch { /* ignore */ }
+    setPendingInviteRoom(null);
+    handleJoin(pendingInviteRoom);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoaded, nickname, pendingInviteRoom]);
 
   async function handleChangeNickname() {
     if (!changeNicknameInput.trim()) return;
@@ -1078,10 +1104,6 @@ export default function Lobby() {
                     setNickname(trimmed);
                     localStorage.setItem("playerName", trimmed);
                     setNicknameDialogOpen(false);
-                    if (pendingInviteRoomId.current) {
-                      handleJoin(pendingInviteRoomId.current);
-                      pendingInviteRoomId.current = null;
-                    }
                   }
                 }}
                 className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20 h-11"
@@ -1101,10 +1123,6 @@ export default function Lobby() {
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
                 setNicknameDialogOpen(false);
-                if (pendingInviteRoomId.current) {
-                  handleJoin(pendingInviteRoomId.current);
-                  pendingInviteRoomId.current = null;
-                }
               }}
             >
               Let's Play →
