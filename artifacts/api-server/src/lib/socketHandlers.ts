@@ -178,6 +178,9 @@ async function skipFaceoffRound(io: SocketServer, state: GameState, roomId: stri
 
   if (state.currentRound < state.totalRounds) {
     scheduleAutoAdvance(io, roomId);
+  } else {
+    // Final round ended as a skipped faceoff — still credit the overall game winner.
+    creditGameEnd(state).catch(() => {});
   }
 }
 
