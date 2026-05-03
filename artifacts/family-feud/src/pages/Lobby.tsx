@@ -88,6 +88,25 @@ export default function Lobby() {
   });
   const [nicknameDialogOpen, setNicknameDialogOpen] = useState(false);
 
+  // When the user signs in, the locked Clerk-linked nickname is the source of
+  // truth — override any leftover guest nickname so the lobby/header don't
+  // display two identities at once.
+  useEffect(() => {
+    if (!authLoaded || !isSignedIn) return;
+    let cancelled = false;
+    fetch("/api/users/me", { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.nickname) return;
+        if (nickname !== data.nickname) {
+          setNickname(data.nickname);
+          try { localStorage.setItem("playerName", data.nickname); } catch { /* ignore */ }
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [authLoaded, isSignedIn, nickname]);
+
   // First-visit redirect: if the user has neither set a guest nickname nor
   // signed in, send them to the sign-in screen. From there they can choose
   // to authenticate or click "Back to lobby" to play as a guest.
