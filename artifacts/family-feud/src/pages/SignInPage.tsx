@@ -11,7 +11,9 @@ const NICKNAME_PATTERN = /^[A-Za-z0-9_-]{2,16}$/;
 
 export default function SignInPage() {
   const [, setLocation] = useLocation();
-  const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(() => {
+    try { return !!localStorage.getItem("playerName"); } catch { return false; }
+  });
   const [guestName, setGuestName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
