@@ -32,10 +32,10 @@ export default function SignInPage() {
     }
   });
 
-  // First-time visitors land on the guest-first view; returning visitors
-  // (back-to-lobby crowd) and anyone who clicks "Sign in instead" see the
-  // Clerk widget directly.
-  const renderSignIn = showBackToLobby || showSignIn;
+  // Always show the guest-first view initially.
+  // The Clerk widget is only revealed when the user explicitly clicks
+  // "Sign in or create a free account".
+  const renderSignIn = showSignIn;
 
   function backToGuestView() {
     try { sessionStorage.removeItem("cameFromLobby"); } catch { /* ignore */ }
