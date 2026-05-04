@@ -243,10 +243,14 @@ export default function Lobby() {
   const [soloLoading, setSoloLoading] = useState(false);
 
   const handleSoloPlay = () => {
-    // Solo play is open to everyone — auto-assign a guest name if needed.
+    // Solo play is open to everyone — auto-assign a fun name if needed.
     let playerName = nickname.trim();
     if (!playerName) {
-      playerName = "Guest" + Math.floor(1000 + Math.random() * 9000);
+      const adjs = ["Swift","Bold","Clever","Lucky","Fierce","Calm","Sly","Bright","Wild","Cool","Sneaky","Epic","Mighty","Funky","Zany"];
+      const nouns = ["Fox","Panda","Eagle","Tiger","Shark","Wolf","Hawk","Lynx","Cobra","Raven","Falcon","Otter","Viper","Moose","Bison"];
+      const adj = adjs[Math.floor(Math.random() * adjs.length)];
+      const noun = nouns[Math.floor(Math.random() * nouns.length)];
+      playerName = adj + noun;
       setNickname(playerName);
       try { localStorage.setItem("playerName", playerName); } catch { /* ignore */ }
     }
