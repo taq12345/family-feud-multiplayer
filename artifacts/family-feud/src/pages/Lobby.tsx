@@ -171,9 +171,12 @@ export default function Lobby() {
   // If a user arrives without a nickname and tries to act, send them to
   // /sign-in where they can pick a guest name or log in with Clerk.
   // Returns true if the user has a nickname and can proceed.
-  function requireNickname(): boolean {
+  function requireNickname(pendingAction?: string): boolean {
     if (nickname.trim()) return true;
-    try { sessionStorage.setItem("cameFromLobby", "1"); } catch { /* ignore */ }
+    try {
+      sessionStorage.setItem("cameFromLobby", "1");
+      if (pendingAction) sessionStorage.setItem("pendingAction", pendingAction);
+    } catch { /* ignore */ }
     setLocation("/sign-in");
     return false;
   }
@@ -204,6 +207,18 @@ export default function Lobby() {
       setKickedMessage(msg);
       sessionStorage.removeItem("kickedMessage");
     }
+  }, []);
+
+  // After returning from /sign-in, auto-open whatever dialog the user was
+  // trying to reach before they were prompted to authenticate.
+  useEffect(() => {
+    try {
+      const action = sessionStorage.getItem("pendingAction");
+      if (!action) return;
+      sessionStorage.removeItem("pendingAction");
+      if (action === "create") setCreateOpen(true);
+    } catch { /* ignore */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Keep Lobby's nickname state in sync when NicknameSetupDialog (mounted in
@@ -675,7 +690,7 @@ export default function Lobby() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Dialog open={createOpen} onOpenChange={v => { if (v && !requireNickname()) return; setCreateOpen(v); if (!v) setCreateError(null); }}>
+            <Dialog open={createOpen} onOpenChange={v => { if (v && !requireNickname("create")) return; setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all border-0 px-3 sm:px-4">
                   <Plus className="w-4 h-4 sm:mr-1.5" />
@@ -878,7 +893,7 @@ export default function Lobby() {
               <p className="text-slate-500 text-sm mt-1">Create a room and invite your friends!</p>
             </div>
             <Button
-              onClick={() => { if (requireNickname()) setCreateOpen(true); }}
+              onClick={() => { if (requireNickname("create")) setCreateOpen(true); }}
               className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.3)] border-0"
             >
               <Plus className="w-4 h-4 mr-2" /> Create Room
