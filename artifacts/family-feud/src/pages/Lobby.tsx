@@ -228,7 +228,13 @@ export default function Lobby() {
   const [soloLoading, setSoloLoading] = useState(false);
 
   const handleSoloPlay = () => {
-    if (!requireNickname()) return;
+    // Solo play is open to everyone — auto-assign a guest name if needed.
+    let playerName = nickname.trim();
+    if (!playerName) {
+      playerName = "Guest" + Math.floor(1000 + Math.random() * 9000);
+      setNickname(playerName);
+      try { localStorage.setItem("playerName", playerName); } catch { /* ignore */ }
+    }
     
     if (soloMode === "custom") {
       const trimmed = soloTopic.trim();
@@ -243,13 +249,13 @@ export default function Lobby() {
     playClickSound();
     
     createSoloGame(
-      nickname, 
+      playerName, 
       soloRounds, 
       soloMode === "custom" ? soloTopic.trim() : undefined,
       (roomId) => {
         setSoloLoading(false);
         setSoloOpen(false);
-        setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
+        setLocation(`/room/${roomId}?name=${encodeURIComponent(playerName)}&team=1`);
       },
       (error) => {
         setSoloLoading(false);
@@ -766,7 +772,7 @@ export default function Lobby() {
             </svg>
             Find Friends
           </a>
-          <Dialog open={soloOpen} onOpenChange={v => { if (v && !requireNickname()) return; setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
+          <Dialog open={soloOpen} onOpenChange={v => { setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-br from-emerald-500/40 to-teal-600/40 border border-emerald-400/50 text-emerald-300 hover:from-emerald-500/50 hover:to-teal-600/50 hover:border-emerald-300/60 hover:text-emerald-200 transition-all text-sm font-bold shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_24px_rgba(16,185,129,0.35)]">
                   <Gamepad2 className="w-5 h-5" />
