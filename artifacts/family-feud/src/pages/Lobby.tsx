@@ -168,32 +168,16 @@ export default function Lobby() {
     return sessionStorage.getItem("pendingInviteJoin");
   });
 
-  // First-visit redirect: if the user has neither set a guest nickname nor
-  // signed in, send them to the sign-in screen. From there they can choose
-  // to authenticate or click "Back to lobby" to play as a guest.
-  // Invite-link users (?join=ROOM_ID) are treated the same — the room ID is
-  // preserved in sessionStorage so it survives the round-trip to /sign-in.
-  useEffect(() => {
-    if (!authLoaded) return;
-    if (localStorage.getItem("playerName")) return;
-    if (isSignedIn) return;
+  // If a user arrives without a nickname and tries to act, send them to
+  // /sign-in where they can pick a guest name or log in with Clerk.
+  // Returns true if the user has a nickname and can proceed.
+  function requireNickname(): boolean {
+    if (nickname.trim()) return true;
+    try { sessionStorage.setItem("cameFromLobby", "1"); } catch { /* ignore */ }
     setLocation("/sign-in");
-  }, [authLoaded, isSignedIn, setLocation]);
+    return false;
+  }
 
-  // Open the guest nickname dialog only when the user has returned from
-  // /sign-in without signing in (i.e. they clicked "Back to lobby").
-  useEffect(() => {
-    if (!authLoaded) return;
-    if (isSignedIn) return;
-    if (localStorage.getItem("playerName")) return;
-    // Give the redirect effect a tick to fire first.
-    const t = setTimeout(() => {
-      if (!localStorage.getItem("playerName") && !isSignedIn) {
-        setNicknameDialogOpen(true);
-      }
-    }, 50);
-    return () => clearTimeout(t);
-  }, [authLoaded, isSignedIn]);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -244,7 +228,7 @@ export default function Lobby() {
   const [soloLoading, setSoloLoading] = useState(false);
 
   const handleSoloPlay = () => {
-    if (!nickname) return;
+    if (!requireNickname()) return;
     
     if (soloMode === "custom") {
       const trimmed = soloTopic.trim();
@@ -437,6 +421,7 @@ export default function Lobby() {
   }
 
   async function handleJoin(roomId: string) {
+    if (!requireNickname()) return;
     setJoinRoomId(roomId);
     setJoinDialogOpen(true);
     setJoinRoomPlayers(null);
@@ -684,7 +669,7 @@ export default function Lobby() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
+            <Dialog open={createOpen} onOpenChange={v => { if (v && !requireNickname()) return; setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all border-0 px-3 sm:px-4">
                   <Plus className="w-4 h-4 sm:mr-1.5" />
@@ -889,7 +874,7 @@ export default function Lobby() {
               <p className="text-slate-500 text-sm mt-1">Create a room and invite your friends!</p>
             </div>
             <Button
-              onClick={() => setCreateOpen(true)}
+              onClick={() => { if (requireNickname()) setCreateOpen(true); }}
               className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.3)] border-0"
             >
               <Plus className="w-4 h-4 mr-2" /> Create Room
