@@ -26,7 +26,6 @@ export default function SignInPage() {
   function backToGuestView() {
     try { sessionStorage.removeItem("cameFromLobby"); } catch { /* ignore */ }
     setShowSignIn(false);
-    setShowBackToLobby(false);
   }
 
   async function handleGuestSubmit(e: React.FormEvent) {
