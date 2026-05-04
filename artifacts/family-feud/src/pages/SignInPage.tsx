@@ -16,21 +16,7 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // "Back to lobby" only makes sense if the visitor already has a way back —
-  // either they came from clicking the header sign-in button (cameFromLobby
-  // sessionStorage flag) or they already have a guest nickname stored.
-  // Stored as state so toggling "Continue as guest instead" can clear it.
-  const [showBackToLobby, setShowBackToLobby] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return (
-        !!localStorage.getItem("playerName") ||
-        sessionStorage.getItem("cameFromLobby") === "1"
-      );
-    } catch {
-      return false;
-    }
-  });
+  const [showBackToLobby] = useState(true);
 
   // Always show the guest-first view initially.
   // The Clerk widget is only revealed when the user explicitly clicks
