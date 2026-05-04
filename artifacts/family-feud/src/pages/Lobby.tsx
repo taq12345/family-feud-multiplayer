@@ -766,8 +766,7 @@ export default function Lobby() {
             </svg>
             Find Friends
           </a>
-          {nickname && (
-            <Dialog open={soloOpen} onOpenChange={v => { setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
+          <Dialog open={soloOpen} onOpenChange={v => { if (v && !requireNickname()) return; setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-br from-emerald-500/40 to-teal-600/40 border border-emerald-400/50 text-emerald-300 hover:from-emerald-500/50 hover:to-teal-600/50 hover:border-emerald-300/60 hover:text-emerald-200 transition-all text-sm font-bold shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_24px_rgba(16,185,129,0.35)]">
                   <Gamepad2 className="w-5 h-5" />
@@ -845,8 +844,7 @@ export default function Lobby() {
                   </Button>
                 </div>
               </DialogContent>
-            </Dialog>
-          )}
+          </Dialog>
         </div>
 
         <div className="flex items-center justify-between mb-6">
