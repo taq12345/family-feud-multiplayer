@@ -446,7 +446,12 @@ export default function Lobby() {
   }
 
   async function handleJoin(roomId: string) {
-    if (!requireNickname()) return;
+    if (!nickname.trim()) {
+      // Save the room so the auto-trigger fires when the user returns with a nickname.
+      try { sessionStorage.setItem("pendingInviteJoin", roomId); } catch { /* ignore */ }
+      requireNickname();
+      return;
+    }
     setJoinRoomId(roomId);
     setJoinDialogOpen(true);
     setJoinRoomPlayers(null);
