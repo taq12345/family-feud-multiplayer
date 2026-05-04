@@ -11,9 +11,8 @@ const NICKNAME_PATTERN = /^[A-Za-z0-9_-]{2,16}$/;
 
 export default function SignInPage() {
   const [, setLocation] = useLocation();
-  const [showSignIn, setShowSignIn] = useState(() => {
-    try { return !!localStorage.getItem("playerName"); } catch { return false; }
-  });
+  const alreadyHasNickname = (() => { try { return !!localStorage.getItem("playerName"); } catch { return false; } })();
+  const [showSignIn, setShowSignIn] = useState(alreadyHasNickname);
   const [guestName, setGuestName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -166,12 +165,14 @@ export default function SignInPage() {
               fallbackRedirectUrl={basePath || "/"}
               appearance={{ elements: { badge: "hidden", logoBox: "hidden" } }}
             />
-            <button
-              onClick={backToGuestView}
-              className="text-sm text-slate-400 hover:text-white underline-offset-2 hover:underline"
-            >
-              ← Continue as guest instead
-            </button>
+            {!alreadyHasNickname && (
+              <button
+                onClick={backToGuestView}
+                className="text-sm text-slate-400 hover:text-white underline-offset-2 hover:underline"
+              >
+                ← Continue as guest instead
+              </button>
+            )}
           </>
         )}
       </div>
