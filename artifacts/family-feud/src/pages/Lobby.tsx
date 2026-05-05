@@ -528,7 +528,7 @@ export default function Lobby() {
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
-      <SEO />
+      <SEO canonical="https://friendlyfeud.fun/" />
       {/* Decorative background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
