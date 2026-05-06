@@ -153,6 +153,13 @@ export default function SignInPage() {
                     {" "}— wins, streaks, and progress saved across devices.
                   </span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-fuchsia-400 mt-0.5 shrink-0" />
+                  <span>
+                    <span className="text-white font-medium">Choose a profile picture</span>
+                    {" "}— make your nickname easier to spot in rooms and leaderboards.
+                  </span>
+                </li>
               </ul>
               <button
                 onClick={() => setShowSignIn(true)}
