@@ -596,8 +596,17 @@ export default function Lobby() {
             </button>
 
             <button
+              onClick={() => { playClickSound(); setLocation("/feedback"); }}
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              title="Feedback & Bug Reports"
+              aria-label="Feedback & Bug Reports"
+            >
+              <MessageSquare className="w-4 h-4" />
+            </button>
+
+            <button
               onClick={() => { playClickSound(); setLocation("/leaderboard"); }}
-              className="p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
+              className="sm:hidden p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
               title="Leaderboard"
               aria-label="Leaderboard"
             >
@@ -612,11 +621,12 @@ export default function Lobby() {
               <FileQuestion className="w-4 h-4" />
             </button>
             <button
-              onClick={() => { playClickSound(); setLocation("/feedback"); }}
-              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-              title="Feedback & Bug Reports"
+              onClick={() => { playClickSound(); setLocation("/leaderboard"); }}
+              className="hidden sm:inline-flex p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
+              title="Leaderboard"
+              aria-label="Leaderboard"
             >
-              <MessageSquare className="w-4 h-4" />
+              <Trophy className="w-4 h-4" />
             </button>
             <button
               onClick={() => {
