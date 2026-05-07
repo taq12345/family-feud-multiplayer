@@ -86,7 +86,7 @@ export default function SignInPage() {
                 Jump straight in
               </h1>
               <p className="text-slate-400 mt-2 text-sm">
-                Pick a nickname and start playing. No sign-up required.
+                Pick a nickname and start playing.
               </p>
             </div>
 

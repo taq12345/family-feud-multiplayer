@@ -372,12 +372,11 @@ export default function Leaderboard() {
               type="button"
               onClick={() => void handleRefresh()}
               disabled={refreshing}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 disabled:opacity-60 disabled:cursor-not-allowed transition-all text-xs sm:text-sm font-semibold"
+              className="inline-flex items-center justify-center p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white shadow-[0_0_16px_rgba(16,185,129,0.35)] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
               aria-label="Refresh leaderboard"
               title="Refresh leaderboard"
             >
               <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
-              Refresh
             </button>
             {!loading && rows && rows.length > 0 && (
               <span className="text-[10px] sm:text-xs text-slate-600 ml-auto">
