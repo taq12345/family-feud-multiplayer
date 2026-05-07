@@ -12,7 +12,8 @@ const AD_HTML_NATIVE = `<!DOCTYPE html>
 </body>
 </html>`;
 
-const AD_HTML_BANNER_728_90 = `<!DOCTYPE html>
+function buildBannerHtml(config: { key: string; width: number; height: number }): string {
+  return `<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,54 +29,41 @@ body{width:100%;display:flex;justify-content:center;align-items:flex-start}
 </div>
 <script>
   (function () {
-    var MOBILE = {
-      key: "7c3d49327fa4bdf90f0f7710de941992",
-      width: 300,
-      height: 250
+    var CONFIG = {
+      key: "${config.key}",
+      width: ${config.width},
+      height: ${config.height}
     };
-    var DESKTOP = {
-      key: "206bfaf543b74bc7403ff3a609cd5874",
-      width: 728,
-      height: 90
-    };
-
-    function pickConfig(vw) {
-      var isMobileUa = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
-      return (isMobileUa || vw <= 768) ? MOBILE : DESKTOP;
-    }
-
-    function loadAd(config) {
+    function loadAd() {
       var scaleEl = document.getElementById("ad-scale");
       if (!scaleEl) return;
       scaleEl.innerHTML = "";
-      scaleEl.style.width = config.width + "px";
-      scaleEl.style.height = config.height + "px";
+      scaleEl.style.width = CONFIG.width + "px";
+      scaleEl.style.height = CONFIG.height + "px";
 
       window.atOptions = {
-        key: config.key,
+        key: CONFIG.key,
         format: "iframe",
-        height: config.height,
-        width: config.width,
+        height: CONFIG.height,
+        width: CONFIG.width,
         params: {}
       };
 
       var s = document.createElement("script");
-      s.src = "https://www.highperformanceformat.com/" + config.key + "/invoke.js";
+      s.src = "https://www.highperformanceformat.com/" + CONFIG.key + "/invoke.js";
       scaleEl.appendChild(s);
     }
 
     function fitBanner() {
       var scaleEl = document.getElementById('ad-scale');
       if (!scaleEl) return;
-      var vw = document.documentElement.clientWidth || window.innerWidth || 728;
-      var cfg = pickConfig(vw);
-      var scale = Math.min(1, vw / cfg.width);
+      var vw = document.documentElement.clientWidth || window.innerWidth || ${config.width};
+      var scale = Math.min(1, vw / CONFIG.width);
       scaleEl.style.transform = 'scale(' + scale + ')';
-      document.body.style.height = (cfg.height * scale) + 'px';
+      document.body.style.height = (CONFIG.height * scale) + 'px';
     }
 
-    var initialVw = document.documentElement.clientWidth || window.innerWidth || 728;
-    loadAd(pickConfig(initialVw));
+    loadAd();
     fitBanner();
 
     function handleResize() {
@@ -86,19 +74,36 @@ body{width:100%;display:flex;justify-content:center;align-items:flex-start}
 </script>
 </body>
 </html>`;
+}
 
 type AdsterraWidgetVariant = "native" | "banner728x90";
 
 export default function AdsterraWidget({ variant = "native" }: { variant?: AdsterraWidgetVariant }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [height, setHeight] = useState(variant === "banner728x90" ? 90 : 120);
-  const adHtml = variant === "banner728x90" ? AD_HTML_BANNER_728_90 : AD_HTML_NATIVE;
+  const [isMobileViewport, setIsMobileViewport] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(max-width: 768px)").matches : false,
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobileViewport(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  const bannerConfig = isMobileViewport
+    ? { key: "7c3d49327fa4bdf90f0f7710de941992", width: 300, height: 250 }
+    : { key: "206bfaf543b74bc7403ff3a609cd5874", width: 728, height: 90 };
+  const [height, setHeight] = useState(variant === "banner728x90" ? bannerConfig.height : 120);
+  const adHtml = variant === "banner728x90" ? buildBannerHtml(bannerConfig) : AD_HTML_NATIVE;
 
   useEffect(() => {
     if (isMobileApp) return;
     const iframe = iframeRef.current;
     if (!iframe) return;
-    setHeight(variant === "banner728x90" ? 90 : 120);
+    setHeight(variant === "banner728x90" ? bannerConfig.height : 120);
 
     const resize = () => {
       try {
@@ -114,7 +119,7 @@ export default function AdsterraWidget({ variant = "native" }: { variant?: Adste
       iframe.removeEventListener("load", resize);
       clearInterval(interval);
     };
-  }, [variant]);
+  }, [variant, bannerConfig.height]);
 
   if (isMobileApp) return null;
 
