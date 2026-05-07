@@ -15,9 +15,16 @@ const AD_HTML_NATIVE = `<!DOCTYPE html>
 const AD_HTML_BANNER_728_90 = `<!DOCTYPE html>
 <html>
 <head>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{background:transparent;display:flex;justify-content:center;overflow:hidden}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:transparent;overflow:hidden}
+body{width:100%}
+#ad-scale{width:728px;height:90px;transform-origin:top left}
+</style>
 </head>
 <body>
+<div id="ad-scale">
 <script>
   atOptions = {
     'key' : '206bfaf543b74bc7403ff3a609cd5874',
@@ -28,6 +35,22 @@ const AD_HTML_BANNER_728_90 = `<!DOCTYPE html>
   };
 </script>
 <script src="https://www.highperformanceformat.com/206bfaf543b74bc7403ff3a609cd5874/invoke.js"><\/script>
+</div>
+<script>
+  (function () {
+    function fitBanner() {
+      var scaleEl = document.getElementById('ad-scale');
+      if (!scaleEl) return;
+      var vw = document.documentElement.clientWidth || window.innerWidth || 728;
+      var scale = Math.min(1, vw / 728);
+      scaleEl.style.transform = 'scale(' + scale + ')';
+      document.body.style.height = (90 * scale) + 'px';
+      document.body.style.width = Math.min(vw, 728) + 'px';
+    }
+    fitBanner();
+    window.addEventListener('resize', fitBanner);
+  })();
+</script>
 </body>
 </html>`;
 
