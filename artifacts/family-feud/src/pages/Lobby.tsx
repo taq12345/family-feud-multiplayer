@@ -1152,7 +1152,7 @@ export default function Lobby() {
       </Dialog>
 
       <div className="max-w-4xl mx-auto px-4 mt-12 mb-4">
-        <AdsterraWidget />
+        <AdsterraWidget variant="banner728x90" />
       </div>
 
       <div className="max-w-3xl mx-auto px-4 mb-8 text-center">
