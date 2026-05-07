@@ -287,8 +287,8 @@ export default function Lobby() {
     name: "My Room",
     team1Name: "Team 1",
     team2Name: "Team 2",
-    totalRounds: 4,
-    maxPlayers: 10,
+    totalRounds: 6,
+    maxPlayers: 4,
   });
 
   // Default room name when opening the creation dialog.
