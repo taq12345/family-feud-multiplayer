@@ -19,8 +19,8 @@ const AD_HTML_BANNER_728_90 = `<!DOCTYPE html>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:transparent;overflow:hidden}
-body{width:100%}
-#ad-scale{width:728px;height:90px;transform-origin:top left}
+body{width:100%;display:flex;justify-content:center;align-items:flex-start}
+#ad-scale{width:728px;height:90px;transform-origin:top center}
 </style>
 </head>
 <body>
@@ -45,7 +45,6 @@ body{width:100%}
       var scale = Math.min(1, vw / 728);
       scaleEl.style.transform = 'scale(' + scale + ')';
       document.body.style.height = (90 * scale) + 'px';
-      document.body.style.width = Math.min(vw, 728) + 'px';
     }
     fitBanner();
     window.addEventListener('resize', fitBanner);
