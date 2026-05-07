@@ -20,34 +20,68 @@ const AD_HTML_BANNER_728_90 = `<!DOCTYPE html>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:transparent;overflow:hidden}
 body{width:100%;display:flex;justify-content:center;align-items:flex-start}
-#ad-scale{width:728px;height:90px;transform-origin:top center}
+#ad-scale{transform-origin:top center}
 </style>
 </head>
 <body>
 <div id="ad-scale">
-<script>
-  atOptions = {
-    'key' : '206bfaf543b74bc7403ff3a609cd5874',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/206bfaf543b74bc7403ff3a609cd5874/invoke.js"><\/script>
 </div>
 <script>
   (function () {
+    var MOBILE = {
+      key: "7c3d49327fa4bdf90f0f7710de941992",
+      width: 300,
+      height: 250
+    };
+    var DESKTOP = {
+      key: "206bfaf543b74bc7403ff3a609cd5874",
+      width: 728,
+      height: 90
+    };
+
+    function pickConfig(vw) {
+      var isMobileUa = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+      return (isMobileUa || vw <= 768) ? MOBILE : DESKTOP;
+    }
+
+    function loadAd(config) {
+      var scaleEl = document.getElementById("ad-scale");
+      if (!scaleEl) return;
+      scaleEl.innerHTML = "";
+      scaleEl.style.width = config.width + "px";
+      scaleEl.style.height = config.height + "px";
+
+      window.atOptions = {
+        key: config.key,
+        format: "iframe",
+        height: config.height,
+        width: config.width,
+        params: {}
+      };
+
+      var s = document.createElement("script");
+      s.src = "https://www.highperformanceformat.com/" + config.key + "/invoke.js";
+      scaleEl.appendChild(s);
+    }
+
     function fitBanner() {
       var scaleEl = document.getElementById('ad-scale');
       if (!scaleEl) return;
       var vw = document.documentElement.clientWidth || window.innerWidth || 728;
-      var scale = Math.min(1, vw / 728);
+      var cfg = pickConfig(vw);
+      var scale = Math.min(1, vw / cfg.width);
       scaleEl.style.transform = 'scale(' + scale + ')';
-      document.body.style.height = (90 * scale) + 'px';
+      document.body.style.height = (cfg.height * scale) + 'px';
     }
+
+    var initialVw = document.documentElement.clientWidth || window.innerWidth || 728;
+    loadAd(pickConfig(initialVw));
     fitBanner();
-    window.addEventListener('resize', fitBanner);
+
+    function handleResize() {
+      fitBanner();
+    }
+    window.addEventListener('resize', handleResize);
   })();
 </script>
 </body>
