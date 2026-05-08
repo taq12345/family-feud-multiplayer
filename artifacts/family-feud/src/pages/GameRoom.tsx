@@ -1004,6 +1004,16 @@ export default function GameRoom() {
         </div>
       )}
 
+      {isSolo && (
+        <div className="md:hidden relative z-10 px-2 pt-1">
+          <AdsterraWidget
+            key={`solo-ad-mobile-${gameState?.currentRound ?? 0}`}
+            variant="banner728x90"
+            mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
+          />
+        </div>
+      )}
+
       <div className={`flex ${isSolo ? "flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
         {/* Main game area */}
         <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
@@ -1543,8 +1553,12 @@ export default function GameRoom() {
       </div>
 
       {isSolo && (
-        <div className="w-full max-w-2xl mx-auto">
-          <AdsterraWidget key={`solo-ad-${gameState?.currentRound ?? 0}`} variant="banner728x90" />
+        <div className="hidden md:block w-full max-w-2xl mx-auto">
+          <AdsterraWidget
+            key={`solo-ad-${gameState?.currentRound ?? 0}`}
+            variant="banner728x90"
+            mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
+          />
         </div>
       )}
 
