@@ -8,8 +8,6 @@ export interface Player {
   team: 1 | 2;
   isHost: boolean;
   contributedPoints: number;
-  /** Clerk-hosted avatar URL for registered players; null for guests. */
-  avatarUrl: string | null;
 }
 
 export interface GameState {
@@ -17,9 +15,6 @@ export interface GameState {
   roomName: string;
   isSolo: boolean;
   players: Map<string, Player>;
-  /** All players who ever joined this game (keyed by lowercase name). Never shrinks during play;
-   *  used by stats crediting so disconnects before endRound don't erase someone's win/loss. */
-  allParticipants: Map<string, { name: string; team: 1 | 2 }>;
   team1Score: number;
   team2Score: number;
   team1Name: string;
@@ -68,7 +63,6 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
     roomName,
     isSolo: false,
     players: new Map(),
-    allParticipants: new Map(),
     team1Score: 0,
     team2Score: 0,
     team1Name,
