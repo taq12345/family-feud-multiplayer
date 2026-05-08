@@ -129,7 +129,7 @@ export function AuthHeaderButton({ onLogin }: { onLogin?: () => void }) {
             onLogin?.();
             setLocation("/sign-in");
           }}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold text-sm shadow-[0_0_16px_rgba(251,191,36,0.3)] hover:shadow-[0_0_22px_rgba(251,191,36,0.5)] transition-all"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-400 hover:to-pink-500 text-white font-bold text-sm shadow-[0_0_16px_rgba(236,72,153,0.35)] hover:shadow-[0_0_22px_rgba(236,72,153,0.5)] transition-all"
           title="Sign in"
           aria-label="Sign in"
         >

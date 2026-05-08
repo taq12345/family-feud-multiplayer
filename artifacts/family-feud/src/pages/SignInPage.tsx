@@ -11,36 +11,22 @@ const NICKNAME_PATTERN = /^[A-Za-z0-9_-]{2,16}$/;
 
 export default function SignInPage() {
   const [, setLocation] = useLocation();
-  const [showSignIn, setShowSignIn] = useState(false);
+  const alreadyHasNickname = (() => { try { return !!localStorage.getItem("playerName"); } catch { return false; } })();
+  const [showSignIn, setShowSignIn] = useState(alreadyHasNickname);
   const [guestName, setGuestName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // "Back to lobby" only makes sense if the visitor already has a way back —
-  // either they came from clicking the header sign-in button (cameFromLobby
-  // sessionStorage flag) or they already have a guest nickname stored.
-  // Stored as state so toggling "Continue as guest instead" can clear it.
-  const [showBackToLobby, setShowBackToLobby] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return (
-        !!localStorage.getItem("playerName") ||
-        sessionStorage.getItem("cameFromLobby") === "1"
-      );
-    } catch {
-      return false;
-    }
-  });
+  const [showBackToLobby] = useState(true);
 
-  // First-time visitors land on the guest-first view; returning visitors
-  // (back-to-lobby crowd) and anyone who clicks "Sign in instead" see the
-  // Clerk widget directly.
-  const renderSignIn = showBackToLobby || showSignIn;
+  // Always show the guest-first view initially.
+  // The Clerk widget is only revealed when the user explicitly clicks
+  // "Sign in or create a free account".
+  const renderSignIn = showSignIn;
 
   function backToGuestView() {
     try { sessionStorage.removeItem("cameFromLobby"); } catch { /* ignore */ }
     setShowSignIn(false);
-    setShowBackToLobby(false);
   }
 
   async function handleGuestSubmit(e: React.FormEvent) {
@@ -79,6 +65,12 @@ export default function SignInPage() {
         <div className="p-4">
           <Link
             href="/"
+            onClick={() => {
+              try {
+                sessionStorage.removeItem("pendingAction");
+                sessionStorage.removeItem("pendingInviteJoin");
+              } catch { /* ignore */ }
+            }}
             className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all text-sm"
           >
             <ArrowLeft className="w-4 h-4" /> Back to lobby
@@ -94,7 +86,7 @@ export default function SignInPage() {
                 Jump straight in
               </h1>
               <p className="text-slate-400 mt-2 text-sm">
-                Pick a nickname and start playing. No sign-up required.
+                Pick a nickname and start playing.
               </p>
             </div>
 
@@ -161,6 +153,13 @@ export default function SignInPage() {
                     {" "}— wins, streaks, and progress saved across devices.
                   </span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-fuchsia-400 mt-0.5 shrink-0" />
+                  <span>
+                    <span className="text-white font-medium">Choose a profile picture</span>
+                    {" "}— make your nickname easier to spot in rooms and leaderboards.
+                  </span>
+                </li>
               </ul>
               <button
                 onClick={() => setShowSignIn(true)}
@@ -179,12 +178,14 @@ export default function SignInPage() {
               fallbackRedirectUrl={basePath || "/"}
               appearance={{ elements: { badge: "hidden", logoBox: "hidden" } }}
             />
-            <button
-              onClick={backToGuestView}
-              className="text-sm text-slate-400 hover:text-white underline-offset-2 hover:underline"
-            >
-              ← Continue as guest instead
-            </button>
+            {!alreadyHasNickname && (
+              <button
+                onClick={backToGuestView}
+                className="text-sm text-slate-400 hover:text-white underline-offset-2 hover:underline"
+              >
+                ← Continue as guest instead
+              </button>
+            )}
           </>
         )}
       </div>

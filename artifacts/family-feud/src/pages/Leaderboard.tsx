@@ -14,6 +14,11 @@ import {
   Zap,
   Swords,
   Star,
+  Loader2,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+  RefreshCw,
 } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import AdsterraWidget from "../components/AdsterraWidget";
@@ -122,6 +127,140 @@ function RankBadge({ rank }: { rank: number }) {
 
 export default function Leaderboard() {
   const [, setLocation] = useLocation();
+  const [mode, setMode] = useState<Mode>("multiplayer");
+  const [multiRows, setMultiRows] = useState<MultiplayerRow[] | null>(null);
+  const [soloRows, setSoloRows] = useState<SoloRow[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>("totalPoints");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [refreshing, setRefreshing] = useState(false);
+
+  function handleSort(key: SortKey) {
+    playClickSound();
+    if (sortKey === key) {
+      setSortDir(d => (d === "desc" ? "asc" : "desc"));
+    } else {
+      setSortKey(key);
+      setSortDir("desc");
+    }
+  }
+
+  function handleModeChange(next: Mode) {
+    if (next === mode) return;
+    playClickSound();
+    setMode(next);
+    // Reset sort to "Points desc" so users land on the most useful default
+    // for whichever board they switched into.
+    setSortKey("totalPoints");
+    setSortDir("desc");
+  }
+
+  async function fetchLeaderboard(nextMode: Mode, force = false) {
+    const haveData = nextMode === "multiplayer" ? multiRows !== null : soloRows !== null;
+    if (!force && haveData) return;
+
+    setError(null);
+    if (force) setRefreshing(true);
+    const res = await fetch(`/api/leaderboard?mode=${nextMode}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const list = Array.isArray(data?.leaderboard) ? data.leaderboard : [];
+    if (nextMode === "multiplayer") setMultiRows(list);
+    else setSoloRows(list);
+  }
+
+  // Fetch the current mode's leaderboard if we don't already have it cached.
+  useEffect(() => {
+    const haveData = mode === "multiplayer" ? multiRows !== null : soloRows !== null;
+    if (haveData) return;
+    let cancelled = false;
+    fetchLeaderboard(mode)
+      .catch(err => {
+        if (cancelled) return;
+        console.error("[leaderboard] fetch failed", err);
+        setError("Couldn't load the leaderboard. Try again in a moment.");
+        if (mode === "multiplayer") setMultiRows([]);
+        else setSoloRows([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, multiRows, soloRows]);
+
+  async function handleRefresh() {
+    playClickSound();
+    try {
+      await fetchLeaderboard(mode, true);
+    } catch (err) {
+      console.error("[leaderboard] refresh failed", err);
+      setError("Couldn't refresh the leaderboard. Try again in a moment.");
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  const rows: (MultiplayerRow | SoloRow)[] | null =
+    mode === "multiplayer" ? multiRows : soloRows;
+  const loading = rows === null;
+  const isEmpty = !loading && rows && rows.length === 0;
+
+  const sortedRows = rows
+    ? [...rows].sort((a, b) => {
+        // sortKey may not exist on solo rows (e.g. gamesWon); fall back to 0.
+        const av = (a as Record<string, number>)[sortKey] ?? 0;
+        const bv = (b as Record<string, number>)[sortKey] ?? 0;
+        const diff = bv - av;
+        const primary = sortDir === "desc" ? diff : -diff;
+        if (primary !== 0) return primary;
+        if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+        return a.nickname.localeCompare(b.nickname);
+      })
+    : null;
+
+  function SortIcon({ k }: { k: SortKey }) {
+    if (sortKey !== k) {
+      return <ArrowUpDown className="w-3 h-3 text-slate-600 opacity-60" />;
+    }
+    return sortDir === "desc" ? (
+      <ArrowDown className="w-3 h-3 text-amber-400" />
+    ) : (
+      <ArrowUp className="w-3 h-3 text-amber-400" />
+    );
+  }
+
+  function SortableTh({
+    k,
+    label,
+    shortLabel,
+    icon,
+  }: {
+    k: SortKey;
+    label: string;
+    shortLabel?: string;
+    icon: React.ReactNode;
+  }) {
+    const active = sortKey === k;
+    return (
+      <th
+        className={`px-3 py-4 font-semibold text-xs tracking-wider uppercase select-none ${
+          active ? "text-amber-300" : "text-slate-400"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => handleSort(k)}
+          className="inline-flex items-center gap-1.5 justify-center w-full hover:text-white transition-colors cursor-pointer"
+          aria-label={`Sort by ${label}`}
+          aria-sort={active ? (sortDir === "desc" ? "descending" : "ascending") : "none"}
+        >
+          {icon}
+          <span className="hidden sm:inline">{label}</span>
+          {shortLabel && <span className="sm:hidden">{shortLabel}</span>}
+          <SortIcon k={k} />
+        </button>
+      </th>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
@@ -186,7 +325,47 @@ export default function Leaderboard() {
             <h2 id="leaderboard-heading" className="text-sm font-bold tracking-wider uppercase text-slate-500">
               Top Players · Preview
             </h2>
-            <span className="text-[10px] sm:text-xs text-slate-600 italic">Sample data</span>
+            <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-sm">
+              <button
+                type="button"
+                onClick={() => handleModeChange("multiplayer")}
+                className={`px-4 sm:px-5 py-1.5 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all ${
+                  mode === "multiplayer"
+                    ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+                aria-pressed={mode === "multiplayer"}
+              >
+                Multiplayer
+              </button>
+              <button
+                type="button"
+                onClick={() => handleModeChange("solo")}
+                className={`px-4 sm:px-5 py-1.5 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all ${
+                  mode === "solo"
+                    ? "bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+                aria-pressed={mode === "solo"}
+              >
+                Solo
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => void handleRefresh()}
+              disabled={refreshing}
+              className="inline-flex items-center justify-center p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white shadow-[0_0_16px_rgba(16,185,129,0.35)] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+              aria-label="Refresh leaderboard"
+              title="Refresh leaderboard"
+            >
+              <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+            </button>
+            {!loading && rows && rows.length > 0 && (
+              <span className="text-[10px] sm:text-xs text-slate-600 ml-auto">
+                {rows.length} player{rows.length === 1 ? "" : "s"}
+              </span>
+            )}
           </div>
 
           <div className="rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-sm overflow-hidden shadow-2xl">

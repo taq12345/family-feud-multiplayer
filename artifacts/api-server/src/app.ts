@@ -1,3 +1,11 @@
+// Suppress Clerk's dev-instance "azp claim missing" warning — it is a known
+// limitation of development Clerk instances and cannot be resolved on our end.
+const _warn = console.warn.bind(console);
+console.warn = (...args: unknown[]) => {
+  if (typeof args[0] === "string" && args[0].includes("azp")) return;
+  _warn(...args);
+};
+
 import express, { type Express } from "express";
 import { createServer } from "http";
 import { Server as SocketServer } from "socket.io";

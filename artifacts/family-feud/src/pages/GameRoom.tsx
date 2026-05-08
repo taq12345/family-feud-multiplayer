@@ -860,6 +860,7 @@ export default function GameRoom() {
     gameState.status === "finished" ? "text-amber-400" : "text-slate-400";
 
   const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
+  const allowRoomScroll = !isSolo && gameState.status === "waiting";
 
   return (
     <div className={`${isSolo ? "min-h-svh overflow-y-auto" : "h-svh overflow-hidden"} bg-[#070d1f] text-white flex flex-col`}>
@@ -975,9 +976,19 @@ export default function GameRoom() {
         </div>
       )}
 
+      {isSolo && (
+        <div className="md:hidden relative z-10 px-2 pt-1">
+          <AdsterraWidget
+            key={`solo-ad-mobile-${gameState?.currentRound ?? 0}`}
+            variant="banner728x90"
+            mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
+          />
+        </div>
+      )}
+
       <div className={`flex ${isSolo ? "flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
         {/* Main game area */}
-        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
+        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : allowRoomScroll ? "overflow-y-auto" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
           {/* Round info bar */}
           <div className="shrink-0 flex items-center justify-center gap-3 py-0.5">
@@ -1043,11 +1054,11 @@ export default function GameRoom() {
 
             {/* Waiting to start */}
             {gameState.status === "waiting" && (
-              <div className="rounded-2xl bg-white/[0.03] border border-white/8 p-5">
-                <p className="text-slate-400 text-sm text-center mb-4">
+              <div className="rounded-2xl bg-white/[0.03] border border-white/8 p-4 sm:p-5">
+                <p className="text-slate-400 text-sm text-center mb-3 sm:mb-4">
                   {isHost ? "You're the host — start the game when everyone is ready!" : "Waiting for the host to start…"}
                 </p>
-                <div className="grid grid-cols-2 gap-2 mb-4">
+                <div className="grid grid-cols-2 gap-2 mb-3 sm:mb-4">
                   {[1, 2].map(t => (
                     <div key={t} className={`rounded-xl p-3 border ${t === 1 ? "bg-rose-500/10 border-rose-500/20" : "bg-blue-500/10 border-blue-500/20"}`}>
                       <div className={`text-xs font-bold mb-2 uppercase tracking-wide ${t === 1 ? "text-rose-400" : "text-blue-400"}`}>
@@ -1123,7 +1134,8 @@ export default function GameRoom() {
                   </div>
                 )}
                 {!isMobileApp && (
-                  <div className="flex justify-center mt-3">
+                  <div className="flex justify-center mt-2 sm:mt-3">
+                    <div className="origin-top scale-90 sm:scale-100">
                     <iframe
                       srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
                       sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
@@ -1131,6 +1143,7 @@ export default function GameRoom() {
                       style={{ width: 300, height: 250, border: "none", display: "block" }}
                       title="Advertisement"
                     />
+                    </div>
                   </div>
                 )}
               </div>
@@ -1513,8 +1526,12 @@ export default function GameRoom() {
       </div>
 
       {isSolo && (
-        <div className="w-full max-w-2xl mx-auto">
-          <AdsterraWidget key={`solo-ad-${gameState?.currentRound ?? 0}`} />
+        <div className="hidden md:block w-full max-w-2xl mx-auto">
+          <AdsterraWidget
+            key={`solo-ad-${gameState?.currentRound ?? 0}`}
+            variant="banner728x90"
+            mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
+          />
         </div>
       )}
 

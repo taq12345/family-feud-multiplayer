@@ -83,7 +83,64 @@ export default function Lobby() {
     const stored = localStorage.getItem("playerName") ?? "";
     return stored.length > 16 ? stored.slice(0, 16) : stored;
   });
-  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(() => !localStorage.getItem("playerName"));
+  const [nicknameDialogOpen, setNicknameDialogOpen] = useState(false);
+  // The signed-in user's locked Clerk nickname (null for guests). Used to
+  // short-circuit the "is this nickname taken?" checks against your own name.
+  const [lockedNickname, setLockedNickname] = useState<string | null>(null);
+
+  // When the user signs in, the locked Clerk-linked nickname is the source of
+  // truth — override any leftover guest nickname so the lobby/header don't
+  // display two identities at once.
+  useEffect(() => {
+    if (!authLoaded || !isSignedIn) return;
+    let cancelled = false;
+    fetch("/api/users/me", { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.nickname) return;
+        setLockedNickname(data.nickname);
+        if (nickname !== data.nickname) {
+          setNickname(data.nickname);
+          try { localStorage.setItem("playerName", data.nickname); } catch { /* ignore */ }
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [authLoaded, isSignedIn, nickname]);
+
+  // Clear locked nickname when user signs out
+  useEffect(() => {
+    if (authLoaded && !isSignedIn) setLockedNickname(null);
+  }, [authLoaded, isSignedIn]);
+
+  // Capture ?join=ROOM_ID synchronously on first render — before auth-dependent
+  // effects run and before the URL is cleaned up.  Persisted in sessionStorage so
+  // the invite survives navigation to /sign-in and back.
+  const [pendingInviteRoom, setPendingInviteRoom] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const joinRoom = params.get("join");
+    if (joinRoom) {
+      try { sessionStorage.setItem("pendingInviteJoin", joinRoom); } catch { /* ignore */ }
+      window.history.replaceState({}, "", window.location.pathname);
+      return joinRoom;
+    }
+    // Pick up an invite left over from a previous page-load (e.g. user went to /sign-in)
+    return sessionStorage.getItem("pendingInviteJoin");
+  });
+
+  // If a user arrives without a nickname and tries to act, send them to
+  // /sign-in where they can pick a guest name or log in with Clerk.
+  // Returns true if the user has a nickname and can proceed.
+  function requireNickname(pendingAction?: string): boolean {
+    if (nickname.trim()) return true;
+    try {
+      sessionStorage.setItem("cameFromLobby", "1");
+      if (pendingAction) sessionStorage.setItem("pendingAction", pendingAction);
+    } catch { /* ignore */ }
+    setLocation("/sign-in");
+    return false;
+  }
+
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -103,8 +160,6 @@ export default function Lobby() {
   const [reconnectSlot, setReconnectSlot] = useState<{ roomId: string; team: 1 | 2 } | null>(null);
 
   const [kickedMessage, setKickedMessage] = useState<string | null>(null);
-  // Holds the room ID from an invite link so we can open the join dialog AFTER the user sets a nickname
-  const pendingInviteRoomId = useRef<string | null>(null);
 
   useEffect(() => {
     const msg = sessionStorage.getItem("kickedMessage");
@@ -114,20 +169,30 @@ export default function Lobby() {
     }
   }, []);
 
-  // Auto-open join dialog when arriving via an invite link (?join=ROOM_ID)
+  // After returning from /sign-in, auto-open whatever dialog the user was
+  // trying to reach before they were prompted to authenticate.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const inviteRoomId = params.get("join");
-    if (!inviteRoomId) return;
-    window.history.replaceState({}, "", window.location.pathname);
-    if (localStorage.getItem("playerName")) {
-      // Existing user — open join dialog immediately
-      handleJoin(inviteRoomId);
-    } else {
-      // New user — wait until they set a nickname, then open join dialog
-      pendingInviteRoomId.current = inviteRoomId;
-    }
+    try {
+      const action = sessionStorage.getItem("pendingAction");
+      if (!action) return;
+      sessionStorage.removeItem("pendingAction");
+      if (action === "create") setCreateOpen(true);
+    } catch { /* ignore */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep Lobby's nickname state in sync when NicknameSetupDialog (mounted in
+  // App.tsx) fires after a signed-in user sets their permanent nickname.
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const nick = (e as CustomEvent<{ nickname: string }>).detail?.nickname;
+      if (nick) {
+        setNickname(nick);
+        try { localStorage.setItem("playerName", nick); } catch { /* ignore */ }
+      }
+    };
+    window.addEventListener("nickname:set", handler);
+    return () => window.removeEventListener("nickname:set", handler);
   }, []);
 
   const [soloOpen, setSoloOpen] = useState(false);
@@ -138,7 +203,17 @@ export default function Lobby() {
   const [soloLoading, setSoloLoading] = useState(false);
 
   const handleSoloPlay = () => {
-    if (!nickname) return;
+    // Solo play is open to everyone — auto-assign a fun name if needed.
+    let playerName = nickname.trim();
+    if (!playerName) {
+      const adjs = ["Swift","Bold","Clever","Lucky","Fierce","Calm","Sly","Bright","Wild","Cool","Sneaky","Epic","Mighty","Funky","Zany"];
+      const nouns = ["Fox","Panda","Eagle","Tiger","Shark","Wolf","Hawk","Lynx","Cobra","Raven","Falcon","Otter","Viper","Moose","Bison"];
+      const adj = adjs[Math.floor(Math.random() * adjs.length)];
+      const noun = nouns[Math.floor(Math.random() * nouns.length)];
+      playerName = adj + noun;
+      setNickname(playerName);
+      try { localStorage.setItem("playerName", playerName); } catch { /* ignore */ }
+    }
     
     if (soloMode === "custom") {
       const trimmed = soloTopic.trim();
@@ -153,13 +228,13 @@ export default function Lobby() {
     playClickSound();
     
     createSoloGame(
-      nickname, 
+      playerName, 
       soloRounds, 
       soloMode === "custom" ? soloTopic.trim() : undefined,
       (roomId) => {
         setSoloLoading(false);
         setSoloOpen(false);
-        setLocation(`/room/${roomId}?name=${encodeURIComponent(nickname)}&team=1`);
+        setLocation(`/room/${roomId}?name=${encodeURIComponent(playerName)}&team=1`);
       },
       (error) => {
         setSoloLoading(false);
@@ -172,8 +247,8 @@ export default function Lobby() {
     name: "My Room",
     team1Name: "Team 1",
     team2Name: "Team 2",
-    totalRounds: 4,
-    maxPlayers: 10,
+    totalRounds: 6,
+    maxPlayers: 4,
   });
 
   // Default room name when opening the creation dialog.
@@ -331,6 +406,12 @@ export default function Lobby() {
   }
 
   async function handleJoin(roomId: string) {
+    if (!nickname.trim()) {
+      // Save the room so the auto-trigger fires when the user returns with a nickname.
+      try { sessionStorage.setItem("pendingInviteJoin", roomId); } catch { /* ignore */ }
+      requireNickname();
+      return;
+    }
     setJoinRoomId(roomId);
     setJoinDialogOpen(true);
     setJoinRoomPlayers(null);
@@ -346,6 +427,25 @@ export default function Lobby() {
       }
     } catch { /* ignore */ }
   }
+
+  // As soon as auth is loaded AND the user has a nickname AND there's a pending
+  // invite room, open the join dialog automatically.  This covers every path:
+  //   • guest sets nickname in the dialog above
+  //   • signed-in user already has a nickname (from localStorage or /api/users/me)
+  //   • new signed-in user sets nickname via NicknameSetupDialog (App.tsx)
+  //   • user navigated to /sign-in and came back (invite survives via sessionStorage)
+  const pendingInviteHandled = useRef(false);
+  useEffect(() => {
+    if (!pendingInviteRoom) return;
+    if (!authLoaded) return;
+    if (!nickname.trim()) return;
+    if (pendingInviteHandled.current) return;
+    pendingInviteHandled.current = true;
+    try { sessionStorage.removeItem("pendingInviteJoin"); } catch { /* ignore */ }
+    setPendingInviteRoom(null);
+    handleJoin(pendingInviteRoom);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoaded, nickname, pendingInviteRoom]);
 
   async function handleChangeNickname() {
     if (!changeNicknameInput.trim()) return;
@@ -382,7 +482,7 @@ export default function Lobby() {
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
-      <SEO />
+      <SEO canonical="https://friendlyfeud.fun/" />
       {/* Decorative background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
@@ -450,8 +550,17 @@ export default function Lobby() {
             </button>
 
             <button
+              onClick={() => { playClickSound(); setLocation("/feedback"); }}
+              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+              title="Feedback & Bug Reports"
+              aria-label="Feedback & Bug Reports"
+            >
+              <MessageSquare className="w-4 h-4" />
+            </button>
+
+            <button
               onClick={() => { playClickSound(); setLocation("/leaderboard"); }}
-              className="p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
+              className="sm:hidden p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
               title="Leaderboard"
               aria-label="Leaderboard"
             >
@@ -466,11 +575,12 @@ export default function Lobby() {
               <FileQuestion className="w-4 h-4" />
             </button>
             <button
-              onClick={() => { playClickSound(); setLocation("/feedback"); }}
-              className="hidden sm:inline-flex p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-              title="Feedback & Bug Reports"
+              onClick={() => { playClickSound(); setLocation("/leaderboard"); }}
+              className="hidden sm:inline-flex p-2 rounded-lg bg-pink-500/15 border border-pink-400/40 text-pink-300 hover:text-white hover:bg-pink-500/25 hover:border-pink-400/60 hover:shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-all"
+              title="Leaderboard"
+              aria-label="Leaderboard"
             >
-              <MessageSquare className="w-4 h-4" />
+              <Trophy className="w-4 h-4" />
             </button>
             <button
               onClick={() => {
@@ -547,7 +657,7 @@ export default function Lobby() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Dialog open={createOpen} onOpenChange={v => { setCreateOpen(v); if (!v) setCreateError(null); }}>
+            <Dialog open={createOpen} onOpenChange={v => { if (v && !requireNickname("create")) return; setCreateOpen(v); if (!v) setCreateError(null); }}>
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all border-0 px-3 sm:px-4">
                   <Plus className="w-4 h-4 sm:mr-1.5" />
@@ -644,8 +754,7 @@ export default function Lobby() {
             </svg>
             Find Friends
           </a>
-          {nickname && (
-            <Dialog open={soloOpen} onOpenChange={v => { setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
+          <Dialog open={soloOpen} onOpenChange={v => { setSoloOpen(v); if (!v) { setSoloError(null); setSoloLoading(false); } }}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-br from-emerald-500/40 to-teal-600/40 border border-emerald-400/50 text-emerald-300 hover:from-emerald-500/50 hover:to-teal-600/50 hover:border-emerald-300/60 hover:text-emerald-200 transition-all text-sm font-bold shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_24px_rgba(16,185,129,0.35)]">
                   <Gamepad2 className="w-5 h-5" />
@@ -723,8 +832,7 @@ export default function Lobby() {
                   </Button>
                 </div>
               </DialogContent>
-            </Dialog>
-          )}
+          </Dialog>
         </div>
 
         <div className="flex items-center justify-between mb-6">
@@ -752,7 +860,7 @@ export default function Lobby() {
               <p className="text-slate-500 text-sm mt-1">Create a room and invite your friends!</p>
             </div>
             <Button
-              onClick={() => setCreateOpen(true)}
+              onClick={() => { if (requireNickname("create")) setCreateOpen(true); }}
               className="bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold shadow-[0_0_20px_rgba(251,191,36,0.3)] border-0"
             >
               <Plus className="w-4 h-4 mr-2" /> Create Room
@@ -964,10 +1072,6 @@ export default function Lobby() {
                     setNickname(trimmed);
                     localStorage.setItem("playerName", trimmed);
                     setNicknameDialogOpen(false);
-                    if (pendingInviteRoomId.current) {
-                      handleJoin(pendingInviteRoomId.current);
-                      pendingInviteRoomId.current = null;
-                    }
                   }
                 }}
                 className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-amber-500/50 focus:ring-amber-500/20 h-11"
@@ -987,10 +1091,6 @@ export default function Lobby() {
                 setNickname(trimmed);
                 localStorage.setItem("playerName", trimmed);
                 setNicknameDialogOpen(false);
-                if (pendingInviteRoomId.current) {
-                  handleJoin(pendingInviteRoomId.current);
-                  pendingInviteRoomId.current = null;
-                }
               }}
             >
               Let's Play →
@@ -999,12 +1099,15 @@ export default function Lobby() {
         </DialogContent>
       </Dialog>
 
-      <div className="max-w-4xl mx-auto px-4 mt-12 mb-4">
-        <AdsterraWidget />
+      <div className="max-w-4xl mx-auto px-4 mt-2 sm:mt-12 mb-4">
+        <AdsterraWidget
+          variant="banner728x90"
+          mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
+        />
       </div>
 
       <div className="max-w-3xl mx-auto px-4 mb-8 text-center">
-        <h2 className="text-base font-semibold text-slate-400 mb-2">Play Family Feud Online With Friends — Free</h2>
+        <h2 className="text-base font-semibold text-slate-400 mb-2">Friendly Feud - Play Family Feud Online With Friends Free</h2>
         <p className="text-sm text-slate-500 leading-relaxed">
           Friendly Feud is the fastest way to play Family Feud online with friends — no download, no account, no cost. Create a private room, share the link, and your friends join instantly. Split into two teams and race to guess the top survey answers before the other side does. With 8,700+ classic questions and AI-powered custom rounds, every game is different.
         </p>
