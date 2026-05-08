@@ -1151,8 +1151,11 @@ export default function Lobby() {
         </DialogContent>
       </Dialog>
 
-      <div className="max-w-4xl mx-auto px-4 mt-6 sm:mt-12 mb-4">
-        <AdsterraWidget variant="banner728x90" />
+      <div className="max-w-4xl mx-auto px-4 mt-2 sm:mt-12 mb-4">
+        <AdsterraWidget
+          variant="banner728x90"
+          mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
+        />
       </div>
 
       <div className="max-w-3xl mx-auto px-4 mb-8 text-center">

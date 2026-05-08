@@ -77,8 +77,15 @@ body{width:100%;display:flex;justify-content:center;align-items:flex-start}
 }
 
 type AdsterraWidgetVariant = "native" | "banner728x90";
+type BannerConfig = { key: string; width: number; height: number };
 
-export default function AdsterraWidget({ variant = "native" }: { variant?: AdsterraWidgetVariant }) {
+export default function AdsterraWidget({
+  variant = "native",
+  mobileBannerConfig,
+}: {
+  variant?: AdsterraWidgetVariant;
+  mobileBannerConfig?: BannerConfig;
+}) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isMobileViewport, setIsMobileViewport] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia("(max-width: 768px)").matches : false,
@@ -93,8 +100,8 @@ export default function AdsterraWidget({ variant = "native" }: { variant?: Adste
     return () => media.removeEventListener("change", update);
   }, []);
 
-  const bannerConfig = isMobileViewport
-    ? { key: "7c3d49327fa4bdf90f0f7710de941992", width: 300, height: 250 }
+  const bannerConfig: BannerConfig = isMobileViewport
+    ? (mobileBannerConfig ?? { key: "7c3d49327fa4bdf90f0f7710de941992", width: 300, height: 250 })
     : { key: "206bfaf543b74bc7403ff3a609cd5874", width: 728, height: 90 };
   const [height, setHeight] = useState(variant === "banner728x90" ? bannerConfig.height : 120);
   const adHtml = variant === "banner728x90" ? buildBannerHtml(bannerConfig) : AD_HTML_NATIVE;
