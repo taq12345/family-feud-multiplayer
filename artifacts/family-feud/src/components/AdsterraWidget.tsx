@@ -76,41 +76,47 @@ body{width:100%;display:flex;justify-content:center;align-items:flex-start}
 </html>`;
 }
 
-type AdsterraWidgetVariant = "native" | "banner728x90";
+type AdsterraWidgetVariant = "native" | "banner728x90" | "banner160x600";
 type BannerConfig = { key: string; width: number; height: number };
 
 export default function AdsterraWidget({
   variant = "native",
   mobileBannerConfig,
+  minViewportWidth,
 }: {
   variant?: AdsterraWidgetVariant;
   mobileBannerConfig?: BannerConfig;
+  minViewportWidth?: number;
 }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [isMobileViewport, setIsMobileViewport] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(max-width: 768px)").matches : false,
+  const [viewportWidth, setViewportWidth] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth : Number.POSITIVE_INFINITY,
   );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const media = window.matchMedia("(max-width: 768px)");
-    const update = () => setIsMobileViewport(media.matches);
+    const update = () => setViewportWidth(window.innerWidth);
     update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
-  const bannerConfig: BannerConfig = isMobileViewport
-    ? (mobileBannerConfig ?? { key: "7c3d49327fa4bdf90f0f7710de941992", width: 300, height: 250 })
-    : { key: "206bfaf543b74bc7403ff3a609cd5874", width: 728, height: 90 };
-  const [height, setHeight] = useState(variant === "banner728x90" ? bannerConfig.height : 120);
-  const adHtml = variant === "banner728x90" ? buildBannerHtml(bannerConfig) : AD_HTML_NATIVE;
+  const isMobileViewport = viewportWidth <= 768;
+  const bannerConfig: BannerConfig =
+    variant === "banner160x600"
+      ? { key: "782a09ea05e6e2301dae0976801a9334", width: 160, height: 600 }
+      : isMobileViewport
+        ? (mobileBannerConfig ?? { key: "7c3d49327fa4bdf90f0f7710de941992", width: 300, height: 250 })
+        : { key: "206bfaf543b74bc7403ff3a609cd5874", width: 728, height: 90 };
+  const isBanner = variant === "banner728x90" || variant === "banner160x600";
+  const [height, setHeight] = useState(isBanner ? bannerConfig.height : 120);
+  const adHtml = isBanner ? buildBannerHtml(bannerConfig) : AD_HTML_NATIVE;
 
   useEffect(() => {
     if (isMobileApp) return;
     const iframe = iframeRef.current;
     if (!iframe) return;
-    setHeight(variant === "banner728x90" ? bannerConfig.height : 120);
+    setHeight(isBanner ? bannerConfig.height : 120);
 
     const resize = () => {
       try {
@@ -126,9 +132,10 @@ export default function AdsterraWidget({
       iframe.removeEventListener("load", resize);
       clearInterval(interval);
     };
-  }, [variant, bannerConfig.height]);
+  }, [isBanner, bannerConfig.height]);
 
   if (isMobileApp) return null;
+  if (minViewportWidth && viewportWidth < minViewportWidth) return null;
 
   return (
     <iframe

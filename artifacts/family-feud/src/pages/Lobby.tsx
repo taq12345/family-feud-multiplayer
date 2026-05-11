@@ -779,6 +779,13 @@ export default function Lobby() {
         </div>
       </header>
 
+      <aside className="fixed left-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+        <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+      </aside>
+      <aside className="fixed right-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+        <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+      </aside>
+
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
         <div className="max-w-4xl mx-auto mb-6">
