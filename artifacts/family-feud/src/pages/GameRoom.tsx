@@ -1569,6 +1569,17 @@ export default function GameRoom() {
       </div>
 
       {/* Mobile bottom tab bar — hidden in solo mode */}
+      {isSolo && (
+        <div className="relative z-10 hidden md:block w-full px-3 pb-3 2xl:px-[192px]">
+          <div className="max-w-2xl mx-auto">
+            <AdsterraWidget
+              key={`solo-bottom-ad-${gameState?.currentRound ?? 0}`}
+              variant="banner728x90"
+            />
+          </div>
+        </div>
+      )}
+
       <div className={`${isSolo ? "hidden" : ""} md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10`}>
         <button
           onClick={() => { playClickSound(); setMobileTab("game"); }}
