@@ -1006,9 +1006,9 @@ export default function GameRoom() {
       )}
 
       {isSolo && (
-        <div className="md:hidden relative z-10 px-2 pt-1">
+        <div className="relative z-10 w-full max-w-2xl mx-auto px-2 pt-1 md:px-3 md:pt-2">
           <AdsterraWidget
-            key={`solo-ad-mobile-${gameState?.currentRound ?? 0}`}
+            key={`solo-ad-${gameState?.currentRound ?? 0}`}
             variant="banner728x90"
             mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
           />
@@ -1554,16 +1554,6 @@ export default function GameRoom() {
         </div>
         )}
       </div>
-
-      {isSolo && (
-        <div className="hidden md:block w-full max-w-2xl mx-auto">
-          <AdsterraWidget
-            key={`solo-ad-${gameState?.currentRound ?? 0}`}
-            variant="banner728x90"
-            mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
-          />
-        </div>
-      )}
 
       {/* Mobile bottom tab bar — hidden in solo mode */}
       <div className={`${isSolo ? "hidden" : ""} md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10`}>

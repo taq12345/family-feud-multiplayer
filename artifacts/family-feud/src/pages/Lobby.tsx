@@ -781,6 +781,13 @@ export default function Lobby() {
 
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
+        <div className="max-w-4xl mx-auto mb-6">
+          <AdsterraWidget
+            variant="banner728x90"
+            mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
+          />
+        </div>
+
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <a
             href="https://www.patreon.com/cw/talhaqureshi/membership"
@@ -1150,13 +1157,6 @@ export default function Lobby() {
           </div>
         </DialogContent>
       </Dialog>
-
-      <div className="max-w-4xl mx-auto px-4 mt-2 sm:mt-12 mb-4">
-        <AdsterraWidget
-          variant="banner728x90"
-          mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
-        />
-      </div>
 
       <div className="max-w-3xl mx-auto px-4 mb-8 text-center">
         <h2 className="text-base font-semibold text-slate-400 mb-2">Friendly Feud - Play Family Feud Online With Friends Free</h2>
