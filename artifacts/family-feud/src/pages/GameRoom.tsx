@@ -889,7 +889,6 @@ export default function GameRoom() {
     gameState.status === "finished" ? "text-amber-400" : "text-slate-400";
 
   const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
-  const allowRoomScroll = !isSolo && gameState.status === "waiting";
 
   return (
     <div className={`${isSolo ? "min-h-svh overflow-y-auto" : "h-svh overflow-hidden"} bg-[#070d1f] text-white flex flex-col`}>
@@ -1027,6 +1026,14 @@ export default function GameRoom() {
         </div>
       )}
 
+      {!isSolo && (
+        <div className="relative z-10 hidden md:block w-full px-3 py-2">
+          <div className="max-w-3xl mx-auto">
+            <AdsterraWidget variant="banner728x90" />
+          </div>
+        </div>
+      )}
+
       <div className={`flex ${isSolo ? "flex-none 2xl:px-[192px]" : "flex-1 overflow-hidden"} relative z-10`}>
         {!isSolo && (
           <aside className="hidden 2xl:flex w-[184px] shrink-0 items-start justify-center border-r border-white/5 bg-black/20 px-3 py-3" aria-label="Advertisement">
@@ -1037,7 +1044,7 @@ export default function GameRoom() {
         )}
 
         {/* Main game area */}
-        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : allowRoomScroll ? "overflow-y-auto" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
+        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : "overflow-y-auto"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
           {/* Round info bar */}
           <div className="shrink-0 flex items-center justify-center gap-3 py-0.5">
@@ -1582,6 +1589,14 @@ export default function GameRoom() {
             <AdsterraWidget
               variant="banner728x90"
             />
+          </div>
+        </div>
+      )}
+
+      {!isSolo && (
+        <div className="relative z-10 hidden md:block w-full px-3 py-2">
+          <div className="max-w-3xl mx-auto">
+            <AdsterraWidget variant="banner728x90" />
           </div>
         </div>
       )}
