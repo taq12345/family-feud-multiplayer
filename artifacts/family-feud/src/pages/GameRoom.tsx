@@ -1020,7 +1020,6 @@ export default function GameRoom() {
         <div className="relative z-10 w-full px-2 pt-1 md:px-3 md:pt-2 2xl:px-[192px]">
           <div className="max-w-2xl mx-auto">
             <AdsterraWidget
-              key={`solo-ad-${gameState?.currentRound ?? 0}`}
               variant="banner728x90"
               mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
             />
@@ -1573,7 +1572,6 @@ export default function GameRoom() {
         <div className="relative z-10 hidden md:block w-full px-3 pb-3 2xl:px-[192px]">
           <div className="max-w-2xl mx-auto">
             <AdsterraWidget
-              key={`solo-bottom-ad-${gameState?.currentRound ?? 0}`}
               variant="banner728x90"
             />
           </div>
