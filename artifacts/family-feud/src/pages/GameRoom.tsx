@@ -1028,6 +1028,14 @@ export default function GameRoom() {
       )}
 
       <div className={`flex ${isSolo ? "flex-none 2xl:px-[192px]" : "flex-1 overflow-hidden"} relative z-10`}>
+        {!isSolo && (
+          <aside className="hidden 2xl:flex w-[184px] shrink-0 items-start justify-center border-r border-white/5 bg-black/20 px-3 py-3" aria-label="Advertisement">
+            <div className="w-[160px]">
+              <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+            </div>
+          </aside>
+        )}
+
         {/* Main game area */}
         <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : allowRoomScroll ? "overflow-y-auto" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
