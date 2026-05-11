@@ -1006,6 +1006,17 @@ export default function GameRoom() {
       )}
 
       {isSolo && (
+        <>
+          <aside className="fixed left-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+            <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+          </aside>
+          <aside className="fixed right-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+            <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+          </aside>
+        </>
+      )}
+
+      {isSolo && (
         <div className="relative z-10 w-full max-w-2xl mx-auto px-2 pt-1 md:px-3 md:pt-2">
           <AdsterraWidget
             key={`solo-ad-${gameState?.currentRound ?? 0}`}
