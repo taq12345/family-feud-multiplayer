@@ -1026,14 +1026,6 @@ export default function GameRoom() {
         </div>
       )}
 
-      {!isSolo && (
-        <div className="relative z-10 hidden md:flex h-[90px] shrink-0 w-full items-center justify-center overflow-hidden px-3">
-          <div className="max-w-3xl mx-auto">
-            <AdsterraWidget variant="banner728x90" />
-          </div>
-        </div>
-      )}
-
       <div className={`flex min-h-0 ${isSolo ? "flex-none 2xl:px-[192px]" : "flex-1 overflow-hidden"} relative z-10`}>
         {!isSolo && (
           <aside className="hidden 2xl:flex w-[184px] shrink-0 items-start justify-center border-r border-white/5 bg-black/20 px-3 py-3" aria-label="Advertisement">
@@ -1044,7 +1036,7 @@ export default function GameRoom() {
         )}
 
         {/* Main game area */}
-        <div className={`flex-1 min-h-0 flex flex-col ${isSolo ? "p-2 md:p-3 gap-2" : "overflow-hidden p-1.5 md:p-2 gap-1.5"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
+        <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
           {/* Round info bar */}
           <div className="shrink-0 flex items-center justify-center gap-3 py-0.5">
@@ -1589,14 +1581,6 @@ export default function GameRoom() {
             <AdsterraWidget
               variant="banner728x90"
             />
-          </div>
-        </div>
-      )}
-
-      {!isSolo && (
-        <div className="relative z-10 hidden md:flex h-[90px] shrink-0 w-full items-center justify-center overflow-hidden px-3">
-          <div className="max-w-3xl mx-auto">
-            <AdsterraWidget variant="banner728x90" />
           </div>
         </div>
       )}
