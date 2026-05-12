@@ -889,6 +889,7 @@ export default function GameRoom() {
     gameState.status === "finished" ? "text-amber-400" : "text-slate-400";
 
   const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
+  const roomAdRefreshKey = Math.floor(Math.max(0, gameState.currentRound - 1) / 2);
 
   return (
     <div className={`${isSolo ? "min-h-svh overflow-y-auto" : "h-svh overflow-hidden"} bg-[#070d1f] text-white flex flex-col`}>
@@ -1007,10 +1008,18 @@ export default function GameRoom() {
       {isSolo && (
         <>
           <aside className="fixed left-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
-            <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+            <AdsterraWidget
+              key={`solo-left-rail-ad-${roomAdRefreshKey}`}
+              variant="banner160x600"
+              minViewportWidth={1536}
+            />
           </aside>
           <aside className="fixed right-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
-            <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+            <AdsterraWidget
+              key={`solo-right-rail-ad-${roomAdRefreshKey}`}
+              variant="banner160x600"
+              minViewportWidth={1536}
+            />
           </aside>
         </>
       )}
@@ -1019,6 +1028,7 @@ export default function GameRoom() {
         <div className="relative z-10 w-full px-2 pt-1 md:px-3 md:pt-2 2xl:px-[192px]">
           <div className="max-w-2xl mx-auto">
             <AdsterraWidget
+              key={`solo-top-ad-${roomAdRefreshKey}`}
               variant="banner728x90"
               mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
             />
@@ -1030,7 +1040,11 @@ export default function GameRoom() {
         {!isSolo && (
           <aside className="hidden 2xl:flex w-[184px] shrink-0 items-start justify-center border-r border-white/5 bg-black/20 px-3 py-3" aria-label="Advertisement">
             <div className="w-[160px]">
-              <AdsterraWidget variant="banner160x600" minViewportWidth={1536} />
+              <AdsterraWidget
+                key={`multiplayer-left-rail-ad-${roomAdRefreshKey}`}
+                variant="banner160x600"
+                minViewportWidth={1536}
+              />
             </div>
           </aside>
         )}
@@ -1186,6 +1200,7 @@ export default function GameRoom() {
                   <div className="flex justify-center mt-2 sm:mt-3">
                     <div className="origin-top scale-90 sm:scale-100">
                     <iframe
+                      key={`waiting-ad-${roomAdRefreshKey}`}
                       srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
                       sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
                       scrolling="no"
@@ -1517,7 +1532,7 @@ export default function GameRoom() {
           {!isMobileApp && (
             <div className="shrink-0 overflow-hidden border-b border-white/5 flex items-center justify-center bg-black/20" style={{ height: 250 }}>
               <iframe
-                key={`chat-ad-${gameState?.currentRound ?? 0}`}
+                key={`chat-ad-${roomAdRefreshKey}`}
                 srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
                 sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
                 style={{ width: 300, height: 250, border: "none", display: "block" }}
@@ -1579,6 +1594,7 @@ export default function GameRoom() {
         <div className="relative z-10 hidden md:block w-full px-3 pb-3 2xl:px-[192px]">
           <div className="max-w-2xl mx-auto">
             <AdsterraWidget
+              key={`solo-bottom-ad-${roomAdRefreshKey}`}
               variant="banner728x90"
             />
           </div>
