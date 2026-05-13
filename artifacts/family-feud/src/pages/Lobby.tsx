@@ -478,6 +478,15 @@ export default function Lobby() {
   useEffect(() => {
     if (!pendingInviteRoom) return;
     if (!authLoaded) return;
+    if (!isSignedIn && !nickname.trim()) {
+      if (pendingInviteHandled.current) return;
+      pendingInviteHandled.current = true;
+      try { sessionStorage.removeItem("pendingInviteJoin"); } catch { /* ignore */ }
+      const room = pendingInviteRoom;
+      setPendingInviteRoom(null);
+      handleJoin(room);
+      return;
+    }
     if (!nickname.trim()) return;
     if (pendingInviteHandled.current) return;
     pendingInviteHandled.current = true;
@@ -485,7 +494,7 @@ export default function Lobby() {
     setPendingInviteRoom(null);
     handleJoin(pendingInviteRoom);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoaded, nickname, pendingInviteRoom]);
+  }, [authLoaded, isSignedIn, nickname, pendingInviteRoom]);
 
   async function handleChangeNickname() {
     if (!changeNicknameInput.trim()) return;
