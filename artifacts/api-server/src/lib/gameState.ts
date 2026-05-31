@@ -12,10 +12,18 @@ export interface Player {
   avatarUrl: string | null;
 }
 
+export interface ChatMessage {
+  playerName: string;
+  message: string;
+  createdAt: string;
+}
+
 export interface GameState {
   roomId: string;
   roomName: string;
   isSolo: boolean;
+  /** In-memory chat history — serves reconnects without hitting the DB. Capped at 100 messages. */
+  chatHistory: ChatMessage[];
   players: Map<string, Player>;
   /** All players who ever joined this game (keyed by lowercase name). Never shrinks during play;
    *  used by stats crediting so disconnects before endRound don't erase someone's win/loss. */
@@ -67,6 +75,7 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
     roomId,
     roomName,
     isSolo: false,
+    chatHistory: [],
     players: new Map(),
     allParticipants: new Map(),
     team1Score: 0,

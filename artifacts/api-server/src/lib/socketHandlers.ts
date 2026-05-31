@@ -486,15 +486,9 @@ export function setupSocketHandlers(io: SocketServer) {
 
         console.log(`${trimmedPlayerName} reconnected to ${roomId} (${existingSocketId} → ${socket.id})`);
 
-        // Re-sync state to the reconnecting socket only
-        const recent = await db.select().from(chatMessagesTable)
-          .where(eq(chatMessagesTable.roomId, roomId))
-          .limit(50);
-        socket.emit("chat_history", recent.map(m => ({
-          playerName: m.playerName,
-          message: m.message,
-          createdAt: m.createdAt.toISOString(),
-        })));
+        // Re-sync state to the reconnecting socket only.
+        // Chat history is served from in-memory cache — no DB query needed.
+        socket.emit("chat_history", state.chatHistory);
         socket.emit("game_state", serializeGameState(state));
         // Don't broadcast player_joined — from everyone else's perspective they never left
         return;
@@ -535,14 +529,9 @@ export function setupSocketHandlers(io: SocketServer) {
           .set({ playerCount: state.players.size })
           .where(eq(roomsTable.id, roomId));
 
-        const recent = await db.select().from(chatMessagesTable)
-          .where(eq(chatMessagesTable.roomId, roomId))
-          .limit(50);
-        socket.emit("chat_history", recent.map(m => ({
-          playerName: m.playerName,
-          message: m.message,
-          createdAt: m.createdAt.toISOString(),
-        })));
+        // Chat history is served from in-memory cache — no DB query needed.
+        // Note: rooms hydrated after a server restart start with empty chat history; this is acceptable.
+        socket.emit("chat_history", state.chatHistory);
 
         // If a player joins into a between_rounds room and their team was empty (which
         // caused endRound to fire without scheduling auto-advance, or the timer already
@@ -584,8 +573,6 @@ export function setupSocketHandlers(io: SocketServer) {
       state.faceoffWinner = null;
       initFaceoff(state, 1);
       startFaceoffAnswerTimer(io, roomId);
-
-      await db.update(roomsTable).set({ currentRound: state.currentRound }).where(eq(roomsTable.id, roomId));
 
       io.to(roomId).emit("game_state", serializeGameState(state));
     });
@@ -782,8 +769,6 @@ export function setupSocketHandlers(io: SocketServer) {
       freshState.faceoffWinner = null;
       initFaceoff(freshState, 1);
       startFaceoffAnswerTimer(io, roomId);
-
-      await db.update(roomsTable).set({ currentRound: freshState.currentRound }).where(eq(roomsTable.id, roomId));
 
       io.to(roomId).emit("game_state", serializeGameState(freshState));
     });
@@ -1094,25 +1079,21 @@ export function setupSocketHandlers(io: SocketServer) {
       }
     });
 
-    socket.on("send_chat", async ({ roomId, message }: { roomId: string; message: string }) => {
+    socket.on("send_chat", ({ roomId, message }: { roomId: string; message: string }) => {
       if (!message?.trim()) return;
       const playerName = socket.data.playerName ?? "Anonymous";
+      const trimmedMessage = message.trim().slice(0, 200);
+      const createdAt = new Date().toISOString();
 
-      try {
-        await db.insert(chatMessagesTable).values({
-          roomId,
-          playerName,
-          message: message.trim().slice(0, 200),
-        });
-      } catch (err) {
-        console.error("Failed to save chat:", err);
+      // Store in in-memory chat history (cap at 100 messages) — no DB write needed.
+      // Chat is ephemeral: it only lasts as long as the room exists in memory.
+      const state = gameStates.get(roomId);
+      if (state) {
+        state.chatHistory.push({ playerName, message: trimmedMessage, createdAt });
+        if (state.chatHistory.length > 100) state.chatHistory.shift();
       }
 
-      io.to(roomId).emit("chat_message", {
-        playerName,
-        message: message.trim().slice(0, 200),
-        createdAt: new Date().toISOString(),
-      });
+      io.to(roomId).emit("chat_message", { playerName, message: trimmedMessage, createdAt });
     });
 
     socket.on("next_round", async ({ roomId }: { roomId: string }) => {
