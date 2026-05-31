@@ -10,6 +10,7 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { Users, Plus, RefreshCw, Tv2, Trophy, Zap, Lock, Pencil, X, BookOpen, MessageSquare, Crown, Gamepad2, FileQuestion, Wand2, MoreVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../components/ui/dropdown-menu";
 import { createSoloGame } from "../hooks/useGameSocket";
+import { getSocket } from "../lib/socket";
 import AdsterraWidget from "../components/AdsterraWidget";
 import { AuthHeaderButton } from "../components/AuthGate";
 import { useUser } from "@clerk/react";
@@ -313,43 +314,18 @@ export default function Lobby() {
   }, []);
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    let scheduleVersion = 0;
-
-    const scheduleNextRefresh = (version: number) => {
-      const delay = document.visibilityState === "visible"
-        ? VISIBLE_ROOMS_REFRESH_MS
-        : HIDDEN_ROOMS_REFRESH_MS;
-      timeoutId = setTimeout(async () => {
-        await loadRooms();
-        if (version === scheduleVersion) {
-          scheduleNextRefresh(version);
-        }
-      }, delay);
-    };
-
-    const resetPolling = (refreshNow: boolean) => {
-      if (timeoutId) clearTimeout(timeoutId);
-      scheduleVersion += 1;
-      if (refreshNow) void loadRooms();
-      scheduleNextRefresh(scheduleVersion);
-    };
-
     void loadRooms();
-    scheduleNextRefresh(scheduleVersion);
 
-    const handleFocus = () => resetPolling(true);
-    const handleVisibilityChange = () => {
-      resetPolling(document.visibilityState === "visible");
-    };
-
-    window.addEventListener("focus", handleFocus);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    const socket = getSocket();
+    socket.emit("join_lobby");
+    socket.on("lobby_update", (rooms: Room[]) => {
+      setRooms(rooms);
+      setIsLoading(false);
+    });
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      window.removeEventListener("focus", handleFocus);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      socket.emit("leave_lobby");
+      socket.off("lobby_update");
     };
   }, [loadRooms]);
 
