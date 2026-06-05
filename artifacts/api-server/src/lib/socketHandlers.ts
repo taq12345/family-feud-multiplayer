@@ -25,27 +25,33 @@ const answerProcessing = new Map<string, boolean>();
 // nickname (lowercase) → socket.id – tracks every connected player across all rooms
 const activeNicknames = new Map<string, string>();
 
-export async function broadcastLobbyUpdate() {
+export function broadcastLobbyUpdate() {
   if (!ioInstance) return;
-  try {
-    const rooms = await db.select().from(roomsTable).orderBy(roomsTable.createdAt);
-    const payload = rooms.map(r => ({
-      id: r.id,
-      name: r.name,
-      hostName: r.hostName,
-      status: r.status,
-      playerCount: r.playerCount,
-      maxPlayers: r.maxPlayers,
-      team1Name: r.team1Name,
-      team2Name: r.team2Name,
-      team1Score: r.team1Score,
-      team2Score: r.team2Score,
-      currentRound: r.currentRound,
-      totalRounds: r.totalRounds,
-      createdAt: r.createdAt.toISOString(),
-    }));
-    ioInstance.to("lobby").emit("lobby_update", payload);
-  } catch { /* ignore */ }
+  // Build the lobby payload entirely from in-memory state — no DB query needed.
+  // This prevents rate-limit errors when many game events fire in quick succession.
+  const payload = Array.from(gameStates.values())
+    .filter(s => !s.isSolo)
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+    .map(s => {
+      const host = Array.from(s.players.values()).find(p => p.isHost);
+      const dbStatus = s.status === "waiting" ? "waiting" : s.status === "finished" ? "finished" : "playing";
+      return {
+        id: s.roomId,
+        name: s.roomName,
+        hostName: host?.name ?? "",
+        status: dbStatus,
+        playerCount: s.players.size,
+        maxPlayers: s.maxPlayers,
+        team1Name: s.team1Name,
+        team2Name: s.team2Name,
+        team1Score: s.team1Score,
+        team2Score: s.team2Score,
+        currentRound: s.currentRound,
+        totalRounds: s.totalRounds,
+        createdAt: s.createdAt,
+      };
+    });
+  ioInstance.to("lobby").emit("lobby_update", payload);
 }
 
 export function isNicknameTaken(name: string, excludeSocketId?: string): boolean {
@@ -70,7 +76,7 @@ async function deleteRoomNow(roomId: string) {
     await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
     await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
     console.log(`Deleted empty room ${roomId}`);
-    broadcastLobbyUpdate().catch(() => {});
+    broadcastLobbyUpdate();
   } catch (err) {
     console.error(`Failed to delete room ${roomId}:`, err);
   }
@@ -431,7 +437,10 @@ export function setupSocketHandlers(io: SocketServer) {
         try {
           const [room] = await db.select().from(roomsTable).where(eq(roomsTable.id, roomId));
           if (room) {
-            const state = createGameState(roomId, room.name, room.team1Name, room.team2Name, room.totalRounds);
+            const state = createGameState(
+              roomId, room.name, room.team1Name, room.team2Name, room.totalRounds,
+              room.maxPlayers, room.createdAt.toISOString(),
+            );
             gameStates.set(roomId, state);
           }
         } catch (err) {
@@ -564,7 +573,7 @@ export function setupSocketHandlers(io: SocketServer) {
         await db.update(roomsTable)
           .set({ playerCount: state.players.size })
           .where(eq(roomsTable.id, roomId));
-        broadcastLobbyUpdate().catch(() => {});
+        broadcastLobbyUpdate();
 
         // Chat history is served from in-memory cache — no DB query needed.
         // Note: rooms hydrated after a server restart start with empty chat history; this is acceptable.
@@ -593,7 +602,7 @@ export function setupSocketHandlers(io: SocketServer) {
       if (!player?.isHost) return;
 
       await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
-      broadcastLobbyUpdate().catch(() => {});
+      broadcastLobbyUpdate();
 
       const question = getNextQuestion(state);
       if (!question) return;
@@ -787,7 +796,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
       // Auto-start — same logic as start_game
       await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
-      broadcastLobbyUpdate().catch(() => {});
+      broadcastLobbyUpdate();
 
       const question = getNextQuestion(freshState);
       if (!question) {
@@ -1175,7 +1184,7 @@ export function setupSocketHandlers(io: SocketServer) {
       try {
         await db.delete(chatMessagesTable).where(eq(chatMessagesTable.roomId, roomId));
         await db.delete(roomsTable).where(eq(roomsTable.id, roomId));
-        broadcastLobbyUpdate().catch(() => {});
+        broadcastLobbyUpdate();
       } catch {
         // ignore DB errors
       }
@@ -1307,7 +1316,7 @@ async function handlePlayerLeave(io: SocketServer, socket: Socket, roomId: strin
       await db.update(roomsTable)
         .set({ playerCount: state.players.size })
         .where(eq(roomsTable.id, roomId));
-      broadcastLobbyUpdate().catch(() => {});
+      broadcastLobbyUpdate();
     } catch (err) {
       // ignore
     }

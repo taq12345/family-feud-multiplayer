@@ -22,6 +22,8 @@ export interface GameState {
   roomId: string;
   roomName: string;
   isSolo: boolean;
+  maxPlayers: number;
+  createdAt: string;
   /** In-memory chat history — serves reconnects without hitting the DB. Capped at 100 messages. */
   chatHistory: ChatMessage[];
   players: Map<string, Player>;
@@ -63,7 +65,15 @@ export interface GameState {
   lastGuesserTeam2: string | null;
 }
 
-export function createGameState(roomId: string, roomName: string, team1Name: string, team2Name: string, totalRounds: number): GameState {
+export function createGameState(
+  roomId: string,
+  roomName: string,
+  team1Name: string,
+  team2Name: string,
+  totalRounds: number,
+  maxPlayers = 10,
+  createdAt = new Date().toISOString(),
+): GameState {
   const allQuestions = [...surveyQuestions];
   // Shuffle
   for (let i = allQuestions.length - 1; i > 0; i--) {
@@ -75,6 +85,8 @@ export function createGameState(roomId: string, roomName: string, team1Name: str
     roomId,
     roomName,
     isSolo: false,
+    maxPlayers,
+    createdAt,
     chatHistory: [],
     players: new Map(),
     allParticipants: new Map(),
