@@ -601,7 +601,9 @@ export function setupSocketHandlers(io: SocketServer) {
       const player = state.players.get(socket.id);
       if (!player?.isHost) return;
 
-      await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
+      try {
+        await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
+      } catch { /* non-fatal — game state is in memory */ }
       broadcastLobbyUpdate();
 
       const question = getNextQuestion(state);
@@ -795,7 +797,9 @@ export function setupSocketHandlers(io: SocketServer) {
       freshState.usedQuestionIds = new Set();
 
       // Auto-start — same logic as start_game
-      await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
+      try {
+        await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
+      } catch { /* non-fatal — game state is in memory */ }
       broadcastLobbyUpdate();
 
       const question = getNextQuestion(freshState);
@@ -880,9 +884,11 @@ export function setupSocketHandlers(io: SocketServer) {
       state.lastGuesserTeam1 = null;
       state.lastGuesserTeam2 = null;
 
-      await db.update(roomsTable)
-        .set({ status: "waiting", team1Score: 0, team2Score: 0, currentRound: 0 })
-        .where(eq(roomsTable.id, roomId));
+      try {
+        await db.update(roomsTable)
+          .set({ status: "waiting", team1Score: 0, team2Score: 0, currentRound: 0 })
+          .where(eq(roomsTable.id, roomId));
+      } catch { /* non-fatal — game state is in memory */ }
 
       io.to(roomId).emit("game_state", serializeGameState(state));
     });
