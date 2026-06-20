@@ -562,7 +562,9 @@ export function setupSocketHandlers(io: SocketServer) {
         // Chat history is served from in-memory cache — no DB query needed.
         socket.emit("chat_history", state.chatHistory);
         socket.emit("game_state", serializeGameState(state));
-        bumpRoomActivity(io, roomId);
+        // Intentionally NOT bumping activity on reconnect — an automatic socket
+        // reconnect is not meaningful user action and must not reset the inactivity
+        // timer (an idle host cycling connections would keep the room alive forever).
         // Don't broadcast player_joined — from everyone else's perspective they never left
         return;
       }
