@@ -61,11 +61,38 @@ export function isNicknameTaken(name: string, excludeSocketId?: string): boolean
 }
 
 const PLAYER_DISCONNECT_GRACE_MS = 10 * 60 * 1000; // 10 minutes per-player reconnect window
+const ROOM_INACTIVITY_MS = 10 * 60 * 1000; // delete room after 10 minutes of no activity
 const FACEOFF_ANSWER_MS = 25 * 1000; // 25 seconds per faceoff guess
 const ROUND_ANSWER_MS = 25 * 1000; // 25 seconds per guess
 
+// Per-room inactivity timers — reset on any meaningful game event
+const roomInactivityTimers = new Map<string, ReturnType<typeof setTimeout>>();
+
+function clearRoomInactivityTimer(roomId: string) {
+  const existing = roomInactivityTimers.get(roomId);
+  if (existing) {
+    clearTimeout(existing);
+    roomInactivityTimers.delete(roomId);
+  }
+}
+
+function bumpRoomActivity(io: SocketServer, roomId: string) {
+  const state = gameStates.get(roomId);
+  if (!state || state.isSolo) return; // solo rooms self-clean on disconnect
+  clearRoomInactivityTimer(roomId);
+  const timer = setTimeout(async () => {
+    roomInactivityTimers.delete(roomId);
+    if (!gameStates.has(roomId)) return; // already deleted
+    console.log(`Room ${roomId} deleted due to 10 minutes of inactivity`);
+    io.to(roomId).emit("room_deleted", { roomId, reason: "inactivity" });
+    await deleteRoomNow(roomId);
+  }, ROOM_INACTIVITY_MS);
+  roomInactivityTimers.set(roomId, timer);
+}
+
 async function deleteRoomNow(roomId: string) {
   clearAutoAdvanceTimer(roomId);
+  clearRoomInactivityTimer(roomId);
   const isSoloRoom = gameStates.get(roomId)?.isSolo ?? false;
   gameStates.delete(roomId);
   if (isSoloRoom) {
@@ -535,6 +562,7 @@ export function setupSocketHandlers(io: SocketServer) {
         // Chat history is served from in-memory cache — no DB query needed.
         socket.emit("chat_history", state.chatHistory);
         socket.emit("game_state", serializeGameState(state));
+        bumpRoomActivity(io, roomId);
         // Don't broadcast player_joined — from everyone else's perspective they never left
         return;
       }
@@ -592,6 +620,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
         io.to(roomId).emit("game_state", serializeGameState(state));
         io.to(roomId).emit("player_joined", { playerName: trimmedPlayerName, team });
+        bumpRoomActivity(io, roomId);
       }
     });
 
@@ -605,6 +634,7 @@ export function setupSocketHandlers(io: SocketServer) {
         await db.update(roomsTable).set({ status: "playing" }).where(eq(roomsTable.id, roomId));
       } catch { /* non-fatal — game state is in memory */ }
       broadcastLobbyUpdate();
+      bumpRoomActivity(io, roomId);
 
       const question = getNextQuestion(state);
       if (!question) return;
@@ -836,6 +866,7 @@ export function setupSocketHandlers(io: SocketServer) {
       clearFaceoffAnswerTimer(roomId);
       clearAnswerTimer(roomId);
       clearAutoAdvanceTimer(roomId);
+      bumpRoomActivity(io, roomId);
 
       // Reshuffle standard questions, placing previously-used ones at the back.
       // Always reverts to the standard survey pool (AI-generated questions are not kept).
@@ -909,6 +940,7 @@ export function setupSocketHandlers(io: SocketServer) {
       try {
         // Clear the per-player faceoff timer immediately so it cannot fire during the async AI call
         clearFaceoffAnswerTimer(roomId);
+        bumpRoomActivity(io, roomId);
 
         // Reject immediately if this answer was already used (wrong or correct) this round.
         // Use the same full normalizer as the answer matcher so the key is always consistent.
@@ -1005,6 +1037,7 @@ export function setupSocketHandlers(io: SocketServer) {
       answerProcessing.set(roomId, true);
 
       clearAnswerTimer(roomId);
+      bumpRoomActivity(io, roomId);
 
       try {
         // Broadcast the steal guess to all players immediately (before AI processing)
@@ -1148,6 +1181,7 @@ export function setupSocketHandlers(io: SocketServer) {
       }
 
       io.to(roomId).emit("chat_message", { playerName, message: trimmedMessage, createdAt });
+      bumpRoomActivity(io, roomId);
     });
 
     socket.on("next_round", async ({ roomId }: { roomId: string }) => {
@@ -1168,6 +1202,7 @@ export function setupSocketHandlers(io: SocketServer) {
 
       // Cancel the auto-advance timer — host is manually advancing
       clearAutoAdvanceTimer(roomId);
+      bumpRoomActivity(io, roomId);
       const error = await advanceToNextRound(io, roomId);
       if (error) {
         socket.emit("next_round_error", { message: error });
