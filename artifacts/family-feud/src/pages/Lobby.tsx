@@ -47,6 +47,56 @@ import AdsterraWidget from "../components/AdsterraWidget";
 import { AuthHeaderButton } from "../components/AuthGate";
 import { useUser } from "@clerk/react";
 
+// Home-page FAQ structured data. Kept here (rather than in the shared
+// index.html head) so it renders on "/" only — avoids duplicate FAQPage
+// schema on the prerendered /rules and /questions pages, which have their own.
+const homeFaqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How do I play Family Feud online with friends?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Go to friendlyfeud.fun, enter a nickname, and click 'Create Room'. Share the room link with your friends — they join instantly with no account needed. Split into two teams and race to guess the top survey answers to win.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is Friendly Feud free to play?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, Friendly Feud is completely free. No account, no download, and no payment required — just open the site and start playing.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How many players can join a Family Feud game online?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Up to 10 players can join a single room. You can also play solo to practice on your own.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Do I need to download anything to play Family Feud online?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No download needed. Friendly Feud runs entirely in your web browser on any device — desktop, tablet, or mobile.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What kind of questions are in the game?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Friendly Feud includes over 8,700 classic survey-style questions. You can also use AI to generate a custom round on any topic you choose.",
+      },
+    },
+  ],
+};
+
 interface Room {
   id: string;
   name: string;
@@ -704,7 +754,11 @@ export default function Lobby() {
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
-      <SEO canonical="https://friendlyfeud.fun/" />
+      <SEO
+        description="Play Family Feud online with friends for free — no account or download needed. Create a room, share the link, split into teams, and guess the top survey answers. 8,700+ questions & AI rounds."
+        canonical="https://friendlyfeud.fun/"
+        schema={homeFaqSchema}
+      />
       {/* Decorative background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
@@ -737,9 +791,9 @@ export default function Lobby() {
         <div className="max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <FriendlyFeudLogo className="w-9 h-9 sm:w-10 sm:h-10 shrink-0" />
-            <h1 className="flex items-center">
+            <div className="flex items-center">
               <FriendlyFeudWordmark />
-            </h1>
+            </div>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -896,32 +950,41 @@ export default function Lobby() {
                     <DropdownMenuSeparator className="bg-white/10" />
                   </>
                 )}
-                <DropdownMenuItem
-                  onClick={() => {
-                    playClickSound();
-                    setLocation("/rules");
-                  }}
-                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
-                >
-                  <BookOpen className="w-4 h-4 mr-2" /> How to Play
+                <DropdownMenuItem asChild className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer">
+                  <a
+                    href="/rules"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      playClickSound();
+                      setLocation("/rules");
+                    }}
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" /> How to Play
+                  </a>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    playClickSound();
-                    setLocation("/questions");
-                  }}
-                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
-                >
-                  <FileQuestion className="w-4 h-4 mr-2" /> Survey Questions
+                <DropdownMenuItem asChild className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer">
+                  <a
+                    href="/questions"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      playClickSound();
+                      setLocation("/questions");
+                    }}
+                  >
+                    <FileQuestion className="w-4 h-4 mr-2" /> Survey Questions
+                  </a>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    playClickSound();
-                    setLocation("/feedback");
-                  }}
-                  className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer"
-                >
-                  <MessageSquare className="w-4 h-4 mr-2" /> Feedback
+                <DropdownMenuItem asChild className="text-slate-200 focus:text-white focus:bg-white/10 cursor-pointer">
+                  <a
+                    href="/feedback"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      playClickSound();
+                      setLocation("/feedback");
+                    }}
+                  >
+                    <MessageSquare className="w-4 h-4 mr-2" /> Feedback
+                  </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -1044,6 +1107,17 @@ export default function Lobby() {
 
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
+        <div className="max-w-3xl mx-auto mb-8 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
+            Play Family Feud Online With Friends — Free
+          </h1>
+          <p className="mt-4 text-slate-400 text-base sm:text-lg leading-relaxed">
+            Friendly Feud is a free online multiplayer survey game inspired by Family Feud.
+            Create a private room, share the link, split into two teams, and race to guess
+            the top survey answers — no account or download required.
+          </p>
+        </div>
+
         <div className="max-w-4xl mx-auto mb-6">
           <AdsterraWidget
             variant="banner728x90"
@@ -1594,19 +1668,149 @@ export default function Lobby() {
         />
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 mb-8 text-center">
-        <h2 className="text-base font-semibold text-slate-400 mb-2">
-          Friendly Feud - Play Family Feud Online With Friends Free
+      <section
+        className="max-w-3xl mx-auto px-4 mb-12 mt-8"
+        aria-labelledby="about-game-heading"
+      >
+        <h2
+          id="about-game-heading"
+          className="text-2xl sm:text-3xl font-extrabold text-white mb-4"
+        >
+          The Free Family Feud Game You Can Play Online With Friends
         </h2>
-        <p className="text-sm text-slate-500 leading-relaxed">
-          Friendly Feud is the fastest way to play Family Feud online with
-          friends — no download, no account, no cost. Create a private room,
-          share the link, and your friends join instantly. Split into two teams
-          and race to guess the top survey answers before the other side does.
-          With 8,700+ classic questions and AI-powered custom rounds, every game
-          is different.
+        <div className="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed">
+          <p>
+            Friendly Feud is the fastest way to play a Family Feud–style survey
+            game online with friends — no download, no account, and no cost.
+            Create a private room, share the link, and your friends join
+            instantly from any device. Split into two teams and race to guess
+            the top survey answers before the other side does. With 8,700+
+            classic questions and AI-powered custom rounds on any topic you
+            choose, every game night plays out differently.
+          </p>
+          <p>
+            It works great for family game nights, parties, classrooms, remote
+            team-building, and virtual events. Because everything runs in the
+            browser, there is nothing to install on a phone, tablet, or laptop —
+            just open the site, pick a nickname, and start a room.
+          </p>
+        </div>
+
+        <h3 className="text-lg sm:text-xl font-bold text-white mt-8 mb-4">
+          How to Play in 3 Steps
+        </h3>
+        <ol className="grid gap-3 sm:grid-cols-3">
+          {[
+            {
+              n: "1",
+              t: "Create a room",
+              d: "Enter a nickname and create a private game room — choose the number of rounds and player limit.",
+            },
+            {
+              n: "2",
+              t: "Share the link",
+              d: "Send the room link to friends. They join instantly with no sign-up and split into two teams.",
+            },
+            {
+              n: "3",
+              t: "Guess & win",
+              d: "Race to name the top survey answers, earn points, steal from the other team, and win the game.",
+            },
+          ].map(({ n, t, d }) => (
+            <li
+              key={n}
+              className="rounded-2xl bg-white/[0.03] border border-white/10 p-4"
+            >
+              <span className="inline-flex w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-black font-extrabold text-sm items-center justify-center mb-2">
+                {n}
+              </span>
+              <p className="font-semibold text-white mb-1">{t}</p>
+              <p className="text-slate-400 text-sm leading-relaxed">{d}</p>
+            </li>
+          ))}
+        </ol>
+        <p className="text-sm text-slate-400 mt-4">
+          New here? Read the{" "}
+          <a
+            href="/rules"
+            onClick={(e) => {
+              e.preventDefault();
+              playClickSound();
+              setLocation("/rules");
+            }}
+            className="text-amber-400 hover:text-amber-300 underline underline-offset-2"
+          >
+            full rules and scoring guide
+          </a>{" "}
+          or browse{" "}
+          <a
+            href="/questions"
+            onClick={(e) => {
+              e.preventDefault();
+              playClickSound();
+              setLocation("/questions");
+            }}
+            className="text-amber-400 hover:text-amber-300 underline underline-offset-2"
+          >
+            free survey questions and answers
+          </a>
+          .
         </p>
-      </div>
+
+        <h3 className="text-lg sm:text-xl font-bold text-white mt-8 mb-4">
+          Why Play Friendly Feud?
+        </h3>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {[
+            {
+              t: "100% free, no account",
+              d: "No payment, no download, and no registration — start playing in seconds.",
+            },
+            {
+              t: "Real-time multiplayer",
+              d: "Up to 10 players per room with live scoring, a Face-Off, strikes, and a steal round.",
+            },
+            {
+              t: "8,700+ questions & AI rounds",
+              d: "A huge bank of classic survey questions, plus AI-generated rounds on any topic.",
+            },
+            {
+              t: "Plays anywhere",
+              d: "Runs in any modern browser on desktop, tablet, or mobile — perfect for remote friends.",
+            },
+          ].map(({ t, d }) => (
+            <li
+              key={t}
+              className="rounded-2xl bg-white/[0.03] border border-white/10 p-4"
+            >
+              <p className="font-semibold text-amber-400 mb-1">{t}</p>
+              <p className="text-slate-400 text-sm leading-relaxed">{d}</p>
+            </li>
+          ))}
+        </ul>
+
+        <h3 className="text-lg sm:text-xl font-bold text-white mt-8 mb-4">
+          Frequently Asked Questions
+        </h3>
+        <div className="space-y-3">
+          {homeFaqSchema.mainEntity.map((item) => (
+            <details
+              key={item.name}
+              className="group rounded-xl bg-white/[0.03] border border-white/10 overflow-hidden"
+            >
+              <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-semibold text-white select-none list-none">
+                {item.name}
+                <span className="text-slate-500 group-open:rotate-180 transition-transform ml-4 shrink-0">
+                  ▾
+                </span>
+              </summary>
+              <p className="px-5 pb-4 text-slate-400 text-sm leading-relaxed">
+                {item.acceptedAnswer.text}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
 
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 flex flex-wrap items-center justify-between gap-3">
