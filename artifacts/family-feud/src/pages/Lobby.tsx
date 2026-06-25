@@ -1107,17 +1107,6 @@ export default function Lobby() {
 
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
-        <div className="max-w-3xl mx-auto mb-8 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
-            Play Family Feud Online With Friends — Free
-          </h1>
-          <p className="mt-4 text-slate-400 text-base sm:text-lg leading-relaxed">
-            Friendly Feud is a free online multiplayer survey game inspired by Family Feud.
-            Create a private room, share the link, split into two teams, and race to guess
-            the top survey answers — no account or download required.
-          </p>
-        </div>
-
         <div className="max-w-4xl mx-auto mb-6">
           <AdsterraWidget
             variant="banner728x90"
@@ -1672,12 +1661,12 @@ export default function Lobby() {
         className="max-w-3xl mx-auto px-4 mb-12 mt-8"
         aria-labelledby="about-game-heading"
       >
-        <h2
+        <h1
           id="about-game-heading"
           className="text-2xl sm:text-3xl font-extrabold text-white mb-4"
         >
           The Free Family Feud Game You Can Play Online With Friends
-        </h2>
+        </h1>
         <div className="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed">
           <p>
             Friendly Feud is the fastest way to play a Family Feud–style survey
@@ -1815,8 +1804,8 @@ export default function Lobby() {
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-slate-600">
-            © {new Date().getFullYear()} Friendly Feud · Made with ♥ by Oqasha
-            Akram
+            © {new Date().getFullYear()} Friendly Feud · Made with ♥ by Talha
+            Qureshi
           </p>
           <nav
             className="flex items-center gap-4 text-xs text-slate-600"
