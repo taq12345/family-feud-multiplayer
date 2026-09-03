@@ -6,7 +6,7 @@ Thin Capacitor shell that wraps **https://friendlyfeud.fun** in a native Android
 
 - `capacitor.config.ts` points `server.url` at `https://friendlyfeud.fun`
 - The WebView appends `FriendlyFeudApp/1.0` to its User-Agent
-- The web app (`artifacts/family-feud`) detects that UA in `AdsterraWidget.tsx` and hides ads when running inside the app
+- The web app (`artifacts/family-feud`) detects that UA in `src/lib/isMobileApp.ts`; `src/components/AdSense.tsx` never loads AdSense or renders ad units when running inside the app
 
 ## Build the APK (one-time setup needed)
 
@@ -33,4 +33,4 @@ pnpm --filter @workspace/family-feud-mobile run build:apk:debug
 
 ## Why no ads on mobile?
 
-Adsterra's ad formats (popunder, social bar, push) violate Google Play's Disruptive Ads policy. To stay Play-Store-compliant, ads are stripped from the in-app experience via User-Agent detection in `AdsterraWidget`. AdMob can be added later as a follow-up.
+The web app is monetised with Google AdSense, and AdSense may not be served inside native WebViews (that is what AdMob is for). To stay compliant with both AdSense and Google Play policies, ads are stripped from the in-app experience via User-Agent detection (`isMobileApp`). AdMob can be added later as a follow-up.

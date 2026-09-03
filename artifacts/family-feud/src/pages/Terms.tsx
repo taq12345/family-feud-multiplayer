@@ -1,11 +1,10 @@
 import { SEO } from "../components/SEO";
-import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { ArrowLeft, ScrollText } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
-const LAST_UPDATED = "March 28, 2025";
+const LAST_UPDATED = "September 3, 2026";
 const CONTACT_EMAIL = "talhaahmadqureshi@gmail.com";
 const SITE_URL = "https://friendlyfeud.fun";
 
@@ -67,7 +66,7 @@ export default function Terms() {
               title: "1. Acceptance of Terms",
               content: (
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                  By accessing or using <a href={SITE_URL} className="text-amber-400 hover:underline">{SITE_URL}</a> (the "<strong className="text-white">Service</strong>"), you agree to be bound by these Terms of Service and our <button onClick={() => { playClickSound(); }} className="text-amber-400 hover:underline" data-navigate="/privacy">Privacy Policy</button>. If you do not agree to these terms, please do not use the Service. These terms apply to all visitors, users, and other persons who access or use the Service.
+                  By accessing or using <a href={SITE_URL} className="text-amber-400 hover:underline">{SITE_URL}</a> (the "<strong className="text-white">Service</strong>"), you agree to be bound by these Terms of Service and our <Link href="/privacy" onClick={() => playClickSound()} className="text-amber-400 hover:underline">Privacy Policy</Link>. If you do not agree to these terms, please do not use the Service. These terms apply to all visitors, users, and other persons who access or use the Service.
                 </p>
               ),
             },
@@ -80,14 +79,28 @@ export default function Terms() {
                     Friendly Feud is a free, browser-based multiplayer quiz game inspired by classic TV game show formats. It allows users to create or join game rooms, form teams, and compete to answer survey-style questions in real time.
                   </p>
                   <p>
-                    The Service is provided free of charge and does not require account registration. We reserve the right to modify, suspend, or discontinue the Service at any time without prior notice.
+                    The Service is provided free of charge and does not require account registration. An optional free account lets you reserve a nickname and appear on the leaderboard. We reserve the right to modify, suspend, or discontinue the Service at any time without prior notice.
+                  </p>
+                </div>
+              ),
+            },
+            {
+              id: "accounts",
+              title: "3. Optional Accounts",
+              content: (
+                <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
+                  <p>
+                    You may create one account per person. You are responsible for keeping your sign-in credentials secure and for all activity under your account. Nicknames must not impersonate other people or contain offensive content; we may change or remove a nickname, or suspend an account, that breaches these Terms.
+                  </p>
+                  <p>
+                    Gameplay statistics attached to an account are displayed publicly on the leaderboard together with your nickname and avatar. You can ask us to delete your account and its statistics at any time by contacting <a href={`mailto:${CONTACT_EMAIL}`} className="text-amber-400 hover:underline">{CONTACT_EMAIL}</a>.
                   </p>
                 </div>
               ),
             },
             {
               id: "eligibility",
-              title: "3. Eligibility & Age Requirements",
+              title: "4. Eligibility & Age Requirements",
               content: (
                 <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
                   <p>You must be at least <strong className="text-white">13 years of age</strong> to use this Service. By using the Service, you represent and warrant that you meet this age requirement.</p>
@@ -97,7 +110,7 @@ export default function Terms() {
             },
             {
               id: "conduct",
-              title: "4. Acceptable Use",
+              title: "5. Acceptable Use",
               content: (
                 <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
                   <p>You agree not to use the Service to:</p>
@@ -116,7 +129,7 @@ export default function Terms() {
             },
             {
               id: "intellectual-property",
-              title: "5. Intellectual Property",
+              title: "6. Intellectual Property",
               content: (
                 <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
                   <p>
@@ -130,16 +143,16 @@ export default function Terms() {
             },
             {
               id: "advertising",
-              title: "6. Advertising",
+              title: "7. Advertising",
               content: (
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                  The Service may display advertisements served by Google AdSense or similar third-party advertising networks. These networks may use cookies and similar technologies to show you relevant ads based on your browsing activity. We do not control the content of these ads. Please refer to our <button className="text-amber-400 hover:underline">Privacy Policy</button> for more details on how advertising data is handled.
+                  The informational pages of the Service (such as the home page, guides, rules and question library) display advertisements served by Google AdSense. No advertisements are shown inside game rooms. Google may use cookies and similar technologies to show you relevant ads based on your browsing activity, subject to your consent where required by law. We do not control the content of these ads. Please refer to our <Link href="/privacy" onClick={() => playClickSound()} className="text-amber-400 hover:underline">Privacy Policy</Link> for more details on how advertising data is handled.
                 </p>
               ),
             },
             {
               id: "disclaimers",
-              title: "7. Disclaimers & Limitation of Liability",
+              title: "8. Disclaimers & Limitation of Liability",
               content: (
                 <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
                   <p>
@@ -156,16 +169,16 @@ export default function Terms() {
             },
             {
               id: "privacy",
-              title: "8. Privacy",
+              title: "9. Privacy",
               content: (
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                  Your use of the Service is also subject to our <button className="text-amber-400 hover:underline" onClick={() => { playClickSound(); setLocation("/privacy"); }}>Privacy Policy</button>, which is incorporated into these Terms by reference. Please review it to understand our practices.
+                  Your use of the Service is also subject to our <Link href="/privacy" onClick={() => playClickSound()} className="text-amber-400 hover:underline">Privacy Policy</Link>, which is incorporated into these Terms by reference. Please review it to understand our practices.
                 </p>
               ),
             },
             {
               id: "modifications",
-              title: "9. Modifications to Terms",
+              title: "10. Modifications to Terms",
               content: (
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
                   We reserve the right to update or modify these Terms at any time. Changes will take effect immediately upon posting to this page with an updated "Last updated" date. Your continued use of the Service after any changes constitutes your acceptance of the revised Terms.
@@ -174,7 +187,7 @@ export default function Terms() {
             },
             {
               id: "governing-law",
-              title: "10. Governing Law",
+              title: "11. Governing Law",
               content: (
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
                   These Terms are governed by and construed in accordance with the laws of the <strong className="text-white">Islamic Republic of Pakistan</strong>. Any disputes arising from these Terms or your use of the Service shall be subject to the exclusive jurisdiction of the courts located in Pakistan.
@@ -183,7 +196,7 @@ export default function Terms() {
             },
             {
               id: "contact",
-              title: "11. Contact",
+              title: "12. Contact",
               content: (
                 <div className="space-y-2 text-slate-300 text-sm sm:text-base leading-relaxed">
                   <p>If you have any questions about these Terms, please contact us at:</p>
@@ -208,11 +221,11 @@ export default function Terms() {
 
       <footer className="relative z-10 border-t border-white/5 py-6 text-center">
         <div className="flex items-center justify-center gap-4 text-xs text-slate-600">
-          <button onClick={() => { playClickSound(); setLocation("/"); }} className="hover:text-slate-400 transition-colors">Home</button>
+          <Link href="/" onClick={() => playClickSound()} className="hover:text-slate-400 transition-colors">Home</Link>
           <span>·</span>
-          <button onClick={() => { playClickSound(); setLocation("/terms"); }} className="text-slate-400">Terms of Service</button>
+          <Link href="/terms" onClick={() => playClickSound()} className="text-slate-400">Terms of Service</Link>
           <span>·</span>
-          <button onClick={() => { playClickSound(); setLocation("/privacy"); }} className="hover:text-slate-400 transition-colors">Privacy Policy</button>
+          <Link href="/privacy" onClick={() => playClickSound()} className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
         </div>
       </footer>
     </div>

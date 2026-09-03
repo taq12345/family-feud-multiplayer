@@ -1,6 +1,4 @@
 import { SEO } from "../components/SEO";
-import AdsterraWidget from "../components/AdsterraWidget";
-import { isMobileApp } from "../lib/isMobileApp";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
 import { useGameSocket, createSoloGame, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
@@ -864,6 +862,7 @@ export default function GameRoom() {
   if (!gameState) {
     return (
       <div className="h-svh bg-[#070d1f] flex items-center justify-center">
+        <SEO title="Game Room" noindex />
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 rounded-full border-2 border-amber-400/30 border-t-amber-400 animate-spin" />
           <p className="text-slate-400 text-sm">Connecting to game…</p>
@@ -889,10 +888,11 @@ export default function GameRoom() {
     gameState.status === "finished" ? "text-amber-400" : "text-slate-400";
 
   const displayRoomName = gameState.roomName?.trim() || fallbackRoomName || "Unnamed Room";
-  const roomAdRefreshKey = Math.floor(Math.max(0, gameState.currentRound - 1) / 2);
 
   return (
     <div className={`${isSolo ? "min-h-svh overflow-y-auto" : "h-svh overflow-hidden"} bg-[#070d1f] text-white flex flex-col`}>
+      {/* Game rooms are transient screens: keep them out of search results. */}
+      <SEO title={isSolo ? "Solo Game" : "Game Room"} noindex />
       {/* Answer verification overlay */}
       {verifyingAnswer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -1005,50 +1005,9 @@ export default function GameRoom() {
         </div>
       )}
 
-      {isSolo && (
-        <>
-          <aside className="fixed left-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
-            <AdsterraWidget
-              key={`solo-left-rail-ad-${roomAdRefreshKey}`}
-              variant="banner160x600"
-              minViewportWidth={1536}
-            />
-          </aside>
-          <aside className="fixed right-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
-            <AdsterraWidget
-              key={`solo-right-rail-ad-${roomAdRefreshKey}`}
-              variant="banner160x600"
-              minViewportWidth={1536}
-            />
-          </aside>
-        </>
-      )}
-
-      {isSolo && (
-        <div className="relative z-10 w-full px-2 pt-1 md:px-3 md:pt-2 2xl:px-[192px]">
-          <div className="max-w-2xl mx-auto">
-            <AdsterraWidget
-              key={`solo-top-ad-${roomAdRefreshKey}`}
-              variant="banner728x90"
-              mobileBannerConfig={{ key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 }}
-            />
-          </div>
-        </div>
-      )}
-
-      <div className={`flex min-h-0 ${isSolo ? "flex-none 2xl:px-[192px]" : "flex-1 overflow-hidden"} relative z-10`}>
-        {!isSolo && (
-          <aside className="hidden 2xl:flex w-[184px] shrink-0 items-start justify-center border-r border-white/5 bg-black/20 px-3 py-3" aria-label="Advertisement">
-            <div className="w-[160px]">
-              <AdsterraWidget
-                key={`multiplayer-left-rail-ad-${roomAdRefreshKey}`}
-                variant="banner160x600"
-                minViewportWidth={1536}
-              />
-            </div>
-          </aside>
-        )}
-
+      {/* No ads anywhere in the game room: AdSense forbids ads on screens
+          without publisher content (gameplay, waiting rooms, chat). */}
+      <div className={`flex min-h-0 ${isSolo ? "flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
         {/* Main game area */}
         <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
@@ -1194,20 +1153,6 @@ export default function GameRoom() {
                     >
                       <Wand2 className="w-4 h-4 mr-2" /> Custom Questions (Beta)
                     </Button>
-                  </div>
-                )}
-                {!isMobileApp && (
-                  <div className="flex justify-center mt-2 sm:mt-3">
-                    <div className="origin-top scale-90 sm:scale-100">
-                    <iframe
-                      key={`waiting-ad-${roomAdRefreshKey}`}
-                      srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
-                      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                      scrolling="no"
-                      style={{ width: 300, height: 250, border: "none", display: "block" }}
-                      title="Advertisement"
-                    />
-                    </div>
                   </div>
                 )}
               </div>
@@ -1529,17 +1474,6 @@ export default function GameRoom() {
             <MessageCircle className="w-3.5 h-3.5 text-slate-500" />
             <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Live Chat</span>
           </div>
-          {!isMobileApp && (
-            <div className="shrink-0 overflow-hidden border-b border-white/5 flex items-center justify-center bg-black/20" style={{ height: 250 }}>
-              <iframe
-                key={`chat-ad-${roomAdRefreshKey}`}
-                srcDoc={`<!DOCTYPE html><html><head><style>*{margin:0;padding:0;overflow:hidden}body{background:transparent;display:flex;align-items:center;justify-content:center}</style></head><body><script>atOptions={'key':'7c3d49327fa4bdf90f0f7710de941992','format':'iframe','height':250,'width':300,'params':{}};<\/script><script src="https://www.highperformanceformat.com/7c3d49327fa4bdf90f0f7710de941992/invoke.js"><\/script></body></html>`}
-                sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                style={{ width: 300, height: 250, border: "none", display: "block" }}
-                title="Advertisement"
-              />
-            </div>
-          )}
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {chatMessages.length === 0 && (
               <p className="text-slate-600 text-xs text-center mt-6">No messages yet. Say hello!</p>
@@ -1590,17 +1524,6 @@ export default function GameRoom() {
       </div>
 
       {/* Mobile bottom tab bar — hidden in solo mode */}
-      {isSolo && (
-        <div className="relative z-10 hidden md:block w-full px-3 pb-3 2xl:px-[192px]">
-          <div className="max-w-2xl mx-auto">
-            <AdsterraWidget
-              key={`solo-bottom-ad-${roomAdRefreshKey}`}
-              variant="banner728x90"
-            />
-          </div>
-        </div>
-      )}
-
       <div className={`${isSolo ? "hidden" : ""} md:hidden flex border-t border-white/5 bg-black/50 backdrop-blur-xl shrink-0 relative z-10`}>
         <button
           onClick={() => { playClickSound(); setMobileTab("game"); }}

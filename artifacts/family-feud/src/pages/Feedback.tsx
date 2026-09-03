@@ -4,7 +4,6 @@ import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { ArrowLeft, Send, CheckCircle, MessageSquare } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
-import AdsterraWidget from "../components/AdsterraWidget";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -82,10 +81,13 @@ export default function Feedback() {
           <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto">
             Found a bug or have a suggestion? We'd love to hear from you. Fill out the form below and we'll get back to you.
           </p>
-        </div>
-
-        <div className="mb-8">
-          <AdsterraWidget />
+          <p className="text-slate-500 text-xs sm:text-sm mt-3 max-w-lg mx-auto">
+            Prefer email? Write to{" "}
+            <a href="mailto:talhaahmadqureshi@gmail.com" className="text-amber-400 hover:underline">
+              talhaahmadqureshi@gmail.com
+            </a>
+            . Messages are read by the developer and usually answered within a few days.
+          </p>
         </div>
 
         {success ? (

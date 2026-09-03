@@ -4,8 +4,7 @@ import { SEO } from "../components/SEO";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles, Shuffle } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
-import AdsterraWidget from "../components/AdsterraWidget";
-
+import { AdUnit } from "../components/AdSense";
 
 // Each answer includes the survey point value from the original show data.
 interface Q { q: string; a: { text: string; pts: number }[] }
@@ -330,9 +329,7 @@ export default function Questions() {
             </p>
           </header>
 
-          <div className="mb-8">
-            <AdsterraWidget />
-          </div>
+          <AdUnit slot="articleTop" className="mb-8" />
 
           {/* Play CTA */}
           <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 p-5 sm:p-6 text-center">
@@ -470,6 +467,8 @@ export default function Questions() {
                 );
               })}
             </div>
+
+          <AdUnit slot="articleBottom" className="mt-10" />
 
           {/* Bottom CTA */}
           <div className="mt-12 text-center">

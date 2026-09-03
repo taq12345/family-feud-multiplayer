@@ -9,6 +9,7 @@ import { HelmetProvider } from "react-helmet-async";
 import Lobby from "./pages/Lobby";
 import { clerkAppearance } from "./lib/clerkAppearance";
 import { NicknameSetupDialog } from "./components/AuthGate";
+import { AdSenseLoader } from "./components/AdSense";
 
 const GameRoom = lazy(() => import("./pages/GameRoom"));
 const Rules = lazy(() => import("./pages/Rules"));
@@ -18,8 +19,11 @@ const About = lazy(() => import("./pages/About"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
+const NotFound = lazy(() => import("./pages/not-found"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,11 +56,15 @@ function Router() {
         <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     }>
+      {/* Loads AdSense only on content routes — see src/lib/adsense.ts */}
+      <AdSenseLoader />
       <Switch>
         <Route path="/" component={Lobby} />
         <Route path="/rules" component={Rules} />
         <Route path="/questions" component={Questions} />
         <Route path="/about" component={About} />
+        <Route path="/blog" component={Blog} />
+        <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/feedback" component={Feedback} />
         <Route path="/privacy" component={Privacy} />
         <Route path="/terms" component={Terms} />
@@ -64,14 +72,7 @@ function Router() {
         <Route path="/room/:roomId" component={GameRoom} />
         <Route path="/sign-in/*?" component={SignInPage} />
         <Route path="/sign-up/*?" component={SignUpPage} />
-        <Route>
-          <div className="min-h-screen bg-blue-950 flex items-center justify-center text-white">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-yellow-400">404</h1>
-              <p className="text-blue-300 mt-2">Page not found</p>
-            </div>
-          </div>
-        </Route>
+        <Route component={NotFound} />
       </Switch>
     </Suspense>
   );

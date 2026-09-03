@@ -22,7 +22,6 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
-import AdsterraWidget from "../components/AdsterraWidget";
 
 type MultiplayerRow = {
   userId: string;
@@ -332,10 +331,6 @@ export default function Leaderboard() {
             for registered players only.
           </p>
         </section>
-
-        <div className="mb-10">
-          <AdsterraWidget />
-        </div>
 
         <section aria-labelledby="leaderboard-heading">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4 px-1">

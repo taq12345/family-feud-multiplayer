@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { SignUp } from "@clerk/react";
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { SEO } from "../components/SEO";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -20,6 +21,7 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-[100dvh] bg-[#070d1f] text-white flex flex-col">
+      <SEO title="Create Account" noindex />
       {showBackToLobby && (
         <div className="p-4">
           <Link

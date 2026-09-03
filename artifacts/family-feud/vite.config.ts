@@ -4,16 +4,22 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { execSync } from "node:child_process";
+import { BLOG_SLUGS } from "./src/content/blogSlugs";
 
 const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 5173;
 const basePath = process.env.BASE_PATH ?? "/";
 
+// Every crawlable page gets a static HTML snapshot at build time. Game rooms
+// and auth screens are intentionally absent (they are noindex + robots-blocked).
 const PRERENDER_ROUTES = [
   "/",
   "/rules",
   "/questions",
   "/about",
+  "/blog",
+  ...BLOG_SLUGS.map((slug) => `/blog/${slug}`),
+  "/leaderboard",
   "/feedback",
   "/privacy",
   "/terms",
@@ -39,6 +45,26 @@ function resolveChromiumPath(): string | undefined {
     /* ignore */
   }
   return undefined;
+}
+
+// Head tags that src/components/SEO.tsx renders per page. React 19 hoists them
+// into <head> with no marker, so the snapshot tags them with `data-prerender`
+// and src/main.tsx removes them before the live render — otherwise every page
+// would end up with two titles / two canonicals (the client re-adds its own).
+const MANAGED_META =
+  /<meta\b(?=[^>]*\b(?:name="(?:description|robots|twitter:title|twitter:description)"|property="og:(?:title|description|type|url)"))(?![^>]*\bdata-prerender\b)/g;
+const MANAGED_TITLE = /<title\b(?![^>]*\bdata-prerender\b)/g;
+const MANAGED_CANONICAL = /<link\b(?=[^>]*\brel="canonical")(?![^>]*\bdata-prerender\b)/g;
+
+function markPrerenderedHead(html: string): string {
+  const headEnd = html.indexOf("</head>");
+  if (headEnd === -1) return html;
+  const head = html
+    .slice(0, headEnd)
+    .replace(MANAGED_TITLE, "<title data-prerender")
+    .replace(MANAGED_META, "<meta data-prerender")
+    .replace(MANAGED_CANONICAL, "<link data-prerender");
+  return head + html.slice(headEnd);
 }
 
 export default defineConfig({
@@ -67,15 +93,19 @@ export default defineConfig({
             renderer: "@prerenderer/renderer-puppeteer",
             rendererOptions: {
               maxConcurrentRoutes: 2,
-              renderAfterTime: 2500,
+              // Generous so lazy route chunks finish loading on slow build
+              // machines; a too-early snapshot captures the wrong page.
+              renderAfterTime: 5000,
               headless: true,
               executablePath: resolveChromiumPath(),
               args: ["--no-sandbox", "--disable-setuid-sandbox"],
+              // Exposed as window.__PRERENDER_INJECTED so the app can skip
+              // things that make no sense in a static snapshot (ads, auth).
+              inject: { prerender: true },
             },
             postProcess(renderedRoute: { html: string }) {
-              renderedRoute.html = renderedRoute.html.replace(
-                /<script (.*?)>/g,
-                "<script $1 defer>",
+              renderedRoute.html = markPrerenderedHead(
+                renderedRoute.html.replace(/<script (.*?)>/g, "<script $1 defer>"),
               );
               return renderedRoute;
             },

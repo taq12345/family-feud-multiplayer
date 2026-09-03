@@ -5,6 +5,7 @@ import { ArrowLeft, Trophy, BarChart3, ShieldCheck, Sparkles } from "lucide-reac
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
+import { SEO } from "../components/SEO";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 const NICKNAME_PATTERN = /^[A-Za-z0-9_-]{2,16}$/;
@@ -61,6 +62,7 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-[100dvh] bg-[#070d1f] text-white flex flex-col">
+      <SEO title="Sign In" noindex />
       {showBackToLobby && (
         <div className="p-4">
           <Link
