@@ -46,6 +46,7 @@ import {
 import { createSoloGame } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { AdUnit } from "../components/AdSense";
+import { HomeContent, homeFaqSchema } from "../components/HomeContent";
 import { AuthHeaderButton } from "../components/AuthGate";
 import { useUser } from "@clerk/react";
 
@@ -706,7 +707,11 @@ export default function Lobby() {
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
-      <SEO canonical="https://friendlyfeud.fun/" />
+      <SEO
+        description="Play Family Feud online with friends for free — no account or download needed. Create a room, share the link, split into teams, and guess the top survey answers. 8,700+ questions & AI rounds."
+        canonical="https://friendlyfeud.fun/"
+        schema={homeFaqSchema}
+      />
       {/* Decorative background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
@@ -739,9 +744,10 @@ export default function Lobby() {
         <div className="max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <FriendlyFeudLogo className="w-9 h-9 sm:w-10 sm:h-10 shrink-0" />
-            <h1 className="flex items-center">
+            {/* Not an <h1>: the page's single H1 lives in <HomeContent>. */}
+            <div className="flex items-center">
               <FriendlyFeudWordmark />
-            </h1>
+            </div>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -1579,20 +1585,10 @@ export default function Lobby() {
         </DialogContent>
       </Dialog>
 
-      <div className="max-w-3xl mx-auto px-4 mt-2 sm:mt-12 mb-8 text-center">
-        <h2 className="text-base font-semibold text-slate-400 mb-2">
-          Friendly Feud - Play Family Feud Online With Friends Free
-        </h2>
-        <p className="text-sm text-slate-500 leading-relaxed">
-          Friendly Feud is the fastest way to play Family Feud online with
-          friends — no download, no account, no cost. Create a private room,
-          share the link, and your friends join instantly. Split into two teams
-          and race to guess the top survey answers before the other side does.
-          With 8,700+ classic questions and AI-powered custom rounds, every game
-          is different.
-        </p>
-      </div>
-
+      {/* Editorial content below the room list: what the game is, how to
+          play, FAQ, question lists and guides. The only home-page ad sits
+          after it, next to real content. */}
+      <HomeContent />
       <AdUnit slot="homeContent" className="max-w-3xl mx-auto px-4 mb-10" />
 
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">

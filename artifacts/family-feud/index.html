@@ -89,55 +89,12 @@
             "@type": "Person",
             "name": "Talha Qureshi"
           }
-        },
-        {
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "How do I play Family Feud online with friends?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Go to friendlyfeud.fun, enter a nickname, and click 'Create Room'. Share the room link with your friends — they join instantly with no account needed. Split into two teams and race to guess the top survey answers to win."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is Friendly Feud free to play?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, Friendly Feud is completely free. No account, no download, and no payment required — just open the site and start playing."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How many players can join a Family Feud game online?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Up to 10 players can join a single room. You can also play solo to practice on your own."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Do I need to download anything to play Family Feud online?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "No download needed. Friendly Feud runs entirely in your web browser on any device — desktop, tablet, or mobile."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What kind of questions are in the game?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Friendly Feud includes over 8,700 classic survey-style questions. You can also use AI to generate a custom round on any topic you choose."
-              }
-            }
-          ]
         }
       ]
     }
     </script>
+    <!-- The home-page FAQ schema is emitted by src/components/HomeContent.tsx
+         on "/" only, so it does not duplicate the FAQ schema on other pages. -->
 
     <!-- Google AdSense is loaded at runtime by src/components/AdSense.tsx,
          and only on content pages (never in game rooms, auth screens or the
@@ -158,7 +115,7 @@
     <script type="module" src="/src/main.tsx"></script>
     <noscript>
       <div style="font-family:sans-serif;max-width:680px;margin:40px auto;padding:0 20px;color:#ccc;background:#070d1f;line-height:1.6">
-        <h1 style="color:#fff">Friendly Feud - Play Family Feud Online With Friends Free</h1>
+        <p style="color:#fff;font-size:1.5em;font-weight:bold">Friendly Feud - Play Family Feud Online With Friends Free</p>
         <p>Friendly Feud is a free online multiplayer game where you can play Family Feud with friends directly in your browser — no download or account required. Create a private room, share the link, split into two teams, and compete to guess the top survey answers.</p>
         <ul>
           <li>8,700+ classic survey questions</li>
