@@ -4,27 +4,14 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { execSync } from "node:child_process";
-import { BLOG_SLUGS, QUESTION_THEME_SLUGS } from "./src/content/blogSlugs";
+// Shared with scripts/generate-artifact-rewrites.mjs: the host must rewrite
+// each of these paths to its snapshot, or the SPA catch-all serves the home
+// page's HTML for every route.
+import { PRERENDER_ROUTES } from "./src/content/prerenderRoutes";
 
 const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 5173;
 const basePath = process.env.BASE_PATH ?? "/";
-
-// Every crawlable page gets a static HTML snapshot at build time. Game rooms
-// and auth screens are intentionally absent (they are noindex + robots-blocked).
-const PRERENDER_ROUTES = [
-  "/",
-  "/rules",
-  "/questions",
-  ...QUESTION_THEME_SLUGS.map((slug) => `/questions/${slug}`),
-  "/about",
-  "/blog",
-  ...BLOG_SLUGS.map((slug) => `/blog/${slug}`),
-  "/leaderboard",
-  "/feedback",
-  "/privacy",
-  "/terms",
-];
 
 // Prerendering runs on every `vite build` (dev + production). It does NOT
 // run during `vite dev` — the rollup plugin only kicks in at build time, so
