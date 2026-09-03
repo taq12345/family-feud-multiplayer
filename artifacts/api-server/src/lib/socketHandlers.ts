@@ -692,25 +692,15 @@ export function setupSocketHandlers(io: SocketServer) {
       const state = createGameState(roomId, "Solo Play", "You", "CPU", numRounds);
       state.isSolo = true;
 
-      let soloAvatarUrl: string | null = null;
-      try {
-        const [u] = await db
-          .select({ avatarUrl: usersTable.avatarUrl })
-          .from(usersTable)
-          .where(eq(usersTable.nicknameLower, nameKey))
-          .limit(1);
-        soloAvatarUrl = u?.avatarUrl ?? null;
-      } catch {
-        // ignore — non-fatal
-      }
-
       const soloPlayer: import("./gameState.js").Player = {
         id: socket.id,
         name: trimmedName,
         team: 1,
         isHost: true,
         contributedPoints: 0,
-        avatarUrl: soloAvatarUrl,
+        // Avatar decoration must never block starting a game. The authenticated
+        // user's profile is still available to the client through Clerk.
+        avatarUrl: null,
       };
       state.players.set(socket.id, soloPlayer);
 

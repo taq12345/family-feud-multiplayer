@@ -68,14 +68,31 @@ export function createSoloGame(
   onError: (error: string) => void
 ) {
   const socket = getSocket();
-  socket.once("solo_game_created", ({ roomId }: { roomId: string }) => {
-    socket.off("solo_game_error");
+
+  const cleanup = () => {
+    clearTimeout(timeout);
+    socket.off("solo_game_created", handleCreated);
+    socket.off("solo_game_error", handleError);
+  };
+  const handleCreated = ({ roomId }: { roomId: string }) => {
+    cleanup();
     onCreated(roomId);
-  });
-  socket.once("solo_game_error", ({ message }: { message: string }) => {
-    socket.off("solo_game_created");
+  };
+  const handleError = ({ message }: { message: string }) => {
+    cleanup();
     onError(message);
-  });
+  };
+  const timeout = setTimeout(() => {
+    cleanup();
+    onError(
+      socket.connected
+        ? "The game server did not respond. Please try again."
+        : "Could not connect to the game server. Please check your connection and try again.",
+    );
+  }, topic ? 90_000 : 15_000);
+
+  socket.once("solo_game_created", handleCreated);
+  socket.once("solo_game_error", handleError);
   socket.emit("create_solo_game", { playerName, rounds, topic });
 }
 
