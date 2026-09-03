@@ -33,7 +33,7 @@ export type AdSlotName = keyof typeof AD_SLOTS;
 // and sign-up, the feedback form, the leaderboard, legal pages and the 404
 // page are deliberately excluded.
 const AD_ELIGIBLE_EXACT = new Set(["/", "/rules", "/questions", "/about", "/blog"]);
-const AD_ELIGIBLE_PREFIXES = ["/blog/"];
+const AD_ELIGIBLE_PREFIXES = ["/blog/", "/questions/"];
 
 export function isAdEligiblePath(pathname: string): boolean {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;

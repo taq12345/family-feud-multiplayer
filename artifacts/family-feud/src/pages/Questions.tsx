@@ -5,6 +5,8 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles, Shuffle } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import { AdUnit } from "../components/AdSense";
+import { canonicalUrl } from "../lib/site";
+import { QUESTION_THEMES } from "../content/questionThemes";
 
 // Each answer includes the survey point value from the original show data.
 interface Q { q: string; a: { text: string; pts: number }[] }
@@ -286,9 +288,9 @@ export default function Questions() {
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO
-        title="150+ Best Family Feud-Style Survey Questions & Answers for Game Night"
-        description={`Browse ${totalQuestions}+ survey questions and answers with point values, perfect for playing a Family Feud-style game online. Use these free trivia and survey questions for game nights, parties, team building, and virtual events.`}
-        canonical="https://friendlyfeud.fun/questions"
+        title="Family Feud Questions & Answers With Points"
+        description={`Browse ${totalQuestions}+ free Family Feud-style survey questions with answers and point values, plus themed lists for Christmas, Halloween, kids, work, food, animals and couples.`}
+        canonical={canonicalUrl("/questions")}
         schema={questionsSchema}
       />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
@@ -330,6 +332,27 @@ export default function Questions() {
           </header>
 
           <AdUnit slot="articleTop" className="mb-8" />
+
+          {/* Themed lists — separate indexable pages generated from the full bank */}
+          <section className="mb-8" aria-labelledby="themes-heading">
+            <h2 id="themes-heading" className="text-xl font-bold text-white mb-1">Browse by theme</h2>
+            <p className="text-slate-400 text-sm mb-4">
+              Ready-made lists for specific occasions, each pulled from the full 8,700-question bank.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {QUESTION_THEMES.map((t) => (
+                <a
+                  key={t.slug}
+                  href={`/questions/${t.slug}`}
+                  onClick={(e) => { e.preventDefault(); playClickSound(); setLocation(`/questions/${t.slug}`); }}
+                  className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-amber-500/30 hover:bg-white/[0.05] p-4 transition-all"
+                >
+                  <span className="block text-sm font-semibold text-white leading-snug">{t.h1}</span>
+                  <span className="block text-xs text-slate-500 mt-1">{t.questions.length} questions</span>
+                </a>
+              ))}
+            </div>
+          </section>
 
           {/* Play CTA */}
           <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 p-5 sm:p-6 text-center">
@@ -469,6 +492,22 @@ export default function Questions() {
             </div>
 
           <AdUnit slot="articleBottom" className="mt-10" />
+
+          <section className="mt-10" aria-labelledby="write-your-own-heading">
+            <h2 id="write-your-own-heading" className="text-xl font-bold text-white mb-2">Write your own</h2>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              A good survey question has four to eight answers that cluster around one obvious favourite.
+              Our guide on{" "}
+              <a href="/blog/how-to-write-family-feud-survey-questions" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/blog/how-to-write-family-feud-survey-questions"); }} className="text-amber-400 hover:text-amber-300 underline underline-offset-2">
+                writing Family Feud survey questions
+              </a>{" "}
+              walks through the formula with worked examples, and the{" "}
+              <a href="/rules" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/rules"); }} className="text-amber-400 hover:text-amber-300 underline underline-offset-2">
+                rules page
+              </a>{" "}
+              explains how points, strikes and steals work once you play them.
+            </p>
+          </section>
 
           {/* Bottom CTA */}
           <div className="mt-12 text-center">

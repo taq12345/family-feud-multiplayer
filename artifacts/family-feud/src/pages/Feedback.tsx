@@ -43,7 +43,7 @@ export default function Feedback() {
       <SEO 
         title="Feedback & Bug Reports" 
         description="Report bugs, suggest new features, or contact the developer of Friendly Feud." 
-        canonical="https://friendlyfeud.fun/feedback"
+        canonical="https://friendlyfeud.fun/feedback/"
       />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />

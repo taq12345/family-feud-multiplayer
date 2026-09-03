@@ -16,7 +16,7 @@ export default function Privacy() {
       <SEO
         title="Privacy Policy"
         description="Privacy Policy for Friendly Feud, a free online Family Feud-style survey game. Learn what data we collect, how advertising and analytics work, and your rights."
-        canonical="https://friendlyfeud.fun/privacy"
+        canonical="https://friendlyfeud.fun/privacy/"
       />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />

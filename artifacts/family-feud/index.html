@@ -44,9 +44,22 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "Organization",
+          "@id": "https://friendlyfeud.fun/#organization",
+          "name": "Friendly Feud",
+          "url": "https://friendlyfeud.fun",
+          "logo": "https://friendlyfeud.fun/favicon-512x512.png",
+          "email": "talhaahmadqureshi@gmail.com",
+          "sameAs": [
+            "https://discord.gg/vug29JzN",
+            "https://www.patreon.com/cw/talhaqureshi/membership"
+          ]
+        },
+        {
           "@type": "WebSite",
           "name": "Friendly Feud",
           "url": "https://friendlyfeud.fun",
+          "publisher": { "@id": "https://friendlyfeud.fun/#organization" },
           "description": "Play Family Feud online with friends for free — no account or download needed. Create a room, share the link, split into teams, and guess the top survey answers."
         },
         {

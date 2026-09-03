@@ -4,6 +4,8 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { Tv2, ArrowLeft, Users, Zap, Shield, Trophy, RotateCcw, Star, Clock, Target } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import { AdUnit } from "../components/AdSense";
+import { canonicalUrl } from "../lib/site";
+import { BLOG_POSTS } from "../content/blogPosts";
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -60,7 +62,7 @@ export default function Rules() {
       <SEO 
         title="How to Play" 
         description="Learn how to play Friendly Feud — a free online Family Feud-style survey game. Full rules covering Face-Off, Playing phase, Steal, scoring, and tips to win." 
-        canonical="https://friendlyfeud.fun/rules"
+        canonical={canonicalUrl("/rules")}
         schema={faqSchema}
       />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
@@ -264,6 +266,32 @@ export default function Rules() {
                 </details>
               ))}
             </div>
+          </section>
+
+          <section className="mt-10" aria-labelledby="further-reading-heading">
+            <h2 id="further-reading-heading" className="text-xl font-bold text-white mb-4">Go deeper</h2>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {BLOG_POSTS.filter((p) =>
+                ["family-feud-rules-explained", "how-to-win-family-feud-strategy", "how-to-host-a-virtual-family-feud-game-night"].includes(p.slug),
+              ).map((p) => (
+                <a
+                  key={p.slug}
+                  href={`/blog/${p.slug}`}
+                  onClick={(e) => { e.preventDefault(); playClickSound(); setLocation(`/blog/${p.slug}`); }}
+                  className="rounded-xl bg-white/[0.03] border border-white/10 hover:border-amber-500/30 p-4 flex flex-col transition-all"
+                >
+                  <span className="text-[10px] uppercase tracking-wider text-amber-400/80 font-semibold mb-1">{p.category}</span>
+                  <span className="text-sm font-semibold text-white leading-snug">{p.title}</span>
+                </a>
+              ))}
+            </div>
+            <p className="text-sm text-slate-400 mt-4">
+              Need material to play with? Browse{" "}
+              <a href="/questions" onClick={(e) => { e.preventDefault(); playClickSound(); setLocation("/questions"); }} className="text-amber-400 hover:text-amber-300 underline underline-offset-2">
+                free survey questions with point values
+              </a>
+              , including themed lists for Christmas, kids, work and more.
+            </p>
           </section>
 
           <div className="mt-12 text-center">

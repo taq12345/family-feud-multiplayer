@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { execSync } from "node:child_process";
-import { BLOG_SLUGS } from "./src/content/blogSlugs";
+import { BLOG_SLUGS, QUESTION_THEME_SLUGS } from "./src/content/blogSlugs";
 
 const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 5173;
@@ -16,6 +16,7 @@ const PRERENDER_ROUTES = [
   "/",
   "/rules",
   "/questions",
+  ...QUESTION_THEME_SLUGS.map((slug) => `/questions/${slug}`),
   "/about",
   "/blog",
   ...BLOG_SLUGS.map((slug) => `/blog/${slug}`),

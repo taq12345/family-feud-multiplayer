@@ -287,7 +287,7 @@ export default function Leaderboard() {
       <SEO
         title="Leaderboard"
         description="See the top Friendly Feud players ranked by games won, rounds won, correct guesses, steals, and total points."
-        canonical="https://friendlyfeud.fun/leaderboard"
+        canonical="https://friendlyfeud.fun/leaderboard/"
       />
 
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">

@@ -16,7 +16,7 @@ export default function Terms() {
       <SEO 
         title="Terms of Service" 
         description="Terms of Service and user agreement for playing Friendly Feud online." 
-        canonical="https://friendlyfeud.fun/terms"
+        canonical="https://friendlyfeud.fun/terms/"
       />
       <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />

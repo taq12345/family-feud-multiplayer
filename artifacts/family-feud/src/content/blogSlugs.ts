@@ -11,3 +11,16 @@ export const BLOG_SLUGS = [
 ] as const;
 
 export type BlogSlug = (typeof BLOG_SLUGS)[number];
+
+// Themed question-list pages under /questions/<slug>. Must match the themes
+// in scripts/generate-question-themes.mjs.
+export const QUESTION_THEME_SLUGS = [
+  "christmas",
+  "halloween",
+  "thanksgiving",
+  "for-kids",
+  "for-work",
+  "food",
+  "animals",
+  "couples",
+] as const;

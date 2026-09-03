@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import { AdUnit } from "../components/AdSense";
+import { canonicalUrl } from "../lib/site";
 
 const CONTACT_EMAIL = "talhaahmadqureshi@gmail.com";
 
@@ -27,12 +28,12 @@ export default function About() {
       <SEO
         title="About Friendly Feud"
         description="Learn about Friendly Feud, a free Family Feud-style multiplayer survey game: how it works, where the 8,700+ questions come from, how answers are judged, and who builds it."
-        canonical="https://friendlyfeud.fun/about"
+        canonical={canonicalUrl("/about")}
         schema={{
           "@context": "https://schema.org",
           "@type": "AboutPage",
           name: "About Friendly Feud",
-          url: "https://friendlyfeud.fun/about",
+          url: canonicalUrl("/about"),
           mainEntity: {
             "@type": "Organization",
             name: "Friendly Feud",

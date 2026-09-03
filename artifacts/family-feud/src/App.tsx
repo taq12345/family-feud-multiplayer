@@ -14,6 +14,7 @@ import { AdSenseLoader } from "./components/AdSense";
 const GameRoom = lazy(() => import("./pages/GameRoom"));
 const Rules = lazy(() => import("./pages/Rules"));
 const Questions = lazy(() => import("./pages/Questions"));
+const QuestionTheme = lazy(() => import("./pages/QuestionTheme"));
 const Feedback = lazy(() => import("./pages/Feedback"));
 const About = lazy(() => import("./pages/About"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -62,6 +63,7 @@ function Router() {
         <Route path="/" component={Lobby} />
         <Route path="/rules" component={Rules} />
         <Route path="/questions" component={Questions} />
+        <Route path="/questions/:theme" component={QuestionTheme} />
         <Route path="/about" component={About} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/:slug" component={BlogPost} />

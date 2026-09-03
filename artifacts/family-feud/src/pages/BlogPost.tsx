@@ -7,8 +7,7 @@ import { AdUnit } from "../components/AdSense";
 import { BLOG_AUTHOR, BLOG_POSTS, BLOG_POSTS_BY_SLUG, type PostBlock } from "../content/blogPosts";
 import { playClickSound } from "../lib/sounds";
 import NotFound from "./not-found";
-
-const SITE_URL = "https://friendlyfeud.fun";
+import { canonicalUrl, SITE_URL } from "../lib/site";
 
 // Inline markup: **bold** and [label](url). Internal URLs become router links.
 const INLINE_RE = /\*\*(.+?)\*\*|\[([^\]]+)\]\(([^)]+)\)/g;
@@ -103,12 +102,20 @@ export default function BlogPost() {
 
   if (!post) return <NotFound />;
 
-  const url = `${SITE_URL}/blog/${post.slug}`;
+  const url = canonicalUrl(`/blog/${post.slug}`);
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: "Guides", item: canonicalUrl("/blog") },
+          { "@type": "ListItem", position: 3, name: post.title, item: url },
+        ],
+      },
       {
         "@type": "Article",
         headline: post.title,
@@ -120,6 +127,7 @@ export default function BlogPost() {
         author: { "@type": "Person", name: BLOG_AUTHOR },
         publisher: {
           "@type": "Organization",
+          "@id": `${SITE_URL}/#organization`,
           name: "Friendly Feud",
           url: SITE_URL,
           logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon-512x512.png` },

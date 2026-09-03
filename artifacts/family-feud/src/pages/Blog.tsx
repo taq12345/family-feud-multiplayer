@@ -5,20 +5,19 @@ import { ContentPageLayout } from "../components/ContentPageLayout";
 import { AdUnit } from "../components/AdSense";
 import { BLOG_POSTS } from "../content/blogPosts";
 import { playClickSound } from "../lib/sounds";
-
-const SITE_URL = "https://friendlyfeud.fun";
+import { canonicalUrl, SITE_URL } from "../lib/site";
 
 const blogSchema = {
   "@context": "https://schema.org",
   "@type": "Blog",
   name: "Friendly Feud Guides",
-  url: `${SITE_URL}/blog`,
+  url: canonicalUrl("/blog"),
   description:
     "Guides for hosting and winning Family Feud-style survey games online: rules, strategy, team building, classroom use and writing your own questions.",
   blogPost: BLOG_POSTS.map((post) => ({
     "@type": "BlogPosting",
     headline: post.title,
-    url: `${SITE_URL}/blog/${post.slug}`,
+    url: canonicalUrl(`/blog/${post.slug}`),
     datePublished: post.published,
     description: post.description,
   })),
@@ -39,7 +38,7 @@ export default function Blog() {
       <SEO
         title="Family Feud Game Night Guides, Rules & Strategy"
         description="How-to guides for Family Feud-style survey games: hosting a virtual game night, the full rules, winning strategy, team building at work, classroom use, and writing your own survey questions."
-        canonical={`${SITE_URL}/blog`}
+        canonical={canonicalUrl("/blog")}
         schema={blogSchema}
       />
 
