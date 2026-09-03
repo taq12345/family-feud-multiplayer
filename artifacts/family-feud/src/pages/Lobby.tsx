@@ -1594,8 +1594,8 @@ export default function Lobby() {
       <footer className="relative z-10 border-t border-white/5 mt-8 py-5">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-slate-600">
-            © {new Date().getFullYear()} Friendly Feud · Made with ♥ by Oqasha
-            Akram
+            © {new Date().getFullYear()} Friendly Feud · Made with ♥ by Talha
+            Qureshi
           </p>
           <nav
             className="flex items-center gap-4 text-xs text-slate-600"
