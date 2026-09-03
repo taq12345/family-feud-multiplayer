@@ -1,0 +1,1 @@
+- [Preview port collisions](preview-port-collision.md) — artifact workflow restarts can leave an orphaned Vite process occupying the configured preview port.
