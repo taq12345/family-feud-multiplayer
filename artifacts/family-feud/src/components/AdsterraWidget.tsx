@@ -2,14 +2,16 @@ import { useRef, useEffect, useState } from "react";
 import { isMobileApp } from "@/lib/isMobileApp";
 
 // Adsterra placements, chosen from Jul–Aug 2026 results (revenue per 1,000
-// views): native $0.87, 728x90 $0.38, 160x600 $0.31, 320x50 $0.06. The old
-// in-game 300x250 units drew the most views but earned $0.04, so game rooms
-// stay ad-free — the site also promises players no ads during games.
+// views): native $0.87, 728x90 $0.38, 160x600 $0.31, 320x50 $0.06. Game rooms
+// stay ad-free — the site promises players no ads during games. On phones the
+// native widget stacks its four ads into a ~1,300px column, so phones get a
+// 300x250 in that slot instead.
 const NATIVE_KEY = "272c9d71cc235c9077a71bec4e2c70cb";
 const BANNERS = {
   leaderboard: { key: "206bfaf543b74bc7403ff3a609cd5874", width: 728, height: 90 },
   mobile: { key: "a27b4847f4b5d00d63623929539b2b8a", width: 320, height: 50 },
   skyscraper: { key: "782a09ea05e6e2301dae0976801a9334", width: 160, height: 600 },
+  rectangle: { key: "7c3d49327fa4bdf90f0f7710de941992", width: 300, height: 250 },
 } as const;
 type BannerConfig = (typeof BANNERS)[keyof typeof BANNERS];
 
@@ -69,7 +71,8 @@ body{width:100%;display:flex;justify-content:center;align-items:flex-start}
 }
 
 type AdsterraVariant =
-  /** Native widget. One per page: Adsterra fills a fixed container id. */
+  /** Native widget on desktop, 300x250 on phones. One per page: Adsterra
+   *  fills the native into a fixed container id. */
   | "native"
   /** 728x90 on desktop, 320x50 on phones. */
   | "banner"
@@ -89,14 +92,17 @@ export default function AdsterraWidget({ variant = "native" }: { variant?: Adste
     return () => window.removeEventListener("resize", update);
   }, []);
 
+  const isPhone = viewportWidth <= MOBILE_MAX_VIEWPORT;
   const banner: BannerConfig | null =
     variant === "rail"
       ? BANNERS.skyscraper
       : variant === "banner"
-        ? viewportWidth <= MOBILE_MAX_VIEWPORT
+        ? isPhone
           ? BANNERS.mobile
           : BANNERS.leaderboard
-        : null;
+        : isPhone
+          ? BANNERS.rectangle
+          : null;
   const initialHeight = banner ? banner.height : 120;
   const [height, setHeight] = useState(initialHeight);
   const adHtml = banner ? buildBannerHtml(banner) : NATIVE_HTML;
