@@ -5,6 +5,7 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { ArrowLeft, Tv2, ChevronDown, ChevronUp, Sparkles, Shuffle } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import { AdUnit } from "../components/AdSense";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { canonicalUrl } from "../lib/site";
 import { QUESTION_THEMES } from "../content/questionThemes";
 
@@ -332,6 +333,9 @@ export default function Questions() {
           </header>
 
           <AdUnit slot="articleTop" className="mb-8" />
+          <div className="mb-8">
+            <AdsterraWidget />
+          </div>
 
           {/* Themed lists — separate indexable pages generated from the full bank */}
           <section className="mb-8" aria-labelledby="themes-heading">

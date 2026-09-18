@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
 import { ArrowLeft, Send, CheckCircle, MessageSquare } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -88,6 +89,10 @@ export default function Feedback() {
             </a>
             . Messages are read by the developer and usually answered within a few days.
           </p>
+        </div>
+
+        <div className="mb-8">
+          <AdsterraWidget />
         </div>
 
         {success ? (

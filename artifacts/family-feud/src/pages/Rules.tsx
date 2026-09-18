@@ -4,6 +4,7 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { Tv2, ArrowLeft, Users, Zap, Shield, Trophy, RotateCcw, Star, Clock, Target } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 import { AdUnit } from "../components/AdSense";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { canonicalUrl } from "../lib/site";
 import { BLOG_POSTS } from "../content/blogPosts";
 
@@ -102,6 +103,9 @@ export default function Rules() {
           </header>
 
           <AdUnit slot="articleTop" className="mb-10" />
+          <div className="mb-10">
+            <AdsterraWidget />
+          </div>
 
           <section className="mb-10" aria-labelledby="overview-heading">
             <h2 id="overview-heading" className="text-xl font-bold text-white mb-4 flex items-center gap-2">

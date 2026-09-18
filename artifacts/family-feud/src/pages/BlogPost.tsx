@@ -4,6 +4,7 @@ import { Clock, Lightbulb, ArrowRight, Tv2 } from "lucide-react";
 import { SEO } from "../components/SEO";
 import { ContentPageLayout } from "../components/ContentPageLayout";
 import { AdUnit } from "../components/AdSense";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { BLOG_AUTHOR, BLOG_POSTS, BLOG_POSTS_BY_SLUG, type PostBlock } from "../content/blogPosts";
 import { playClickSound } from "../lib/sounds";
 import NotFound from "./not-found";
@@ -193,6 +194,9 @@ export default function BlogPost() {
         </header>
 
         <AdUnit slot="articleTop" className="mb-8" />
+        <div className="mb-8">
+          <AdsterraWidget />
+        </div>
 
         <div>
           {post.blocks.slice(0, splitAt).map((block, i) => (

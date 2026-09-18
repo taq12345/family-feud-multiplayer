@@ -4,6 +4,7 @@ import { Tv2, Lightbulb, ArrowRight } from "lucide-react";
 import { SEO } from "../components/SEO";
 import { ContentPageLayout } from "../components/ContentPageLayout";
 import { AdUnit } from "../components/AdSense";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { QUESTION_THEMES, QUESTION_THEMES_BY_SLUG } from "../content/questionThemes";
 import { canonicalUrl, SITE_URL } from "../lib/site";
 import { playClickSound } from "../lib/sounds";
@@ -82,6 +83,9 @@ export default function QuestionTheme() {
         </header>
 
         <AdUnit slot="articleTop" className="mb-8" />
+        <div className="mb-8">
+          <AdsterraWidget />
+        </div>
 
         <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 p-5 text-center">
           <p className="text-slate-300 text-sm mb-3">

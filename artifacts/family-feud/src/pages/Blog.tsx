@@ -3,6 +3,7 @@ import { Clock, ArrowRight, Tv2 } from "lucide-react";
 import { SEO } from "../components/SEO";
 import { ContentPageLayout } from "../components/ContentPageLayout";
 import { AdUnit } from "../components/AdSense";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { BLOG_POSTS } from "../content/blogPosts";
 import { playClickSound } from "../lib/sounds";
 import { canonicalUrl, SITE_URL } from "../lib/site";
@@ -53,6 +54,9 @@ export default function Blog() {
       </header>
 
       <AdUnit slot="articleTop" className="mb-10" />
+      <div className="mb-10">
+        <AdsterraWidget />
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {BLOG_POSTS.map((post) => (

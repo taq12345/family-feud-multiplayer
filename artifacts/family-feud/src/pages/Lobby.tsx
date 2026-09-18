@@ -46,6 +46,7 @@ import {
 import { createSoloGame } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { AdUnit } from "../components/AdSense";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { HomeContent, homeFaqSchema } from "../components/HomeContent";
 import { AuthHeaderButton } from "../components/AuthGate";
 import { useUser } from "@clerk/react";
@@ -1055,8 +1056,21 @@ export default function Lobby() {
         </div>
       </header>
 
+      {/* 160x600 rails beside the page column; they only render on very
+          wide screens, so they never overlap the lobby. */}
+      <aside className="fixed left-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+        <AdsterraWidget variant="rail" />
+      </aside>
+      <aside className="fixed right-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+        <AdsterraWidget variant="rail" />
+      </aside>
+
       {/* Main content */}
       <main className="relative z-10 max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
+        <div className="max-w-4xl mx-auto mb-6">
+          <AdsterraWidget variant="banner" />
+        </div>
+
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <a
             href="https://www.patreon.com/cw/talhaqureshi/membership"
@@ -1584,6 +1598,10 @@ export default function Lobby() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <div className="max-w-4xl mx-auto px-4 mt-2 sm:mt-12 mb-4">
+        <AdsterraWidget variant="banner" />
+      </div>
 
       {/* Editorial content below the room list: what the game is, how to
           play, FAQ, question lists and guides. The only home-page ad sits

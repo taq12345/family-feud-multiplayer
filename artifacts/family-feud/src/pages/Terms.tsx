@@ -4,7 +4,7 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { ArrowLeft, ScrollText } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
-const LAST_UPDATED = "September 3, 2026";
+const LAST_UPDATED = "September 18, 2026";
 const CONTACT_EMAIL = "talhaahmadqureshi@gmail.com";
 const SITE_URL = "https://friendlyfeud.fun";
 
@@ -146,7 +146,7 @@ export default function Terms() {
               title: "7. Advertising",
               content: (
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                  The informational pages of the Service (such as the home page, guides, rules and question library) display advertisements served by Google AdSense. No advertisements are shown inside game rooms. Google may use cookies and similar technologies to show you relevant ads based on your browsing activity, subject to your consent where required by law. We do not control the content of these ads. Please refer to our <Link href="/privacy" onClick={() => playClickSound()} className="text-amber-400 hover:underline">Privacy Policy</Link> for more details on how advertising data is handled.
+                  Pages of the Service outside game rooms (such as the home page, guides, rules, question library, leaderboard and feedback page) display advertisements served by Google AdSense and Adsterra. No advertisements are shown inside game rooms. These networks may use cookies and similar technologies to show you relevant ads based on your browsing activity, subject to your consent where required by law. We do not control the content of these ads. Please refer to our <Link href="/privacy" onClick={() => playClickSound()} className="text-amber-400 hover:underline">Privacy Policy</Link> for more details on how advertising data is handled.
                 </p>
               ),
             },
