@@ -23,7 +23,7 @@ const NATIVE_HTML = `<!DOCTYPE html>
 <style>*{margin:0;padding:0}body{background:transparent}</style>
 </head>
 <body>
-<script async data-cfasync="false" src="https://pl29266201.profitablecpmratenetwork.com/${NATIVE_KEY}/invoke.js"><\/script>
+<script async data-cfasync="false" src="https://pl29266201.profitableratecpmnetwork.com/${NATIVE_KEY}/invoke.js"><\/script>
 <div id="container-${NATIVE_KEY}"></div>
 </body>
 </html>`;
@@ -50,7 +50,7 @@ body{width:100%;display:flex;justify-content:center;align-items:flex-start}
     scaleEl.style.height = CONFIG.height + "px";
     window.atOptions = { key: CONFIG.key, format: "iframe", height: CONFIG.height, width: CONFIG.width, params: {} };
     var s = document.createElement("script");
-    s.src = "https://www.highperformanceformat.com/" + CONFIG.key + "/invoke.js";
+    s.src = "https://www.highrevenueformat.com/" + CONFIG.key + "/invoke.js";
     scaleEl.appendChild(s);
 
     // Shrink the banner to fit narrow containers instead of overflowing.
