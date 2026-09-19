@@ -204,8 +204,9 @@ export default function About() {
                 to the person who can fix it.
               </p>
               <p>
-                The site is free to play and is supported by advertising on its informational pages (never
-                inside game rooms) and by optional contributions from players on{" "}
+                The site is free to play and is supported by advertising (inside game rooms, only at natural
+                breaks such as between rounds, never while you answer) and by optional contributions
+                from players on{" "}
                 <a
                   href="https://www.patreon.com/cw/talhaqureshi/membership"
                   target="_blank"

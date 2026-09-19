@@ -2,10 +2,10 @@ import { useRef, useEffect, useState } from "react";
 import { isMobileApp } from "@/lib/isMobileApp";
 
 // Adsterra placements, chosen from Jul–Aug 2026 results (revenue per 1,000
-// views): native $0.87, 728x90 $0.38, 160x600 $0.31, 320x50 $0.06. Game rooms
-// stay ad-free — the site promises players no ads during games. On phones the
-// native widget stacks its four ads into a ~1,300px column, so phones get a
-// 300x250 in that slot instead.
+// views): native $0.87, 728x90 $0.38, 160x600 $0.31, 320x50 $0.06. On phones
+// the native widget stacks its four ads into a ~1,300px column, so phones get
+// a 300x250 in that slot instead. Game rooms only show ads at natural breaks
+// (waiting screen, between rounds, game over) and in wide-screen side rails.
 const NATIVE_KEY = "272c9d71cc235c9077a71bec4e2c70cb";
 const BANNERS = {
   leaderboard: { key: "206bfaf543b74bc7403ff3a609cd5874", width: 728, height: 90 },
@@ -18,6 +18,8 @@ type BannerConfig = (typeof BANNERS)[keyof typeof BANNERS];
 // Rails only fit beside the page column on very wide screens (Tailwind 2xl).
 const RAIL_MIN_VIEWPORT = 1536;
 const MOBILE_MAX_VIEWPORT = 768;
+// Start loading slightly before the slot scrolls into view.
+const LOAD_MARGIN = "200px 0px";
 
 const NATIVE_HTML = `<!DOCTYPE html>
 <html>
@@ -79,11 +81,24 @@ type AdsterraVariant =
   /** 160x600 side rail, rendered only on very wide screens. */
   | "rail";
 
-export default function AdsterraWidget({ variant = "native" }: { variant?: AdsterraVariant }) {
+export default function AdsterraWidget({
+  variant = "native",
+  hideOnPhone = false,
+  label = false,
+}: {
+  variant?: AdsterraVariant;
+  /** Render nothing on phone-width screens. */
+  hideOnPhone?: boolean;
+  /** Show a small "Advertisement" caption, so the ad reads as separate from
+   *  the game UI around it. */
+  label?: boolean;
+}) {
+  const slotRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [viewportWidth, setViewportWidth] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth : Number.POSITIVE_INFINITY,
   );
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const update = () => setViewportWidth(window.innerWidth);
@@ -107,9 +122,42 @@ export default function AdsterraWidget({ variant = "native" }: { variant?: Adste
   const [height, setHeight] = useState(initialHeight);
   const adHtml = banner ? buildBannerHtml(banner) : NATIVE_HTML;
 
+  // No ads inside the Android wrapper (Play Store policy) or in build-time
+  // prerender snapshots (the live page would load every ad twice).
+  const suppressed =
+    isMobileApp ||
+    (typeof window !== "undefined" && !!window.__PRERENDER_INJECTED) ||
+    (variant === "rail" && viewportWidth < RAIL_MIN_VIEWPORT) ||
+    (hideOnPhone && isPhone);
+
+  // Load the ad only once its slot is actually on screen. Slots inside hidden
+  // or clipped containers never intersect, so they never count an impression
+  // nobody could see.
+  useEffect(() => {
+    if (suppressed || inView) return;
+    const el = slotRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: LOAD_MARGIN },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [suppressed, inView]);
+
   // The native widget's height depends on the creative, so follow it.
   useEffect(() => {
     setHeight(initialHeight);
+    if (!inView) return;
     const iframe = iframeRef.current;
     if (!iframe) return;
     const resize = () => {
@@ -126,22 +174,32 @@ export default function AdsterraWidget({ variant = "native" }: { variant?: Adste
       iframe.removeEventListener("load", resize);
       clearInterval(interval);
     };
-  }, [initialHeight, adHtml]);
+  }, [initialHeight, adHtml, inView]);
 
-  // No ads inside the Android wrapper (Play Store policy) or in build-time
-  // prerender snapshots (the live page would load every ad twice).
-  if (isMobileApp) return null;
-  if (typeof window !== "undefined" && window.__PRERENDER_INJECTED) return null;
-  if (variant === "rail" && viewportWidth < RAIL_MIN_VIEWPORT) return null;
+  if (suppressed) return null;
 
+  const slot = (
+    <div ref={slotRef} style={inView ? undefined : { minHeight: initialHeight }}>
+      {inView && (
+        <iframe
+          ref={iframeRef}
+          srcDoc={adHtml}
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          scrolling="no"
+          style={{ width: "100%", height, border: "none", display: "block", overflow: "hidden" }}
+          title="Advertisement"
+        />
+      )}
+    </div>
+  );
+
+  if (!label) return slot;
   return (
-    <iframe
-      ref={iframeRef}
-      srcDoc={adHtml}
-      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-      scrolling="no"
-      style={{ width: "100%", height, border: "none", display: "block", overflow: "hidden" }}
-      title="Advertisement"
-    />
+    <div>
+      <p className="text-center text-[10px] font-medium uppercase tracking-wider text-slate-600 mb-1">
+        Advertisement
+      </p>
+      {slot}
+    </div>
   );
 }

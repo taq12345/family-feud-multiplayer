@@ -1,4 +1,5 @@
 import { SEO } from "../components/SEO";
+import AdsterraWidget from "../components/AdsterraWidget";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
 import { useGameSocket, createSoloGame, GameStateData, ChatMsg, CanonicalAnswerSlot } from "../hooks/useGameSocket";
@@ -1005,9 +1006,35 @@ export default function GameRoom() {
         </div>
       )}
 
-      {/* No ads anywhere in the game room: AdSense forbids ads on screens
-          without publisher content (gameplay, waiting rooms, chat). */}
-      <div className={`flex min-h-0 ${isSolo ? "flex-none" : "flex-1 overflow-hidden"} relative z-10`}>
+      {/* Room ads are Adsterra only — Google's AdSense script never loads in
+          game rooms. They sit in wide-screen side rails, above the solo board
+          on desktop, and at natural breaks (waiting screen, between rounds,
+          game over); never beside the answer box or chat. */}
+      {isSolo && (
+        <>
+          <aside className="fixed left-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+            <AdsterraWidget variant="rail" />
+          </aside>
+          <aside className="fixed right-4 top-32 z-20 hidden 2xl:block w-[160px]" aria-label="Advertisement">
+            <AdsterraWidget variant="rail" />
+          </aside>
+          <div className="relative z-10 w-full px-2 pt-1 md:px-3 md:pt-2 2xl:px-[192px]">
+            <div className="max-w-2xl mx-auto">
+              <AdsterraWidget variant="banner" hideOnPhone label />
+            </div>
+          </div>
+        </>
+      )}
+
+      <div className={`flex min-h-0 ${isSolo ? "flex-none 2xl:px-[192px]" : "flex-1 overflow-hidden"} relative z-10`}>
+        {!isSolo && (
+          <aside className="hidden 2xl:flex w-[184px] shrink-0 items-start justify-center border-r border-white/5 bg-black/20 px-3 py-3" aria-label="Advertisement">
+            <div className="w-[160px]">
+              <AdsterraWidget variant="rail" />
+            </div>
+          </aside>
+        )}
+
         {/* Main game area */}
         <div className={`flex-1 flex flex-col p-2 md:p-3 gap-2 ${isSolo ? "" : "overflow-hidden"} ${mobileTab === "chat" ? "hidden md:flex" : "flex"}`}>
 
@@ -1155,6 +1182,13 @@ export default function GameRoom() {
                     </Button>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Ad at the pre-game pause, spaced away from the start buttons. */}
+            {gameState.status === "waiting" && !isSolo && (
+              <div className="pt-3">
+                <AdsterraWidget variant="banner" label />
               </div>
             )}
 
@@ -1462,6 +1496,16 @@ export default function GameRoom() {
                 </div>
               );
             })()}
+
+            {/* Ad at the between-rounds pause (it remounts each round, so no
+                forced refresh). Solo already has a banner above the board, so
+                it only gets this one at game over. */}
+            {gameState.status === "between_rounds" &&
+              (!isSolo || gameState.currentRound >= gameState.totalRounds) && (
+              <div className="pt-3">
+                <AdsterraWidget variant="banner" label />
+              </div>
+            )}
 
           </div>
 

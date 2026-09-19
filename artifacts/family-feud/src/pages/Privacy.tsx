@@ -4,7 +4,7 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { ArrowLeft, Shield } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
-const LAST_UPDATED = "September 18, 2026";
+const LAST_UPDATED = "September 19, 2026";
 const CONTACT_EMAIL = "talhaahmadqureshi@gmail.com";
 const SITE_URL = "https://friendlyfeud.fun";
 
@@ -113,7 +113,7 @@ export default function Privacy() {
                   <li>To provide optional accounts, reserve nicknames and display the leaderboard.</li>
                   <li>To respond to feedback, bug reports and support requests.</li>
                   <li>To understand how the site is used and improve it (analytics).</li>
-                  <li>To display advertising through Google AdSense and Adsterra on pages outside game rooms (see Section 4). We never show ads inside game rooms.</li>
+                  <li>To display advertising through Google AdSense and Adsterra (see Section 4). Inside game rooms, ads appear only at natural breaks (before a game, between rounds and at the end), never beside the answer box or the chat.</li>
                   <li>To detect and prevent abuse, cheating or misuse of the service.</li>
                 </ul>
               ),
@@ -133,7 +133,7 @@ export default function Privacy() {
                       },
                       {
                         name: "Adsterra",
-                        desc: "Displays banner and native advertisements on the home page and other pages outside game rooms. Adsterra and the advertisers it works with may use cookies, device identifiers and your IP address to serve ads, limit how often you see them, measure performance and prevent fraud.",
+                        desc: "Displays banner and native advertisements on the home page and content pages, and in game rooms at natural breaks (before a game, between rounds and at the end). Adsterra and the advertisers it works with may use cookies, device identifiers and your IP address to serve ads, limit how often you see them, measure performance and prevent fraud.",
                         link: "https://adsterra.com/privacy-policy/",
                       },
                       {

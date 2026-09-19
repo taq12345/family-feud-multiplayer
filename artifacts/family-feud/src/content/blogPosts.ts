@@ -424,7 +424,7 @@ export const BLOG_POSTS: BlogPost[] = [
     faq: [
       {
         q: "Is there a cost for using it at work?",
-        a: "No. Friendly Feud is free and has no premium tier. The site is supported by advertising on its content pages; there are no ads inside game rooms.",
+        a: "No. Friendly Feud is free and has no premium tier. The site is supported by advertising. Inside game rooms, ads only appear at natural breaks (before a game, between rounds and at the end), never while someone is answering.",
       },
       {
         q: "Can we play with more than ten people?",
@@ -524,7 +524,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "p",
         text:
-          "No student needs an account. Nicknames live in the browser and on the server only for the duration of the game session, after which they are removed. Full details are in the [privacy policy](/privacy). Ads never appear inside game rooms, only on informational pages like this one.",
+          "No student needs an account. Nicknames live in the browser and on the server only for the duration of the game session, after which they are removed. Full details are in the [privacy policy](/privacy). Inside game rooms, ads only appear at natural breaks (before a game, between rounds and at the end), never while students are answering.",
       },
     ],
   },
