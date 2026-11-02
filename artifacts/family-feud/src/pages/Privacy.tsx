@@ -4,7 +4,7 @@ import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFe
 import { ArrowLeft, Shield } from "lucide-react";
 import { playClickSound } from "../lib/sounds";
 
-const LAST_UPDATED = "September 19, 2026";
+const LAST_UPDATED = "November 2, 2026";
 const CONTACT_EMAIL = "talhaahmadqureshi@gmail.com";
 const SITE_URL = "https://friendlyfeud.fun";
 
@@ -113,7 +113,7 @@ export default function Privacy() {
                   <li>To provide optional accounts, reserve nicknames and display the leaderboard.</li>
                   <li>To respond to feedback, bug reports and support requests.</li>
                   <li>To understand how the site is used and improve it (analytics).</li>
-                  <li>To display advertising through Google AdSense and Adsterra (see Section 4). Inside game rooms, ads appear only at natural breaks (before a game, between rounds and at the end), never beside the answer box or the chat.</li>
+                  <li>To display advertising through Google AdSense on our content pages (see Section 4). No ads are shown inside game rooms.</li>
                   <li>To detect and prevent abuse, cheating or misuse of the service.</li>
                 </ul>
               ),
@@ -128,13 +128,8 @@ export default function Privacy() {
                     {[
                       {
                         name: "Google AdSense",
-                        desc: "Displays advertisements on our content pages (home, guides, rules and questions). Google and its partners use cookies and device identifiers to serve ads and to measure them; where you have consented, ads may be personalised based on your visits to this and other sites. You can opt out of personalised advertising at Google's Ads Settings or via www.aboutads.info. Visitors in the EEA, UK and Switzerland are shown a consent message before any personalised ads are served, and can change their choice at any time.",
+                        desc: "May display advertisements on our content pages (home, guides, rules and questions). Google and its partners use cookies and device identifiers to serve ads and to measure them; where you have consented, ads may be personalised based on your visits to this and other sites. You can opt out of personalised advertising at Google's Ads Settings or via www.aboutads.info. Visitors in the EEA, UK and Switzerland are shown a consent message before any personalised ads are served, and can change their choice at any time.",
                         link: "https://policies.google.com/technologies/ads",
-                      },
-                      {
-                        name: "Adsterra",
-                        desc: "Displays banner and native advertisements on the home page and content pages, and in game rooms at natural breaks (before a game, between rounds and at the end). Adsterra and the advertisers it works with may use cookies, device identifiers and your IP address to serve ads, limit how often you see them, measure performance and prevent fraud.",
-                        link: "https://adsterra.com/privacy-policy/",
                       },
                       {
                         name: "Google Analytics",
@@ -182,7 +177,7 @@ export default function Privacy() {
                     <li><strong className="text-slate-200">Accounts and statistics:</strong> Kept until you ask us to delete your account. Deleting your account removes your stored profile and statistics.</li>
                     <li><strong className="text-slate-200">Feedback submissions:</strong> Retained as long as necessary to address the issue, then deleted.</li>
                     <li><strong className="text-slate-200">Local storage:</strong> Your nickname preference stays in your own browser until you clear it.</li>
-                    <li><strong className="text-slate-200">Analytics and advertising data:</strong> Governed by the retention policies of Google and Adsterra (typically 14–26 months for Google Analytics).</li>
+                    <li><strong className="text-slate-200">Analytics and advertising data:</strong> Governed by the retention policies of Google (typically 14–26 months for Google Analytics).</li>
                   </ul>
                 </div>
               ),
