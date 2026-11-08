@@ -160,10 +160,9 @@ Reply ONLY with a JSON object of this exact shape, no extra text:
     try {
       const response = await Promise.race([
         openai.chat.completions.create({
-          model: "gpt-4o",
+          model: "gpt-6-luna",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: Math.min(2500, 350 * count + 200),
-          temperature: 1.3,
+          max_completion_tokens: 8192,
           response_format: { type: "json_object" },
         }),
         timeoutPromise,
