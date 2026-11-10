@@ -225,13 +225,15 @@ function stemmedMatch(normSubmitted: string, normCanonical: string): boolean {
  * cutting input tokens dramatically when a question has many unrevealed answers.
  *
  * Returns the position (in the `candidates` array passed in) of the lowest-index
- * matching candidate, or -1 if none match.
+ * matching candidate, -1 if the AI explicitly said none match, or `null` if
+ * there was no ruling at all (the call failed, timed out, or the reply could
+ * not be read). Callers must not cache a `null` as a rejection.
  */
 async function aiSemanticMatchBatch(
   submitted: string,
   candidates: string[],
   question: string,
-): Promise<number> {
+): Promise<number | null> {
   const AI_TIMEOUT_MS = 6000;
   if (candidates.length === 0) return -1;
 
@@ -260,13 +262,15 @@ async function aiSemanticMatchBatch(
     const response = await Promise.race([aiCall, timeout]);
     const text = response.choices[0]?.message?.content?.trim() ?? "";
     const numMatch = text.match(/-?\d+/);
-    if (!numMatch) return -1;
-    const num = parseInt(numMatch[0], 10);
-    if (!Number.isInteger(num) || num < 0 || num >= candidates.length) return -1;
-    return num;
+    const num = numMatch ? parseInt(numMatch[0], 10) : NaN;
+    if (num === -1) return -1; // explicit "none match"
+    if (Number.isInteger(num) && num >= 0 && num < candidates.length) return num;
+    // Empty reply, no number, or an index that is not on the list: not a ruling.
+    console.error(`[answerMatcher] AI batch reply was not a valid index: ${JSON.stringify(text)}`);
+    return null;
   } catch (err) {
     console.error("[answerMatcher] AI batch call failed or timed out:", err);
-    return -1;
+    return null;
   }
 }
 
@@ -373,6 +377,13 @@ export async function findMatchIndex(
     flatCandidates.map(c => c.canonical),
     question,
   );
+
+  if (matchedFlatIdx === null) {
+    // No ruling (failure, timeout or unreadable reply). The answer counts as
+    // wrong this time, but nothing is cached, so the same answer is judged
+    // again on the next attempt instead of being refused from memory.
+    return -1;
+  }
 
   if (matchedFlatIdx === -1) {
     // AI explicitly rejected ALL candidates — safe to cache every one as false.
