@@ -267,8 +267,8 @@ export function HomeContent() {
         Free Survey Questions by Theme
       </h2>
       <p className="text-sm text-slate-400 mb-4">
-        Need material for your own game night? Every list below is pulled from the same
-        8,700-question bank the game uses, with real point values for each answer.
+        Need material for your own game night? We wrote each list below for a specific occasion:
+        twelve boards with ranked answers, suggested points and a note for the host.
       </p>
       <ul className="grid gap-2 sm:grid-cols-2">
         {QUESTION_THEMES.map((t) => (

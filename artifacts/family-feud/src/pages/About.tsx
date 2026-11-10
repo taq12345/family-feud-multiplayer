@@ -136,10 +136,10 @@ export default function About() {
               <p>
                 The classic mode draws from a curated bank of more than 8,700 survey-style questions,
                 each with a ranked answer board and point values in the style of the television format.
-                Questions are cleaned and de-duplicated before they enter the bank, and a sample of them
-                is published on the{" "}
+                Questions are cleaned and de-duplicated before they enter the bank. Separately, the{" "}
                 <Link href="/questions" onClick={() => playClickSound()} className="text-amber-400 hover:underline">Survey Questions</Link>{" "}
-                page for anyone to use at their own game night.
+                page publishes themed lists that we wrote ourselves, with suggested points, for anyone to
+                use at their own game night.
               </p>
               <p>
                 The <strong className="text-white">Custom Questions</strong> option (currently in beta) generates a fresh survey board on

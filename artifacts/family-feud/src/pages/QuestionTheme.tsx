@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { Link, useParams } from "wouter";
 import { Tv2, Lightbulb, ArrowRight } from "lucide-react";
 import { SEO } from "../components/SEO";
 import { ContentPageLayout } from "../components/ContentPageLayout";
 import { AdUnit } from "../components/AdSense";
+import { QuestionBoard, SUGGESTED_POINTS_NOTE } from "../components/QuestionBoard";
 import { QUESTION_THEMES, QUESTION_THEMES_BY_SLUG } from "../content/questionThemes";
 import { canonicalUrl, SITE_URL } from "../lib/site";
 import { playClickSound } from "../lib/sounds";
@@ -12,7 +12,6 @@ import NotFound from "./not-found";
 export default function QuestionTheme() {
   const { theme: slug } = useParams<{ theme: string }>();
   const theme = slug ? QUESTION_THEMES_BY_SLUG[slug] : undefined;
-  const [revealed, setRevealed] = useState<Set<number>>(new Set());
 
   if (!theme) return <NotFound />;
 
@@ -30,28 +29,7 @@ export default function QuestionTheme() {
           { "@type": "ListItem", position: 3, name: theme.name, item: url },
         ],
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: theme.questions.slice(0, 25).map((q) => ({
-          "@type": "Question",
-          name: q.q,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `Top survey answers: ${q.a.map((a) => `${a.text} (${a.pts} pts)`).join(", ")}`,
-          },
-        })),
-      },
     ],
-  };
-
-  const toggle = (i: number) => {
-    playClickSound();
-    setRevealed((prev) => {
-      const next = new Set(prev);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
-      return next;
-    });
   };
 
   return (
@@ -76,8 +54,8 @@ export default function QuestionTheme() {
             ))}
           </div>
           <p className="mt-4 text-xs text-slate-500">
-            {theme.questions.length} questions · every answer shows its survey point value · free to use for
-            your own game night
+            {theme.questions.length} original questions · suggested points on every answer · free to use
+            for your own game night
           </p>
         </header>
 
@@ -85,8 +63,8 @@ export default function QuestionTheme() {
 
         <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 p-5 text-center">
           <p className="text-slate-300 text-sm mb-3">
-            Want the game to run itself? Create a free room and play these boards with friends — timer,
-            strikes, steals and scoring included.
+            Want the game to run itself? Create a free room and play online with friends. The timer,
+            strikes, steals and scoring are handled for you.
           </p>
           <Link
             href="/"
@@ -102,39 +80,34 @@ export default function QuestionTheme() {
           <h2 id="questions-heading" className="text-xl font-bold text-white mb-4">
             {theme.name} survey questions
           </h2>
+          <p className="text-sm text-slate-400 mb-4">{SUGGESTED_POINTS_NOTE}</p>
           <ol className="rounded-2xl bg-white/[0.03] border border-white/10 divide-y divide-white/5 overflow-hidden">
-            {theme.questions.map((item, i) => {
-              const isOpen = revealed.has(i);
-              return (
-                <li key={item.q} className="px-5 py-4">
-                  <button onClick={() => toggle(i)} className="w-full text-left group">
-                    <h3 className="font-semibold text-sm sm:text-base text-slate-200 group-hover:text-amber-300 transition-colors">
-                      <span className="text-amber-500/70 mr-2">{i + 1}.</span>
-                      {item.q}
-                    </h3>
-                    <p className="text-xs text-amber-500/70 mt-1">
-                      {isOpen ? "Hide answers ▴" : `Reveal ${item.a.length} answers ▾`}
-                    </p>
-                  </button>
-                  {isOpen && (
-                    <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {item.a.map((ans, aIdx) => (
-                        <div
-                          key={aIdx}
-                          className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm flex items-center justify-between gap-2"
-                        >
-                          <span>
-                            <span className="text-amber-400 font-bold mr-2">{aIdx + 1}.</span>
-                            <span className="text-slate-300 capitalize">{ans.text}</span>
-                          </span>
-                          <span className="text-amber-400/80 font-mono text-xs font-bold whitespace-nowrap">{ans.pts} pts</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </li>
-              );
-            })}
+            {theme.questions.map((item, i) => (
+              <li key={item.q}>
+                <QuestionBoard item={item} number={i + 1} />
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="mt-10" aria-labelledby="offline-heading">
+          <h2 id="offline-heading" className="text-xl font-bold text-white mb-4">
+            How to play these boards without a screen
+          </h2>
+          <ol className="space-y-2 pl-5 list-decimal marker:text-amber-400 marker:font-bold text-slate-300 text-sm sm:text-base leading-relaxed">
+            <li>Split into two teams and pick a host, who keeps this page to themselves.</li>
+            <li>
+              The host reads a question. One player from each team answers; whoever names the higher-scoring
+              answer wins control of the board for their team.
+            </li>
+            <li>
+              That team takes turns guessing. Each answer on the board scores its points, and each miss is a
+              strike.
+            </li>
+            <li>
+              After three strikes the other team gets one guess to steal every point scored in the round. Most
+              points after four boards wins.
+            </li>
           </ol>
         </section>
 
@@ -186,8 +159,9 @@ export default function QuestionTheme() {
         </section>
 
         <p className="mt-10 text-[10px] text-slate-700 text-center leading-relaxed">
-          These survey questions are sourced from an open-source database and are free to use. "Family Feud"
-          is a registered trademark of Fremantle. Friendly Feud is an independent fan project and is not
+          The questions, answers and host notes on this page were written by Friendly Feud and are free to
+          use at your own game night. Point values are suggestions, not survey results. "Family Feud" is a
+          registered trademark of Fremantle. Friendly Feud is an independent fan project and is not
           affiliated with or endorsed by Fremantle or any related entity.
         </p>
       </article>
