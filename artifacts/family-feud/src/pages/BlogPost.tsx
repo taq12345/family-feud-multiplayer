@@ -77,6 +77,69 @@ function Block({ block }: { block: PostBlock }) {
           ))}
         </ol>
       );
+    case "table":
+      return (
+        <figure className="my-6">
+          <div className="overflow-x-auto rounded-xl border border-white/10">
+            <table className="w-full text-sm text-left">
+              {block.caption && <caption className="sr-only">{block.caption}</caption>}
+              <thead className="bg-white/[0.05] text-slate-200">
+                <tr>
+                  {block.head.map((cell) => (
+                    <th key={cell} scope="col" className="px-4 py-2.5 font-semibold whitespace-nowrap">
+                      {cell}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 text-slate-300">
+                {block.rows.map((row, r) => (
+                  <tr key={r}>
+                    {row.map((cell, c) => (
+                      <td key={c} className="px-4 py-2.5">
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {block.caption && (
+            <figcaption className="mt-2 text-xs text-slate-500" aria-hidden="true">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    case "bars": {
+      const max = block.max ?? Math.max(...block.items.map((item) => item.value));
+      // Same number of decimals on every row so the printed values line up.
+      const digits = block.items.some((item) => !Number.isInteger(item.value)) ? 1 : 0;
+      return (
+        <figure className="my-6 rounded-2xl bg-white/[0.03] border border-white/10 p-4 sm:p-5">
+          <figcaption className="text-sm font-semibold text-slate-200 mb-4">{block.caption}</figcaption>
+          <ul className="space-y-2.5">
+            {block.items.map((item) => (
+              <li key={item.label} className="grid grid-cols-[6.5rem_1fr_4rem] sm:grid-cols-[8rem_1fr_4.5rem] items-center gap-3 text-sm">
+                <span className="text-slate-300">{item.label}</span>
+                <span className="h-2.5 rounded-full bg-white/[0.06] overflow-hidden" aria-hidden="true">
+                  <span
+                    className="block h-full rounded-r-[4px] bg-amber-400"
+                    style={{ width: `${Math.max(1, (item.value / max) * 100)}%` }}
+                  />
+                </span>
+                <span className="text-right font-mono text-xs text-slate-200 tabular-nums">
+                  {item.value.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits })}
+                  {block.unit}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {block.note && <p className="mt-3 text-xs text-slate-500">{block.note}</p>}
+        </figure>
+      );
+    }
     case "tip":
       return (
         <aside className="my-6 rounded-2xl bg-amber-500/8 border border-amber-500/25 p-4 sm:p-5 flex gap-3">
@@ -121,7 +184,7 @@ export default function BlogPost() {
         headline: post.title,
         description: post.description,
         datePublished: post.published,
-        dateModified: post.published,
+        dateModified: post.updated ?? post.published,
         inLanguage: "en",
         mainEntityOfPage: { "@type": "WebPage", "@id": url },
         author: { "@type": "Person", name: BLOG_AUTHOR },
@@ -185,6 +248,9 @@ export default function BlogPost() {
           <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
             <span>By {BLOG_AUTHOR}</span>
             <span>{formatDate(post.published)}</span>
+            {post.updated && post.updated !== post.published && (
+              <span>Updated {formatDate(post.updated)}</span>
+            )}
             <span className="inline-flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
               {post.readingMinutes} min read

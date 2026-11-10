@@ -12,7 +12,23 @@ export type PostBlock =
   | { type: "h3"; text: string }
   | { type: "ul"; items: string[] }
   | { type: "ol"; items: string[] }
-  | { type: "tip"; text: string };
+  | { type: "tip"; text: string }
+  /** Plain data table. Cells are plain text. */
+  | { type: "table"; caption?: string; head: string[]; rows: string[][] }
+  /**
+   * Horizontal bar chart of one measure. Every value is printed beside its
+   * bar, so the figure reads the same without colour or JavaScript.
+   */
+  | {
+      type: "bars";
+      caption: string;
+      /** Appended to each printed value, e.g. "%" or " pts". */
+      unit: string;
+      /** Value that fills the whole track. Defaults to the largest item. */
+      max?: number;
+      items: { label: string; value: number }[];
+      note?: string;
+    };
 
 export interface BlogPost {
   slug: BlogSlug;
@@ -20,8 +36,10 @@ export interface BlogPost {
   /** Meta description / card summary (≤160 chars). */
   description: string;
   category: string;
-  /** ISO date, also used for Article schema. */
+  /** ISO date of first publication, also used for Article schema. */
   published: string;
+  /** ISO date of the last substantial revision, if any. Never backdate. */
+  updated?: string;
   readingMinutes: number;
   blocks: PostBlock[];
   faq?: { q: string; a: string }[];
@@ -29,7 +47,300 @@ export interface BlogPost {
 
 export const BLOG_AUTHOR = "Talha Qureshi";
 
+// Newest first: the blog index and the home page list posts in this order.
 export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "how-friendly-feud-checks-your-answers",
+    title: "How Friendly Feud Decides Whether Your Answer Counts",
+    description:
+      "Inside the answer checker: how typed guesses are cleaned up, matched to the board and, when needed, sent to an AI judge. Plus what it means for how you type.",
+    category: "Behind the Scenes",
+    published: "2026-11-11",
+    readingMinutes: 6,
+    blocks: [
+      {
+        type: "p",
+        text:
+          "On a television survey show, a human judge decides whether “automobile” counts for “car”. Friendly Feud has no judge in the room, so the server makes that call every time someone types an answer. This post explains how it decides, step by step. Knowing the rules helps you play better, and it helps you understand a ruling that surprised you.",
+      },
+      { type: "h2", text: "The short version" },
+      {
+        type: "ol",
+        items: [
+          "Your answer is cleaned up: capital letters, punctuation and extra spaces are removed.",
+          "If the answer was already tried this round, it is wrong straight away.",
+          "The cleaned answer is compared with every hidden answer on the board, first exactly and then with word endings removed.",
+          "If nothing matches, an AI judge is asked whether your answer means the same as any hidden answer.",
+          "The ruling is remembered, so the same answer to the same board entry is judged instantly next time.",
+        ],
+      },
+      { type: "h2", text: "Step 1: Cleaning up what you typed" },
+      {
+        type: "p",
+        text:
+          "The checker lowercases your answer, drops apostrophes, turns every other punctuation mark into a space and collapses repeated spaces. So “Scooby-Doo”, “scooby doo” and “SCOOBY DOO” are the same answer, and “McDonald's” equals “mcdonalds”. A leading “the”, “a” or “an” is ignored too, so “the beach” matches “beach”.",
+      },
+      {
+        type: "tip",
+        text:
+          "Capital letters, hyphens and apostrophes never matter. Do not spend timer seconds fixing them.",
+      },
+      { type: "h2", text: "Step 2: Repeats cost a strike" },
+      {
+        type: "p",
+        text:
+          "Before any matching happens, the server checks whether the same answer has already been tried this round, right or wrong. If it has, the answer is rejected at once, and during normal play that counts as a strike. The same applies to an answer that is already showing on the board.",
+      },
+      {
+        type: "p",
+        text:
+          "One detail catches people out. If a multi-word answer such as “ice cream” has been revealed, typing a single word from it (“cream”) is treated as a repeat of that answer, not as a new guess.",
+      },
+      { type: "h2", text: "Step 3: Exact match, then word endings" },
+      {
+        type: "p",
+        text:
+          "Next, the cleaned answer is compared with each answer that is still hidden. Some board answers contain a slash, such as “Food/Milk”. Each side of the slash is an alternative, and matching either one reveals the answer.",
+      },
+      {
+        type: "p",
+        text:
+          "If there is no exact match, the checker reduces every word to its stem by removing common endings: plurals, “-ing”, “-ed”, “-ly” and a few others. That makes “dance”, “danced” and “dancing” the same word, “dogs” the same as “dog”, and “running” the same as “run”. Word order does not matter.",
+      },
+      {
+        type: "p",
+        text:
+          "This check is strict in one way on purpose: every word has to be there. “Butter” does not reveal “peanut butter”, and “ice” does not reveal “ice cream”. Accepting part of an answer would reveal boards by accident.",
+      },
+      {
+        type: "table",
+        caption: "What the quick checks do with some typical answers",
+        head: ["You type", "Board answer", "Quick check"],
+        rows: [
+          ["Dogs", "Dog", "Match (plural removed)"],
+          ["the tube", "Tube", "Match (“the” ignored)"],
+          ["Running", "Run", "Match (ending removed)"],
+          ["milk", "Food/Milk", "Match (either side of the slash)"],
+          ["butter", "Peanut butter", "No match, goes to the AI judge"],
+          ["automobile", "Car", "No match, goes to the AI judge"],
+        ],
+      },
+      { type: "h2", text: "Step 4: The AI judge" },
+      {
+        type: "p",
+        text:
+          "When the quick checks find nothing, the server sends one request to a small AI language model. The model receives the question, your answer and the list of answers that are still hidden. It is asked whether your answer means the same as any of them, counting synonyms, related concepts, alternate phrasings and cultural equivalents. It replies with a single number: which answer matched, or none. If more than one matches, the one listed first on the board wins.",
+      },
+      {
+        type: "p",
+        text:
+          "This is the step that lets “automobile” reveal “car”. The question is part of the request because meaning depends on it: “bat” is an animal on one board and sports equipment on another.",
+      },
+      {
+        type: "p",
+        text:
+          "The judge has six seconds to reply. If it does not answer in time, or the request fails, the answer is marked wrong. This is the main way a good answer can be refused, and it is why a second try with a simpler word is sometimes accepted.",
+      },
+      {
+        type: "p",
+        text:
+          "The AI is only consulted for answers that failed the quick checks. An answer that matches the board exactly is revealed immediately, and a short pause before a ruling usually means the judge was asked.",
+      },
+      { type: "h2", text: "Step 5: Remembering rulings" },
+      {
+        type: "p",
+        text:
+          "Each ruling is kept in the server's memory, keyed by the board answer and what was typed. The store holds the most recent 1,000 pairs. When the same pair comes up again, in your room or anyone else's, the ruling is instant. The store is emptied whenever the server restarts.",
+      },
+      { type: "h2", text: "What this means for how you type" },
+      {
+        type: "ul",
+        items: [
+          "**Type the plainest word.** “Car” is matched instantly. “My dad's old station wagon” has to go to the AI judge.",
+          "**Give one answer at a time.** Two ideas in one line cannot match the quick checks, and the judge may pick either one or neither.",
+          "**Ignore plurals, tense, capitals and punctuation.** The checker removes them.",
+          "**Spelling still matters for the quick checks.** A typo is sent to the AI judge, which may or may not recognise the word.",
+          "**Do not repeat an answer.** Read the board and the list of wrong answers first, because a repeat is a strike.",
+          "**Include the whole answer.** If you mean “peanut butter”, type both words.",
+        ],
+      },
+      { type: "h2", text: "Where it can go wrong" },
+      {
+        type: "p",
+        text:
+          "No judge is perfect. The AI can be too generous and accept a loosely related answer, or too strict and miss a regional word for the same thing. If you think a ruling was wrong, send the question and what you typed through the [feedback page](/feedback) so we can look at it.",
+      },
+      {
+        type: "p",
+        text:
+          "For advice on choosing answers, as opposed to typing them, read [how to win at Family Feud](/blog/how-to-win-family-feud-strategy).",
+      },
+    ],
+    faq: [
+      {
+        q: "Does spelling count in Friendly Feud?",
+        a: "Capital letters, punctuation, plurals and verb endings do not count. A misspelled word fails the quick checks and is passed to an AI judge, which may or may not recognise it, so correct spelling is safer.",
+      },
+      {
+        q: "Why did my correct answer get a strike?",
+        a: "There are three usual reasons: the answer had already been tried this round, the AI judge did not consider it the same as a board answer, or the judge did not reply within its six-second limit.",
+      },
+      {
+        q: "Do Solo and Custom games use the same answer checker?",
+        a: "Yes. Classic, Custom and Solo games all send typed answers through the same checker.",
+      },
+    ],
+  },
+  {
+    slug: "what-survey-boards-reveal-about-top-answers",
+    title: "What 7,880 Survey Boards Reveal About Top Answers",
+    description:
+      "We counted every answer in the game's classic question bank. Here is how points are spread across a board, and what that means for your guesses.",
+    category: "Data",
+    published: "2026-11-11",
+    readingMinutes: 7,
+    blocks: [
+      {
+        type: "p",
+        text:
+          "Advice about survey games is usually based on feel: say the obvious thing, keep it short. We have the classic question bank that the game deals from, so we counted. This post covers 7,880 boards holding almost 42,000 answers, and the numbers back up some of the usual advice and sharpen the rest.",
+      },
+      { type: "h2", text: "The top answer is worth about 42 points" },
+      {
+        type: "p",
+        text:
+          "Across all boards, the number-one answer averages 42.2 points, and the median is 41. More than half of boards (54.1%) have a top answer worth 40 or more. Runaway answers are less common than they feel: only about one board in ten has a top answer worth 60 or more. At the other end, 6.6% of boards have a top answer under 25 points, which means the whole board is wide open.",
+      },
+      {
+        type: "bars",
+        caption: "Share of boards whose top answer is worth at least this many points",
+        unit: "%",
+        max: 100,
+        items: [
+          { label: "30 or more", value: 83.8 },
+          { label: "40 or more", value: 54.1 },
+          { label: "50 or more", value: 27.6 },
+          { label: "60 or more", value: 10.1 },
+          { label: "70 or more", value: 2.9 },
+        ],
+      },
+      { type: "h2", text: "Points fall away quickly" },
+      {
+        type: "p",
+        text:
+          "The second answer is worth about half the first, and the third about half the second. After that the drop slows down, and every remaining answer is worth single digits on average.",
+      },
+      {
+        type: "bars",
+        caption: "Average points by position on the board",
+        unit: " pts",
+        items: [
+          { label: "1st answer", value: 42.2 },
+          { label: "2nd answer", value: 22.0 },
+          { label: "3rd answer", value: 12.9 },
+          { label: "4th answer", value: 8.2 },
+          { label: "5th answer", value: 5.9 },
+          { label: "6th answer", value: 4.6 },
+          { label: "7th answer", value: 4.0 },
+          { label: "8th answer", value: 3.4 },
+        ],
+        note: "Positions four to eight are averaged over the boards that have that many answers.",
+      },
+      {
+        type: "p",
+        text:
+          "On an average board the top answer holds 45.8% of all the points, and the top two together hold 69.7%. A team that finds those two and then strikes out has still put most of the round into the pot. That is why a steal is so valuable: the stealing team needs one answer, often a small one, to take a pot built mostly from the two big ones.",
+      },
+      { type: "h2", text: "Almost one board in five is a toss-up at the top" },
+      {
+        type: "p",
+        text:
+          "The typical gap between the first and second answer is 16 points. On 24.9% of boards the gap is 30 points or more, so the top answer is clear. On 18.5% of boards the gap is five points or fewer. In a Face-Off on one of those boards, the “obvious” answer and its rival are worth nearly the same, and whoever answers second has a real chance of winning control.",
+      },
+      { type: "h2", text: "Most boards have five or six answers" },
+      {
+        type: "table",
+        caption: "Board size and the value of the top answer",
+        head: ["Answers on the board", "Boards", "Share", "Average top answer"],
+        rows: [
+          ["3", "304", "3.9%", "49.6 pts"],
+          ["4", "1,720", "21.8%", "48.8 pts"],
+          ["5", "2,293", "29.1%", "43.2 pts"],
+          ["6", "2,421", "30.7%", "38.7 pts"],
+          ["7", "984", "12.5%", "36.2 pts"],
+          ["8", "158", "2.0%", "33.7 pts"],
+        ],
+      },
+      {
+        type: "p",
+        text:
+          "The more answers a board has, the less the top one is worth. A four-answer board concentrates its points at the top; a seven-answer board spreads them out. The last answer on a board is worth a median of five points, and on 30.9% of boards it is worth three or fewer. Chasing the final hidden answer rarely pays for the strike it risks.",
+      },
+      { type: "h2", text: "The answers that win most often" },
+      {
+        type: "bars",
+        caption: "Most common number-one answers, by number of boards",
+        unit: "",
+        items: [
+          { label: "Money", value: 108 },
+          { label: "Car", value: 80 },
+          { label: "Clothes", value: 53 },
+          { label: "Food", value: 46 },
+          { label: "Doctor", value: 40 },
+          { label: "Hair", value: 34 },
+          { label: "Wedding", value: 34 },
+          { label: "Dog", value: 30 },
+          { label: "Bathroom", value: 26 },
+          { label: "New York", value: 25 },
+        ],
+      },
+      {
+        type: "p",
+        text:
+          "“Money” is the top answer on 108 boards and appears somewhere on 273. “Car” appears on 269, “clothes” on 197 and “food” on 191. The list is made of everyday nouns: things people own, wear, eat and visit. “New York” is the only place in the top ten.",
+      },
+      { type: "h2", text: "Answers are short" },
+      {
+        type: "p",
+        text:
+          "Of all the answers we counted, 63.3% are a single word and 28.6% are two words. Fewer than one answer in fifty runs to four words or more. If you are typing a sentence, you are almost certainly describing an answer that the board states in one word.",
+      },
+      { type: "h2", text: "How the questions are phrased" },
+      {
+        type: "p",
+        text:
+          "About 77% of questions begin with the word “Name”: 40.9% with “Name something”, 32.3% with “Name a” or “Name an”, and the rest with other forms. Direct questions starting with what, which, who or how make up 7.5%, “Tell me” 4.9%, hypotheticals starting with “If” 3.0% and “Besides…” questions 2.1%. The median question is 11 words long. If you write your own boards, that is the template to copy; our guide to [writing survey questions](/blog/how-to-write-family-feud-survey-questions) covers the rest.",
+      },
+      { type: "h2", text: "Boards rarely add up to 100" },
+      {
+        type: "p",
+        text:
+          "The median board totals 95 points, and the average is 92.1. The likely reason is that answers given by only one or two people in a survey are left off the board. A team that clears a board should expect about 95 points, not 100.",
+      },
+      { type: "h2", text: "What to do with this" },
+      {
+        type: "ul",
+        items: [
+          "**In a Face-Off, say the plainest answer at once.** The top answer is worth 42 points on average, almost half the board.",
+          "**Bank the top two, then be careful.** After them about 70% of the points are gone, and the answers that remain average 13 points or fewer.",
+          "**On a steal, name the most ordinary thing that is missing.** You need one answer, and small ones count.",
+          "**Keep answers to one or two words.** More than nine in ten board answers are that short.",
+          "**When your mind goes blank, think of everyday nouns.** Money, car, clothes and food fit more boards than anything else.",
+        ],
+      },
+      {
+        type: "p",
+        text:
+          "For the reasoning behind these habits, read [how to win at Family Feud](/blog/how-to-win-family-feud-strategy).",
+      },
+      { type: "h2", text: "How we counted" },
+      {
+        type: "p",
+        text:
+          "The figures come from the game's classic question bank as it stood in November 2026: 8,782 boards. We left out 902 boards that had fewer than three answers, more than eight answers, or an answer worth zero points, which leaves the 7,880 analysed here. Answers were compared after lowercasing and removing punctuation, so “car” and “cars” were counted separately. Percentages are rounded to one decimal place.",
+      },
+    ],
+  },
   {
     slug: "how-to-host-a-virtual-family-feud-game-night",
     title: "How to Host a Virtual Family Feud Game Night (Step-by-Step)",
