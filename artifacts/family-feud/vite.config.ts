@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { execSync } from "node:child_process";
+import { copyFileSync, existsSync, rmSync } from "node:fs";
 // Shared with scripts/generate-artifact-rewrites.mjs: the host must rewrite
 // each of these paths to its snapshot, or the SPA catch-all serves the home
 // page's HTML for every route.
@@ -44,6 +45,34 @@ const MANAGED_META =
 const MANAGED_TITLE = /<title\b(?![^>]*\bdata-prerender\b)/g;
 const MANAGED_CANONICAL = /<link\b(?=[^>]*\brel="canonical")(?![^>]*\bdata-prerender\b)/g;
 
+// The host serves /404.html (with a 404 status) for any URL that matches no
+// file and no rewrite. The prerenderer can only write <route>/index.html, so
+// the not-found page is snapshotted at NOT_FOUND_ROUTE and moved to the root
+// once the bundle is on disk. Without a snapshot (DISABLE_PRERENDER=1) the
+// plain app shell is used instead; it boots the SPA, which shows the same
+// not-found page.
+const NOT_FOUND_ROUTE = "/404";
+
+function emitNotFoundPage(outDir: string) {
+  return {
+    name: "emit-404-page",
+    apply: "build" as const,
+    closeBundle() {
+      const snapshotDir = path.join(outDir, NOT_FOUND_ROUTE.slice(1));
+      const snapshot = path.join(snapshotDir, "index.html");
+      const target = path.join(outDir, "404.html");
+      if (existsSync(snapshot)) {
+        copyFileSync(snapshot, target);
+        rmSync(snapshotDir, { recursive: true, force: true });
+      } else if (!shouldPrerender && existsSync(path.join(outDir, "index.html"))) {
+        copyFileSync(path.join(outDir, "index.html"), target);
+      } else {
+        throw new Error(`emit-404-page: no not-found snapshot at ${snapshot}`);
+      }
+    },
+  };
+}
+
 function markPrerenderedHead(html: string): string {
   const headEnd = html.indexOf("</head>");
   if (headEnd === -1) return html;
@@ -77,7 +106,7 @@ export default defineConfig({
     ...(shouldPrerender
       ? [
           (await import("@prerenderer/rollup-plugin")).default({
-            routes: PRERENDER_ROUTES,
+            routes: [...PRERENDER_ROUTES, NOT_FOUND_ROUTE],
             renderer: "@prerenderer/renderer-puppeteer",
             rendererOptions: {
               maxConcurrentRoutes: 2,
@@ -100,6 +129,7 @@ export default defineConfig({
           }),
         ]
       : []),
+    emitNotFoundPage(path.resolve(import.meta.dirname, "dist/public")),
   ],
   resolve: {
     alias: {
