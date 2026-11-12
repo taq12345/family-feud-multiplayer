@@ -407,7 +407,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "p",
         text:
-          "When everyone is in, the host sees two start buttons. **Classic Questions** draws from a bank of more than 8,700 survey questions with real point values, the same style you would hear on the TV show. **Custom Questions (Beta)** asks for a topic — “90s cartoons”, “things that happen at a wedding”, “our office” — and generates a themed round on the spot. Custom rounds are a great way to personalise a birthday or a team event; classic rounds are the safer choice for a group that wants pure Feud.",
+          "When everyone is in, the host sees two start buttons. **Classic Questions** draws from a bank of more than 8,500 survey questions with real point values, the same style you would hear on the TV show. **Custom Questions (Beta)** asks for a topic — “90s cartoons”, “things that happen at a wedding”, “our office” — and generates a themed round on the spot. Custom rounds are a great way to personalise a birthday or a team event; classic rounds are the safer choice for a group that wants pure Feud.",
       },
       { type: "h2", text: "Step 5 — Run the game" },
       {
@@ -947,7 +947,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "p",
         text:
-          "From the [lobby](/), click **Solo Play**. Choose between **Classic** (questions from the 8,700+ survey bank) and **Custom Topic**, pick 2 to 10 rounds, and start. There is no Face-Off and no opposing team — each round simply presents a board, and you type answers with the same 25-second timer and the same three-layer answer judge as multiplayer. Three strikes end the round; clearing the board banks every point.",
+          "From the [lobby](/), click **Solo Play**. Choose between **Classic** (questions from the 8,500+ survey bank) and **Custom Topic**, pick 2 to 10 rounds, and start. There is no Face-Off and no opposing team — each round simply presents a board, and you type answers with the same 25-second timer and the same three-layer answer judge as multiplayer. Three strikes end the round; clearing the board banks every point.",
       },
       {
         type: "ul",

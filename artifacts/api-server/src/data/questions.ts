@@ -78,28 +78,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3,
-        "question":  "After having kids, name something that happens that interrupts a couple's alone time at night.",
-        "answers":  [
-                        {
-                            "text":  "crying baby",
-                            "points":  37
-                        },
-                        {
-                            "text":  "nightmares",
-                            "points":  23
-                        },
-                        {
-                            "text":  "feeding times",
-                            "points":  18
-                        },
-                        {
-                            "text":  "sick kid",
-                            "points":  14
-                        }
-                    ]
-    },
-    {
         "id":  4,
         "question":  "At what age might a man have a midlife crisis?",
         "answers":  [
@@ -127,7 +105,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5,
-        "question":  "At what age does it become embarrassing to still live with your parents (numeric only)?",
+        "question":  "At what age does it become embarrassing to still live with your parents?",
         "answers":  [
                         {
                             "text":  "25",
@@ -580,79 +558,11 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Besides trash, name something specific people throw away every day.",
         "answers":  [
                         {
-                            "text":  "coinage",
-                            "points":  37
-                        },
-                        {
-                            "text":  "riches",
-                            "points":  37
-                        },
-                        {
                             "text":  "money",
                             "points":  37
                         },
                         {
-                            "text":  "wealth",
-                            "points":  37
-                        },
-                        {
-                            "text":  "currency",
-                            "points":  37
-                        },
-                        {
-                            "text":  "bucks",
-                            "points":  37
-                        },
-                        {
-                            "text":  "cash",
-                            "points":  37
-                        },
-                        {
-                            "text":  "meals",
-                            "points":  20
-                        },
-                        {
-                            "text":  "groceries",
-                            "points":  20
-                        },
-                        {
                             "text":  "food",
-                            "points":  20
-                        },
-                        {
-                            "text":  "suppers",
-                            "points":  20
-                        },
-                        {
-                            "text":  "edibles",
-                            "points":  20
-                        },
-                        {
-                            "text":  "eats",
-                            "points":  20
-                        },
-                        {
-                            "text":  "nutrients",
-                            "points":  20
-                        },
-                        {
-                            "text":  "dinner",
-                            "points":  20
-                        },
-                        {
-                            "text":  "desserts",
-                            "points":  20
-                        },
-                        {
-                            "text":  "sandwiches",
-                            "points":  20
-                        },
-                        {
-                            "text":  "tucker",
-                            "points":  20
-                        },
-                        {
-                            "text":  "lunches",
                             "points":  20
                         }
                     ]
@@ -740,36 +650,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "dogs",
                             "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  26,
-        "question":  "Give me a woman\u0027s name with 3 letters.",
-        "answers":  [
-                        {
-                            "text":  "ann",
-                            "points":  22
-                        },
-                        {
-                            "text":  "sue",
-                            "points":  22
-                        },
-                        {
-                            "text":  "amy",
-                            "points":  14
-                        },
-                        {
-                            "text":  "eve",
-                            "points":  14
-                        },
-                        {
-                            "text":  "pam",
-                            "points":  11
-                        },
-                        {
-                            "text":  "mia",
-                            "points":  10
                         }
                     ]
     },
@@ -920,7 +800,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "talking alot",
+                            "text":  "talking a lot",
                             "points":  9
                         },
                         {
@@ -990,10 +870,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "How old were you when you babysat for the first time?",
         "answers":  [
                         {
-                            "text":  "10",
-                            "points":  7
-                        },
-                        {
                             "text":  "12",
                             "points":  30
                         },
@@ -1008,6 +884,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "15",
                             "points":  11
+                        },
+                        {
+                            "text":  "10",
+                            "points":  7
                         }
                     ]
     },
@@ -1122,12 +1002,8 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "In minutes, how long is your commute to work?",
         "answers":  [
                         {
-                            "text":  "5",
-                            "points":  6
-                        },
-                        {
-                            "text":  "10",
-                            "points":  13
+                            "text":  "30",
+                            "points":  29
                         },
                         {
                             "text":  "15",
@@ -1138,16 +1014,20 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "30",
-                            "points":  29
-                        },
-                        {
-                            "text":  "45",
-                            "points":  5
+                            "text":  "10",
+                            "points":  13
                         },
                         {
                             "text":  "60",
                             "points":  7
+                        },
+                        {
+                            "text":  "5",
+                            "points":  6
+                        },
+                        {
+                            "text":  "45",
+                            "points":  5
                         }
                     ]
     },
@@ -1298,7 +1178,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  25
                         },
                         {
-                            "text":  "clean litterbox",
+                            "text":  "clean litter box",
                             "points":  10
                         },
                         {
@@ -1397,7 +1277,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  52,
-        "question":  "If there was no speed limit, how fast would you drive on the way to work each morning (round to ten)?",
+        "question":  "If there was no speed limit, how fast would you drive on the way to work each morning?",
         "answers":  [
                         {
                             "text":  "100mph",
@@ -1676,30 +1556,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "denzil washington",
+                            "text":  "denzel washington",
                             "points":  9
                         },
                         {
                             "text":  "robert redford",
-                            "points":  0
-                        }
-                    ]
-    },
-    {
-        "id":  63,
-        "question":  "If there was an award for \"loudest in the zoo,\" which animal would win it?",
-        "answers":  [
-                        {
-                            "text":  "lion",
-                            "points":  41
-                        },
-                        {
-                            "text":  "elephant",
-                            "points":  34
-                        },
-                        {
-                            "text":  "monkey",
-                            "points":  19
+                            "points":  4
                         }
                     ]
     },
@@ -1812,7 +1674,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "icecream",
+                            "text":  "ice cream",
                             "points":  18
                         },
                         {
@@ -2700,7 +2562,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "lochness monster",
+                            "text":  "loch ness monster",
                             "points":  9
                         },
                         {
@@ -2739,7 +2601,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "detroit",
-                            "points":  0
+                            "points":  2
                         }
                     ]
     },
@@ -2904,7 +2766,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that might be carved into a Christmas ice sculpture.",
         "answers":  [
                         {
-                            "text":  "angel/religious fig.",
+                            "text":  "angel/religious figure",
                             "points":  39
                         },
                         {
@@ -3072,7 +2934,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a famous sight that tourists take an elevator up to see.",
         "answers":  [
                         {
-                            "text":  "empire state bldg.",
+                            "text":  "empire state building",
                             "points":  35
                         },
                         {
@@ -3456,7 +3318,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "fired chicken",
+                            "text":  "fried chicken",
                             "points":  12
                         },
                         {
@@ -3678,7 +3540,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "columbia",
+                            "text":  "colombia",
                             "points":  8
                         },
                         {
@@ -3890,7 +3752,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  54
                         },
                         {
-                            "text":  "loyality",
+                            "text":  "loyalty",
                             "points":  14
                         },
                         {
@@ -4033,7 +3895,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  152,
-        "question":  "Name something you keep in an ice chest. (Food is not an answer, be more specific.)",
+        "question":  "Name something you keep in an ice chest.",
         "answers":  [
                         {
                             "text":  "soft drinks",
@@ -4112,7 +3974,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "pader",
+                            "text":  "pager",
                             "points":  11
                         },
                         {
@@ -4157,15 +4019,15 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "swimming",
-                            "points":  52
+                            "points":  48
                         },
                         {
                             "text":  "basketball",
-                            "points":  20
+                            "points":  18
                         },
                         {
                             "text":  "volleyball",
-                            "points":  18
+                            "points":  17
                         },
                         {
                             "text":  "soccer",
@@ -4173,7 +4035,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "tennis",
-                            "points":  6
+                            "points":  5
                         },
                         {
                             "text":  "wrestling",
@@ -4198,7 +4060,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "g.o.",
+                            "text":  "gq",
                             "points":  10
                         },
                         {
@@ -5114,40 +4976,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  191,
-        "question":  "Name something you'd hate to find had happened to your car while it was parked.",
-        "answers":  [
-                        {
-                            "text":  "hit by another car",
-                            "points":  43
-                        },
-                        {
-                            "text":  "carjacked",
-                            "points":  17
-                        },
-                        {
-                            "text":  "keyed",
-                            "points":  13
-                        },
-                        {
-                            "text":  "broken into",
-                            "points":  10
-                        },
-                        {
-                            "text":  "flat tire",
-                            "points":  5
-                        },
-                        {
-                            "text":  "towed",
-                            "points":  4
-                        },
-                        {
-                            "text":  "parking ticket",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  192,
         "question":  "Name something you always have with you so you don't get lost.",
         "answers":  [
@@ -5273,15 +5101,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "leave number",
-                            "points":  0
-                        },
-                        {
-                            "text":  "28",
-                            "points":  0
-                        },
-                        {
-                            "text":  "8",
-                            "points":  5
+                            "points":  28
                         }
                     ]
     },
@@ -5354,7 +5174,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "life music",
+                            "text":  "live music",
                             "points":  3
                         }
                     ]
@@ -5394,7 +5214,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a famous building that's big enough to house a dinosaur.",
         "answers":  [
                         {
-                            "text":  "empire state bldg",
+                            "text":  "empire state building",
                             "points":  38
                         },
                         {
@@ -5540,7 +5360,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "exercise",
+                            "text":  "ex",
                             "points":  6
                         },
                         {
@@ -5648,7 +5468,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "deoderant",
+                            "text":  "deodorant",
                             "points":  6
                         },
                         {
@@ -5972,7 +5792,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "marhmellow",
+                            "text":  "marshmallow",
                             "points":  4
                         },
                         {
@@ -5998,7 +5818,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "bilkes",
+                            "text":  "bikes",
                             "points":  10
                         },
                         {
@@ -6126,7 +5946,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might worry about while on a cruise ship.",
         "answers":  [
                         {
-                            "text":  "ship sinkong",
+                            "text":  "ship sinking",
                             "points":  48
                         },
                         {
@@ -6241,7 +6061,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "atlantic city",
-                            "points":  0
+                            "points":  1
                         }
                     ]
     },
@@ -6266,16 +6086,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
+                            "text":  "scratch it",
+                            "points":  5
+                        },
+                        {
                             "text":  "run out of gas",
                             "points":  4
                         },
                         {
                             "text":  "speeding ticket",
                             "points":  3
-                        },
-                        {
-                            "text":  "scratch it",
-                            "points":  5
                         }
                     ]
     },
@@ -6478,7 +6298,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "portable videogame",
+                            "text":  "portable video game",
                             "points":  5
                         }
                     ]
@@ -6724,7 +6544,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "thinik",
+                            "text":  "think",
                             "points":  4
                         },
                         {
@@ -6970,7 +6790,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an expression that begins with the word first.",
         "answers":  [
                         {
-                            "text":  "â¦come,first served",
+                            "text":  "first come, first served",
                             "points":  24
                         },
                         {
@@ -7172,32 +6992,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  266,
-        "question":  "Name a Shakespeare character who most people have heard of.",
-        "answers":  [
-                        {
-                            "text":  "romeo",
-                            "points":  56
-                        },
-                        {
-                            "text":  "hamlet",
-                            "points":  20
-                        },
-                        {
-                            "text":  "juliettejuliet",
-                            "points":  15
-                        },
-                        {
-                            "text":  "macbeth",
-                            "points":  3
-                        },
-                        {
-                            "text":  "othello",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  267,
         "question":  "Name a place where a man might be a \"regular customer.\"",
         "answers":  [
@@ -7392,7 +7186,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something there are seven of.",
         "answers":  [
                         {
-                            "text":  "dwarfes",
+                            "text":  "dwarfs",
                             "points":  28
                         },
                         {
@@ -7434,7 +7228,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "dentist",
+                            "text":  "dentures",
                             "points":  9
                         }
                     ]
@@ -7728,7 +7522,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  52
                         },
                         {
-                            "text":  "airplain",
+                            "text":  "airplane",
                             "points":  28
                         },
                         {
@@ -7762,7 +7556,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "pass gass",
+                            "text":  "pass gas",
                             "points":  19
                         },
                         {
@@ -7818,7 +7612,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "snorkle",
+                            "text":  "snorkel",
                             "points":  3
                         }
                     ]
@@ -8100,7 +7894,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "thrown",
+                            "text":  "throne",
                             "points":  6
                         },
                         {
@@ -8206,7 +8000,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "clean backgroung",
+                            "text":  "clean background",
                             "points":  2
                         }
                     ]
@@ -8232,7 +8026,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "satelite dish",
+                            "text":  "satellite dish",
                             "points":  4
                         },
                         {
@@ -8272,40 +8066,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "coffee",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  306,
-        "question":  "Name a pastime more respectable than watching TV.",
-        "answers":  [
-                        {
-                            "text":  "reading",
-                            "points":  39
-                        },
-                        {
-                            "text":  "exercise",
-                            "points":  22
-                        },
-                        {
-                            "text":  "sports",
-                            "points":  12
-                        },
-                        {
-                            "text":  "crafts",
-                            "points":  9
-                        },
-                        {
-                            "text":  "playing instrument",
-                            "points":  7
-                        },
-                        {
-                            "text":  "listening to radio",
-                            "points":  3
-                        },
-                        {
-                            "text":  "cooking",
-                            "points":  3
                         }
                     ]
     },
@@ -8670,7 +8430,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "hawii",
+                            "text":  "hawaii",
                             "points":  5
                         },
                         {
@@ -8710,7 +8470,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "deoderant",
+                            "text":  "deodorant",
                             "points":  30
                         },
                         {
@@ -8764,7 +8524,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "politition",
+                            "text":  "politician",
                             "points":  5
                         }
                     ]
@@ -9012,7 +8772,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "jumprope",
+                            "text":  "jump rope",
                             "points":  18
                         },
                         {
@@ -9027,7 +8787,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  333,
-        "question":  "Name a type of poster a year-old boy might have on his wall.",
+        "question":  "Name a type of poster a young boy might have on his wall.",
         "answers":  [
                         {
                             "text":  "movie/tv star",
@@ -9517,7 +9277,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "kick boxing",
-                            "points":  0
+                            "points":  28
                         },
                         {
                             "text":  "a kick out of you",
@@ -9636,7 +9396,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you see on the set of every game show.",
         "answers":  [
                         {
-                            "text":  "hast",
+                            "text":  "host",
                             "points":  42
                         },
                         {
@@ -9738,7 +9498,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "maintainance",
+                            "text":  "maintenance",
                             "points":  11
                         }
                     ]
@@ -9878,20 +9638,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  365,
-        "question":  "Name the loudest animal in the zoo.",
-        "answers":  [
-                        {
-                            "text":  "lion",
-                            "points":  41
-                        },
-                        {
-                            "text":  "elephant",
-                            "points":  34
-                        }
-                    ]
-    },
-    {
         "id":  366,
         "question":  "Name something scientists wear in the lab.",
         "answers":  [
@@ -10012,7 +9758,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "deoderant",
+                            "text":  "deodorant",
                             "points":  4
                         },
                         {
@@ -10482,7 +10228,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a breakfast item that you'd find on the menu of a fancy restaurant, but not your local diner.",
         "answers":  [
                         {
-                            "text":  "eggs benidict",
+                            "text":  "eggs benedict",
                             "points":  35
                         },
                         {
@@ -10512,7 +10258,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you'd see in an office's kitchen area.",
         "answers":  [
                         {
-                            "text":  "coffe pot/mugs",
+                            "text":  "coffee pot/mugs",
                             "points":  42
                         },
                         {
@@ -10616,7 +10362,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "violence \u0026 movie",
+                            "text":  "violence & movie",
                             "points":  20
                         },
                         {
@@ -10628,7 +10374,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "sopping trip",
+                            "text":  "shopping trip",
                             "points":  8
                         },
                         {
@@ -10642,7 +10388,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a reason why a kid might not wear his ordinary clothes to school.",
         "answers":  [
                         {
-                            "text":  "they\u0027re dirty",
+                            "text":  "they're dirty",
                             "points":  33
                         },
                         {
@@ -10650,11 +10396,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  29
                         },
                         {
-                            "text":  "it\u0027s halloween",
+                            "text":  "it's halloween",
                             "points":  24
                         },
                         {
-                            "text":  "wear\u0027s a uniform",
+                            "text":  "wears a uniform",
                             "points":  9
                         }
                     ]
@@ -10892,7 +10638,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "empire state bldg",
+                            "text":  "empire state building",
                             "points":  9
                         }
                     ]
@@ -11018,7 +10764,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something people know more about if they read the tabloids in the checkout line.",
         "answers":  [
                         {
-                            "text":  "celebs/scandlescelebs/sca",
+                            "text":  "celebs/scandals",
                             "points":  73
                         },
                         {
@@ -11294,7 +11040,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "napolean dynamite",
+                            "text":  "napoleon dynamite",
                             "points":  11
                         },
                         {
@@ -11328,7 +11074,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "niagra falls",
+                            "text":  "niagara falls",
                             "points":  7
                         },
                         {
@@ -11901,16 +11647,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  444,
-        "question":  "Name an animal that would look cute in a pirate\u0027s hat.",
+        "question":  "Name an animal that would look cute in a pirate's hat.",
         "answers":  [
-                        {
-                            "text":  "dog",
-                            "points":  10
-                        },
-                        {
-                            "text":  "parrot",
-                            "points":  9
-                        },
                         {
                             "text":  "monkey",
                             "points":  22
@@ -11918,6 +11656,14 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "cat",
                             "points":  18
+                        },
+                        {
+                            "text":  "dog",
+                            "points":  10
+                        },
+                        {
+                            "text":  "parrot",
+                            "points":  9
                         }
                     ]
     },
@@ -12238,36 +11984,22 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  461,
-        "question":  "Name something that reminds you of winter.",
-        "answers":  [
-                        {
-                            "text":  "snow",
-                            "points":  38
-                        },
-                        {
-                            "text":  "snowman",
-                            "points":  9
-                        }
-                    ]
-    },
-    {
         "id":  462,
         "question":  "Name a fictional character who hates the holidays.",
         "answers":  [
                         {
-                            "text":  "grinch",
-                            "points":  27
-                        },
-                        {
                             "text":  "scrooge",
                             "points":  39
+                        },
+                        {
+                            "text":  "grinch",
+                            "points":  27
                         }
                     ]
     },
     {
         "id":  463,
-        "question":  "Name a comedian who has, or had, a TV series. (full names)",
+        "question":  "Name a comedian who has, or had, a TV series.",
         "answers":  [
                         {
                             "text":  "ray romano",
@@ -12327,15 +12059,15 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  465,
-        "question":  "Name something teenagers think it\u0027s important to be good at.",
+        "question":  "Name something teenagers think it's important to be good at.",
         "answers":  [
-                        {
-                            "text":  "school",
-                            "points":  10
-                        },
                         {
                             "text":  "sports",
                             "points":  39
+                        },
+                        {
+                            "text":  "school",
+                            "points":  10
                         }
                     ]
     },
@@ -12457,7 +12189,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "sneezing",
-                            "points":  0
+                            "points":  50
                         },
                         {
                             "text":  "blowing nose",
@@ -12537,7 +12269,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "be aggressive",
-                            "points":  0
+                            "points":  42
                         },
                         {
                             "text":  "hit",
@@ -12697,7 +12429,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "cookies",
-                            "points":  0
+                            "points":  12
                         }
                     ]
     },
@@ -12751,12 +12483,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  487,
-        "question":  "Name someone you have to be nice to, even if you don\u0027t like them.",
+        "question":  "Name someone you have to be nice to, even if you don't like them.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "boss",
                             "points":  44
@@ -12829,7 +12557,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "cheaper",
-                            "points":  0
+                            "points":  47
                         },
                         {
                             "text":  "couch",
@@ -12866,20 +12594,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "takes your money",
                             "points":  23
-                        }
-                    ]
-    },
-    {
-        "id":  495,
-        "question":  "Name the worst food to eat if you are on a diet. (\"Dessert\" is not an answer. Be more specific.)",
-        "answers":  [
-                        {
-                            "text":  "football",
-                            "points":  22
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  10
                         }
                     ]
     },
@@ -13054,10 +12768,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you receive multiple times per day.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "phone calls",
                             "points":  45
                         }
@@ -13083,7 +12793,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "pictures",
-                            "points":  0
+                            "points":  49
                         },
                         {
                             "text":  "vase",
@@ -13097,12 +12807,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  508,
-        "question":  "Name something you don\u0027t want to do when you\u0027re tired.",
+        "question":  "Name something you don't want to do when you're tired.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "work",
                             "points":  44
@@ -13115,7 +12821,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "rabbit",
-                            "points":  0
+                            "points":  38
                         },
                         {
                             "text":  "birds",
@@ -13322,10 +13028,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a party game that might be more fun to play nude.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "twister",
                             "points":  53
                         }
@@ -13492,7 +13194,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "makign money",
+                            "text":  "making money",
                             "points":  7
                         },
                         {
@@ -13804,7 +13506,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "kid\u0027s moving out",
+                            "text":  "kid's moving out",
                             "points":  8
                         },
                         {
@@ -13824,7 +13526,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "mother\u0027s",
+                            "text":  "mother's day",
                             "points":  4
                         }
                     ]
@@ -14002,34 +13704,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  547,
-        "question":  "Name something kids can get away with in the summer that adults can\u0027t.",
-        "answers":  [
-                        {
-                            "text":  "bugs",
-                            "points":  29
-                        },
-                        {
-                            "text":  "food",
-                            "points":  25
-                        },
-                        {
-                            "text":  "homesick",
-                            "points":  23
-                        },
-                        {
-                            "text":  "weather",
-                            "points":  15
-                        },
-                        {
-                            "text":  "boredom",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  548,
-        "question":  "Name a specific place where you\u0027d hate to be when there\u0027s a major power failure.",
+        "question":  "Name a specific place where you'd hate to be when there's a major power failure.",
         "answers":  [
                         {
                             "text":  "elevator",
@@ -14040,7 +13716,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "work/office bldg.",
+                            "text":  "work/office building",
                             "points":  9
                         },
                         {
@@ -14172,7 +13848,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  71
                         },
                         {
-                            "text":  "i need to go to the bathr",
+                            "text":  "i need to go to the bathroom",
                             "points":  21
                         }
                     ]
@@ -14272,7 +13948,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "niagra falls",
+                            "text":  "niagara falls",
                             "points":  5
                         },
                         {
@@ -14409,7 +14085,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  564,
-        "question":  "Name something that is made of gold. (\"Jewelry\" is not an answer. Be more specific.)",
+        "question":  "Name something that is made of gold.",
         "answers":  [
                         {
                             "text":  "necklace",
@@ -15216,7 +14892,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "matthew mcconaug...",
+                            "text":  "matthew mcconaughey",
                             "points":  14
                         },
                         {
@@ -15283,71 +14959,15 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "shower",
-                            "points":  5
-                        },
-                        {
-                            "text":  "bathe",
                             "points":  55
-                        },
-                        {
-                            "text":  "wade",
-                            "points":  20
                         },
                         {
                             "text":  "swim",
                             "points":  20
                         },
                         {
-                            "text":  "stroke",
-                            "points":  20
-                        },
-                        {
-                            "text":  "aquatics",
-                            "points":  20
-                        },
-                        {
-                            "text":  "front stroke",
-                            "points":  20
-                        },
-                        {
-                            "text":  "backstroke",
-                            "points":  20
-                        },
-                        {
-                            "text":  "breaststroke",
-                            "points":  20
-                        },
-                        {
-                            "text":  "butterfly",
-                            "points":  20
-                        },
-                        {
-                            "text":  "nap",
-                            "points":  13
-                        },
-                        {
-                            "text":  "snooze",
-                            "points":  13
-                        },
-                        {
-                            "text":  "slumber",
-                            "points":  13
-                        },
-                        {
                             "text":  "sleep",
                             "points":  13
-                        },
-                        {
-                            "text":  "dream",
-                            "points":  13
-                        },
-                        {
-                            "text":  "head scratch",
-                            "points":  4
-                        },
-                        {
-                            "text":  "itch head",
-                            "points":  4
                         },
                         {
                             "text":  "scratch head",
@@ -15355,26 +14975,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "wash it",
-                            "points":  3
-                        },
-                        {
-                            "text":  "it",
-                            "points":  3
-                        },
-                        {
-                            "text":  "lave",
-                            "points":  3
-                        },
-                        {
-                            "text":  "soap",
-                            "points":  3
-                        },
-                        {
-                            "text":  "scrub",
-                            "points":  3
-                        },
-                        {
-                            "text":  "clean",
                             "points":  3
                         }
                     ]
@@ -15440,20 +15040,20 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something people do to relax.",
         "answers":  [
                         {
-                            "text":  "watch tv",
-                            "points":  16
-                        },
-                        {
                             "text":  "read",
                             "points":  34
                         },
                         {
-                            "text":  "sleep",
-                            "points":  10
-                        },
-                        {
                             "text":  "bathe",
                             "points":  26
+                        },
+                        {
+                            "text":  "watch tv",
+                            "points":  16
+                        },
+                        {
+                            "text":  "sleep",
+                            "points":  10
                         },
                         {
                             "text":  "listen to music",
@@ -15622,10 +15222,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "streisand",
-                            "points":  26
-                        },
-                        {
                             "text":  "cher",
                             "points":  19
                         },
@@ -15634,15 +15230,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "parton",
-                            "points":  9
-                        },
-                        {
                             "text":  "madonna",
-                            "points":  8
-                        },
-                        {
-                            "text":  "houston",
                             "points":  8
                         },
                         {
@@ -15672,7 +15260,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "watching fire..",
+                            "text":  "watching fireworks",
                             "points":  5
                         },
                         {
@@ -15755,28 +15343,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "france",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  612,
-        "question":  "Name something that makes you feel better.",
-        "answers":  [
-                        {
-                            "text":  "children",
-                            "points":  49
-                        },
-                        {
-                            "text":  "exercise",
-                            "points":  36
-                        },
-                        {
-                            "text":  "laughing",
-                            "points":  8
-                        },
-                        {
-                            "text":  "healthy foods",
                             "points":  7
                         }
                     ]
@@ -16140,20 +15706,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  626,
-        "question":  "Name something you eat on a bun.",
-        "answers":  [
-                        {
-                            "text":  "hot dog",
-                            "points":  50
-                        },
-                        {
-                            "text":  "hamburger",
-                            "points":  42
-                        }
-                    ]
-    },
-    {
         "id":  627,
         "question":  "Name a vehicle that is used by the military.",
         "answers":  [
@@ -16228,10 +15780,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a color the sky turns when the weather gets bad.",
         "answers":  [
                         {
-                            "text":  "darkened",
-                            "points":  54
-                        },
-                        {
                             "text":  "gray",
                             "points":  54
                         },
@@ -16245,14 +15793,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "dark blue",
-                            "points":  5
-                        },
-                        {
-                            "text":  "navy",
-                            "points":  5
-                        },
-                        {
-                            "text":  "blue",
                             "points":  5
                         },
                         {
@@ -16691,7 +16231,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  647,
-        "question":  "Name something about you peple might say was \"sharp\".",
+        "question":  "Name something about you people might say was \"sharp\".",
         "answers":  [
                         {
                             "text":  "wit",
@@ -17048,7 +16588,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "land scaping",
+                            "text":  "landscaping",
                             "points":  6
                         },
                         {
@@ -17066,7 +16606,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name the most evil Disney villain.",
         "answers":  [
                         {
-                            "text":  "cruella devil",
+                            "text":  "cruella de vil",
                             "points":  54
                         },
                         {
@@ -17140,32 +16680,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "shave",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  664,
-        "question":  "Name something you might do while stuck in traffic.",
-        "answers":  [
-                        {
-                            "text":  "listen to radio",
-                            "points":  43
-                        },
-                        {
-                            "text":  "sing",
-                            "points":  20
-                        },
-                        {
-                            "text":  "talk on the phone",
-                            "points":  17
-                        },
-                        {
-                            "text":  "text",
-                            "points":  11
-                        },
-                        {
-                            "text":  "read",
-                            "points":  9
                         }
                     ]
     },
@@ -17654,7 +17168,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might find on a deserted island.",
         "answers":  [
                         {
-                            "text":  "palmtree",
+                            "text":  "palm tree",
                             "points":  41
                         },
                         {
@@ -18073,7 +17587,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  698,
-        "question":  "Name something you eat or drink that\u0027s pink.",
+        "question":  "Name something you eat or drink that's pink.",
         "answers":  [
                         {
                             "text":  "lemonade",
@@ -18084,7 +17598,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "cottoncandy",
+                            "text":  "cotton candy",
                             "points":  5
                         },
                         {
@@ -18114,7 +17628,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "department st..",
+                            "text":  "department store",
                             "points":  10
                         },
                         {
@@ -18316,7 +17830,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "tower or terror",
+                            "text":  "tower of terror",
                             "points":  5
                         }
                     ]
@@ -18986,28 +18500,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "shed fur",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  733,
-        "question":  "Name a country you would not like to live in.",
-        "answers":  [
-                        {
-                            "text":  "afghanistan",
-                            "points":  35
-                        },
-                        {
-                            "text":  "iraq",
-                            "points":  35
-                        },
-                        {
-                            "text":  "iran",
-                            "points":  18
-                        },
-                        {
-                            "text":  "north korea",
-                            "points":  12
                         }
                     ]
     },
@@ -19774,39 +19266,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  25
                         },
                         {
-                            "text":  "soap",
-                            "points":  25
-                        },
-                        {
-                            "text":  "detergent",
-                            "points":  25
-                        },
-                        {
-                            "text":  "dog food",
-                            "points":  9
-                        },
-                        {
-                            "text":  "licorice",
-                            "points":  14
-                        },
-                        {
-                            "text":  "suckers",
-                            "points":  14
-                        },
-                        {
-                            "text":  "sweets",
-                            "points":  14
-                        },
-                        {
                             "text":  "candy",
-                            "points":  14
-                        },
-                        {
-                            "text":  "bonbons",
-                            "points":  14
-                        },
-                        {
-                            "text":  "lollipops",
                             "points":  14
                         },
                         {
@@ -19814,28 +19274,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "alpo",
-                            "points":  9
-                        },
-                        {
-                            "text":  "kibble",
-                            "points":  9
-                        },
-                        {
-                            "text":  "food",
-                            "points":  9
-                        },
-                        {
-                            "text":  "conditioner",
-                            "points":  9
-                        },
-                        {
                             "text":  "shampoo",
                             "points":  9
-                        },
-                        {
-                            "text":  "dentifrice",
-                            "points":  8
                         },
                         {
                             "text":  "toothpaste",
@@ -19964,7 +19404,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "monster inc.",
+                            "text":  "monsters inc.",
                             "points":  3
                         },
                         {
@@ -20502,28 +19942,28 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something a man might have expensive taste in.",
         "answers":  [
                         {
-                            "text":  "cologne",
-                            "points":  20
-                        },
-                        {
                             "text":  "car",
-                            "points":  54
+                            "points":  41
                         },
                         {
                             "text":  "clothes/shoes",
-                            "points":  22
+                            "points":  17
                         },
                         {
-                            "text":  "jewelry/watch",
-                            "points":  12
-                        },
-                        {
-                            "text":  "wine/alcohol",
-                            "points":  7
+                            "text":  "cologne",
+                            "points":  15
                         },
                         {
                             "text":  "cigars",
-                            "points":  18
+                            "points":  13
+                        },
+                        {
+                            "text":  "jewelry/watch",
+                            "points":  9
+                        },
+                        {
+                            "text":  "wine/alcohol",
+                            "points":  5
                         }
                     ]
     },
@@ -20634,7 +20074,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "drumset",
+                            "text":  "drum set",
                             "points":  5
                         }
                     ]
@@ -20696,7 +20136,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  27
                         },
                         {
-                            "text":  "vetetables",
+                            "text":  "vegetables",
                             "points":  8
                         },
                         {
@@ -21142,7 +20582,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "dirtry harry",
+                            "text":  "dirty harry",
                             "points":  16
                         },
                         {
@@ -21225,10 +20665,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "baseball",
-                            "points":  9
-                        },
-                        {
-                            "text":  "fastball",
                             "points":  9
                         },
                         {
@@ -21506,28 +20942,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  825,
-        "question":  "Name something people say keeps you going.",
-        "answers":  [
-                        {
-                            "text":  "children",
-                            "points":  49
-                        },
-                        {
-                            "text":  "exercise",
-                            "points":  36
-                        },
-                        {
-                            "text":  "laughing",
-                            "points":  8
-                        },
-                        {
-                            "text":  "healthy foods",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  826,
         "question":  "Name something Santa asks children when they sit on his lap.",
         "answers":  [
@@ -21602,11 +21016,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  50
                         },
                         {
-                            "text":  "rabbit\u0027s foot",
+                            "text":  "rabbit's foot",
                             "points":  37
                         },
                         {
-                            "text":  "horsehoe",
+                            "text":  "horseshoe",
                             "points":  7
                         },
                         {
@@ -21910,7 +21324,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "mail/correspond.",
+                            "text":  "mail/correspondence",
                             "points":  10
                         },
                         {
@@ -22106,7 +21520,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a sporting event that only happens once a year.",
         "answers":  [
                         {
-                            "text":  "superbowl",
+                            "text":  "super bowl",
                             "points":  61
                         },
                         {
@@ -22126,7 +21540,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "wimpledon",
+                            "text":  "wimbledon",
                             "points":  3
                         }
                     ]
@@ -22170,7 +21584,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  33
                         },
                         {
-                            "text":  "red-breasted...",
+                            "text":  "red-breasted robin",
                             "points":  21
                         },
                         {
@@ -22188,14 +21602,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  74
                         },
                         {
-                            "text":  "rat",
-                            "points":  2
-                        },
-                        {
-                            "text":  "mosquito",
-                            "points":  2
-                        },
-                        {
                             "text":  "snakes",
                             "points":  12
                         },
@@ -22206,6 +21612,14 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tiger",
                             "points":  3
+                        },
+                        {
+                            "text":  "rat",
+                            "points":  2
+                        },
+                        {
+                            "text":  "mosquito",
+                            "points":  2
                         },
                         {
                             "text":  "cat",
@@ -22312,15 +21726,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "bride of frank",
+                            "text":  "bride of frankenstein",
                             "points":  4
                         },
                         {
-                            "text":  "bestfriends with the bride",
-                            "points":  4
-                        },
-                        {
-                            "text":  "seven brides",
+                            "text":  "seven brides for seven brothers",
                             "points":  4
                         }
                     ]
@@ -22474,32 +21884,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "lion",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  863,
-        "question":  "Name a sport where the players wear gloves.",
-        "answers":  [
-                        {
-                            "text":  "boxing",
-                            "points":  32
-                        },
-                        {
-                            "text":  "cricket",
-                            "points":  26
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  13
-                        },
-                        {
-                            "text":  "golf",
-                            "points":  12
-                        },
-                        {
-                            "text":  "football",
-                            "points":  11
                         }
                     ]
     },
@@ -22778,7 +22162,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "thunder/ld. noise",
+                            "text":  "thunder/loud noise",
                             "points":  10
                         },
                         {
@@ -22878,7 +22262,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "all dogs...heaven",
+                            "text":  "all dogs go to heaven",
                             "points":  16
                         },
                         {
@@ -23458,7 +22842,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "cableman",
+                            "text":  "cable man",
                             "points":  4
                         },
                         {
@@ -24056,7 +23440,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  59
                         },
                         {
-                            "text":  "german shephard",
+                            "text":  "german shepherd",
                             "points":  13
                         },
                         {
@@ -24250,7 +23634,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "applecider",
+                            "text":  "apple cider",
                             "points":  3
                         }
                     ]
@@ -24766,36 +24150,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  949,
-        "question":  "Name something in your house that you hate to clean.",
-        "answers":  [
-                        {
-                            "text":  "bathroom",
-                            "points":  38
-                        },
-                        {
-                            "text":  "stove",
-                            "points":  24
-                        },
-                        {
-                            "text":  "floors",
-                            "points":  15
-                        },
-                        {
-                            "text":  "windows",
-                            "points":  11
-                        },
-                        {
-                            "text":  "refrigerator",
-                            "points":  7
-                        },
-                        {
-                            "text":  "dirty dishes",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  950,
         "question":  "Name a person who is paid to make decisions.",
         "answers":  [
@@ -24856,36 +24210,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "eat by himself",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  952,
-        "question":  "Name the most uncomfortable place to get a sunburn.",
-        "answers":  [
-                        {
-                            "text":  "back",
-                            "points":  40
-                        },
-                        {
-                            "text":  "face",
-                            "points":  25
-                        },
-                        {
-                            "text":  "buttocks",
-                            "points":  18
-                        },
-                        {
-                            "text":  "shoulders",
-                            "points":  8
-                        },
-                        {
-                            "text":  "legs",
-                            "points":  5
-                        },
-                        {
-                            "text":  "feet",
-                            "points":  4
                         }
                     ]
     },
@@ -25169,7 +24493,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  964,
-        "question":  "Name something Donald Trump has that\u0027s big.",
+        "question":  "Name something Donald Trump has that's big.",
         "answers":  [
                         {
                             "text":  "bank accounts",
@@ -25184,7 +24508,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "trump towers/apts.",
+                            "text":  "trump towers/apartments",
                             "points":  8
                         },
                         {
@@ -25412,7 +24736,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "story/conversat\u0027n",
+                            "text":  "story/conversation",
                             "points":  4
                         },
                         {
@@ -25452,14 +24776,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a job you should avoid if you are a lousy driver.",
         "answers":  [
                         {
-                            "text":  "driver",
-                            "points":  28
-                        },
-                        {
-                            "text":  "cab",
-                            "points":  28
-                        },
-                        {
                             "text":  "taxi driver",
                             "points":  28
                         },
@@ -25468,79 +24784,19 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "city bus driver",
-                            "points":  23
-                        },
-                        {
-                            "text":  "school bus driver",
-                            "points":  23
-                        },
-                        {
-                            "text":  "lorry",
-                            "points":  14
-                        },
-                        {
-                            "text":  "pick up",
-                            "points":  14
-                        },
-                        {
-                            "text":  "eighteen wheeler",
-                            "points":  14
-                        },
-                        {
-                            "text":  "big rig",
-                            "points":  14
-                        },
-                        {
-                            "text":  "semi",
-                            "points":  14
-                        },
-                        {
                             "text":  "truck driver",
                             "points":  14
                         },
                         {
-                            "text":  "mack truck",
-                            "points":  14
-                        },
-                        {
-                            "text":  "pizza delivery",
+                            "text":  "delivery driver",
                             "points":  10
                         },
                         {
-                            "text":  "ups",
-                            "points":  10
-                        },
-                        {
-                            "text":  "fedex",
-                            "points":  10
-                        },
-                        {
-                            "text":  "delivery",
-                            "points":  10
-                        },
-                        {
-                            "text":  "chauffer",
+                            "text":  "chauffeur",
                             "points":  4
                         },
                         {
-                            "text":  "nascar",
-                            "points":  2
-                        },
-                        {
-                            "text":  "formula one",
-                            "points":  2
-                        },
-                        {
                             "text":  "race car driver",
-                            "points":  2
-                        },
-                        {
-                            "text":  "car driver",
-                            "points":  2
-                        },
-                        {
-                            "text":  "indy",
                             "points":  2
                         }
                     ]
@@ -25654,7 +24910,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a celebrity you would hate to be stuck next to on a plane.",
         "answers":  [
                         {
-                            "text":  "justin beiber",
+                            "text":  "justin bieber",
                             "points":  24
                         },
                         {
@@ -25934,7 +25190,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "rockband",
+                            "text":  "rock band",
                             "points":  5
                         },
                         {
@@ -26089,7 +25345,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  996,
-        "question":  "Name something you\u0027d find in a ring.",
+        "question":  "Name something you'd find in a ring.",
         "answers":  [
                         {
                             "text":  "gems",
@@ -26108,7 +25364,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "circusact",
+                            "text":  "circus act",
                             "points":  6
                         }
                     ]
@@ -26874,32 +26130,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1027,
-        "question":  "Name something you wish you were born with.",
-        "answers":  [
-                        {
-                            "text":  "money",
-                            "points":  53
-                        },
-                        {
-                            "text":  "good looks",
-                            "points":  16
-                        },
-                        {
-                            "text":  "talent",
-                            "points":  11
-                        },
-                        {
-                            "text":  "smart",
-                            "points":  6
-                        },
-                        {
-                            "text":  "super powers",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  1028,
         "question":  "Name something about Tom Cruise that comedians make fun of.",
         "answers":  [
@@ -27234,20 +26464,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1041,
-        "question":  "Name a beverage you might drink at a typical holiday party.",
-        "answers":  [
-                        {
-                            "text":  "egg nog",
-                            "points":  55
-                        },
-                        {
-                            "text":  "wine",
-                            "points":  16
-                        }
-                    ]
-    },
-    {
         "id":  1042,
         "question":  "Name something you can give as a housewarming gift.",
         "answers":  [
@@ -27452,7 +26668,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "apls",
+                            "text":  "alps",
                             "points":  12
                         },
                         {
@@ -27460,7 +26676,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "pocomo",
+                            "text":  "poconos",
                             "points":  7
                         }
                     ]
@@ -27579,7 +26795,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1053,
-        "question":  "Name something that is considered a citizen\u0027s duty.",
+        "question":  "Name something that is considered a citizen's duty.",
         "answers":  [
                         {
                             "text":  "vote",
@@ -27598,7 +26814,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "neighbor wat...",
+                            "text":  "neighborhood watch",
                             "points":  4
                         },
                         {
@@ -27734,27 +26950,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  31
                         },
                         {
-                            "text":  "safety belt",
-                            "points":  31
-                        },
-                        {
-                            "text":  "alarm",
-                            "points":  8
-                        },
-                        {
-                            "text":  "decelerators",
-                            "points":  9
-                        },
-                        {
                             "text":  "brakes",
                             "points":  9
                         },
                         {
                             "text":  "car alarm",
-                            "points":  8
-                        },
-                        {
-                            "text":  "security alarm",
                             "points":  8
                         }
                     ]
@@ -27898,24 +27098,24 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "On average, how many hours does a couple sleep on their wedding night?",
         "answers":  [
                         {
-                            "text":  "1",
-                            "points":  4
-                        },
-                        {
-                            "text":  "2",
-                            "points":  18
-                        },
-                        {
-                            "text":  "3",
-                            "points":  20
-                        },
-                        {
                             "text":  "4",
                             "points":  30
                         },
                         {
                             "text":  "5",
                             "points":  22
+                        },
+                        {
+                            "text":  "3",
+                            "points":  20
+                        },
+                        {
+                            "text":  "2",
+                            "points":  18
+                        },
+                        {
+                            "text":  "1",
+                            "points":  4
                         }
                     ]
     },
@@ -27951,7 +27151,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "elves",
-                            "points":  0
+                            "points":  45
                         },
                         {
                             "text":  "mrs. claus",
@@ -28150,44 +27350,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "gene autry",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  1075,
-        "question":  "Real or not, name someone famous named Jos.",
-        "answers":  [
-                        {
-                            "text":  "jose feliciano",
-                            "points":  25
-                        },
-                        {
-                            "text":  "jose cuervo",
-                            "points":  23
-                        },
-                        {
-                            "text":  "jose canseco",
-                            "points":  18
-                        },
-                        {
-                            "text":  "jose ferrer",
-                            "points":  11
-                        },
-                        {
-                            "text":  "jose gonzalez",
-                            "points":  3
-                        },
-                        {
-                            "text":  "jose greco",
-                            "points":  3
-                        },
-                        {
-                            "text":  "jose jimenez",
-                            "points":  3
-                        },
-                        {
-                            "text":  "jose iturbi",
-                            "points":  3
                         }
                     ]
     },
@@ -28562,7 +27724,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "doctor\u0027s appt",
+                            "text":  "doctor's appointment",
                             "points":  13
                         },
                         {
@@ -28758,22 +27920,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me the age when boys stop playing with stuffed animals.",
         "answers":  [
                         {
-                            "text":  "3",
-                            "points":  8
-                        },
-                        {
-                            "text":  "4",
-                            "points":  9
-                        },
-                        {
-                            "text":  "5",
-                            "points":  11
-                        },
-                        {
-                            "text":  "6",
-                            "points":  10
-                        },
-                        {
                             "text":  "7",
                             "points":  22
                         },
@@ -28784,6 +27930,22 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "10",
                             "points":  15
+                        },
+                        {
+                            "text":  "5",
+                            "points":  11
+                        },
+                        {
+                            "text":  "6",
+                            "points":  10
+                        },
+                        {
+                            "text":  "4",
+                            "points":  9
+                        },
+                        {
+                            "text":  "3",
+                            "points":  8
                         }
                     ]
     },
@@ -28834,7 +27996,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "movie thearre",
+                            "text":  "movie theater",
                             "points":  6
                         }
                     ]
@@ -29024,7 +28186,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  51
                         },
                         {
-                            "text":  "coyboy hat",
+                            "text":  "cowboy hat",
                             "points":  22
                         },
                         {
@@ -29088,7 +28250,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "wallice and grommit",
+                            "text":  "wallace and gromit",
                             "points":  13
                         },
                         {
@@ -29113,10 +28275,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  1109,
         "question":  "Tell me something you might do to show someone you love them.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "kiss them",
                             "points":  33
@@ -29208,10 +28366,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something that would ruin a cruise.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "illness",
                             "points":  34
                         }
@@ -29252,7 +28406,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "furniture/elec.",
+                            "text":  "furniture/electronics",
                             "points":  17
                         },
                         {
@@ -29295,10 +28449,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "actor",
-                            "points":  6
-                        },
-                        {
-                            "text":  "hairstylist",
                             "points":  6
                         },
                         {
@@ -29368,12 +28518,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something people often keep in their attic.",
         "answers":  [
                         {
-                            "text":  "old clothes",
-                            "points":  25
-                        },
-                        {
                             "text":  "christmas decorations",
                             "points":  35
+                        },
+                        {
+                            "text":  "old clothes",
+                            "points":  25
                         },
                         {
                             "text":  "furniture",
@@ -29464,11 +28614,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "horror pic. show",
+                            "text":  "rocky horror picture show",
                             "points":  10
                         },
                         {
-                            "text":  "rocky \u0026 bullwink.",
+                            "text":  "rocky & bullwinkle",
                             "points":  8
                         }
                     ]
@@ -29526,7 +28676,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "cannoil",
+                            "text":  "cannoli",
                             "points":  6
                         },
                         {
@@ -29896,36 +29046,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1142,
-        "question":  "Tell me something you would hate to be on when it breaks down.",
-        "answers":  [
-                        {
-                            "text":  "roller coaster",
-                            "points":  38
-                        },
-                        {
-                            "text":  "airplanes",
-                            "points":  19
-                        },
-                        {
-                            "text":  "elevator",
-                            "points":  14
-                        },
-                        {
-                            "text":  "ferris wheel",
-                            "points":  13
-                        },
-                        {
-                            "text":  "car",
-                            "points":  10
-                        },
-                        {
-                            "text":  "train",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  1143,
         "question":  "Tell me something that floats on the water.",
         "answers":  [
@@ -30080,7 +29200,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "water melted h...",
+                            "text":  "water melted her",
                             "points":  19
                         },
                         {
@@ -30088,7 +29208,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "she\u0027s ugly",
+                            "text":  "she's ugly",
                             "points":  16
                         },
                         {
@@ -30516,7 +29636,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "tromebone",
+                            "text":  "trombone",
                             "points":  3
                         }
                     ]
@@ -30578,7 +29698,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  55
                         },
                         {
-                            "text":  "proctocologist",
+                            "text":  "proctologist",
                             "points":  26
                         },
                         {
@@ -30924,32 +30044,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "make up",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  1180,
-        "question":  "Where do you get your Christmas tree from each year?",
-        "answers":  [
-                        {
-                            "text":  "store",
-                            "points":  34
-                        },
-                        {
-                            "text":  "woods",
-                            "points":  33
-                        },
-                        {
-                            "text":  "tree lot",
-                            "points":  11
-                        },
-                        {
-                            "text":  "tree farm",
-                            "points":  8
-                        },
-                        {
-                            "text":  "attic",
-                            "points":  5
                         }
                     ]
     },
@@ -31611,7 +30705,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "apple sauce",
-                            "points":  0
+                            "points":  3
                         }
                     ]
     },
@@ -31705,7 +30799,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "princess charming",
-                            "points":  0
+                            "points":  24
                         }
                     ]
     },
@@ -32140,7 +31234,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "dr./dentist appt.",
+                            "text":  "doctor/dentist appointment",
                             "points":  7
                         },
                         {
@@ -32934,7 +32028,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "call someone/ext.",
+                            "text":  "call someone/exterminator",
                             "points":  9
                         },
                         {
@@ -33530,44 +32624,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1275,
-        "question":  "A family man buys food in bulk. Name something a single guy buys in bulk.",
-        "answers":  [
-                        {
-                            "text":  "lube/ky jelly",
-                            "points":  0
-                        },
-                        {
-                            "text":  "jewelry",
-                            "points":  0
-                        },
-                        {
-                            "text":  "roses",
-                            "points":  0
-                        },
-                        {
-                            "text":  "pabst/booze",
-                            "points":  44
-                        },
-                        {
-                            "text":  "boner bonnets",
-                            "points":  25
-                        },
-                        {
-                            "text":  "food/frozen meals",
-                            "points":  21
-                        },
-                        {
-                            "text":  "toilet paper",
-                            "points":  3
-                        },
-                        {
-                            "text":  "undies/clothes",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  1276,
         "question":  "At a nightclub, what would you hate to be doing when the music suddenly stopped?",
         "answers":  [
@@ -33817,7 +32873,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "bodyguard",
-                            "points":  0
+                            "points":  5
                         }
                     ]
     },
@@ -33834,7 +32890,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  27
                         },
                         {
-                            "text":  "souveniers",
+                            "text":  "souvenirs",
                             "points":  11
                         },
                         {
@@ -34413,14 +33469,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1310,
-        "question":  "Fill in the blank: Whoever said money can\u0027t buy happiness never owned a _____.",
+        "question":  "Fill in the blank: Whoever said money can't buy happiness never owned a _____.",
         "answers":  [
                         {
                             "text":  "mansion",
                             "points":  28
                         },
                         {
-                            "text":  "sportscar",
+                            "text":  "sports car",
                             "points":  19
                         },
                         {
@@ -34532,20 +33588,20 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Give me a word that follows 'over the ...'",
         "answers":  [
                         {
-                            "text":  "hill",
-                            "points":  10
-                        },
-                        {
-                            "text":  "rainbow",
-                            "points":  9
-                        },
-                        {
                             "text":  "moon",
                             "points":  17
                         },
                         {
                             "text":  "top",
                             "points":  13
+                        },
+                        {
+                            "text":  "hill",
+                            "points":  10
+                        },
+                        {
+                            "text":  "rainbow",
+                            "points":  9
                         }
                     ]
     },
@@ -34674,7 +33730,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "by...silvery moon",
+                            "text":  "by the light of the silvery moon",
                             "points":  5
                         },
                         {
@@ -34844,7 +33900,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "veil/bridal accessry",
+                            "text":  "veil/bridal accessory",
                             "points":  13
                         },
                         {
@@ -35224,7 +34280,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "If you needed some fast cash, name a possession you might sell.",
         "answers":  [
                         {
-                            "text":  "jewelery",
+                            "text":  "jewelry",
                             "points":  49
                         },
                         {
@@ -35307,23 +34363,23 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "bear",
-                            "points":  0
+                            "points":  11
                         },
                         {
                             "text":  "pig",
-                            "points":  0
+                            "points":  11
                         },
                         {
                             "text":  "cow",
-                            "points":  0
+                            "points":  11
                         },
                         {
                             "text":  "hippo",
-                            "points":  0
+                            "points":  11
                         },
                         {
                             "text":  "whale",
-                            "points":  0
+                            "points":  11
                         }
                     ]
     },
@@ -35347,7 +34403,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "bear growling",
-                            "points":  0
+                            "points":  44
                         },
                         {
                             "text":  "owls",
@@ -35495,27 +34551,31 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1351,
-        "question":  "If you\u0027re cooking Thanksgiving dinner, how many days in advance do you start preparing?",
+        "question":  "If you're cooking Thanksgiving dinner, how many days in advance do you start preparing?",
         "answers":  [
-                        {
-                            "text":  "7",
-                            "points":  20
-                        },
-                        {
-                            "text":  "5",
-                            "points":  15
-                        },
                         {
                             "text":  "2",
                             "points":  23
+                        },
+                        {
+                            "text":  "7",
+                            "points":  20
                         },
                         {
                             "text":  "3",
                             "points":  18
                         },
                         {
+                            "text":  "5",
+                            "points":  15
+                        },
+                        {
                             "text":  "4",
                             "points":  8
+                        },
+                        {
+                            "text":  "1",
+                            "points":  6
                         },
                         {
                             "text":  "30",
@@ -35524,10 +34584,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "14",
                             "points":  5
-                        },
-                        {
-                            "text":  "1",
-                            "points":  6
                         }
                     ]
     },
@@ -35714,24 +34770,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1359,
-        "question":  "In a crowded house, name something specific that people line up to use.",
-        "answers":  [
-                        {
-                            "text":  "toilet",
-                            "points":  50
-                        },
-                        {
-                            "text":  "shower",
-                            "points":  29
-                        },
-                        {
-                            "text":  "phone",
-                            "points":  13
-                        }
-                    ]
-    },
-    {
         "id":  1360,
         "question":  "In what room of the house is a man most likely to commit murder?",
         "answers":  [
@@ -35855,10 +34893,10 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1365,
-        "question":  "If you don\u0027t have a ruler, name something you use to measure things with.",
+        "question":  "If you don't have a ruler, name something you use to measure things with.",
         "answers":  [
                         {
-                            "text":  "tapemeasure",
+                            "text":  "tape measure",
                             "points":  50
                         },
                         {
@@ -36412,7 +35450,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "rosie o\u0027donnell",
+                            "text":  "rosie o'donnell",
                             "points":  11
                         },
                         {
@@ -36429,7 +35467,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "brad pitt",
-                            "points":  0
+                            "points":  4
                         }
                     ]
     },
@@ -36510,7 +35548,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "sit in fornt",
+                            "text":  "sit in front",
                             "points":  5
                         }
                     ]
@@ -36611,7 +35649,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1391,
-        "question":  "Name a beverage served at fancy restaurants. (Alcohol is not an answer, be more specific.)",
+        "question":  "Name a beverage served at fancy restaurants.",
         "answers":  [
                         {
                             "text":  "wine",
@@ -36878,28 +35916,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1401,
-        "question":  "Name a party game that you'd be surprised to see at an adult's birthday.",
-        "answers":  [
-                        {
-                            "text":  "pin the tailâ€¦",
-                            "points":  50
-                        },
-                        {
-                            "text":  "twister",
-                            "points":  19
-                        },
-                        {
-                            "text":  "spin the bottle",
-                            "points":  12
-                        },
-                        {
-                            "text":  "musical chairs",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  1402,
         "question":  "Name a hidden cost when buying a car.",
         "answers":  [
@@ -36938,7 +35954,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  25
                         },
                         {
-                            "text":  "in law\u0027s/parnts",
+                            "text":  "in law's/parents",
                             "points":  12
                         },
                         {
@@ -37716,7 +36732,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "alot more seats",
+                            "text":  "a lot more seats",
                             "points":  2
                         }
                     ]
@@ -37738,10 +36754,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "breathe",
-                            "points":  4
-                        },
-                        {
                             "text":  "railway station",
                             "points":  2
                         }
@@ -37749,7 +36761,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1434,
-        "question":  "Name something many women regularly buy for their husbands, but men don't buy for their wives (more specific than clothes).",
+        "question":  "Name something many women regularly buy for their husbands, but men don't buy for their wives.",
         "answers":  [
                         {
                             "text":  "underwear",
@@ -37920,7 +36932,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something commercial pilots can't fly without.",
         "answers":  [
                         {
-                            "text":  "lisence",
+                            "text":  "license",
                             "points":  34
                         },
                         {
@@ -37967,7 +36979,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "refresh makeup/hair",
-                            "points":  0
+                            "points":  12
                         }
                     ]
     },
@@ -38296,32 +37308,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "garden",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  1454,
-        "question":  "Name an article of clothing that makes you feel you can't move.",
-        "answers":  [
-                        {
-                            "text":  "coat",
-                            "points":  27
-                        },
-                        {
-                            "text":  "jeans",
-                            "points":  26
-                        },
-                        {
-                            "text":  "girdle",
-                            "points":  18
-                        },
-                        {
-                            "text":  "tights",
-                            "points":  9
-                        },
-                        {
-                            "text":  "snowsuit",
-                            "points":  6
                         }
                     ]
     },
@@ -38667,7 +37653,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "feed themselves",
-                            "points":  0
+                            "points":  3
                         }
                     ]
     },
@@ -38784,12 +37770,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "pen/pencil",
-                            "points":  1
-                        },
-                        {
                             "text":  "beeper",
                             "points":  5
+                        },
+                        {
+                            "text":  "pen/pencil",
+                            "points":  1
                         }
                     ]
     },
@@ -39269,7 +38255,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "ralph lauren",
-                            "points":  0
+                            "points":  7
                         }
                     ]
     },
@@ -39452,7 +38438,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "gets dark erlier",
+                            "text":  "gets dark earlier",
                             "points":  4
                         }
                     ]
@@ -39518,7 +38504,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "chronicals of narnia",
+                            "text":  "chronicles of narnia",
                             "points":  16
                         },
                         {
@@ -39712,16 +38698,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "saxaphone",
-                            "points":  1
-                        },
-                        {
                             "text":  "flute",
                             "points":  5
                         },
                         {
                             "text":  "bagpipe",
                             "points":  3
+                        },
+                        {
+                            "text":  "saxophone",
+                            "points":  1
                         }
                     ]
     },
@@ -40114,7 +39100,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "broccili",
+                            "text":  "broccoli",
                             "points":  3
                         },
                         {
@@ -40170,7 +39156,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  25
                         },
                         {
-                            "text":  "jumpstart",
+                            "text":  "jump start",
                             "points":  23
                         },
                         {
@@ -40212,7 +39198,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "telly savalis",
+                            "text":  "telly savalas",
                             "points":  8
                         },
                         {
@@ -40380,7 +39366,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "niagra falls",
+                            "text":  "niagara falls",
                             "points":  3
                         }
                     ]
@@ -40390,7 +39376,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an article of clothing that only a neat freak would iron.",
         "answers":  [
                         {
-                            "text":  "underware",
+                            "text":  "underwear",
                             "points":  47
                         },
                         {
@@ -40658,7 +39644,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a book you carry around to impress someone else.",
         "answers":  [
                         {
-                            "text":  "religous scripture",
+                            "text":  "religious scripture",
                             "points":  58
                         },
                         {
@@ -40744,7 +39730,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "pleny of food",
+                            "text":  "plenty of food",
                             "points":  19
                         },
                         {
@@ -40844,12 +39830,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something cowboys are good at.",
         "answers":  [
                         {
-                            "text":  "riding horses",
-                            "points":  15
-                        },
-                        {
                             "text":  "roping",
                             "points":  20
+                        },
+                        {
+                            "text":  "riding horses",
+                            "points":  15
                         },
                         {
                             "text":  "rodeo",
@@ -41023,7 +40009,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "wonder woman",
-                            "points":  0
+                            "points":  5
                         }
                     ]
     },
@@ -41586,11 +40572,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "jane seymore",
+                            "text":  "jane seymour",
                             "points":  6
                         },
                         {
-                            "text":  "tarzan\u0027s jane",
+                            "text":  "tarzan's jane",
                             "points":  5
                         }
                     ]
@@ -41679,7 +40665,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1579,
-        "question":  "Name something you might see in a high school shop class. (Tools is not an answer, be more specific.)",
+        "question":  "Name something you might see in a high school shop class.",
         "answers":  [
                         {
                             "text":  "wood",
@@ -42432,11 +41418,11 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a country with a very long name.",
         "answers":  [
                         {
-                            "text":  "afghanastan",
+                            "text":  "afghanistan",
                             "points":  31
                         },
                         {
-                            "text":  "austrailia",
+                            "text":  "australia",
                             "points":  25
                         },
                         {
@@ -42786,7 +41772,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "throw bouqueu",
+                            "text":  "throw bouquet",
                             "points":  6
                         },
                         {
@@ -43020,7 +42006,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "symphany",
+                            "text":  "symphony",
                             "points":  3
                         },
                         {
@@ -43112,7 +42098,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "efficient bilbs",
+                            "text":  "efficient bulbs",
                             "points":  19
                         },
                         {
@@ -43230,32 +42216,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "wrap presents",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  1639,
-        "question":  "Name a type of gymnastic move almost every kid knows how to do.",
-        "answers":  [
-                        {
-                            "text":  "cart wheel",
-                            "points":  37
-                        },
-                        {
-                            "text":  "somersault",
-                            "points":  34
-                        },
-                        {
-                            "text":  "tumbling",
-                            "points":  7
-                        },
-                        {
-                            "text":  "flip",
-                            "points":  4
-                        },
-                        {
-                            "text":  "balance beam",
-                            "points":  5
                         }
                     ]
     },
@@ -43630,7 +42590,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  44
                         },
                         {
-                            "text":  "too stressfull",
+                            "text":  "too stressful",
                             "points":  27
                         },
                         {
@@ -43924,40 +42884,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "horoscope sign",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  1664,
-        "question":  "Name something you'd hate to land in after skydiving.",
-        "answers":  [
-                        {
-                            "text":  "water",
-                            "points":  35
-                        },
-                        {
-                            "text":  "manure",
-                            "points":  24
-                        },
-                        {
-                            "text":  "tree",
-                            "points":  8
-                        },
-                        {
-                            "text":  "mud",
-                            "points":  10
-                        },
-                        {
-                            "text":  "cactus",
-                            "points":  9
-                        },
-                        {
-                            "text":  "rocks",
-                            "points":  8
-                        },
-                        {
-                            "text":  "sand",
-                            "points":  3
                         }
                     ]
     },
@@ -44671,15 +43597,15 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "music",
-                            "points":  44
+                            "points":  40
                         },
                         {
                             "text":  "candles",
-                            "points":  33
+                            "points":  30
                         },
                         {
                             "text":  "lighting",
-                            "points":  29
+                            "points":  27
                         },
                         {
                             "text":  "food",
@@ -44730,7 +43656,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  40
                         },
                         {
-                            "text":  "doonsbury",
+                            "text":  "doonesbury",
                             "points":  13
                         },
                         {
@@ -44884,7 +43810,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "tobasco",
+                            "text":  "tabasco",
                             "points":  6
                         },
                         {
@@ -45006,7 +43932,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a specific chore that you cannot do without making a lot of noise.",
         "answers":  [
                         {
-                            "text":  "vacuumming",
+                            "text":  "vacuuming",
                             "points":  61
                         },
                         {
@@ -45062,7 +43988,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "jimmy darante",
+                            "text":  "jimmy durante",
                             "points":  9
                         },
                         {
@@ -45209,7 +44135,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "pulp fiction",
-                            "points":  0
+                            "points":  34
                         },
                         {
                             "text":  "matrix",
@@ -45421,7 +44347,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "red suit",
-                            "points":  0
+                            "points":  50
                         },
                         {
                             "text":  "beard",
@@ -45439,7 +44365,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "american",
-                            "points":  0
+                            "points":  39
                         },
                         {
                             "text":  "swiss",
@@ -45732,24 +44658,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1742,
-        "question":  "Name a state that attracts a lot of tourists.",
-        "answers":  [
-                        {
-                            "text":  "florida",
-                            "points":  38
-                        },
-                        {
-                            "text":  "hawaii",
-                            "points":  6
-                        },
-                        {
-                            "text":  "nevada",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  1743,
         "question":  "Name something about the holidays that is a source of stress.",
         "answers":  [
@@ -45764,20 +44672,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "travel",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  1744,
-        "question":  "Name something you'd need if you wanted to be a lawyer.",
-        "answers":  [
-                        {
-                            "text":  "degree",
-                            "points":  48
-                        },
-                        {
-                            "text":  "briefcase",
-                            "points":  16
                         }
                     ]
     },
@@ -45884,20 +44778,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1752,
-        "question":  "Name something dogs fetch.",
-        "answers":  [
-                        {
-                            "text":  "bone",
-                            "points":  26
-                        },
-                        {
-                            "text":  "frisbee",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  1753,
         "question":  "Name a movie with more action than dialogue.",
         "answers":  [
@@ -45931,12 +44811,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1755,
-        "question":  "Name something you can\u0027t wait to do at a party.",
+        "question":  "Name something you can't wait to do at a party.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "dance",
                             "points":  44
@@ -45963,7 +44839,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "california",
-                            "points":  0
+                            "points":  44
                         },
                         {
                             "text":  "florida",
@@ -46006,15 +44882,11 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a recording artist parents might consider to be a bad influence.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "miley cyrus",
                             "points":  44
                         },
                         {
-                            "text":  "justin beiber",
+                            "text":  "justin bieber",
                             "points":  11
                         }
                     ]
@@ -46053,15 +44925,11 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1762,
-        "question":  "Name something birds have that humans don\u0027t.",
+        "question":  "Name something birds have that humans don't.",
         "answers":  [
                         {
                             "text":  "wings",
                             "points":  58
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -46088,7 +44956,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  44
                         },
                         {
-                            "text":  "dizzy gallespie",
+                            "text":  "dizzy gillespie",
                             "points":  16
                         }
                     ]
@@ -46139,7 +45007,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "colorado",
-                            "points":  0
+                            "points":  37
                         },
                         {
                             "text":  "alaska",
@@ -46169,10 +45037,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  1769,
         "question":  "Name something people use to kill unwanted insects.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "pesticide",
                             "points":  46
@@ -46451,12 +45315,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1783,
-        "question":  "Name something you might find in a kid\u0027s room.",
+        "question":  "Name something you might find in a kid's room.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "toys",
                             "points":  57
@@ -46576,10 +45436,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "hat",
                             "points":  49
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -46588,8 +45444,8 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a sign that the person you're talking to is drunk.",
         "answers":  [
                         {
-                            "text":  "cant stand up",
-                            "points":  0
+                            "text":  "can't stand up",
+                            "points":  47
                         },
                         {
                             "text":  "slurring",
@@ -46601,10 +45457,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  1791,
         "question":  "Name a real-life situation where people might spontaneously break into song.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "birthday",
                             "points":  31
@@ -46689,7 +45541,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "kitty cat",
-                            "points":  0
+                            "points":  44
                         },
                         {
                             "text":  "trash can",
@@ -46978,20 +45830,16 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something about their jobs that teachers hate.",
         "answers":  [
                         {
-                            "text":  "kids",
-                            "points":  52
-                        },
-                        {
-                            "text":  "grading",
-                            "points":  13
-                        },
-                        {
-                            "text":  "behavior",
+                            "text":  "kids' behavior",
                             "points":  52
                         },
                         {
                             "text":  "money",
                             "points":  14
+                        },
+                        {
+                            "text":  "grading",
+                            "points":  13
                         },
                         {
                             "text":  "parents",
@@ -47030,7 +45878,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a type of business where you might drop something off and pick it up later.",
         "answers":  [
                         {
-                            "text":  "automechanic",
+                            "text":  "auto mechanic",
                             "points":  35
                         },
                         {
@@ -47242,7 +46090,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  43
                         },
                         {
-                            "text":  "wardr\u0027b malfunctn",
+                            "text":  "wardrobe malfunction",
                             "points":  25
                         },
                         {
@@ -47674,10 +46522,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "television",
-                            "points":  34
-                        },
-                        {
                             "text":  "babies",
                             "points":  6
                         }
@@ -47685,7 +46529,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1834,
-        "question":  "Name an animal on Noah\u0027s ark that took up a lot of space.",
+        "question":  "Name an animal on Noah's ark that took up a lot of space.",
         "answers":  [
                         {
                             "text":  "elephant",
@@ -47700,38 +46544,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "hippoptamus",
+                            "text":  "hippopotamus",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  1835,
-        "question":  "Name something people are afraid to ride on.",
-        "answers":  [
-                        {
-                            "text":  "roller coaster",
-                            "points":  44
-                        },
-                        {
-                            "text":  "airplane",
-                            "points":  19
-                        },
-                        {
-                            "text":  "horse",
-                            "points":  10
-                        },
-                        {
-                            "text":  "motorcycle",
-                            "points":  7
-                        },
-                        {
-                            "text":  "ferris wheel",
-                            "points":  4
-                        },
-                        {
-                            "text":  "bull",
-                            "points":  4
                         }
                     ]
     },
@@ -47844,7 +46658,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "hygeine",
+                            "text":  "hygiene",
                             "points":  13
                         },
                         {
@@ -48170,7 +46984,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "pegleg",
+                            "text":  "peg leg",
                             "points":  6
                         }
                     ]
@@ -48342,7 +47156,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a place where you might see someone cry.",
         "answers":  [
                         {
-                            "text":  "cemetary",
+                            "text":  "cemetery",
                             "points":  52
                         },
                         {
@@ -48548,19 +47362,11 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a fruit that has a peel.",
         "answers":  [
                         {
-                            "text":  "clementine",
-                            "points":  37
-                        },
-                        {
                             "text":  "oranges",
                             "points":  37
                         },
                         {
                             "text":  "banana",
-                            "points":  28
-                        },
-                        {
-                            "text":  "plantain",
                             "points":  28
                         },
                         {
@@ -48665,7 +47471,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1872,
-        "question":  "Name a way you can tell the person you\u0027re talking to is losing interest.",
+        "question":  "Name a way you can tell the person you're talking to is losing interest.",
         "answers":  [
                         {
                             "text":  "look away",
@@ -48680,7 +47486,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "fodgety",
+                            "text":  "fidgety",
                             "points":  5
                         },
                         {
@@ -49258,12 +48064,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a service people cancel when they move.",
         "answers":  [
                         {
-                            "text":  "phone",
-                            "points":  26
-                        },
-                        {
                             "text":  "electricity",
                             "points":  42
+                        },
+                        {
+                            "text":  "phone",
+                            "points":  26
                         },
                         {
                             "text":  "cable",
@@ -49466,7 +48272,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "has all his atte..",
+                            "text":  "has all his attention",
                             "points":  3
                         },
                         {
@@ -49480,67 +48286,11 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that siblings compete over.",
         "answers":  [
                         {
-                            "text":  "regard",
+                            "text":  "parents' attention",
                             "points":  42
-                        },
-                        {
-                            "text":  "notice",
-                            "points":  42
-                        },
-                        {
-                            "text":  "parents",
-                            "points":  42
-                        },
-                        {
-                            "text":  "mom",
-                            "points":  42
-                        },
-                        {
-                            "text":  "awareness",
-                            "points":  42
-                        },
-                        {
-                            "text":  "grades",
-                            "points":  7
-                        },
-                        {
-                            "text":  "attention",
-                            "points":  42
-                        },
-                        {
-                            "text":  "dad",
-                            "points":  42
-                        },
-                        {
-                            "text":  "figurines",
-                            "points":  19
-                        },
-                        {
-                            "text":  "playthings",
-                            "points":  19
-                        },
-                        {
-                            "text":  "duckies",
-                            "points":  19
-                        },
-                        {
-                            "text":  "dolls",
-                            "points":  19
-                        },
-                        {
-                            "text":  "tv",
-                            "points":  6
                         },
                         {
                             "text":  "toys",
-                            "points":  19
-                        },
-                        {
-                            "text":  "stuffed animals",
-                            "points":  19
-                        },
-                        {
-                            "text":  "rubber duckies",
                             "points":  19
                         },
                         {
@@ -49548,107 +48298,15 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "soccer",
-                            "points":  8
-                        },
-                        {
-                            "text":  "track",
-                            "points":  8
-                        },
-                        {
-                            "text":  "television",
-                            "points":  6
-                        },
-                        {
-                            "text":  "games",
-                            "points":  8
-                        },
-                        {
-                            "text":  "matches",
-                            "points":  8
-                        },
-                        {
-                            "text":  "hockey",
-                            "points":  8
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  8
-                        },
-                        {
-                            "text":  "basketball",
-                            "points":  8
-                        },
-                        {
-                            "text":  "field",
-                            "points":  8
-                        },
-                        {
-                            "text":  "athletics",
-                            "points":  8
-                        },
-                        {
-                            "text":  "football",
-                            "points":  8
-                        },
-                        {
-                            "text":  "golf",
-                            "points":  8
-                        },
-                        {
-                            "text":  "competitions",
-                            "points":  8
-                        },
-                        {
-                            "text":  "schools",
+                            "text":  "grades",
                             "points":  7
                         },
                         {
-                            "text":  "academics",
-                            "points":  7
-                        },
-                        {
-                            "text":  "marks",
-                            "points":  7
-                        },
-                        {
-                            "text":  "boob tube",
+                            "text":  "tv",
                             "points":  6
-                        },
-                        {
-                            "text":  "tube",
-                            "points":  6
-                        },
-                        {
-                            "text":  "on television",
-                            "points":  6
-                        },
-                        {
-                            "text":  "bucks",
-                            "points":  4
-                        },
-                        {
-                            "text":  "cash",
-                            "points":  4
-                        },
-                        {
-                            "text":  "riches",
-                            "points":  4
-                        },
-                        {
-                            "text":  "currency",
-                            "points":  4
-                        },
-                        {
-                            "text":  "wealth",
-                            "points":  4
                         },
                         {
                             "text":  "money",
-                            "points":  4
-                        },
-                        {
-                            "text":  "coinage",
                             "points":  4
                         }
                     ]
@@ -50090,7 +48748,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  41
                         },
                         {
-                            "text":  "hambugers",
+                            "text":  "hamburgers",
                             "points":  23
                         },
                         {
@@ -50270,36 +48928,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "firetruck",
-                            "points":  22
-                        },
-                        {
                             "text":  "stop sign",
                             "points":  21
-                        },
-                        {
-                            "text":  "sign",
-                            "points":  21
-                        },
-                        {
-                            "text":  "automobiles",
-                            "points":  15
-                        },
-                        {
-                            "text":  "vans",
-                            "points":  15
-                        },
-                        {
-                            "text":  "trucks",
-                            "points":  15
-                        },
-                        {
-                            "text":  "suvs",
-                            "points":  15
-                        },
-                        {
-                            "text":  "vehicles",
-                            "points":  15
                         },
                         {
                             "text":  "cars",
@@ -50311,10 +48941,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "fire hydrant",
-                            "points":  6
-                        },
-                        {
-                            "text":  "hydrant",
                             "points":  6
                         }
                     ]
@@ -50828,155 +49454,27 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might ask a landlord before renting an apartment.",
         "answers":  [
                         {
-                            "text":  "apartment",
-                            "points":  51
-                        },
-                        {
                             "text":  "rent",
                             "points":  51
-                        },
-                        {
-                            "text":  "mortgage",
-                            "points":  51
-                        },
-                        {
-                            "text":  "waterworks",
-                            "points":  13
-                        },
-                        {
-                            "text":  "hydro",
-                            "points":  13
-                        },
-                        {
-                            "text":  "electricity",
-                            "points":  13
-                        },
-                        {
-                            "text":  "heat",
-                            "points":  13
-                        },
-                        {
-                            "text":  "power",
-                            "points":  13
-                        },
-                        {
-                            "text":  "running water",
-                            "points":  13
                         },
                         {
                             "text":  "utilities",
                             "points":  13
                         },
                         {
-                            "text":  "pooches",
-                            "points":  7
-                        },
-                        {
-                            "text":  "mutts",
-                            "points":  7
-                        },
-                        {
-                            "text":  "puppies",
-                            "points":  7
-                        },
-                        {
-                            "text":  "kittens",
-                            "points":  7
-                        },
-                        {
-                            "text":  "animals",
-                            "points":  7
-                        },
-                        {
                             "text":  "pets",
                             "points":  7
                         },
                         {
-                            "text":  "hamsters",
-                            "points":  7
-                        },
-                        {
-                            "text":  "guinea pigs",
-                            "points":  7
-                        },
-                        {
-                            "text":  "gerbils",
-                            "points":  7
-                        },
-                        {
-                            "text":  "felines",
-                            "points":  7
-                        },
-                        {
-                            "text":  "canines",
-                            "points":  7
-                        },
-                        {
-                            "text":  "cats",
-                            "points":  7
-                        },
-                        {
-                            "text":  "dogs",
-                            "points":  7
-                        },
-                        {
-                            "text":  "deposits",
+                            "text":  "deposit",
                             "points":  5
-                        },
-                        {
-                            "text":  "tenancy",
-                            "points":  4
-                        },
-                        {
-                            "text":  "contract",
-                            "points":  4
-                        },
-                        {
-                            "text":  "of lease",
-                            "points":  4
                         },
                         {
                             "text":  "length of lease",
                             "points":  4
                         },
                         {
-                            "text":  "cockroaches",
-                            "points":  2
-                        },
-                        {
-                            "text":  "beetles",
-                            "points":  2
-                        },
-                        {
-                            "text":  "termites",
-                            "points":  2
-                        },
-                        {
-                            "text":  "flies",
-                            "points":  2
-                        },
-                        {
-                            "text":  "spiders",
-                            "points":  2
-                        },
-                        {
-                            "text":  "bees",
-                            "points":  2
-                        },
-                        {
-                            "text":  "roaches",
-                            "points":  2
-                        },
-                        {
                             "text":  "bugs",
-                            "points":  2
-                        },
-                        {
-                            "text":  "mites",
-                            "points":  2
-                        },
-                        {
-                            "text":  "insects",
                             "points":  2
                         }
                     ]
@@ -51060,7 +49558,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  45
                         },
                         {
-                            "text":  "superbowl",
+                            "text":  "super bowl",
                             "points":  26
                         },
                         {
@@ -51139,7 +49637,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  1953,
-        "question":  "Name something you might see in the Amazon (animal is not an answer, be specific).",
+        "question":  "Name something you might see in the Amazon.",
         "answers":  [
                         {
                             "text":  "trees",
@@ -51298,7 +49796,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  72
                         },
                         {
-                            "text":  "good..bad..ugly",
+                            "text":  "the good, the bad and the ugly",
                             "points":  12
                         },
                         {
@@ -51306,7 +49804,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "fistfull of dollars",
+                            "text":  "fistful of dollars",
                             "points":  3
                         },
                         {
@@ -51314,30 +49812,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "hang \u0027em high",
+                            "text":  "hang 'em high",
                             "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  1960,
-        "question":  "Name something people have no control over.",
-        "answers":  [
-                        {
-                            "text":  "aging",
-                            "points":  42
-                        },
-                        {
-                            "text":  "gravity",
-                            "points":  31
-                        },
-                        {
-                            "text":  "the weather",
-                            "points":  19
-                        },
-                        {
-                            "text":  "lottery",
-                            "points":  8
                         }
                     ]
     },
@@ -51436,123 +49912,23 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that has an antenna.",
         "answers":  [
                         {
-                            "text":  "television",
-                            "points":  35
-                        },
-                        {
-                            "text":  "tube",
-                            "points":  35
-                        },
-                        {
-                            "text":  "on television",
-                            "points":  35
-                        },
-                        {
                             "text":  "tv",
                             "points":  35
-                        },
-                        {
-                            "text":  "boob tube",
-                            "points":  35
-                        },
-                        {
-                            "text":  "boombox",
-                            "points":  29
-                        },
-                        {
-                            "text":  "speaker",
-                            "points":  29
-                        },
-                        {
-                            "text":  "stereo",
-                            "points":  29
-                        },
-                        {
-                            "text":  "sub woofer",
-                            "points":  29
-                        },
-                        {
-                            "text":  "ghetto blaster",
-                            "points":  29
                         },
                         {
                             "text":  "radio",
                             "points":  29
                         },
                         {
-                            "text":  "jalopy",
-                            "points":  22
-                        },
-                        {
-                            "text":  "vehicle",
-                            "points":  22
-                        },
-                        {
-                            "text":  "truck",
-                            "points":  22
-                        },
-                        {
                             "text":  "car",
                             "points":  22
-                        },
-                        {
-                            "text":  "van",
-                            "points":  22
-                        },
-                        {
-                            "text":  "telephone",
-                            "points":  7
-                        },
-                        {
-                            "text":  "phone",
-                            "points":  7
-                        },
-                        {
-                            "text":  "mobile",
-                            "points":  7
                         },
                         {
                             "text":  "cell phone",
                             "points":  7
                         },
                         {
-                            "text":  "roaches",
-                            "points":  5
-                        },
-                        {
-                            "text":  "bees",
-                            "points":  5
-                        },
-                        {
-                            "text":  "bugs",
-                            "points":  5
-                        },
-                        {
-                            "text":  "cockroaches",
-                            "points":  5
-                        },
-                        {
-                            "text":  "termites",
-                            "points":  5
-                        },
-                        {
-                            "text":  "flies",
-                            "points":  5
-                        },
-                        {
                             "text":  "insects",
-                            "points":  5
-                        },
-                        {
-                            "text":  "mites",
-                            "points":  5
-                        },
-                        {
-                            "text":  "spiders",
-                            "points":  5
-                        },
-                        {
-                            "text":  "beetles",
                             "points":  5
                         }
                     ]
@@ -51946,36 +50322,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1979,
-        "question":  "Name a common tool you might find in a garage.",
-        "answers":  [
-                        {
-                            "text":  "hammer",
-                            "points":  38
-                        },
-                        {
-                            "text":  "wrench",
-                            "points":  16
-                        },
-                        {
-                            "text":  "screwdriver",
-                            "points":  14
-                        },
-                        {
-                            "text":  "lawn mower",
-                            "points":  10
-                        },
-                        {
-                            "text":  "rake",
-                            "points":  9
-                        },
-                        {
-                            "text":  "saw",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  1980,
         "question":  "Name something people remove glasses to do.",
         "answers":  [
@@ -52212,28 +50558,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1988,
-        "question":  "Name something you find in an oasis.",
-        "answers":  [
-                        {
-                            "text":  "water",
-                            "points":  52
-                        },
-                        {
-                            "text":  "trees",
-                            "points":  25
-                        },
-                        {
-                            "text":  "sand",
-                            "points":  8
-                        },
-                        {
-                            "text":  "camels",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  1989,
         "question":  "Name something that comes in an aerosol can?",
         "answers":  [
@@ -52294,7 +50618,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "videogames",
+                            "text":  "video games",
                             "points":  9
                         },
                         {
@@ -52730,7 +51054,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "money/bank acct.",
+                            "text":  "money/bank account",
                             "points":  5
                         },
                         {
@@ -53174,32 +51498,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2025,
-        "question":  "Name something you might ask a hotel maid for more of.",
-        "answers":  [
-                        {
-                            "text":  "towels",
-                            "points":  66
-                        },
-                        {
-                            "text":  "soap",
-                            "points":  12
-                        },
-                        {
-                            "text":  "pillows",
-                            "points":  9
-                        },
-                        {
-                            "text":  "shampoo",
-                            "points":  4
-                        },
-                        {
-                            "text":  "ice",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  2026,
         "question":  "Name someone who does your bragging for you.",
         "answers":  [
@@ -53234,7 +51532,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something people accidentally leave in a taxi.",
         "answers":  [
                         {
-                            "text":  "mobilephone",
+                            "text":  "mobile phone",
                             "points":  32
                         },
                         {
@@ -53388,7 +51686,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "pittsburg penguins",
+                            "text":  "pittsburgh penguins",
                             "points":  14
                         },
                         {
@@ -53784,7 +52082,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "pinkfloyd",
+                            "text":  "pink floyd",
                             "points":  2
                         }
                     ]
@@ -53896,7 +52194,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "funiture",
+                            "text":  "furniture",
                             "points":  9
                         },
                         {
@@ -53966,28 +52264,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2053,
-        "question":  "Name a job someone with claustrophobia shouldn\u0027t do.",
-        "answers":  [
-                        {
-                            "text":  "elevator operator",
-                            "points":  46
-                        },
-                        {
-                            "text":  "miner",
-                            "points":  25
-                        },
-                        {
-                            "text":  "airplane pilot",
-                            "points":  15
-                        },
-                        {
-                            "text":  "astronaut",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  2054,
         "question":  "Name something people do before having their picture taken.",
         "answers":  [
@@ -53996,132 +52272,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  58
                         },
                         {
-                            "text":  "hair",
-                            "points":  58
-                        },
-                        {
-                            "text":  "brush hair",
-                            "points":  58
-                        },
-                        {
-                            "text":  "apply makeup",
-                            "points":  6
-                        },
-                        {
-                            "text":  "grin",
-                            "points":  25
-                        },
-                        {
                             "text":  "smile",
                             "points":  25
-                        },
-                        {
-                            "text":  "smirk",
-                            "points":  25
-                        },
-                        {
-                            "text":  "lotion",
-                            "points":  6
-                        },
-                        {
-                            "text":  "mascara",
-                            "points":  6
-                        },
-                        {
-                            "text":  "moisturizer",
-                            "points":  6
                         },
                         {
                             "text":  "put on makeup",
                             "points":  6
                         },
                         {
-                            "text":  "rouge",
-                            "points":  6
-                        },
-                        {
-                            "text":  "skin care",
-                            "points":  6
-                        },
-                        {
-                            "text":  "soap",
-                            "points":  6
-                        },
-                        {
-                            "text":  "lipstick",
-                            "points":  6
-                        },
-                        {
-                            "text":  "cosmetics",
-                            "points":  6
-                        },
-                        {
-                            "text":  "cover up",
-                            "points":  6
-                        },
-                        {
-                            "text":  "cream",
-                            "points":  6
-                        },
-                        {
-                            "text":  "eyeshadow",
-                            "points":  6
-                        },
-                        {
-                            "text":  "eyeliner",
-                            "points":  6
-                        },
-                        {
-                            "text":  "blush",
-                            "points":  6
-                        },
-                        {
-                            "text":  "face soap",
-                            "points":  6
-                        },
-                        {
-                            "text":  "foundation",
-                            "points":  6
-                        },
-                        {
-                            "text":  "bought clothes",
+                            "text":  "buy new clothes",
                             "points":  4
-                        },
-                        {
-                            "text":  "new clothes",
-                            "points":  4
-                        },
-                        {
-                            "text":  "buy clothes",
-                            "points":  4
-                        },
-                        {
-                            "text":  "clothes",
-                            "points":  4
-                        },
-                        {
-                            "text":  "purchase clothing",
-                            "points":  4
-                        },
-                        {
-                            "text":  "reflective surfaces",
-                            "points":  3
-                        },
-                        {
-                            "text":  "reflector",
-                            "points":  3
-                        },
-                        {
-                            "text":  "in mirror",
-                            "points":  3
-                        },
-                        {
-                            "text":  "mirror",
-                            "points":  3
-                        },
-                        {
-                            "text":  "looking glass",
-                            "points":  3
                         },
                         {
                             "text":  "look in mirror",
@@ -54492,7 +52652,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name the most important person in American history.",
         "answers":  [
                         {
-                            "text":  "george washinton",
+                            "text":  "george washington",
                             "points":  45
                         },
                         {
@@ -54646,20 +52806,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "crafts",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  2073,
-        "question":  "Name something a woman might put in her hair.",
-        "answers":  [
-                        {
-                            "text":  "barrette",
-                            "points":  29
-                        },
-                        {
-                            "text":  "hair spray",
-                            "points":  26
                         }
                     ]
     },
@@ -55022,28 +53168,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tooth",
                             "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  2087,
-        "question":  "Name an occupation where a person carries some kind of bag on the job.",
-        "answers":  [
-                        {
-                            "text":  "mail carrier",
-                            "points":  53
-                        },
-                        {
-                            "text":  "salesperson",
-                            "points":  7
-                        },
-                        {
-                            "text":  "doctor",
-                            "points":  6
-                        },
-                        {
-                            "text":  "lawyer",
-                            "points":  6
                         }
                     ]
     },
@@ -55469,7 +53593,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2104,
-        "question":  "Name a star whose movies you\u0027ll go see no matter how bad the reviews are.",
+        "question":  "Name a star whose movies you'll go see no matter how bad the reviews are.",
         "answers":  [
                         {
                             "text":  "will smith",
@@ -55496,7 +53620,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "matthew mcc..",
+                            "text":  "matthew mcconaughey",
                             "points":  3
                         },
                         {
@@ -55536,92 +53660,20 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something Japan is famous for.",
         "answers":  [
                         {
-                            "text":  "cars",
-                            "points":  17
-                        },
-                        {
-                            "text":  "wasabi",
-                            "points":  32
-                        },
-                        {
                             "text":  "sushi",
                             "points":  32
-                        },
-                        {
-                            "text":  "sashimi",
-                            "points":  32
-                        },
-                        {
-                            "text":  "camcorders",
-                            "points":  19
-                        },
-                        {
-                            "text":  "stereos",
-                            "points":  19
-                        },
-                        {
-                            "text":  "video cameras",
-                            "points":  19
-                        },
-                        {
-                            "text":  "radios",
-                            "points":  19
-                        },
-                        {
-                            "text":  "walkmen",
-                            "points":  19
-                        },
-                        {
-                            "text":  "ipods",
-                            "points":  19
-                        },
-                        {
-                            "text":  "boom boxes",
-                            "points":  19
-                        },
-                        {
-                            "text":  "ghetto blasters",
-                            "points":  19
-                        },
-                        {
-                            "text":  "gadgets",
-                            "points":  19
                         },
                         {
                             "text":  "electronics",
                             "points":  19
                         },
                         {
-                            "text":  "vehicles",
+                            "text":  "cars",
                             "points":  17
-                        },
-                        {
-                            "text":  "vans",
-                            "points":  17
-                        },
-                        {
-                            "text":  "trucks",
-                            "points":  17
-                        },
-                        {
-                            "text":  "suvs",
-                            "points":  17
-                        },
-                        {
-                            "text":  "automobiles",
-                            "points":  17
-                        },
-                        {
-                            "text":  "wrestling",
-                            "points":  10
                         },
                         {
                             "text":  "sumo wrestling",
                             "points":  10
-                        },
-                        {
-                            "text":  "bushido",
-                            "points":  4
                         },
                         {
                             "text":  "samurai",
@@ -55629,10 +53681,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "pearl harbor",
-                            "points":  2
-                        },
-                        {
-                            "text":  "harbor",
                             "points":  2
                         }
                     ]
@@ -55854,12 +53902,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  57
                         },
                         {
-                            "text":  "college",
-                            "points":  8
-                        },
-                        {
                             "text":  "buy car",
                             "points":  24
+                        },
+                        {
+                            "text":  "college",
+                            "points":  8
                         },
                         {
                             "text":  "open business",
@@ -56029,12 +54077,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2122,
-        "question":  "Name something you might compare a bald guy\u0027s head to.",
+        "question":  "Name something you might compare a bald guy's head to.",
         "answers":  [
-                        {
-                            "text":  "ball",
-                            "points":  31
-                        },
                         {
                             "text":  "bowling ball",
                             "points":  31
@@ -56044,27 +54088,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "billiard ball",
-                            "points":  23
-                        },
-                        {
-                            "text":  "pool ball",
-                            "points":  23
-                        },
-                        {
-                            "text":  "beach ball",
-                            "points":  12
-                        },
-                        {
                             "text":  "basketball",
                             "points":  12
                         },
                         {
                             "text":  "egg",
-                            "points":  7
-                        },
-                        {
-                            "text":  "yolk",
                             "points":  7
                         },
                         {
@@ -57240,28 +55268,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2166,
-        "question":  "Name a country where they drink lots of wine.",
-        "answers":  [
-                        {
-                            "text":  "italy",
-                            "points":  53
-                        },
-                        {
-                            "text":  "france",
-                            "points":  40
-                        },
-                        {
-                            "text":  "england",
-                            "points":  2
-                        },
-                        {
-                            "text":  "spain",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
         "id":  2167,
         "question":  "Name something interviewers always ask Paris Hilton about.",
         "answers":  [
@@ -57436,36 +55442,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "messy home",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  2174,
-        "question":  "Name a reason why you might be nervous while driving.",
-        "answers":  [
-                        {
-                            "text":  "weather conditions",
-                            "points":  24
-                        },
-                        {
-                            "text":  "heavy traffic",
-                            "points":  20
-                        },
-                        {
-                            "text":  "new driver",
-                            "points":  19
-                        },
-                        {
-                            "text":  "spot a police car",
-                            "points":  17
-                        },
-                        {
-                            "text":  "tailgating",
-                            "points":  11
-                        },
-                        {
-                            "text":  "lost",
-                            "points":  8
                         }
                     ]
     },
@@ -57687,7 +55663,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2183,
-        "question":  "Name a reptile people keep as a pet (no 'lizard', be more specific).",
+        "question":  "Name a reptile people keep as a pet.",
         "answers":  [
                         {
                             "text":  "snake",
@@ -58048,7 +56024,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "sir/maam",
+                            "text":  "sir/ma'am",
                             "points":  16
                         },
                         {
@@ -58085,7 +56061,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2198,
-        "question":  "Name something you peel. (Be more specific than fruit.)",
+        "question":  "Name something you peel.",
         "answers":  [
                         {
                             "text":  "orange",
@@ -58200,36 +56176,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "insurance",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  2202,
-        "question":  "Name an item of junk lying around your house.",
-        "answers":  [
-                        {
-                            "text":  "newspapers",
-                            "points":  22
-                        },
-                        {
-                            "text":  "magazines",
-                            "points":  20
-                        },
-                        {
-                            "text":  "mail",
-                            "points":  20
-                        },
-                        {
-                            "text":  "car",
-                            "points":  13
-                        },
-                        {
-                            "text":  "tires",
-                            "points":  13
-                        },
-                        {
-                            "text":  "televisions",
-                            "points":  11
                         }
                     ]
     },
@@ -58372,32 +56318,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2208,
-        "question":  "Name something people consider a snack food.",
-        "answers":  [
-                        {
-                            "text":  "chips",
-                            "points":  51
-                        },
-                        {
-                            "text":  "popcorn",
-                            "points":  12
-                        },
-                        {
-                            "text":  "nuts",
-                            "points":  13
-                        },
-                        {
-                            "text":  "pretzels",
-                            "points":  10
-                        },
-                        {
-                            "text":  "apples",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  2209,
         "question":  "Name someone you hate getting bad news from.",
         "answers":  [
@@ -58510,36 +56430,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2213,
-        "question":  "Name a food that gets bigger when you cook it.",
-        "answers":  [
-                        {
-                            "text":  "bread",
-                            "points":  26
-                        },
-                        {
-                            "text":  "hot dog",
-                            "points":  19
-                        },
-                        {
-                            "text":  "rice",
-                            "points":  14
-                        },
-                        {
-                            "text":  "pasta",
-                            "points":  8
-                        },
-                        {
-                            "text":  "cake",
-                            "points":  7
-                        },
-                        {
-                            "text":  "popcorn",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  2214,
         "question":  "Name something people might do to pass time while traveling.",
         "answers":  [
@@ -58644,7 +56534,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something people do every day to show their patriotism.",
         "answers":  [
                         {
-                            "text":  "plegde of allegiance",
+                            "text":  "pledge of allegiance",
                             "points":  47
                         },
                         {
@@ -58762,24 +56652,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "drawer",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  2223,
-        "question":  "Name something teens are more likely to do to their appearance than their parents are.",
-        "answers":  [
-                        {
-                            "text":  "dye their hair",
-                            "points":  41
-                        },
-                        {
-                            "text":  "get a tattoo",
-                            "points":  25
-                        },
-                        {
-                            "text":  "get a piercing",
-                            "points":  17
                         }
                     ]
     },
@@ -59096,7 +56968,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a famous tough guy who could really take a punch.",
         "answers":  [
                         {
-                            "text":  "sylvester stal",
+                            "text":  "sylvester stallone",
                             "points":  14
                         },
                         {
@@ -59108,7 +56980,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "arnold schwar...",
+                            "text":  "arnold schwarzenegger",
                             "points":  11
                         },
                         {
@@ -59122,40 +56994,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "muhammad ali",
                             "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  2237,
-        "question":  "Name something specific everyone complains about.",
-        "answers":  [
-                        {
-                            "text":  "weather",
-                            "points":  25
-                        },
-                        {
-                            "text":  "work",
-                            "points":  21
-                        },
-                        {
-                            "text":  "money",
-                            "points":  17
-                        },
-                        {
-                            "text":  "bills",
-                            "points":  14
-                        },
-                        {
-                            "text":  "taxes",
-                            "points":  12
-                        },
-                        {
-                            "text":  "traffic",
-                            "points":  6
-                        },
-                        {
-                            "text":  "gas prices",
-                            "points":  5
                         }
                     ]
     },
@@ -59202,7 +57040,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "icecream",
+                            "text":  "ice cream",
                             "points":  7
                         },
                         {
@@ -59328,20 +57166,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2244,
-        "question":  "Name something parents tell their kids not to waste.",
-        "answers":  [
-                        {
-                            "text":  "food",
-                            "points":  53
-                        },
-                        {
-                            "text":  "water",
-                            "points":  14
-                        }
-                    ]
-    },
-    {
         "id":  2245,
         "question":  "Name something a clown has.",
         "answers":  [
@@ -59376,16 +57200,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "servant",
-                            "points":  4
-                        },
-                        {
                             "text":  "poor planning",
                             "points":  7
                         },
                         {
                             "text":  "caught cheating",
                             "points":  5
+                        },
+                        {
+                            "text":  "servant",
+                            "points":  4
                         },
                         {
                             "text":  "work dinner",
@@ -59419,36 +57243,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "squealer",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  2248,
-        "question":  "Name something you'd expect to see in a psychiatrist's office.",
-        "answers":  [
-                        {
-                            "text":  "couch",
-                            "points":  56
-                        },
-                        {
-                            "text":  "patients",
-                            "points":  14
-                        },
-                        {
-                            "text":  "diploma",
-                            "points":  12
-                        },
-                        {
-                            "text":  "certificate",
-                            "points":  12
-                        },
-                        {
-                            "text":  "books",
-                            "points":  5
-                        },
-                        {
-                            "text":  "picture",
                             "points":  4
                         }
                     ]
@@ -59492,10 +57286,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  47
                         },
                         {
-                            "text":  "blocks",
-                            "points":  31
-                        },
-                        {
                             "text":  "building blocks",
                             "points":  31
                         },
@@ -59504,23 +57294,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "set",
-                            "points":  9
-                        },
-                        {
                             "text":  "tinker toys",
                             "points":  7
                         },
                         {
-                            "text":  "toys",
-                            "points":  7
-                        },
-                        {
                             "text":  "lincoln logs",
-                            "points":  4
-                        },
-                        {
-                            "text":  "log cabin",
                             "points":  4
                         }
                     ]
@@ -59996,32 +57774,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2268,
-        "question":  "Name an animal with only three letters in its name.",
-        "answers":  [
-                        {
-                            "text":  "dog",
-                            "points":  10
-                        },
-                        {
-                            "text":  "cat",
-                            "points":  52
-                        },
-                        {
-                            "text":  "pig",
-                            "points":  10
-                        },
-                        {
-                            "text":  "fox",
-                            "points":  10
-                        },
-                        {
-                            "text":  "rat",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  2269,
         "question":  "Name a sea creature a pirate might make friends with.",
         "answers":  [
@@ -60172,20 +57924,8 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a performer or group whose music seems to span over generations.",
         "answers":  [
                         {
-                            "text":  "elvis",
-                            "points":  36
-                        },
-                        {
                             "text":  "elvis presley",
                             "points":  36
-                        },
-                        {
-                            "text":  "presley",
-                            "points":  36
-                        },
-                        {
-                            "text":  "sinatra",
-                            "points":  18
                         },
                         {
                             "text":  "frank sinatra",
@@ -60426,30 +58166,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "oppenent",
+                            "text":  "opponent",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  2284,
-        "question":  "Name a part of your body where you hate being tickled.",
-        "answers":  [
-                        {
-                            "text":  "feet",
-                            "points":  53
-                        },
-                        {
-                            "text":  "armpits",
-                            "points":  19
-                        },
-                        {
-                            "text":  "stomach",
-                            "points":  13
-                        },
-                        {
-                            "text":  "ribs",
-                            "points":  5
                         }
                     ]
     },
@@ -60622,7 +58340,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "fast foot restaurants",
+                            "text":  "fast food restaurants",
                             "points":  22
                         },
                         {
@@ -60712,68 +58430,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  60
                         },
                         {
-                            "text":  "timberwolf",
-                            "points":  60
-                        },
-                        {
-                            "text":  "rottweiler",
-                            "points":  34
-                        },
-                        {
-                            "text":  "puppy",
-                            "points":  34
-                        },
-                        {
-                            "text":  "pooch",
-                            "points":  34
-                        },
-                        {
-                            "text":  "pit bull",
-                            "points":  34
-                        },
-                        {
-                            "text":  "mutt",
-                            "points":  34
-                        },
-                        {
-                            "text":  "mongrel",
-                            "points":  34
-                        },
-                        {
-                            "text":  "cur",
-                            "points":  34
-                        },
-                        {
-                            "text":  "canine",
-                            "points":  34
-                        },
-                        {
                             "text":  "dog",
                             "points":  34
                         },
                         {
                             "text":  "coyote",
                             "points":  4
-                        },
-                        {
-                            "text":  "child",
-                            "points":  2
-                        },
-                        {
-                            "text":  "kid",
-                            "points":  2
-                        },
-                        {
-                            "text":  "offspring",
-                            "points":  2
-                        },
-                        {
-                            "text":  "newborn",
-                            "points":  2
-                        },
-                        {
-                            "text":  "infant",
-                            "points":  2
                         },
                         {
                             "text":  "baby",
@@ -61090,7 +58752,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "exer./lose weight",
+                            "text":  "exercise/lose weight",
                             "points":  5
                         },
                         {
@@ -61160,24 +58822,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "anchovy",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  2310,
-        "question":  "Name a food you lick off your fingers.",
-        "answers":  [
-                        {
-                            "text":  "chicken",
-                            "points":  29
-                        },
-                        {
-                            "text":  "sauce",
-                            "points":  27
-                        },
-                        {
-                            "text":  "chocolate",
-                            "points":  14
                         }
                     ]
     },
@@ -61774,40 +59418,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2333,
-        "question":  "Tell me the age a man might start losing his hair. (Numeric only)",
-        "answers":  [
-                        {
-                            "text":  "40",
-                            "points":  29
-                        },
-                        {
-                            "text":  "30",
-                            "points":  25
-                        },
-                        {
-                            "text":  "45",
-                            "points":  13
-                        },
-                        {
-                            "text":  "35",
-                            "points":  10
-                        },
-                        {
-                            "text":  "25",
-                            "points":  6
-                        },
-                        {
-                            "text":  "50",
-                            "points":  5
-                        },
-                        {
-                            "text":  "29",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  2334,
         "question":  "Tell me something you try to avoid hitting while sledding down a hill.",
         "answers":  [
@@ -61917,7 +59527,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2338,
-        "question":  "Tell me how much a room at a cheap motel costs. (Use money format $0.00)",
+        "question":  "Tell me how much a room at a cheap motel costs.",
         "answers":  [
                         {
                             "text":  "$30",
@@ -62033,7 +59643,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2342,
-        "question":  "Tell me the age that a girl stops telling her parents everything. (Numeric only).",
+        "question":  "Tell me the age that a girl stops telling her parents everything.",
         "answers":  [
                         {
                             "text":  "13",
@@ -62310,12 +59920,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something you see a doctor in a movie usually wearing.",
         "answers":  [
                         {
-                            "text":  "stethoscope",
-                            "points":  13
-                        },
-                        {
                             "text":  "lab coat",
                             "points":  24
+                        },
+                        {
+                            "text":  "stethoscope",
+                            "points":  13
                         }
                     ]
     },
@@ -62330,20 +59940,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "100",
                             "points":  22
-                        }
-                    ]
-    },
-    {
-        "id":  2355,
-        "question":  "Tell me the number of people who can ride comfortably in a van.",
-        "answers":  [
-                        {
-                            "text":  "6",
-                            "points":  47
-                        },
-                        {
-                            "text":  "7",
-                            "points":  23
                         }
                     ]
     },
@@ -62586,7 +60182,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  37
                         },
                         {
-                            "text":  "hairdress./barber",
+                            "text":  "hairdresser/barber",
                             "points":  23
                         },
                         {
@@ -62914,7 +60510,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  31
                         },
                         {
-                            "text":  "quit school/univ.",
+                            "text":  "quit school/university",
                             "points":  7
                         },
                         {
@@ -62926,7 +60522,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "i\u0027m gay",
+                            "text":  "i'm gay",
                             "points":  3
                         }
                     ]
@@ -63036,24 +60632,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "clothes/shoes",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  2382,
-        "question":  "Tell me a way in which your office is kind of like a \"soap opera.\"",
-        "answers":  [
-                        {
-                            "text":  "gossip",
-                            "points":  46
-                        },
-                        {
-                            "text":  "affairs",
-                            "points":  34
-                        },
-                        {
-                            "text":  "fighting",
-                            "points":  4
                         }
                     ]
     },
@@ -63771,7 +61349,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "cooking",
-                            "points":  0
+                            "points":  12
                         },
                         {
                             "text":  "dishes",
@@ -64164,7 +61742,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "whoare you",
+                            "text":  "who are you",
                             "points":  2
                         },
                         {
@@ -64358,7 +61936,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  50
                         },
                         {
-                            "text":  "kepp a straight face",
+                            "text":  "keep a straight face",
                             "points":  41
                         },
                         {
@@ -64653,7 +62231,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2442,
-        "question":  "What are some reasons that a racecar driver might lose a race?",
+        "question":  "What are some reasons that a race car driver might lose a race?",
         "answers":  [
                         {
                             "text":  "crash",
@@ -64717,7 +62295,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "computer",
-                            "points":  0
+                            "points":  41
                         },
                         {
                             "text":  "chess",
@@ -64738,7 +62316,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  29
                         },
                         {
-                            "text":  "german shephard",
+                            "text":  "german shepherd",
                             "points":  10
                         },
                         {
@@ -64764,10 +62342,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "When you're at a restaurant, name something you do not want to see your waiter do.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "picking their nose",
                             "points":  59
                         }
@@ -64779,7 +62353,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "eat snacks",
-                            "points":  0
+                            "points":  43
                         },
                         {
                             "text":  "cheer",
@@ -64823,7 +62397,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "run",
-                            "points":  0
+                            "points":  50
                         },
                         {
                             "text":  "drive car",
@@ -65310,7 +62884,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "blakets",
+                            "text":  "blankets",
                             "points":  3
                         }
                     ]
@@ -65848,36 +63422,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2488,
-        "question":  "What excuse would a kid give their teacher for not turning in their homework?",
-        "answers":  [
-                        {
-                            "text":  "\"dog ate it\"",
-                            "points":  54
-                        },
-                        {
-                            "text":  "\"forgot\"",
-                            "points":  19
-                        },
-                        {
-                            "text":  "\"was sick\"",
-                            "points":  11
-                        },
-                        {
-                            "text":  "\"lost it\"",
-                            "points":  7
-                        },
-                        {
-                            "text":  "\"computer broke\"",
-                            "points":  3
-                        },
-                        {
-                            "text":  "don\u0027t have books",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  2489,
         "question":  "Which country has the smartest men?",
         "answers":  [
@@ -66196,7 +63740,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Besides a book, tell me a good gift for someone who loves to read.",
         "answers":  [
                         {
-                            "text":  "mag./subscription",
+                            "text":  "magazine subscription",
                             "points":  35
                         },
                         {
@@ -66848,7 +64392,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Give me a saying that includes the word \"devil.\"",
         "answers":  [
                         {
-                            "text":  "... made me do it",
+                            "text":  "the devil made me do it",
                             "points":  29
                         },
                         {
@@ -66856,7 +64400,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "devil\u0027s advocate",
+                            "text":  "devil's advocate",
                             "points":  9
                         },
                         {
@@ -67057,19 +64601,19 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "gold coin",
-                            "points":  45
+                            "points":  42
                         },
                         {
                             "text":  "eye patch",
-                            "points":  28
+                            "points":  26
                         },
                         {
                             "text":  "sword",
-                            "points":  14
+                            "points":  13
                         },
                         {
                             "text":  "hook",
-                            "points":  8
+                            "points":  7
                         },
                         {
                             "text":  "jewels",
@@ -67371,7 +64915,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "far away",
-                            "points":  0
+                            "points":  2
                         }
                     ]
     },
@@ -67483,7 +65027,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "farmer",
-                            "points":  0
+                            "points":  7
                         }
                     ]
     },
@@ -67537,7 +65081,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "file",
-                            "points":  0
+                            "points":  45
                         },
                         {
                             "text":  "hack saw",
@@ -68086,7 +65630,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  62
                         },
                         {
-                            "text":  "esspresso",
+                            "text":  "espresso",
                             "points":  17
                         },
                         {
@@ -68183,7 +65727,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2575,
-        "question":  "Name something you see the ground littered with after the carnival has moved on (more specific than \"trash\").",
+        "question":  "Name something you see the ground littered with after the carnival has moved on.",
         "answers":  [
                         {
                             "text":  "popcorn",
@@ -68469,7 +66013,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2586,
-        "question":  "Name something people put toothpicks in. (Food is not an answer, be more specific.)",
+        "question":  "Name something people put toothpicks in.",
         "answers":  [
                         {
                             "text":  "in your teeth",
@@ -68848,32 +66392,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2600,
-        "question":  "Name a famous male, real or fictional, who wears tights.",
-        "answers":  [
-                        {
-                            "text":  "robin hood",
-                            "points":  35
-                        },
-                        {
-                            "text":  "superman",
-                            "points":  27
-                        },
-                        {
-                            "text":  "peter pan",
-                            "points":  13
-                        },
-                        {
-                            "text":  "batman",
-                            "points":  10
-                        },
-                        {
-                            "text":  "mikhail barishnikov",
-                            "points":  9
-                        }
-                    ]
-    },
-    {
         "id":  2601,
         "question":  "Name something people donate to charity during the holidays.",
         "answers":  [
@@ -69050,7 +66568,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "jennifer anniston",
+                            "text":  "jennifer aniston",
                             "points":  13
                         },
                         {
@@ -69158,7 +66676,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "camaras",
+                            "text":  "cameras",
                             "points":  6
                         },
                         {
@@ -69845,19 +67363,19 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "bat",
-                            "points":  44
+                            "points":  37
                         },
                         {
                             "text":  "owl",
-                            "points":  28
-                        },
-                        {
-                            "text":  "cat",
-                            "points":  23
+                            "points":  24
                         },
                         {
                             "text":  "raccoon",
-                            "points":  24
+                            "points":  20
+                        },
+                        {
+                            "text":  "cat",
+                            "points":  19
                         }
                     ]
     },
@@ -69866,7 +67384,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a type of business that's convenient to have in your neighborhood.",
         "answers":  [
                         {
-                            "text":  "market/conv store",
+                            "text":  "market/convenience store",
                             "points":  48
                         },
                         {
@@ -70228,7 +67746,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "enchaladas",
+                            "text":  "enchiladas",
                             "points":  4
                         },
                         {
@@ -70574,32 +68092,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "pen",
                             "points":  11
-                        }
-                    ]
-    },
-    {
-        "id":  2665,
-        "question":  "Name a piece of kids' play equipment that adults would probably hurt themselves using.",
-        "answers":  [
-                        {
-                            "text":  "monkey bars",
-                            "points":  35
-                        },
-                        {
-                            "text":  "slide",
-                            "points":  28
-                        },
-                        {
-                            "text":  "swing",
-                            "points":  27
-                        },
-                        {
-                            "text":  "merry go round",
-                            "points":  5
-                        },
-                        {
-                            "text":  "seesaw",
-                            "points":  3
                         }
                     ]
     },
@@ -70952,7 +68444,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "lolipop",
+                            "text":  "lollipop",
                             "points":  6
                         },
                         {
@@ -71130,12 +68622,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "mop",
-                            "points":  1
-                        },
-                        {
                             "text":  "wipe windows",
                             "points":  10
+                        },
+                        {
+                            "text":  "mop",
+                            "points":  1
                         }
                     ]
     },
@@ -71676,7 +69168,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name someone you only see once a year.",
         "answers":  [
                         {
-                            "text":  "santa clause",
+                            "text":  "santa claus",
                             "points":  36
                         },
                         {
@@ -71698,36 +69190,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "aunt/uncle",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  2707,
-        "question":  "Name a kind of boat that doesn\u0027t have an engine.",
-        "answers":  [
-                        {
-                            "text":  "sailboat",
-                            "points":  32
-                        },
-                        {
-                            "text":  "canoe",
-                            "points":  30
-                        },
-                        {
-                            "text":  "rowboat",
-                            "points":  18
-                        },
-                        {
-                            "text":  "paddleboat",
-                            "points":  10
-                        },
-                        {
-                            "text":  "raft",
-                            "points":  3
-                        },
-                        {
-                            "text":  "barge",
-                            "points":  2
                         }
                     ]
     },
@@ -72372,7 +69834,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  25
                         },
                         {
-                            "text":  "racecar driver",
+                            "text":  "race car driver",
                             "points":  22
                         },
                         {
@@ -72578,20 +70040,20 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you do while birdwatching that you might also do while hunting.",
         "answers":  [
                         {
-                            "text":  "shoot(picture)",
-                            "points":  44
+                            "text":  "shoot",
+                            "points":  41
                         },
                         {
                             "text":  "use binoculars",
-                            "points":  32
+                            "points":  30
                         },
                         {
                             "text":  "be quiet",
-                            "points":  25
+                            "points":  23
                         },
                         {
                             "text":  "hide",
-                            "points":  7
+                            "points":  6
                         }
                     ]
     },
@@ -72687,7 +70149,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "skirts",
-                            "points":  0
+                            "points":  28
                         },
                         {
                             "text":  "shirts",
@@ -73636,7 +71098,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "cemetry",
+                            "text":  "cemetery",
                             "points":  30
                         },
                         {
@@ -73894,20 +71356,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2791,
-        "question":  "Name something that goes up and down.",
-        "answers":  [
-                        {
-                            "text":  "elevator",
-                            "points":  58
-                        },
-                        {
-                            "text":  "temperature",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  2792,
         "question":  "Name something that's used to pave a driveway.",
         "answers":  [
@@ -73990,28 +71438,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2795,
-        "question":  "Name something you'd need in order to play a game of basketball.",
-        "answers":  [
-                        {
-                            "text":  "basketball",
-                            "points":  59
-                        },
-                        {
-                            "text":  "hoop",
-                            "points":  25
-                        },
-                        {
-                            "text":  "court",
-                            "points":  5
-                        },
-                        {
-                            "text":  "players",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  2796,
         "question":  "Name an article of clothing you are constantly buying more of.",
         "answers":  [
@@ -74020,7 +71446,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  52
                         },
                         {
-                            "text":  "underware",
+                            "text":  "underwear",
                             "points":  24
                         },
                         {
@@ -74080,7 +71506,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "mouothwash",
+                            "text":  "mouthwash",
                             "points":  16
                         },
                         {
@@ -74250,10 +71676,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "sleeping bag",
                             "points":  5
-                        },
-                        {
-                            "text":  "5",
-                            "points":  0
                         }
                     ]
     },
@@ -74314,7 +71736,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "minniapolis",
+                            "text":  "minneapolis",
                             "points":  20
                         },
                         {
@@ -74482,14 +71904,14 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "no resposibility",
+                            "text":  "no responsibility",
                             "points":  6
                         }
                     ]
     },
     {
         "id":  2814,
-        "question":  "Name something people try to squeeze into (more specific than \"clothes\").",
+        "question":  "Name something people try to squeeze into.",
         "answers":  [
                         {
                             "text":  "jeans",
@@ -74743,14 +72165,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2823,
-        "question":  "Name a drink you get at a cafe that most people can\u0027t make at home.",
+        "question":  "Name a drink you get at a cafe that most people can't make at home.",
         "answers":  [
                         {
                             "text":  "latte",
                             "points":  36
                         },
                         {
-                            "text":  "capuccino",
+                            "text":  "cappuccino",
                             "points":  30
                         },
                         {
@@ -75100,7 +72522,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "loose voice",
+                            "text":  "lose voice",
                             "points":  11
                         },
                         {
@@ -75326,38 +72748,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "dalmation",
+                            "text":  "dalmatian",
                             "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  2844,
-        "question":  "Name a symptom that would cause you to say: \"I think I\u0027m coming down with something.\"",
-        "answers":  [
-                        {
-                            "text":  "runny nose",
-                            "points":  19
-                        },
-                        {
-                            "text":  "coughing",
-                            "points":  17
-                        },
-                        {
-                            "text":  "sneezing",
-                            "points":  14
-                        },
-                        {
-                            "text":  "fever",
-                            "points":  14
-                        },
-                        {
-                            "text":  "sore throat",
-                            "points":  10
-                        },
-                        {
-                            "text":  "stuffy head",
-                            "points":  9
                         }
                     ]
     },
@@ -75575,7 +72967,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2853,
-        "question":  "Name a food that dogs love just as much as humans do. (Meat is not an answer, be more specific.)",
+        "question":  "Name a food that dogs love just as much as humans do.",
         "answers":  [
                         {
                             "text":  "steak",
@@ -75744,7 +73136,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "dick tracey",
+                            "text":  "dick tracy",
                             "points":  11
                         },
                         {
@@ -75968,33 +73360,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2866,
-        "question":  "Name a game show that has been around forever.",
-        "answers":  [
-                        {
-                            "text":  "price is right",
-                            "points":  49
-                        },
-                        {
-                            "text":  "wheel of fortune",
-                            "points":  19
-                        },
-                        {
-                            "text":  "family feud",
-                            "points":  18
-                        },
-                        {
-                            "text":  "jeopardy",
-                            "points":  9
-                        }
-                    ]
-    },
-    {
         "id":  2867,
         "question":  "Name something that is rude to do when someone is talking to you.",
         "answers":  [
                         {
-                            "text":  "interupt",
+                            "text":  "interrupt",
                             "points":  34
                         },
                         {
@@ -76036,7 +73406,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "mashed poatoes",
+                            "text":  "mashed potatoes",
                             "points":  16
                         },
                         {
@@ -76264,7 +73634,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "giills",
+                            "text":  "gills",
                             "points":  3
                         }
                     ]
@@ -76334,7 +73704,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  33
                         },
                         {
-                            "text":  "funiture",
+                            "text":  "furniture",
                             "points":  22
                         },
                         {
@@ -76500,7 +73870,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  55
                         },
                         {
-                            "text":  "minkey",
+                            "text":  "monkey",
                             "points":  31
                         },
                         {
@@ -77253,7 +74623,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2914,
-        "question":  "Name a food served with melted butter on it. (Vegetables is not an answer, be more specific.)",
+        "question":  "Name a food served with melted butter on it.",
         "answers":  [
                         {
                             "text":  "baked potato",
@@ -77519,7 +74889,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "centipede",
-                            "points":  0
+                            "points":  48
                         },
                         {
                             "text":  "spider",
@@ -77579,20 +74949,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "yacht",
-                            "points":  17
-                        }
-                    ]
-    },
-    {
-        "id":  2928,
-        "question":  "Name something you'd probably find in most mansions.",
-        "answers":  [
-                        {
-                            "text":  "butler",
-                            "points":  31
-                        },
-                        {
-                            "text":  "chandelier",
                             "points":  17
                         }
                     ]
@@ -77691,7 +75047,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "oil wells",
-                            "points":  0
+                            "points":  40
                         },
                         {
                             "text":  "cowboys",
@@ -77719,7 +75075,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  2935,
-        "question":  "Name a food that doesn\u0027t grow on trees.",
+        "question":  "Name a food that doesn't grow on trees.",
         "answers":  [
                         {
                             "text":  "potatoes",
@@ -77743,7 +75099,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "twinkies",
-                            "points":  0
+                            "points":  4
                         }
                     ]
     },
@@ -77753,7 +75109,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "mountains",
-                            "points":  0
+                            "points":  36
                         },
                         {
                             "text":  "skiing",
@@ -78135,7 +75491,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "make ornaments",
-                            "points":  0
+                            "points":  43
                         },
                         {
                             "text":  "tree trim",
@@ -78309,10 +75665,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  2961,
         "question":  "Name a country where people go to ski.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  1
-                        },
                         {
                             "text":  "switzerland",
                             "points":  52
@@ -78528,10 +75880,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a time when you might wear a mask.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "halloween",
                             "points":  59
                         }
@@ -78569,21 +75917,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "drug test",
-                            "points":  0
-                        }
-                    ]
-    },
-    {
-        "id":  2975,
-        "question":  "Name a beverage served at fancy restaurants.",
-        "answers":  [
-                        {
-                            "text":  "wine",
-                            "points":  32
-                        },
-                        {
-                            "text":  "champagne",
-                            "points":  15
+                            "points":  17
                         }
                     ]
     },
@@ -78653,7 +75987,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "show affection",
-                            "points":  0
+                            "points":  38
                         },
                         {
                             "text":  "intercourse",
@@ -78686,10 +76020,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "a new car",
                             "points":  39
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -78764,10 +76094,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "highway",
                             "points":  55
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -78777,7 +76103,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "stress",
-                            "points":  0
+                            "points":  52
                         },
                         {
                             "text":  "work",
@@ -79349,10 +76675,10 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3018,
-        "question":  "Name someone who might knock on your door that would cause you to pretend you\u0027re not home.",
+        "question":  "Name someone who might knock on your door that would cause you to pretend you're not home.",
         "answers":  [
                         {
-                            "text":  "jehova\u0027s witness",
+                            "text":  "jehovah's witness",
                             "points":  23
                         },
                         {
@@ -79360,7 +76686,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "police officerq",
+                            "text":  "police officer",
                             "points":  12
                         },
                         {
@@ -80296,36 +77622,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3056,
-        "question":  "Name an animal that might pester you on a camping trip.",
-        "answers":  [
-                        {
-                            "text":  "bear",
-                            "points":  38
-                        },
-                        {
-                            "text":  "dog catcher",
-                            "points":  32
-                        },
-                        {
-                            "text":  "racoon",
-                            "points":  12
-                        },
-                        {
-                            "text":  "skunk",
-                            "points":  6
-                        },
-                        {
-                            "text":  "squirrel",
-                            "points":  3
-                        },
-                        {
-                            "text":  "3",
-                            "points":  0
-                        }
-                    ]
-    },
-    {
         "id":  3057,
         "question":  "Name something specific you always run out of when you\u0027re sick.",
         "answers":  [
@@ -80356,7 +77652,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "mashed potatos",
+                            "text":  "mashed potatoes",
                             "points":  15
                         },
                         {
@@ -80442,7 +77738,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  39
                         },
                         {
-                            "text":  "amiance",
+                            "text":  "ambiance",
                             "points":  25
                         },
                         {
@@ -81028,7 +78324,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  28
                         },
                         {
-                            "text":  "sang happy b\u0027day",
+                            "text":  "sang happy birthday",
                             "points":  14
                         },
                         {
@@ -81784,36 +79080,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3110,
-        "question":  "Name something people put their fingers in their mouth to do.",
-        "answers":  [
-                        {
-                            "text":  "pick teeth",
-                            "points":  27
-                        },
-                        {
-                            "text":  "floss",
-                            "points":  23
-                        },
-                        {
-                            "text":  "bite nails",
-                            "points":  12
-                        },
-                        {
-                            "text":  "suck finger/thumb",
-                            "points":  10
-                        },
-                        {
-                            "text":  "whistle",
-                            "points":  8
-                        },
-                        {
-                            "text":  "eat/taste food",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  3111,
         "question":  "Name something you envy about your children.",
         "answers":  [
@@ -82036,7 +79302,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "austrailian",
+                            "text":  "australian",
                             "points":  3
                         },
                         {
@@ -82226,7 +79492,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "sean cassidy",
+                            "text":  "shaun cassidy",
                             "points":  6
                         }
                     ]
@@ -82240,16 +79506,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  40
                         },
                         {
-                            "text":  "tiger",
-                            "points":  5
-                        },
-                        {
                             "text":  "dog",
                             "points":  12
                         },
                         {
                             "text":  "lion",
                             "points":  9
+                        },
+                        {
+                            "text":  "tiger",
+                            "points":  5
                         },
                         {
                             "text":  "cheetah",
@@ -82310,32 +79576,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "amsterdam",
                             "points":  11
-                        }
-                    ]
-    },
-    {
-        "id":  3129,
-        "question":  "Name a US hockey team that has a big following.",
-        "answers":  [
-                        {
-                            "text":  "detroit red wings",
-                            "points":  37
-                        },
-                        {
-                            "text":  "new york rangers",
-                            "points":  20
-                        },
-                        {
-                            "text":  "chicago blackhawks",
-                            "points":  17
-                        },
-                        {
-                            "text":  "pittsburgh penguins",
-                            "points":  14
-                        },
-                        {
-                            "text":  "boston bruins",
-                            "points":  12
                         }
                     ]
     },
@@ -82590,20 +79830,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3141,
-        "question":  "Name something a woman pretends to be interested in to make conversation with a man she is interested in.",
-        "answers":  [
-                        {
-                            "text":  "sports",
-                            "points":  73
-                        },
-                        {
-                            "text":  "cars",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
         "id":  3142,
         "question":  "Name a body part that many love songs mention.",
         "answers":  [
@@ -82749,11 +79975,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "doc",
-                            "points":  0
+                            "points":  1
                         },
                         {
                             "text":  "bashful",
-                            "points":  0
+                            "points":  1
                         }
                     ]
     },
@@ -83106,107 +80332,19 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you would hate to run out of when you go camping.",
         "answers":  [
                         {
-                            "text":  "bathroom tissue",
-                            "points":  34
-                        },
-                        {
-                            "text":  "paper",
-                            "points":  34
-                        },
-                        {
                             "text":  "toilet paper",
                             "points":  34
-                        },
-                        {
-                            "text":  "tp",
-                            "points":  34
-                        },
-                        {
-                            "text":  "dinner",
-                            "points":  21
-                        },
-                        {
-                            "text":  "sandwiches",
-                            "points":  21
-                        },
-                        {
-                            "text":  "nutrients",
-                            "points":  21
-                        },
-                        {
-                            "text":  "meals",
-                            "points":  21
-                        },
-                        {
-                            "text":  "suppers",
-                            "points":  21
-                        },
-                        {
-                            "text":  "lunches",
-                            "points":  21
-                        },
-                        {
-                            "text":  "desserts",
-                            "points":  21
-                        },
-                        {
-                            "text":  "tucker",
-                            "points":  21
-                        },
-                        {
-                            "text":  "eats",
-                            "points":  21
-                        },
-                        {
-                            "text":  "groceries",
-                            "points":  21
                         },
                         {
                             "text":  "food",
                             "points":  21
                         },
                         {
-                            "text":  "edibles",
-                            "points":  21
-                        },
-                        {
-                            "text":  "drink water",
-                            "points":  19
-                        },
-                        {
                             "text":  "water",
                             "points":  19
                         },
                         {
-                            "text":  "repellent",
-                            "points":  7
-                        },
-                        {
-                            "text":  "raid",
-                            "points":  7
-                        },
-                        {
-                            "text":  "bug repellent",
-                            "points":  7
-                        },
-                        {
-                            "text":  "off",
-                            "points":  7
-                        },
-                        {
-                            "text":  "insect repellent",
-                            "points":  7
-                        },
-                        {
-                            "text":  "mosquito repellent",
-                            "points":  7
-                        },
-                        {
-                            "text":  "deet",
-                            "points":  7
-                        },
-                        {
-                            "text":  "spray",
+                            "text":  "bug spray",
                             "points":  7
                         },
                         {
@@ -83214,27 +80352,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "timber",
-                            "points":  3
-                        },
-                        {
-                            "text":  "lumber",
-                            "points":  3
-                        },
-                        {
-                            "text":  "log",
-                            "points":  3
-                        },
-                        {
-                            "text":  "kindling",
-                            "points":  3
-                        },
-                        {
                             "text":  "firewood",
-                            "points":  3
-                        },
-                        {
-                            "text":  "wood",
                             "points":  3
                         }
                     ]
@@ -83283,28 +80401,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "tulips",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  3162,
-        "question":  "Name a profession that traditionally has more women than men.",
-        "answers":  [
-                        {
-                            "text":  "nursing",
-                            "points":  44
-                        },
-                        {
-                            "text":  "teacher",
-                            "points":  25
-                        },
-                        {
-                            "text":  "maid",
-                            "points":  13
-                        },
-                        {
-                            "text":  "hairdresser",
                             "points":  8
                         }
                     ]
@@ -83730,7 +80826,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "golf/min. golf",
+                            "text":  "golf/mini golf",
                             "points":  18
                         },
                         {
@@ -83794,7 +80890,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "dalamatian",
+                            "text":  "dalmatian",
                             "points":  9
                         },
                         {
@@ -83938,7 +81034,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something people bet on.",
         "answers":  [
                         {
-                            "text":  "horserace",
+                            "text":  "horse race",
                             "points":  29
                         },
                         {
@@ -84177,10 +81273,10 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3194,
-        "question":  "Name a job that\u0027s hard to get if you have a prison record.",
+        "question":  "Name a job that's hard to get if you have a prison record.",
         "answers":  [
                         {
-                            "text":  "govern./politics",
+                            "text":  "government/politics",
                             "points":  31
                         },
                         {
@@ -84348,7 +81444,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an occupation where laughing on the job would be considered rude.",
         "answers":  [
                         {
-                            "text":  "doctor/psych.",
+                            "text":  "doctor/psychiatrist",
                             "points":  34
                         },
                         {
@@ -84498,16 +81594,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "fish",
-                            "points":  9
-                        },
-                        {
                             "text":  "another pirate",
                             "points":  15
                         },
                         {
                             "text":  "barrels",
                             "points":  15
+                        },
+                        {
+                            "text":  "fish",
+                            "points":  9
                         }
                     ]
     },
@@ -85048,7 +82144,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "berkley",
+                            "text":  "berkeley",
                             "points":  8
                         },
                         {
@@ -85096,16 +82192,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  27
                         },
                         {
-                            "text":  "shell",
-                            "points":  14
-                        },
-                        {
                             "text":  "arco",
                             "points":  22
                         },
                         {
-                            "text":  "mobil",
-                            "points":  7
+                            "text":  "shell",
+                            "points":  14
                         },
                         {
                             "text":  "chevron",
@@ -85114,6 +82206,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "conoco",
                             "points":  8
+                        },
+                        {
+                            "text":  "mobil",
+                            "points":  7
                         },
                         {
                             "text":  "mobile",
@@ -85632,7 +82728,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "cologne/aft\u0027shave",
+                            "text":  "cologne/aftershave",
                             "points":  20
                         },
                         {
@@ -85658,7 +82754,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "momories",
+                            "text":  "memories",
                             "points":  14
                         },
                         {
@@ -85680,15 +82776,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you can snap.",
         "answers":  [
                         {
-                            "text":  "chicken fingers",
-                            "points":  44
-                        },
-                        {
                             "text":  "fingers",
-                            "points":  44
-                        },
-                        {
-                            "text":  "strips",
                             "points":  44
                         },
                         {
@@ -85696,32 +82784,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "snap buttons",
-                            "points":  18
-                        },
-                        {
-                            "text":  "leads",
-                            "points":  8
-                        },
-                        {
                             "text":  "pencils",
                             "points":  8
                         },
                         {
-                            "text":  "branches",
-                            "points":  7
-                        },
-                        {
-                            "text":  "sticks",
-                            "points":  7
-                        },
-                        {
                             "text":  "twigs",
                             "points":  7
-                        },
-                        {
-                            "text":  "sweet peas",
-                            "points":  4
                         },
                         {
                             "text":  "peas",
@@ -86228,26 +83296,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  35
                         },
                         {
-                            "text":  "game",
-                            "points":  35
-                        },
-                        {
-                            "text":  "tube",
-                            "points":  6
-                        },
-                        {
-                            "text":  "television",
-                            "points":  6
-                        },
-                        {
-                            "text":  "boob tube",
-                            "points":  6
-                        },
-                        {
-                            "text":  "on television",
-                            "points":  6
-                        },
-                        {
                             "text":  "tv",
                             "points":  6
                         },
@@ -86257,14 +83305,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "school gym",
-                            "points":  3
-                        },
-                        {
-                            "text":  "high school gym",
-                            "points":  3
-                        },
-                        {
-                            "text":  "gymnasium",
                             "points":  3
                         }
                     ]
@@ -87423,12 +84463,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3311,
-        "question":  "Name a business that looks forward to Valentine\u0027s Day.",
+        "question":  "Name a business that looks forward to Valentine's Day.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "florists",
                             "points":  57
@@ -87562,12 +84598,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  35
                         },
                         {
-                            "text":  "television",
-                            "points":  8
-                        },
-                        {
                             "text":  "toilet",
                             "points":  26
+                        },
+                        {
+                            "text":  "television",
+                            "points":  8
                         },
                         {
                             "text":  "nose",
@@ -87960,10 +84996,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something slobs use as a napkin.",
         "answers":  [
                         {
-                            "text":  "shirtsleeve/tail",
-                            "points":  88
-                        },
-                        {
                             "text":  "shirt sleeve",
                             "points":  88
                         },
@@ -88098,7 +85130,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name one of the occupations represented in the disco group the Village People.",
         "answers":  [
                         {
-                            "text":  "construct. worker",
+                            "text":  "construction worker",
                             "points":  45
                         },
                         {
@@ -88486,7 +85518,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  41
                         },
                         {
-                            "text":  "good food/bbq.",
+                            "text":  "good food/bbq",
                             "points":  22
                         },
                         {
@@ -89250,10 +86282,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  51
                         },
                         {
-                            "text":  "peanuts",
-                            "points":  5
-                        },
-                        {
                             "text":  "popcorn",
                             "points":  9
                         },
@@ -89264,6 +86292,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "fruit",
                             "points":  6
+                        },
+                        {
+                            "text":  "peanuts",
+                            "points":  5
                         },
                         {
                             "text":  "cookies",
@@ -89524,10 +86556,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name one way customers are rude to a waitress.",
         "answers":  [
                         {
-                            "text":  "not leave a tip",
-                            "points":  70
-                        },
-                        {
                             "text":  "not leaving a tip",
                             "points":  70
                         },
@@ -89584,119 +86612,19 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you can rent.",
         "answers":  [
                         {
-                            "text":  "vehicle",
-                            "points":  38
-                        },
-                        {
-                            "text":  "jalopy",
-                            "points":  38
-                        },
-                        {
                             "text":  "car",
                             "points":  38
-                        },
-                        {
-                            "text":  "truck",
-                            "points":  38
-                        },
-                        {
-                            "text":  "van",
-                            "points":  38
-                        },
-                        {
-                            "text":  "automobile",
-                            "points":  38
-                        },
-                        {
-                            "text":  "cinema",
-                            "points":  33
                         },
                         {
                             "text":  "movies",
                             "points":  33
                         },
                         {
-                            "text":  "films",
-                            "points":  33
-                        },
-                        {
-                            "text":  "manor",
-                            "points":  18
-                        },
-                        {
                             "text":  "house",
                             "points":  18
                         },
                         {
-                            "text":  "plantation",
-                            "points":  18
-                        },
-                        {
-                            "text":  "estate",
-                            "points":  18
-                        },
-                        {
-                            "text":  "dwelling",
-                            "points":  18
-                        },
-                        {
-                            "text":  "real estate",
-                            "points":  18
-                        },
-                        {
-                            "text":  "condo",
-                            "points":  18
-                        },
-                        {
-                            "text":  "bungalow",
-                            "points":  18
-                        },
-                        {
-                            "text":  "mansion",
-                            "points":  18
-                        },
-                        {
-                            "text":  "sofa",
-                            "points":  5
-                        },
-                        {
-                            "text":  "table",
-                            "points":  5
-                        },
-                        {
-                            "text":  "chair",
-                            "points":  5
-                        },
-                        {
                             "text":  "furniture",
-                            "points":  5
-                        },
-                        {
-                            "text":  "bed",
-                            "points":  5
-                        },
-                        {
-                            "text":  "desk",
-                            "points":  5
-                        },
-                        {
-                            "text":  "couch",
-                            "points":  5
-                        },
-                        {
-                            "text":  "bookshelf",
-                            "points":  5
-                        },
-                        {
-                            "text":  "tenement",
-                            "points":  5
-                        },
-                        {
-                            "text":  "loft",
-                            "points":  5
-                        },
-                        {
-                            "text":  "flat",
                             "points":  5
                         },
                         {
@@ -89736,67 +86664,15 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "sphere",
-                            "points":  30
-                        },
-                        {
-                            "text":  "soccer",
-                            "points":  30
-                        },
-                        {
-                            "text":  "softball",
-                            "points":  30
-                        },
-                        {
-                            "text":  "dodgeball",
-                            "points":  30
-                        },
-                        {
-                            "text":  "orb",
-                            "points":  30
-                        },
-                        {
-                            "text":  "football",
-                            "points":  30
-                        },
-                        {
-                            "text":  "hardball",
-                            "points":  30
-                        },
-                        {
-                            "text":  "kickball",
-                            "points":  30
-                        },
-                        {
                             "text":  "video games",
                             "points":  24
-                        },
-                        {
-                            "text":  "ride bike",
-                            "points":  14
-                        },
-                        {
-                            "text":  "cycle",
-                            "points":  14
-                        },
-                        {
-                            "text":  "bmx",
-                            "points":  14
                         },
                         {
                             "text":  "bike",
                             "points":  14
                         },
                         {
-                            "text":  "dreidel",
-                            "points":  5
-                        },
-                        {
                             "text":  "spinning top",
-                            "points":  5
-                        },
-                        {
-                            "text":  "top",
                             "points":  5
                         },
                         {
@@ -90224,32 +87100,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3410,
-        "question":  "Name something that people frequently trip over.",
-        "answers":  [
-                        {
-                            "text":  "work",
-                            "points":  36
-                        },
-                        {
-                            "text":  "jail",
-                            "points":  29
-                        },
-                        {
-                            "text":  "hospital",
-                            "points":  17
-                        },
-                        {
-                            "text":  "home",
-                            "points":  13
-                        },
-                        {
-                            "text":  "church",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  3411,
         "question":  "Name a vehicle people can stand up in.",
         "answers":  [
@@ -90326,111 +87176,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  43
                         },
                         {
-                            "text":  "soft-boiled eggs",
-                            "points":  43
-                        },
-                        {
-                            "text":  "scrambled eggs",
-                            "points":  43
-                        },
-                        {
-                            "text":  "rotten eggs",
-                            "points":  43
-                        },
-                        {
-                            "text":  "poached eggs",
-                            "points":  43
-                        },
-                        {
-                            "text":  "fried eggs",
-                            "points":  43
-                        },
-                        {
-                            "text":  "hard-boil eggs",
-                            "points":  43
-                        },
-                        {
-                            "text":  "baked goods",
-                            "points":  12
-                        },
-                        {
-                            "text":  "danishes",
-                            "points":  12
-                        },
-                        {
                             "text":  "pastries",
-                            "points":  12
-                        },
-                        {
-                            "text":  "strudels",
-                            "points":  12
-                        },
-                        {
-                            "text":  "tarts",
-                            "points":  12
-                        },
-                        {
-                            "text":  "lime",
-                            "points":  12
-                        },
-                        {
-                            "text":  "mango",
-                            "points":  12
-                        },
-                        {
-                            "text":  "melon",
-                            "points":  12
-                        },
-                        {
-                            "text":  "orange",
-                            "points":  12
-                        },
-                        {
-                            "text":  "peach",
-                            "points":  12
-                        },
-                        {
-                            "text":  "plum",
-                            "points":  12
-                        },
-                        {
-                            "text":  "strawberry",
-                            "points":  12
-                        },
-                        {
-                            "text":  "raspberry",
-                            "points":  12
-                        },
-                        {
-                            "text":  "grape",
-                            "points":  12
-                        },
-                        {
-                            "text":  "lemon",
-                            "points":  12
-                        },
-                        {
-                            "text":  "apple",
-                            "points":  12
-                        },
-                        {
-                            "text":  "banana",
-                            "points":  12
-                        },
-                        {
-                            "text":  "berry",
-                            "points":  12
-                        },
-                        {
-                            "text":  "blackberry",
-                            "points":  12
-                        },
-                        {
-                            "text":  "blueberry",
-                            "points":  12
-                        },
-                        {
-                            "text":  "cherry",
                             "points":  12
                         },
                         {
@@ -90438,43 +87184,15 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "taters",
-                            "points":  8
-                        },
-                        {
-                            "text":  "spuds",
-                            "points":  8
-                        },
-                        {
                             "text":  "potatoes",
                             "points":  8
-                        },
-                        {
-                            "text":  "baked potato",
-                            "points":  8
-                        },
-                        {
-                            "text":  "french fries",
-                            "points":  8
-                        },
-                        {
-                            "text":  "cooked ham",
-                            "points":  4
-                        },
-                        {
-                            "text":  "cured ham",
-                            "points":  4
                         },
                         {
                             "text":  "ham",
                             "points":  4
                         },
                         {
-                            "text":  "caesar salad",
-                            "points":  3
-                        },
-                        {
-                            "text":  "salads",
+                            "text":  "salad",
                             "points":  3
                         }
                     ]
@@ -90822,7 +87540,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "check driv. lic.",
+                            "text":  "check driver's license",
                             "points":  3
                         }
                     ]
@@ -91014,7 +87732,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "shuffleb\u0027rd/games",
+                            "text":  "shuffleboard/games",
                             "points":  8
                         },
                         {
@@ -91029,10 +87747,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "eat/chew",
-                            "points":  59
-                        },
-                        {
-                            "text":  "chew",
                             "points":  59
                         },
                         {
@@ -91338,28 +88052,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3443,
-        "question":  "Name an occasion for which people might include cash in a card.",
-        "answers":  [
-                        {
-                            "text":  "birthday",
-                            "points":  58
-                        },
-                        {
-                            "text":  "wedding",
-                            "points":  16
-                        },
-                        {
-                            "text":  "graduation",
-                            "points":  15
-                        },
-                        {
-                            "text":  "christmas",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  3444,
         "question":  "Name someone you talk over your sex life with.",
         "answers":  [
@@ -91562,7 +88254,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "salt/peppershaker",
+                            "text":  "salt/pepper shaker",
                             "points":  16
                         },
                         {
@@ -91598,12 +88290,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might \"catch up on.\"",
         "answers":  [
                         {
-                            "text":  "reading",
-                            "points":  19
-                        },
-                        {
                             "text":  "sleep",
                             "points":  29
+                        },
+                        {
+                            "text":  "reading",
+                            "points":  19
                         },
                         {
                             "text":  "bills",
@@ -91740,11 +88432,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "anti freeze",
-                            "points":  13
-                        },
-                        {
-                            "text":  "anti-freeze",
+                            "text":  "antifreeze",
                             "points":  13
                         },
                         {
@@ -91934,7 +88622,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "cibatta",
+                            "text":  "ciabatta",
                             "points":  3
                         }
                     ]
@@ -92412,32 +89100,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3484,
-        "question":  "Name an occasion when a woman might be especially nervous and excited.",
-        "answers":  [
-                        {
-                            "text":  "wedding day",
-                            "points":  49
-                        },
-                        {
-                            "text":  "first date",
-                            "points":  19
-                        },
-                        {
-                            "text":  "pregnant",
-                            "points":  17
-                        },
-                        {
-                            "text":  "proposal",
-                            "points":  6
-                        },
-                        {
-                            "text":  "job interview",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  3485,
         "question":  "Name a snack food that has cream in the middle.",
         "answers":  [
@@ -92640,28 +89302,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name someone famous who rode a horse.",
         "answers":  [
                         {
-                            "text":  "wayne",
-                            "points":  25
-                        },
-                        {
-                            "text":  "the duke",
-                            "points":  25
-                        },
-                        {
                             "text":  "john wayne",
                             "points":  25
                         },
                         {
-                            "text":  "revere",
-                            "points":  17
-                        },
-                        {
                             "text":  "paul revere",
                             "points":  17
-                        },
-                        {
-                            "text":  "reeve",
-                            "points":  13
                         },
                         {
                             "text":  "christopher reeve",
@@ -92674,14 +89320,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "george washington",
                             "points":  6
-                        },
-                        {
-                            "text":  "washington",
-                            "points":  6
-                        },
-                        {
-                            "text":  "ranger",
-                            "points":  4
                         },
                         {
                             "text":  "lone ranger",
@@ -92708,36 +89346,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "covers",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  3494,
-        "question":  "Name a celebrity you wouldn\u0027t want to sit next to on an airplane.",
-        "answers":  [
-                        {
-                            "text":  "justin beiber",
-                            "points":  24
-                        },
-                        {
-                            "text":  "kim kardashian",
-                            "points":  20
-                        },
-                        {
-                            "text":  "lindsay lohan",
-                            "points":  17
-                        },
-                        {
-                            "text":  "miley cyrus",
-                            "points":  15
-                        },
-                        {
-                            "text":  "lil wayne",
-                            "points":  13
-                        },
-                        {
-                            "text":  "howard stern",
-                            "points":  11
                         }
                     ]
     },
@@ -92820,28 +89428,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "jasmine",
                             "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  3498,
-        "question":  "Name something that you move around.",
-        "answers":  [
-                        {
-                            "text":  "cart",
-                            "points":  50
-                        },
-                        {
-                            "text":  "baby stroller",
-                            "points":  27
-                        },
-                        {
-                            "text":  "vacuum",
-                            "points":  8
-                        },
-                        {
-                            "text":  "lawn mower",
-                            "points":  5
                         }
                     ]
     },
@@ -93141,32 +89727,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "paris",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  3511,
-        "question":  "Name somewhere children love going that adults don\u0027t.",
-        "answers":  [
-                        {
-                            "text":  "park",
-                            "points":  42
-                        },
-                        {
-                            "text":  "amusement park",
-                            "points":  22
-                        },
-                        {
-                            "text":  "chuck e cheese",
-                            "points":  20
-                        },
-                        {
-                            "text":  "petting zoo",
-                            "points":  11
-                        },
-                        {
-                            "text":  "arcades",
                             "points":  5
                         }
                     ]
@@ -93544,32 +90104,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3526,
-        "question":  "Name something that you think is okay to do in public but is frowned upon by other people.",
-        "answers":  [
-                        {
-                            "text":  "kiss",
-                            "points":  52
-                        },
-                        {
-                            "text":  "breast feeding",
-                            "points":  18
-                        },
-                        {
-                            "text":  "fart",
-                            "points":  13
-                        },
-                        {
-                            "text":  "belch",
-                            "points":  12
-                        },
-                        {
-                            "text":  "pee",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  3527,
         "question":  "Name an exercise that no one looks good doing.",
         "answers":  [
@@ -93614,36 +90148,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "pig",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  3529,
-        "question":  "Name something a person might do right after eating a big Thanksgiving dinner.",
-        "answers":  [
-                        {
-                            "text":  "more sleep",
-                            "points":  44
-                        },
-                        {
-                            "text":  "nap",
-                            "points":  44
-                        },
-                        {
-                            "text":  "dream",
-                            "points":  44
-                        },
-                        {
-                            "text":  "sleep",
-                            "points":  44
-                        },
-                        {
-                            "text":  "slumber",
-                            "points":  44
-                        },
-                        {
-                            "text":  "snooze",
-                            "points":  44
                         }
                     ]
     },
@@ -93755,7 +90259,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3535,
-        "question":  "Name something a bracelet might be made of. (Be more specific than metal.)",
+        "question":  "Name something a bracelet might be made of.",
         "answers":  [
                         {
                             "text":  "gold",
@@ -93880,15 +90384,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  55
                         },
                         {
-                            "text":  "babies",
-                            "points":  10
-                        },
-                        {
                             "text":  "parenting",
-                            "points":  10
-                        },
-                        {
-                            "text":  "baby",
                             "points":  10
                         },
                         {
@@ -93904,15 +90400,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "election",
-                            "points":  6
-                        },
-                        {
                             "text":  "politics",
-                            "points":  6
-                        },
-                        {
-                            "text":  "healthcare",
                             "points":  6
                         }
                     ]
@@ -94734,7 +91222,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "rembrandt vin rijn",
+                            "text":  "rembrandt van rijn",
                             "points":  9
                         },
                         {
@@ -94858,7 +91346,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "bary shnikov",
+                            "text":  "baryshnikov",
                             "points":  7
                         },
                         {
@@ -94877,14 +91365,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3576,
-        "question":  "Roses are red, violets are blue, tell me a poet who\u0027s famous to you.",
+        "question":  "Roses are red, violets are blue, tell me a poet who's famous to you.",
         "answers":  [
                         {
-                            "text":  "edgar allen poe",
+                            "text":  "edgar allan poe",
                             "points":  30
                         },
                         {
-                            "text":  "william shakespear",
+                            "text":  "william shakespeare",
                             "points":  19
                         },
                         {
@@ -94948,7 +91436,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "nails on chalkb\u0027d",
+                            "text":  "nails on chalkboard",
                             "points":  9
                         },
                         {
@@ -94974,7 +91462,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  59
                         },
                         {
-                            "text":  "family fued",
+                            "text":  "family feud",
                             "points":  14
                         },
                         {
@@ -94984,36 +91472,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "jeopardy",
                             "points":  9
-                        }
-                    ]
-    },
-    {
-        "id":  3580,
-        "question":  "Tell someone who parents tell their kids to have respect for. (More specific than \"elders\")",
-        "answers":  [
-                        {
-                            "text":  "teacher",
-                            "points":  57
-                        },
-                        {
-                            "text":  "grandparent",
-                            "points":  12
-                        },
-                        {
-                            "text":  "police officer",
-                            "points":  11
-                        },
-                        {
-                            "text":  "themselves",
-                            "points":  8
-                        },
-                        {
-                            "text":  "parent",
-                            "points":  6
-                        },
-                        {
-                            "text":  "clergy",
-                            "points":  5
                         }
                     ]
     },
@@ -95323,7 +91781,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3591,
-        "question":  "Tell me how many times most men get their haircut in a year (numeric only).",
+        "question":  "Tell me how many times most men get their haircut in a year.",
         "answers":  [
                         {
                             "text":  "12",
@@ -95451,7 +91909,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3595,
-        "question":  "Tell me how many days it takes a man to grow a beard. (Numeric only.)",
+        "question":  "Tell me how many days it takes a man to grow a beard.",
         "answers":  [
                         {
                             "text":  "7 days",
@@ -95484,7 +91942,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me a name people use to describe someone who talks too much.",
         "answers":  [
                         {
-                            "text":  "babbermouth",
+                            "text":  "blabbermouth",
                             "points":  39
                         },
                         {
@@ -95910,28 +92368,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3613,
-        "question":  "Tell me something you hate to admit you did on Saturday night.",
-        "answers":  [
-                        {
-                            "text":  "stayed home",
-                            "points":  38
-                        },
-                        {
-                            "text":  "got drunk",
-                            "points":  35
-                        },
-                        {
-                            "text":  "had a fling",
-                            "points":  9
-                        },
-                        {
-                            "text":  "gambled/lost money",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  3614,
         "question":  "Tell me an animal that high school teams are often named after.",
         "answers":  [
@@ -96000,64 +92436,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3616,
-        "question":  "Tell me something you would not like to see when getting on an airplane.",
-        "answers":  [
-                        {
-                            "text":  "flames",
-                            "points":  20
-                        },
-                        {
-                            "text":  "drunk pilot",
-                            "points":  19
-                        },
-                        {
-                            "text":  "bomb",
-                            "points":  17
-                        },
-                        {
-                            "text":  "terrorists",
-                            "points":  14
-                        },
-                        {
-                            "text":  "guns",
-                            "points":  9
-                        },
-                        {
-                            "text":  "crying baby",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  3617,
-        "question":  "Tell me an animal that people usually don\u0027t like to eat.",
-        "answers":  [
-                        {
-                            "text":  "dog",
-                            "points":  34
-                        },
-                        {
-                            "text":  "deer",
-                            "points":  29
-                        },
-                        {
-                            "text":  "cats",
-                            "points":  14
-                        },
-                        {
-                            "text":  "skunks",
-                            "points":  13
-                        },
-                        {
-                            "text":  "snakes",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
         "id":  3618,
-        "question":  "Tell me something you\u0027d love to be able to hypnotize your children to do.",
+        "question":  "Tell me something you'd love to be able to hypnotize your children to do.",
         "answers":  [
                         {
                             "text":  "clean up/room",
@@ -96068,7 +92448,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  27
                         },
                         {
-                            "text":  "homew\u0027k/gd grades",
+                            "text":  "homework/good grades",
                             "points":  14
                         },
                         {
@@ -96700,36 +93080,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "walking",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  3642,
-        "question":  "Tell me something that is never there when you need it?",
-        "answers":  [
-                        {
-                            "text":  "money",
-                            "points":  40
-                        },
-                        {
-                            "text":  "pen/pencil",
-                            "points":  14
-                        },
-                        {
-                            "text":  "significant other",
-                            "points":  13
-                        },
-                        {
-                            "text":  "police officer",
-                            "points":  11
-                        },
-                        {
-                            "text":  "keys",
-                            "points":  9
-                        },
-                        {
-                            "text":  "friends",
-                            "points":  7
                         }
                     ]
     },
@@ -97866,7 +94216,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  35
                         },
                         {
-                            "text":  "rudolph/red nosed reindee",
+                            "text":  "rudolph the red-nosed reindeer",
                             "points":  19
                         },
                         {
@@ -97882,7 +94232,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "it\u0027s/wonderful life",
+                            "text":  "it's/wonderful life",
                             "points":  5
                         },
                         {
@@ -98048,7 +94398,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "What happens to your body that lets you know you're getting old?",
         "answers":  [
                         {
-                            "text":  "werinkles",
+                            "text":  "wrinkles",
                             "points":  54
                         },
                         {
@@ -98060,7 +94410,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "sagd",
+                            "text":  "sag",
                             "points":  8
                         }
                     ]
@@ -98070,16 +94420,16 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "What is the maximum number of times it's okay for your partner to call you at work?",
         "answers":  [
                         {
-                            "text":  "1",
-                            "points":  19
-                        },
-                        {
                             "text":  "2",
                             "points":  34
                         },
                         {
                             "text":  "3",
                             "points":  23
+                        },
+                        {
+                            "text":  "1",
+                            "points":  19
                         },
                         {
                             "text":  "4",
@@ -98496,10 +94846,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "What do you call someone who is too careful with money?",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "cheap",
                             "points":  35
                         }
@@ -98766,28 +95112,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3721,
-        "question":  "What do you do when someone cuts in front of you in line?",
-        "answers":  [
-                        {
-                            "text":  "scream",
-                            "points":  49
-                        },
-                        {
-                            "text":  "bellow",
-                            "points":  49
-                        },
-                        {
-                            "text":  "holler",
-                            "points":  49
-                        },
-                        {
-                            "text":  "yell",
-                            "points":  49
-                        }
-                    ]
-    },
-    {
         "id":  3722,
         "question":  "We surveyed 100 married women... Name something that tires out your husband.",
         "answers":  [
@@ -98980,7 +95304,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "geeze",
+                            "text":  "geez",
                             "points":  3
                         }
                     ]
@@ -99073,7 +95397,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3732,
-        "question":  "What\u0027s something you might do during your lunch break?",
+        "question":  "What's something you might do during your lunch break?",
         "answers":  [
                         {
                             "text":  "eat lunch",
@@ -99084,7 +95408,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "talk a walk",
+                            "text":  "take a walk",
                             "points":  12
                         },
                         {
@@ -99270,7 +95594,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  55
                         },
                         {
-                            "text":  "under bed/mattr.",
+                            "text":  "under bed/mattress",
                             "points":  11
                         },
                         {
@@ -99788,7 +96112,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "watchtv",
+                            "text":  "watch tv",
                             "points":  7
                         },
                         {
@@ -99882,15 +96206,15 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "the good...ugly",
+                            "text":  "the good, the bad and the ugly",
                             "points":  15
                         },
                         {
-                            "text":  "...morning, v\u0027tnam",
+                            "text":  "good morning, vietnam",
                             "points":  10
                         },
                         {
-                            "text":  "as good as...gets",
+                            "text":  "as good as it gets",
                             "points":  5
                         },
                         {
@@ -99904,219 +96228,27 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "According to women: what is something men think they know more about than they do?",
         "answers":  [
                         {
-                            "text":  "suvs",
-                            "points":  53
-                        },
-                        {
-                            "text":  "driving",
-                            "points":  53
-                        },
-                        {
-                            "text":  "steering",
-                            "points":  53
-                        },
-                        {
                             "text":  "cars",
                             "points":  53
-                        },
-                        {
-                            "text":  "motoring",
-                            "points":  53
-                        },
-                        {
-                            "text":  "trucks",
-                            "points":  53
-                        },
-                        {
-                            "text":  "vans",
-                            "points":  53
-                        },
-                        {
-                            "text":  "autos",
-                            "points":  53
-                        },
-                        {
-                            "text":  "automobiles",
-                            "points":  53
-                        },
-                        {
-                            "text":  "vehicles",
-                            "points":  53
-                        },
-                        {
-                            "text":  "field",
-                            "points":  19
-                        },
-                        {
-                            "text":  "football",
-                            "points":  19
-                        },
-                        {
-                            "text":  "matches",
-                            "points":  19
-                        },
-                        {
-                            "text":  "hockey",
-                            "points":  19
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  19
-                        },
-                        {
-                            "text":  "soccer",
-                            "points":  19
-                        },
-                        {
-                            "text":  "golf",
-                            "points":  19
-                        },
-                        {
-                            "text":  "athletics",
-                            "points":  19
-                        },
-                        {
-                            "text":  "basketball",
-                            "points":  19
-                        },
-                        {
-                            "text":  "games",
-                            "points":  19
-                        },
-                        {
-                            "text":  "track",
-                            "points":  19
-                        },
-                        {
-                            "text":  "competitions",
-                            "points":  19
                         },
                         {
                             "text":  "sports",
                             "points":  19
                         },
                         {
-                            "text":  "wealth",
-                            "points":  13
-                        },
-                        {
                             "text":  "money",
                             "points":  13
-                        },
-                        {
-                            "text":  "economy",
-                            "points":  13
-                        },
-                        {
-                            "text":  "riches",
-                            "points":  13
-                        },
-                        {
-                            "text":  "savings",
-                            "points":  13
-                        },
-                        {
-                            "text":  "coin",
-                            "points":  13
-                        },
-                        {
-                            "text":  "currency",
-                            "points":  13
-                        },
-                        {
-                            "text":  "cash",
-                            "points":  13
-                        },
-                        {
-                            "text":  "costs",
-                            "points":  13
-                        },
-                        {
-                            "text":  "finances",
-                            "points":  13
-                        },
-                        {
-                            "text":  "bills",
-                            "points":  13
-                        },
-                        {
-                            "text":  "food processor",
-                            "points":  5
                         },
                         {
                             "text":  "appliances",
                             "points":  5
                         },
                         {
-                            "text":  "stove",
-                            "points":  5
-                        },
-                        {
-                            "text":  "fridge",
-                            "points":  5
-                        },
-                        {
-                            "text":  "toaster",
-                            "points":  5
-                        },
-                        {
-                            "text":  "refrigerator",
-                            "points":  5
-                        },
-                        {
-                            "text":  "range",
-                            "points":  5
-                        },
-                        {
-                            "text":  "oven",
-                            "points":  5
-                        },
-                        {
-                            "text":  "kitchen appliances",
-                            "points":  5
-                        },
-                        {
-                            "text":  "dishwasher",
-                            "points":  5
-                        },
-                        {
-                            "text":  "blender",
-                            "points":  5
-                        },
-                        {
-                            "text":  "affairs",
-                            "points":  3
-                        },
-                        {
-                            "text":  "dating",
-                            "points":  3
-                        },
-                        {
                             "text":  "romance",
                             "points":  3
                         },
                         {
-                            "text":  "love",
-                            "points":  3
-                        },
-                        {
                             "text":  "directions",
-                            "points":  2
-                        },
-                        {
-                            "text":  "navigation",
-                            "points":  2
-                        },
-                        {
-                            "text":  "bearing",
-                            "points":  2
-                        },
-                        {
-                            "text":  "guidance",
-                            "points":  2
-                        },
-                        {
-                            "text":  "destination",
                             "points":  2
                         }
                     ]
@@ -100424,10 +96556,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Besides a house, name something people live in.",
         "answers":  [
                         {
-                            "text":  "home",
-                            "points":  52
-                        },
-                        {
                             "text":  "mobile home",
                             "points":  52
                         },
@@ -100564,20 +96692,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "office",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  3782,
-        "question":  "Do on Christmas Eve (wording not exact).",
-        "answers":  [
-                        {
-                            "text":  "open gifts",
-                            "points":  40
-                        },
-                        {
-                            "text":  "go to church",
-                            "points":  23
                         }
                     ]
     },
@@ -100935,7 +97049,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3795,
-        "question":  "How many times does the average person let a phone ring before answering it? Numeric only.",
+        "question":  "How many times does the average person let a phone ring before answering it?",
         "answers":  [
                         {
                             "text":  "2",
@@ -100957,19 +97071,15 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3796,
-        "question":  "How much do you expect to spend if you're taking a date out for a nice dinner? Please round to nearest.",
+        "question":  "How much do you expect to spend if you're taking a date out for a nice dinner?",
         "answers":  [
-                        {
-                            "text":  "30",
-                            "points":  5
-                        },
-                        {
-                            "text":  "40",
-                            "points":  3
-                        },
                         {
                             "text":  "50",
                             "points":  37
+                        },
+                        {
+                            "text":  "100",
+                            "points":  25
                         },
                         {
                             "text":  "60",
@@ -100984,8 +97094,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "100",
-                            "points":  25
+                            "text":  "30",
+                            "points":  5
+                        },
+                        {
+                            "text":  "40",
+                            "points":  3
                         }
                     ]
     },
@@ -101016,12 +97130,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "How many dates should you go on before kissing someone?",
         "answers":  [
                         {
-                            "text":  "1",
-                            "points":  28
-                        },
-                        {
                             "text":  "2",
                             "points":  39
+                        },
+                        {
+                            "text":  "1",
+                            "points":  28
                         },
                         {
                             "text":  "3",
@@ -101056,32 +97170,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tanned",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  3800,
-        "question":  "How many hours of sleep does the average person need in order to wake up refreshed?",
-        "answers":  [
-                        {
-                            "text":  "6",
-                            "points":  17
-                        },
-                        {
-                            "text":  "7",
-                            "points":  18
-                        },
-                        {
-                            "text":  "8",
-                            "points":  47
-                        },
-                        {
-                            "text":  "9",
-                            "points":  3
-                        },
-                        {
-                            "text":  "10",
-                            "points":  3
                         }
                     ]
     },
@@ -101297,7 +97385,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3808,
-        "question":  "If you could have just one chore that someone else would always do for you, what would it be? (More specific than \"clean.\")",
+        "question":  "If you could have just one chore that someone else would always do for you, what would it be?",
         "answers":  [
                         {
                             "text":  "wash dishes",
@@ -101492,20 +97580,20 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "It's said there is a seven year itch. After how many years do you think the itch really comes?",
         "answers":  [
                         {
-                            "text":  "1",
-                            "points":  8
-                        },
-                        {
-                            "text":  "2",
-                            "points":  16
+                            "text":  "5",
+                            "points":  32
                         },
                         {
                             "text":  "3",
                             "points":  26
                         },
                         {
-                            "text":  "5",
-                            "points":  32
+                            "text":  "2",
+                            "points":  16
+                        },
+                        {
+                            "text":  "1",
+                            "points":  8
                         },
                         {
                             "text":  "7",
@@ -101662,7 +97750,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "visit snackbar",
+                            "text":  "visit snack bar",
                             "points":  19
                         },
                         {
@@ -101811,7 +97899,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3829,
-        "question":  "If you lost your job, name something you\u0027d stop spending money on.",
+        "question":  "If you lost your job, name something you'd stop spending money on.",
         "answers":  [
                         {
                             "text":  "clothes",
@@ -101826,7 +97914,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "gasonline",
+                            "text":  "gasoline",
                             "points":  7
                         },
                         {
@@ -101973,36 +98061,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "ant/fire ant",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  3835,
-        "question":  "If you were called to take part in an amateur contest, name something you might do.",
-        "answers":  [
-                        {
-                            "text":  "sing/rap",
-                            "points":  60
-                        },
-                        {
-                            "text":  "dance",
-                            "points":  18
-                        },
-                        {
-                            "text":  "tell jokes",
-                            "points":  9
-                        },
-                        {
-                            "text":  "play instrument",
-                            "points":  5
-                        },
-                        {
-                            "text":  "juggle",
-                            "points":  4
-                        },
-                        {
-                            "text":  "read/poetry",
                             "points":  2
                         }
                     ]
@@ -102370,60 +98428,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3849,
-        "question":  "(married guys): The good news is your wife\u0027s an animal in bed. The bad news is the animal\u0027s a what?",
-        "answers":  [
-                        {
-                            "text":  "dog",
-                            "points":  21
-                        },
-                        {
-                            "text":  "pig",
-                            "points":  15
-                        },
-                        {
-                            "text":  "(feral) cat",
-                            "points":  14
-                        },
-                        {
-                            "text":  "dead/fish",
-                            "points":  12
-                        },
-                        {
-                            "text":  "cheetah",
-                            "points":  11
-                        },
-                        {
-                            "text":  "gorilla",
-                            "points":  9
-                        },
-                        {
-                            "text":  "tiger",
-                            "points":  8
-                        },
-                        {
-                            "text":  "cow",
-                            "points":  0
-                        },
-                        {
-                            "text":  "hippo",
-                            "points":  0
-                        },
-                        {
-                            "text":  "lion",
-                            "points":  0
-                        },
-                        {
-                            "text":  "cougar",
-                            "points":  0
-                        },
-                        {
-                            "text":  "porcupine",
-                            "points":  0
-                        }
-                    ]
-    },
-    {
         "id":  3850,
         "question":  "Name a weather condition that is 4 letters long.",
         "answers":  [
@@ -102722,7 +98726,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  27
                         },
                         {
-                            "text":  "neman marcus",
+                            "text":  "neiman marcus",
                             "points":  8
                         },
                         {
@@ -102734,7 +98738,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "lord \u0026 taylor",
+                            "text":  "lord & taylor",
                             "points":  3
                         }
                     ]
@@ -103124,7 +99128,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "parcle delivery",
+                            "text":  "parcel delivery",
                             "points":  18
                         },
                         {
@@ -103198,32 +99202,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3879,
-        "question":  "Name something that you would find washed up on a beach.",
-        "answers":  [
-                        {
-                            "text":  "shells",
-                            "points":  37
-                        },
-                        {
-                            "text":  "whale",
-                            "points":  27
-                        },
-                        {
-                            "text":  "message in a bottle",
-                            "points":  16
-                        },
-                        {
-                            "text":  "seaweed",
-                            "points":  11
-                        },
-                        {
-                            "text":  "trash",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  3880,
         "question":  "Name something people do to their body that other people think is crazy.",
         "answers":  [
@@ -103232,7 +99210,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  58
                         },
                         {
-                            "text":  "tatoo",
+                            "text":  "tattoo",
                             "points":  32
                         },
                         {
@@ -103312,20 +99290,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "greedy",
                             "points":  12
-                        }
-                    ]
-    },
-    {
-        "id":  3884,
-        "question":  "Name something on everyone's driver's license.",
-        "answers":  [
-                        {
-                            "text":  "birth date",
-                            "points":  34
-                        },
-                        {
-                            "text":  "name",
-                            "points":  25
                         }
                     ]
     },
@@ -103467,7 +99431,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "poppy z brite",
-                            "points":  0
+                            "points":  1
                         }
                     ]
     },
@@ -103894,7 +99858,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "servents",
+                            "text":  "servants",
                             "points":  8
                         },
                         {
@@ -104952,32 +100916,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3944,
-        "question":  "Name a reason you might skip lunch.",
-        "answers":  [
-                        {
-                            "text":  "not hungry",
-                            "points":  45
-                        },
-                        {
-                            "text":  "too busy",
-                            "points":  16
-                        },
-                        {
-                            "text":  "on a diet",
-                            "points":  12
-                        },
-                        {
-                            "text":  "work/meeting",
-                            "points":  10
-                        },
-                        {
-                            "text":  "sick",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  3945,
         "question":  "Name someplace you might hear an echo.",
         "answers":  [
@@ -105106,7 +101044,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  62
                         },
                         {
-                            "text":  "coyboy boots",
+                            "text":  "cowboy boots",
                             "points":  28
                         },
                         {
@@ -105146,20 +101084,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3951,
-        "question":  "Name something you might lose as you get older.",
-        "answers":  [
-                        {
-                            "text":  "memory",
-                            "points":  41
-                        },
-                        {
-                            "text":  "hair",
-                            "points":  27
-                        }
-                    ]
-    },
-    {
         "id":  3952,
         "question":  "Name something football players wear for protection.",
         "answers":  [
@@ -105187,7 +101111,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  3953,
-        "question":  "Name something you eat by the handful. (Be specific; candy is not an answer.)",
+        "question":  "Name something you eat by the handful.",
         "answers":  [
                         {
                             "text":  "popcorn",
@@ -105198,7 +101122,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  31
                         },
                         {
-                            "text":  "m\u0026m",
+                            "text":  "m&m",
                             "points":  12
                         },
                         {
@@ -105626,24 +101550,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3969,
-        "question":  "Name something people bet on.",
-        "answers":  [
-                        {
-                            "text":  "horses races",
-                            "points":  68
-                        },
-                        {
-                            "text":  "sports",
-                            "points":  20
-                        },
-                        {
-                            "text":  "card games",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
         "id":  3970,
         "question":  "Name something the sign outside a hotel might tell you.",
         "answers":  [
@@ -105690,7 +101596,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "marshmellow",
+                            "text":  "marshmallow",
                             "points":  11
                         }
                     ]
@@ -105822,40 +101728,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "clip nose hairs",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  3977,
-        "question":  "Name something most parents can't wait until their child starts doing on his own.",
-        "answers":  [
-                        {
-                            "text":  "walking",
-                            "points":  38
-                        },
-                        {
-                            "text":  "driving",
-                            "points":  18
-                        },
-                        {
-                            "text":  "using bathroom",
-                            "points":  14
-                        },
-                        {
-                            "text":  "eating",
-                            "points":  8
-                        },
-                        {
-                            "text":  "paying bills",
-                            "points":  6
-                        },
-                        {
-                            "text":  "dressing",
-                            "points":  5
-                        },
-                        {
-                            "text":  "laundry",
-                            "points":  5
                         }
                     ]
     },
@@ -106220,18 +102092,18 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "firefighter",
-                            "points":  4
-                        },
-                        {
                             "text":  "president",
                             "points":  6
+                        },
+                        {
+                            "text":  "firefighter",
+                            "points":  4
                         }
                     ]
     },
     {
         "id":  3991,
-        "question":  "Name something people do when they want to look better. (Makeover is not an answer, be more specific.)",
+        "question":  "Name something people do when they want to look better.",
         "answers":  [
                         {
                             "text":  "change hair",
@@ -107046,7 +102918,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an actor who often plays a \"bad guy.\"",
         "answers":  [
                         {
-                            "text":  "jack nickleson",
+                            "text":  "jack nicholson",
                             "points":  27
                         },
                         {
@@ -107062,7 +102934,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "christopher wakin",
+                            "text":  "christopher walken",
                             "points":  10
                         },
                         {
@@ -107080,7 +102952,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  45
                         },
                         {
-                            "text":  "hawii",
+                            "text":  "hawaii",
                             "points":  35
                         },
                         {
@@ -107188,7 +103060,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "canara",
+                            "text":  "camera",
                             "points":  19
                         },
                         {
@@ -107270,7 +103142,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  28
                         },
                         {
-                            "text":  "flashung lights",
+                            "text":  "flashing lights",
                             "points":  15
                         },
                         {
@@ -107444,7 +103316,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "hygeine product",
+                            "text":  "hygiene product",
                             "points":  15
                         },
                         {
@@ -107928,7 +103800,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "jewelery box",
+                            "text":  "jewelry box",
                             "points":  13
                         },
                         {
@@ -108960,7 +104832,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "going down chiminy",
+                            "text":  "going down chimney",
                             "points":  18
                         },
                         {
@@ -109000,28 +104872,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "kidneys",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  4096,
-        "question":  "Name something you put in your mouth but do not swallow.",
-        "answers":  [
-                        {
-                            "text":  "gum",
-                            "points":  51
-                        },
-                        {
-                            "text":  "toothpaste",
-                            "points":  17
-                        },
-                        {
-                            "text":  "mouthwash",
-                            "points":  16
-                        },
-                        {
-                            "text":  "hard candy/ sucker",
-                            "points":  12
                         }
                     ]
     },
@@ -109128,8 +104978,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "doctor\u0027s office",
-                            "points":  0
+                            "text":  "doctor's office",
+                            "points":  4
                         }
                     ]
     },
@@ -109622,7 +105472,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "land scaper/gardener",
+                            "text":  "landscaper/gardener",
                             "points":  14
                         },
                         {
@@ -109990,7 +105840,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an animal that's known for eating garbage.",
         "answers":  [
                         {
-                            "text":  "racoon",
+                            "text":  "raccoon",
                             "points":  44
                         },
                         {
@@ -110216,32 +106066,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4142,
-        "question":  "Name a place where you'd be mortified if your cell phone went off.",
-        "answers":  [
-                        {
-                            "text":  "church",
-                            "points":  39
-                        },
-                        {
-                            "text":  "funeral",
-                            "points":  37
-                        },
-                        {
-                            "text":  "movies",
-                            "points":  7
-                        },
-                        {
-                            "text":  "job interview",
-                            "points":  4
-                        },
-                        {
-                            "text":  "wedding",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  4143,
         "question":  "Name something modern a homemaker from 100 years ago would have loved to have in the kitchen.",
         "answers":  [
@@ -110286,24 +106110,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "skiing",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  4145,
-        "question":  "Name something Santa does that you wouldn't want your house guest to do.",
-        "answers":  [
-                        {
-                            "text":  "come down chimney",
-                            "points":  59
-                        },
-                        {
-                            "text":  "eat your coookies",
-                            "points":  24
-                        },
-                        {
-                            "text":  "arrive late at night",
-                            "points":  13
                         }
                     ]
     },
@@ -110506,7 +106312,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an activity that could be described as \"wholesome.\"",
         "answers":  [
                         {
-                            "text":  "religous activity",
+                            "text":  "religious activity",
                             "points":  25
                         },
                         {
@@ -110920,11 +106726,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "wartersking",
+                            "text":  "water skiing",
                             "points":  4
                         },
                         {
-                            "text":  "jet sking",
+                            "text":  "jet skiing",
                             "points":  4
                         }
                     ]
@@ -111002,10 +106808,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "a christmas story",
                             "points":  23
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -111207,7 +107009,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  4183,
-        "question":  "Name a school subject you don\u0027t know much about.",
+        "question":  "Name a school subject you don't know much about.",
         "answers":  [
                         {
                             "text":  "math",
@@ -111215,7 +107017,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "science",
-                            "points":  0
+                            "points":  24
                         },
                         {
                             "text":  "history",
@@ -111223,19 +107025,19 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "foreign language",
-                            "points":  0
+                            "points":  6
                         },
                         {
                             "text":  "art",
-                            "points":  0
+                            "points":  6
                         },
                         {
                             "text":  "english",
-                            "points":  0
+                            "points":  6
                         },
                         {
                             "text":  "home economics",
-                            "points":  0
+                            "points":  6
                         }
                     ]
     },
@@ -111257,10 +107059,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  4185,
         "question":  "Name something you might decorate your work desk with.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "pictures",
                             "points":  42
@@ -111299,10 +107097,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  4188,
         "question":  "Name a job you should avoid if you are afraid of public speaking.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "politician",
                             "points":  52
@@ -111585,7 +107379,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "baggy pants",
-                            "points":  0
+                            "points":  51
                         },
                         {
                             "text":  "gold chain",
@@ -111597,10 +107391,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  4207,
         "question":  "Name a situation where you might need to wear ear plugs.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "concerts",
                             "points":  37
@@ -111703,12 +107493,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  4213,
-        "question":  "Name a piece of furniture you might see in someone\u0027s living room.",
+        "question":  "Name a piece of furniture you might see in someone's living room.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "couch",
                             "points":  54
@@ -111854,7 +107640,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name your favorite filling in a holiday candy.",
         "answers":  [
                         {
-                            "text":  "carmel",
+                            "text":  "caramel",
                             "points":  44
                         },
                         {
@@ -111878,20 +107664,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "say i love you",
                             "points":  27
-                        }
-                    ]
-    },
-    {
-        "id":  4221,
-        "question":  "Name something people do when they want to look better.",
-        "answers":  [
-                        {
-                            "text":  "change hair",
-                            "points":  27
-                        },
-                        {
-                            "text":  "lose weight",
-                            "points":  24
                         }
                     ]
     },
@@ -111943,7 +107715,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "lion tamer",
-                            "points":  0
+                            "points":  44
                         },
                         {
                             "text":  "high wire",
@@ -112005,7 +107777,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "a human",
-                            "points":  0
+                            "points":  46
                         },
                         {
                             "text":  "meat",
@@ -112131,7 +107903,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  4235,
-        "question":  "Name a man who thinks he\u0027s the greatest.",
+        "question":  "Name a man who thinks he's the greatest.",
         "answers":  [
                         {
                             "text":  "donald trump",
@@ -112146,7 +107918,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "muhamad ali",
+                            "text":  "muhammad ali",
                             "points":  11
                         },
                         {
@@ -112234,7 +108006,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "sports illustr\u0027d",
+                            "text":  "sports illustrated",
                             "points":  15
                         },
                         {
@@ -112353,7 +108125,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "mansion",
-                            "points":  0
+                            "points":  47
                         },
                         {
                             "text":  "car",
@@ -112374,7 +108146,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  48
                         },
                         {
-                            "text":  "broach",
+                            "text":  "brooch",
                             "points":  16
                         }
                     ]
@@ -112492,8 +108264,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "dress doesn\u0027t fit",
-                            "points":  0
+                            "text":  "dress doesn't fit",
+                            "points":  6
                         }
                     ]
     },
@@ -112778,24 +108550,24 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that expires.",
         "answers":  [
                         {
-                            "text":  "coupons",
-                            "points":  7
-                        },
-                        {
                             "text":  "milk",
-                            "points":  45
+                            "points":  42
                         },
                         {
                             "text":  "meat",
-                            "points":  27
+                            "points":  25
                         },
                         {
                             "text":  "parking meter",
-                            "points":  15
+                            "points":  14
                         },
                         {
-                            "text":  "driver\u0027s license",
-                            "points":  8
+                            "text":  "driver's license",
+                            "points":  7
+                        },
+                        {
+                            "text":  "coupons",
+                            "points":  7
                         },
                         {
                             "text":  "credit cards",
@@ -112942,7 +108714,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "unpaid elec. bill",
+                            "text":  "unpaid electric bill",
                             "points":  6
                         },
                         {
@@ -113466,15 +109238,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "helicopter",
-                            "points":  7
-                        },
-                        {
-                            "text":  "bed",
+                            "text":  "hospital bed",
                             "points":  10
                         },
                         {
-                            "text":  "hospital bed",
+                            "text":  "helicopter",
                             "points":  7
                         }
                     ]
@@ -114218,36 +109986,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4315,
-        "question":  "Name something a child touches that an adult would not.",
-        "answers":  [
-                        {
-                            "text":  "bugs",
-                            "points":  33
-                        },
-                        {
-                            "text":  "dirt",
-                            "points":  19
-                        },
-                        {
-                            "text":  "worms",
-                            "points":  18
-                        },
-                        {
-                            "text":  "poop",
-                            "points":  16
-                        },
-                        {
-                            "text":  "hot stove",
-                            "points":  9
-                        },
-                        {
-                            "text":  "boogers",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  4316,
         "question":  "Name something blue.",
         "answers":  [
@@ -114622,7 +110360,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "finggers",
+                            "text":  "fingers",
                             "points":  19
                         },
                         {
@@ -114990,28 +110728,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4343,
-        "question":  "Name an activity you do at summer camp.",
-        "answers":  [
-                        {
-                            "text":  "learn to make fire",
-                            "points":  38
-                        },
-                        {
-                            "text":  "canoeing",
-                            "points":  29
-                        },
-                        {
-                            "text":  "roast marshmallows",
-                            "points":  21
-                        },
-                        {
-                            "text":  "go fishing",
-                            "points":  12
-                        }
-                    ]
-    },
-    {
         "id":  4344,
         "question":  "Name a food that people usually eat with their fingers.",
         "answers":  [
@@ -115116,20 +110832,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4348,
-        "question":  "Name a place where adults go to relax, but kids go to play.",
-        "answers":  [
-                        {
-                            "text":  "park",
-                            "points":  58
-                        },
-                        {
-                            "text":  "beach",
-                            "points":  34
-                        }
-                    ]
-    },
-    {
         "id":  4349,
         "question":  "Name something that\u0027s embarrassing to fall asleep while doing.",
         "answers":  [
@@ -115180,7 +110882,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "fingerpaint",
+                            "text":  "finger paint",
                             "points":  3
                         }
                     ]
@@ -115452,41 +111154,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "vetetables",
+                            "text":  "vegetables",
                             "points":  7
                         },
                         {
                             "text":  "snake",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  4363,
-        "question":  "Name a ride at Disney.",
-        "answers":  [
-                        {
-                            "text":  "space mountain",
-                            "points":  34
-                        },
-                        {
-                            "text":  "teacups",
-                            "points":  23
-                        },
-                        {
-                            "text":  "matterhorn bobsled",
-                            "points":  18
-                        },
-                        {
-                            "text":  "small world",
-                            "points":  14
-                        },
-                        {
-                            "text":  "splash mountain",
-                            "points":  6
-                        },
-                        {
-                            "text":  "tower of terror",
                             "points":  5
                         }
                     ]
@@ -115816,15 +111488,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  35
                         },
                         {
-                            "text":  "ed",
-                            "points":  16
-                        },
-                        {
-                            "text":  "mister ed",
-                            "points":  16
-                        },
-                        {
-                            "text":  "mr ed",
+                            "text":  "mr. ed",
                             "points":  16
                         },
                         {
@@ -115833,10 +111497,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "rin tin tin",
-                            "points":  8
-                        },
-                        {
-                            "text":  "tin tin",
                             "points":  8
                         },
                         {
@@ -115960,7 +111620,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "anette funachello",
+                            "text":  "annette funicello",
                             "points":  8
                         }
                     ]
@@ -116382,28 +112042,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4397,
-        "question":  "Name something you need in the desert.",
-        "answers":  [
-                        {
-                            "text":  "water",
-                            "points":  42
-                        },
-                        {
-                            "text":  "umbrella",
-                            "points":  28
-                        },
-                        {
-                            "text":  "camel",
-                            "points":  25
-                        },
-                        {
-                            "text":  "compass",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  4398,
         "question":  "Name a dangerous water sport.",
         "answers":  [
@@ -116420,7 +112058,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "jetskiing",
+                            "text":  "jet skiing",
                             "points":  8
                         },
                         {
@@ -116428,7 +112066,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "waterpolo",
+                            "text":  "water polo",
                             "points":  6
                         },
                         {
@@ -116545,10 +112183,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  4403,
         "question":  "Name something of yours that is dirty.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "clothes",
                             "points":  49
@@ -116742,44 +112376,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4411,
-        "question":  "Name a type of cheese with a funny name.",
-        "answers":  [
-                        {
-                            "text":  "mozzarella",
-                            "points":  25
-                        },
-                        {
-                            "text":  "linberger",
-                            "points":  18
-                        },
-                        {
-                            "text":  "munster",
-                            "points":  10
-                        },
-                        {
-                            "text":  "roguefort",
-                            "points":  10
-                        },
-                        {
-                            "text":  "provolone",
-                            "points":  9
-                        },
-                        {
-                            "text":  "brie",
-                            "points":  7
-                        },
-                        {
-                            "text":  "gorgonzola",
-                            "points":  3
-                        },
-                        {
-                            "text":  "roundelay",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  4412,
         "question":  "Name an event you wear a tie to.",
         "answers":  [
@@ -116794,32 +112390,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "funeral",
                             "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  4413,
-        "question":  "Name a part of the body that starts to wrinkle as you age.",
-        "answers":  [
-                        {
-                            "text":  "fingers",
-                            "points":  36
-                        },
-                        {
-                            "text":  "eyes",
-                            "points":  24
-                        },
-                        {
-                            "text":  "foreheads",
-                            "points":  19
-                        },
-                        {
-                            "text":  "noses",
-                            "points":  12
-                        },
-                        {
-                            "text":  "neck",
-                            "points":  9
                         }
                     ]
     },
@@ -116900,7 +112470,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "barbara streisan",
+                            "text":  "barbra streisand",
                             "points":  10
                         },
                         {
@@ -117048,16 +112618,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "tree",
-                            "points":  2
-                        },
-                        {
                             "text":  "nativity scene",
                             "points":  6
                         },
                         {
                             "text":  "snowman",
                             "points":  5
+                        },
+                        {
+                            "text":  "tree",
+                            "points":  2
                         }
                     ]
     },
@@ -117118,14 +112688,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  32
                         },
                         {
-                            "text":  "monkey wrench",
-                            "points":  32
-                        },
-                        {
-                            "text":  "car jack",
-                            "points":  23
-                        },
-                        {
                             "text":  "jack",
                             "points":  23
                         },
@@ -117134,28 +112696,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "iron",
-                            "points":  12
-                        },
-                        {
-                            "text":  "crowbar",
-                            "points":  12
-                        },
-                        {
-                            "text":  "tireiron",
+                            "text":  "tire iron",
                             "points":  12
                         },
                         {
                             "text":  "chains",
                             "points":  10
-                        },
-                        {
-                            "text":  "tire chains",
-                            "points":  10
-                        },
-                        {
-                            "text":  "cables",
-                            "points":  5
                         },
                         {
                             "text":  "jumper cables",
@@ -117316,36 +112862,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "bagpipes",
                             "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  4432,
-        "question":  "Name a brand you can recognize just by its logo.",
-        "answers":  [
-                        {
-                            "text":  "nike",
-                            "points":  59
-                        },
-                        {
-                            "text":  "kellogg\u0027s",
-                            "points":  9
-                        },
-                        {
-                            "text":  "mcdonald\u0027s",
-                            "points":  8
-                        },
-                        {
-                            "text":  "campbell\u0027s",
-                            "points":  7
-                        },
-                        {
-                            "text":  "polo",
-                            "points":  6
-                        },
-                        {
-                            "text":  "coca cola",
-                            "points":  6
                         }
                     ]
     },
@@ -117684,36 +113200,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4446,
-        "question":  "Name an animal you might see at the zoo.",
-        "answers":  [
-                        {
-                            "text":  "elephant",
-                            "points":  26
-                        },
-                        {
-                            "text":  "monkey",
-                            "points":  24
-                        },
-                        {
-                            "text":  "lion",
-                            "points":  15
-                        },
-                        {
-                            "text":  "giraffe",
-                            "points":  11
-                        },
-                        {
-                            "text":  "zebra",
-                            "points":  11
-                        },
-                        {
-                            "text":  "tiger",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
         "id":  4447,
         "question":  "Name a place where you listen to music.",
         "answers":  [
@@ -117827,19 +113313,19 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "beach",
-                            "points":  49
+                            "points":  46
                         },
                         {
                             "text":  "hourglass",
-                            "points":  25
+                            "points":  23
                         },
                         {
                             "text":  "desert",
-                            "points":  19
+                            "points":  18
                         },
                         {
                             "text":  "construction site",
-                            "points":  9
+                            "points":  8
                         },
                         {
                             "text":  "sandbox",
@@ -117954,7 +113440,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "justin beiber",
+                            "text":  "justin bieber",
                             "points":  11
                         },
                         {
@@ -118117,7 +113603,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  4462,
-        "question":  "Name an occupation in which you\u0027d get to hear a lot of good gossip.",
+        "question":  "Name an occupation in which you'd get to hear a lot of good gossip.",
         "answers":  [
                         {
                             "text":  "hairdresser",
@@ -118128,7 +113614,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "secretary/recept.",
+                            "text":  "secretary/receptionist",
                             "points":  10
                         },
                         {
@@ -118398,15 +113884,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name someone you might see in a parade.",
         "answers":  [
                         {
-                            "text":  "buffoons",
-                            "points":  25
-                        },
-                        {
                             "text":  "clown",
-                            "points":  25
-                        },
-                        {
-                            "text":  "jesters",
                             "points":  25
                         },
                         {
@@ -118414,75 +113892,19 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "symphony",
-                            "points":  10
-                        },
-                        {
-                            "text":  "orchestra",
-                            "points":  10
-                        },
-                        {
-                            "text":  "music",
-                            "points":  10
-                        },
-                        {
                             "text":  "marching band",
                             "points":  10
-                        },
-                        {
-                            "text":  "band",
-                            "points":  10
-                        },
-                        {
-                            "text":  "woodwind",
-                            "points":  10
-                        },
-                        {
-                            "text":  "instruments",
-                            "points":  10
-                        },
-                        {
-                            "text":  "st nick",
-                            "points":  7
                         },
                         {
                             "text":  "santa claus",
                             "points":  7
                         },
                         {
-                            "text":  "pere noel",
-                            "points":  7
-                        },
-                        {
-                            "text":  "claus",
-                            "points":  7
-                        },
-                        {
-                            "text":  "father christmas",
-                            "points":  7
-                        },
-                        {
-                            "text":  "kris kringle",
-                            "points":  7
-                        },
-                        {
-                            "text":  "prom queen",
-                            "points":  6
-                        },
-                        {
-                            "text":  "queen",
-                            "points":  6
-                        },
-                        {
                             "text":  "beauty queen",
                             "points":  6
                         },
                         {
-                            "text":  "fire marhshall",
-                            "points":  4
-                        },
-                        {
-                            "text":  "marshall",
+                            "text":  "fire marshal",
                             "points":  4
                         }
                     ]
@@ -118750,7 +114172,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "brussel sprouts",
+                            "text":  "brussels sprouts",
                             "points":  13
                         },
                         {
@@ -118956,20 +114378,20 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  38
                         },
                         {
-                            "text":  "bingo",
-                            "points":  17
-                        },
-                        {
                             "text":  "shuffleboard",
                             "points":  18
                         },
                         {
-                            "text":  "cards",
-                            "points":  5
+                            "text":  "bingo",
+                            "points":  17
                         },
                         {
                             "text":  "bowling",
                             "points":  6
+                        },
+                        {
+                            "text":  "cards",
+                            "points":  5
                         },
                         {
                             "text":  "bocce",
@@ -119010,10 +114432,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "bicycle",
                             "points":  43
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -119090,8 +114508,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "friend\u0027s help",
-                            "points":  0
+                            "text":  "friend's help",
+                            "points":  5
                         }
                     ]
     },
@@ -119818,10 +115236,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "west virginia",
                             "points":  3
-                        },
-                        {
-                            "text":  "west virgina",
-                            "points":  3
                         }
                     ]
     },
@@ -120090,32 +115504,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4535,
-        "question":  "Name something specific a kid might do to earn their allowance.",
-        "answers":  [
-                        {
-                            "text":  "wash dishes",
-                            "points":  31
-                        },
-                        {
-                            "text":  "mow lawn",
-                            "points":  22
-                        },
-                        {
-                            "text":  "clean bedroom",
-                            "points":  17
-                        },
-                        {
-                            "text":  "take out garbage",
-                            "points":  17
-                        },
-                        {
-                            "text":  "care for pets",
-                            "points":  13
-                        }
-                    ]
-    },
-    {
         "id":  4536,
         "question":  "Name a famous person with Nelson in their name.",
         "answers":  [
@@ -120200,16 +115588,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
+                            "text":  "football",
+                            "points":  8
+                        },
+                        {
                             "text":  "bed",
                             "points":  7
                         },
                         {
                             "text":  "clean house",
                             "points":  7
-                        },
-                        {
-                            "text":  "football",
-                            "points":  8
                         }
                     ]
     },
@@ -120368,7 +115756,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  45
                         },
                         {
-                            "text":  "cologne/aft\u0027shave",
+                            "text":  "cologne/aftershave",
                             "points":  14
                         },
                         {
@@ -120502,15 +115890,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "clooney",
-                            "points":  21
-                        },
-                        {
                             "text":  "brad pitt",
-                            "points":  18
-                        },
-                        {
-                            "text":  "pitt",
                             "points":  18
                         },
                         {
@@ -120518,15 +115898,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "depp",
-                            "points":  11
-                        },
-                        {
                             "text":  "tom cruise",
-                            "points":  7
-                        },
-                        {
-                            "text":  "cruise",
                             "points":  7
                         },
                         {
@@ -120816,39 +116188,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  37
                         },
                         {
-                            "text":  "wings",
-                            "points":  37
-                        },
-                        {
-                            "text":  "hen",
-                            "points":  37
-                        },
-                        {
-                            "text":  "rooster",
-                            "points":  37
-                        },
-                        {
-                            "text":  "sweets",
-                            "points":  4
-                        },
-                        {
-                            "text":  "suckers",
-                            "points":  4
-                        },
-                        {
-                            "text":  "lollipops",
-                            "points":  4
-                        },
-                        {
-                            "text":  "licorice",
-                            "points":  4
-                        },
-                        {
                             "text":  "candy",
-                            "points":  4
-                        },
-                        {
-                            "text":  "bonbons",
                             "points":  4
                         },
                         {
@@ -120900,7 +116240,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "roast marshmellows",
+                            "text":  "roast marshmallows",
                             "points":  9
                         },
                         {
@@ -121417,7 +116757,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  4582,
-        "question":  "Name something it\u0027s nice to do in front of a fire.",
+        "question":  "Name something it's nice to do in front of a fire.",
         "answers":  [
                         {
                             "text":  "cuddle",
@@ -121428,7 +116768,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "marshmellows",
+                            "text":  "marshmallows",
                             "points":  17
                         },
                         {
@@ -121516,7 +116856,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a movie that is set in outer space.",
         "answers":  [
                         {
-                            "text":  "starwars",
+                            "text":  "star wars",
                             "points":  39
                         },
                         {
@@ -122328,7 +117668,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "2001: space odys.",
+                            "text":  "2001: a space odyssey",
                             "points":  9
                         },
                         {
@@ -123274,28 +118614,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4653,
-        "question":  "Name a wood that's used for making furniture.",
-        "answers":  [
-                        {
-                            "text":  "oak",
-                            "points":  56
-                        },
-                        {
-                            "text":  "maple",
-                            "points":  15
-                        },
-                        {
-                            "text":  "cherry",
-                            "points":  12
-                        },
-                        {
-                            "text":  "cedar",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  4654,
         "question":  "Name something people find under their sofa cushions.",
         "answers":  [
@@ -123492,32 +118810,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "answer back",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  4662,
-        "question":  "Name a type of professional who might overcharge you if you don\u0027t know any better.",
-        "answers":  [
-                        {
-                            "text":  "mechanic",
-                            "points":  42
-                        },
-                        {
-                            "text":  "lawyer",
-                            "points":  23
-                        },
-                        {
-                            "text":  "doctor/dentist",
-                            "points":  19
-                        },
-                        {
-                            "text":  "plumber",
-                            "points":  6
-                        },
-                        {
-                            "text":  "car dealer",
-                            "points":  5
                         }
                     ]
     },
@@ -123732,7 +119024,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "distributor c...",
+                            "text":  "distributor cap",
                             "points":  2
                         },
                         {
@@ -123798,7 +119090,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "o\u0027hare",
+                            "text":  "o'hare",
                             "points":  15
                         },
                         {
@@ -123806,7 +119098,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "philadelphia internation",
+                            "text":  "philadelphia international",
                             "points":  6
                         }
                     ]
@@ -123846,7 +119138,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  35
                         },
                         {
-                            "text":  "dirty dish/s\u0027ware",
+                            "text":  "dirty dishes/silverware",
                             "points":  16
                         },
                         {
@@ -123962,7 +119254,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "ying yang symbol",
+                            "text":  "yin yang symbol",
                             "points":  7
                         }
                     ]
@@ -124428,7 +119720,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a food or drink that contains the word \"hot.\"",
         "answers":  [
                         {
-                            "text":  "..chocolate/cocoa",
+                            "text":  "hot chocolate/cocoa",
                             "points":  42
                         },
                         {
@@ -124792,7 +120084,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "amer. cancer soc.",
+                            "text":  "american cancer society",
                             "points":  7
                         },
                         {
@@ -124800,7 +120092,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "musc. dyst. assn.",
+                            "text":  "muscular dystrophy association",
                             "points":  4
                         }
                     ]
@@ -125364,7 +120656,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a type of TV show.",
         "answers":  [
                         {
-                            "text":  "gameshow",
+                            "text":  "game show",
                             "points":  40
                         },
                         {
@@ -125622,7 +120914,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "nicole ritchie",
+                            "text":  "nicole richie",
                             "points":  3
                         },
                         {
@@ -125667,7 +120959,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  4745,
-        "question":  "Name something in America that\u0027s a lot dirtier than it used to be.",
+        "question":  "Name something in America that's a lot dirtier than it used to be.",
         "answers":  [
                         {
                             "text":  "cities/streets",
@@ -125682,11 +120974,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "politics/govern.",
+                            "text":  "politics/government",
                             "points":  6
                         },
                         {
-                            "text":  "people\u0027s language",
+                            "text":  "people's language",
                             "points":  5
                         },
                         {
@@ -125706,36 +120998,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "celery",
                             "points":  38
-                        }
-                    ]
-    },
-    {
-        "id":  4747,
-        "question":  "Name something you might find in a person\u0027s shopping cart if they\u0027re planning on a romantic dinner.",
-        "answers":  [
-                        {
-                            "text":  "bottle of wine",
-                            "points":  45
-                        },
-                        {
-                            "text":  "candles",
-                            "points":  26
-                        },
-                        {
-                            "text":  "strawberries",
-                            "points":  5
-                        },
-                        {
-                            "text":  "champagne",
-                            "points":  5
-                        },
-                        {
-                            "text":  "whipped cream",
-                            "points":  5
-                        },
-                        {
-                            "text":  "shrimp",
-                            "points":  3
                         }
                     ]
     },
@@ -125782,7 +121044,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "men\u0027s clothing",
+                            "text":  "men's clothing",
                             "points":  15
                         },
                         {
@@ -125794,7 +121056,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "autoparts",
+                            "text":  "auto parts",
                             "points":  4
                         }
                     ]
@@ -126846,7 +122108,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "rocky marcia...",
+                            "text":  "rocky marciano",
                             "points":  2
                         }
                     ]
@@ -126898,7 +122160,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "sugar ray leon",
+                            "text":  "sugar ray leonard",
                             "points":  3
                         }
                     ]
@@ -127154,7 +122416,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "2months",
+                            "text":  "2 months",
                             "points":  9
                         },
                         {
@@ -127171,7 +122433,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "4 months",
-                            "points":  0
+                            "points":  3
                         }
                     ]
     },
@@ -127312,7 +122574,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "numb mouth/ novacaine",
+                            "text":  "numb mouth/ novocaine",
                             "points":  7
                         }
                     ]
@@ -127349,11 +122611,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "sun burn",
-                            "points":  0
+                            "points":  22
                         },
                         {
                             "text":  "crowded",
-                            "points":  0
+                            "points":  14
                         },
                         {
                             "text":  "parking",
@@ -127602,42 +122864,8 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something you might do after you get a bad grade on a test.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "get upset",
                             "points":  51
-                        }
-                    ]
-    },
-    {
-        "id":  4820,
-        "question":  "Tell me something that can be frustrating to use for the very first time.",
-        "answers":  [
-                        {
-                            "text":  "computer/internet",
-                            "points":  23
-                        },
-                        {
-                            "text":  "dvd player/vcr",
-                            "points":  13
-                        },
-                        {
-                            "text":  "car",
-                            "points":  11
-                        },
-                        {
-                            "text":  "tools",
-                            "points":  7
-                        },
-                        {
-                            "text":  "video game",
-                            "points":  6
-                        },
-                        {
-                            "text":  "can opener",
-                            "points":  6
                         }
                     ]
     },
@@ -127647,15 +122875,15 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "comb over",
-                            "points":  0
-                        },
-                        {
-                            "text":  "toupee",
-                            "points":  21
+                            "points":  37
                         },
                         {
                             "text":  "hat",
                             "points":  28
+                        },
+                        {
+                            "text":  "toupee",
+                            "points":  21
                         }
                     ]
     },
@@ -127663,10 +122891,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  4822,
         "question":  "Tell me something you expect to find in a hotel.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "beds",
                             "points":  56
@@ -127850,7 +123074,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me a celebrity you would hate to sit next to on a long flight.",
         "answers":  [
                         {
-                            "text":  "justin beiber",
+                            "text":  "justin bieber",
                             "points":  39
                         },
                         {
@@ -127919,7 +123143,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "blown",
-                            "points":  0
+                            "points":  3
                         }
                     ]
     },
@@ -128044,28 +123268,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4836,
-        "question":  "Tell me something you buy tickets for.",
-        "answers":  [
-                        {
-                            "text":  "concerts",
-                            "points":  27
-                        },
-                        {
-                            "text":  "movies",
-                            "points":  27
-                        },
-                        {
-                            "text":  "sporting events",
-                            "points":  24
-                        },
-                        {
-                            "text":  "air travel",
-                            "points":  22
-                        }
-                    ]
-    },
-    {
         "id":  4837,
         "question":  "Tell me something that often doesn\u0027t start when it\u0027s supposed to.",
         "answers":  [
@@ -128126,32 +123328,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4839,
-        "question":  "Tell me an animal that people don\u0027t usually eat.",
-        "answers":  [
-                        {
-                            "text":  "dog",
-                            "points":  34
-                        },
-                        {
-                            "text":  "deer",
-                            "points":  29
-                        },
-                        {
-                            "text":  "cats",
-                            "points":  14
-                        },
-                        {
-                            "text":  "skunks",
-                            "points":  13
-                        },
-                        {
-                            "text":  "snakes",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
         "id":  4840,
         "question":  "Tell me something that you might accidentally throw into your garbage that would send you digging for it.",
         "answers":  [
@@ -128204,48 +123380,8 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something that comes in pairs.",
         "answers":  [
                         {
-                            "text":  "loafers",
-                            "points":  46
-                        },
-                        {
-                            "text":  "running shoes",
-                            "points":  46
-                        },
-                        {
-                            "text":  "high heels",
-                            "points":  46
-                        },
-                        {
-                            "text":  "heels",
-                            "points":  46
-                        },
-                        {
                             "text":  "shoes",
                             "points":  46
-                        },
-                        {
-                            "text":  "flats",
-                            "points":  46
-                        },
-                        {
-                            "text":  "sneakers",
-                            "points":  46
-                        },
-                        {
-                            "text":  "cross trainers",
-                            "points":  46
-                        },
-                        {
-                            "text":  "boots",
-                            "points":  46
-                        },
-                        {
-                            "text":  "pumps",
-                            "points":  46
-                        },
-                        {
-                            "text":  "stockings",
-                            "points":  20
                         },
                         {
                             "text":  "socks",
@@ -128256,39 +123392,15 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "studs",
-                            "points":  7
-                        },
-                        {
-                            "text":  "rings",
-                            "points":  7
-                        },
-                        {
                             "text":  "earrings",
                             "points":  7
-                        },
-                        {
-                            "text":  "mittens",
-                            "points":  5
                         },
                         {
                             "text":  "gloves",
                             "points":  5
                         },
                         {
-                            "text":  "gauntlets",
-                            "points":  5
-                        },
-                        {
                             "text":  "salt and pepper",
-                            "points":  3
-                        },
-                        {
-                            "text":  "pepper mill",
-                            "points":  3
-                        },
-                        {
-                            "text":  "and pepper",
                             "points":  3
                         }
                     ]
@@ -128355,7 +123467,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  4845,
-        "question":  "Tell me the most number of people that could squeeze into a telephone booth (numeric only).",
+        "question":  "Tell me the most number of people that could squeeze into a telephone booth.",
         "answers":  [
                         {
                             "text":  "5",
@@ -128396,7 +123508,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  35
                         },
                         {
-                            "text":  "empire state bldg",
+                            "text":  "empire state building",
                             "points":  23
                         },
                         {
@@ -128492,7 +123604,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something you might do the moment you get home from work.",
         "answers":  [
                         {
-                            "text":  "take of shoes",
+                            "text":  "take off shoes",
                             "points":  37
                         },
                         {
@@ -128504,12 +123616,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "change clothes",
-                            "points":  4
-                        },
-                        {
                             "text":  "eat food",
                             "points":  10
+                        },
+                        {
+                            "text":  "change clothes",
+                            "points":  4
                         }
                     ]
     },
@@ -128531,32 +123643,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "ryan gosling",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  4852,
-        "question":  "Tell me a word you\u0027d use to describe someone that is mean.",
-        "answers":  [
-                        {
-                            "text":  "bully",
-                            "points":  35
-                        },
-                        {
-                            "text":  "horrible",
-                            "points":  27
-                        },
-                        {
-                            "text":  "bossy",
-                            "points":  21
-                        },
-                        {
-                            "text":  "wicked",
-                            "points":  11
-                        },
-                        {
-                            "text":  "cruel",
                             "points":  6
                         }
                     ]
@@ -128906,7 +123992,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "When shopping for a new pair of jeans, name something that never fits quite right.",
         "answers":  [
                         {
-                            "text":  "waiste",
+                            "text":  "waist",
                             "points":  34
                         },
                         {
@@ -129104,7 +124190,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "gas guage",
+                            "text":  "gas gauge",
                             "points":  6
                         },
                         {
@@ -129316,7 +124402,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "thunder strorm",
+                            "text":  "thunder storm",
                             "points":  12
                         },
                         {
@@ -129482,40 +124568,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4887,
-        "question":  "What might a kid take along if he's planning to run away from home?",
-        "answers":  [
-                        {
-                            "text":  "clothes",
-                            "points":  36
-                        },
-                        {
-                            "text":  "food",
-                            "points":  25
-                        },
-                        {
-                            "text":  "money",
-                            "points":  15
-                        },
-                        {
-                            "text":  "bedding",
-                            "points":  7
-                        },
-                        {
-                            "text":  "toys",
-                            "points":  6
-                        },
-                        {
-                            "text":  "backpack",
-                            "points":  5
-                        },
-                        {
-                            "text":  "bike",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  4888,
         "question":  "Why might a bride or groom back out of a wedding at the last minute?",
         "answers":  [
@@ -129554,7 +124606,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "niagra falls",
+                            "text":  "niagara falls",
                             "points":  11
                         },
                         {
@@ -129572,28 +124624,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "jamaica",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  4890,
-        "question":  "Which words do you dread hearing at the dentist's office?",
-        "answers":  [
-                        {
-                            "text":  "cavity",
-                            "points":  38
-                        },
-                        {
-                            "text":  "drill",
-                            "points":  30
-                        },
-                        {
-                            "text":  "root canal",
-                            "points":  13
-                        },
-                        {
-                            "text":  "oops",
-                            "points":  6
                         }
                     ]
     },
@@ -129736,36 +124766,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4896,
-        "question":  "Where do many kids think that babies come from?",
-        "answers":  [
-                        {
-                            "text":  "the stork",
-                            "points":  56
-                        },
-                        {
-                            "text":  "heaven",
-                            "points":  16
-                        },
-                        {
-                            "text":  "a cabbage patch",
-                            "points":  7
-                        },
-                        {
-                            "text":  "mom\u0027s tummy",
-                            "points":  7
-                        },
-                        {
-                            "text":  "the hospital",
-                            "points":  6
-                        },
-                        {
-                            "text":  "santa clause",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  4897,
         "question":  "What could your computer run without but it would be a bummer not to have?",
         "answers":  [
@@ -129804,11 +124804,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "perscription refill",
+                            "text":  "prescription refill",
                             "points":  14
                         },
                         {
-                            "text":  "doctor\u0027s excuse",
+                            "text":  "doctor's excuse",
                             "points":  12
                         },
                         {
@@ -129926,36 +124926,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4903,
-        "question":  "When sitting close to a date, what clue might they give that they like you?",
-        "answers":  [
-                        {
-                            "text":  "holds your hand",
-                            "points":  28
-                        },
-                        {
-                            "text":  "kisses you",
-                            "points":  25
-                        },
-                        {
-                            "text":  "smiling",
-                            "points":  21
-                        },
-                        {
-                            "text":  "arm around you",
-                            "points":  12
-                        },
-                        {
-                            "text":  "move closer",
-                            "points":  7
-                        },
-                        {
-                            "text":  "looking at you",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  4904,
         "question":  "What might you find out about a job that would keep you from accepting it?",
         "answers":  [
@@ -130006,7 +124976,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "nmusic/movie",
+                            "text":  "music/movie",
                             "points":  4
                         }
                     ]
@@ -130087,7 +125057,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "black",
-                            "points":  0
+                            "points":  46
                         },
                         {
                             "text":  "blonde",
@@ -130188,7 +125158,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "the young and the restles",
+                            "text":  "the young and the restless",
                             "points":  16
                         }
                     ]
@@ -130274,7 +125244,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "chicken/buf. wing",
+                            "text":  "chicken/buffalo wings",
                             "points":  6
                         },
                         {
@@ -130570,7 +125540,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "malcom x",
+                            "text":  "malcolm x",
                             "points":  3
                         }
                     ]
@@ -131058,7 +126028,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "movies/entertain.",
+                            "text":  "movies/entertainment",
                             "points":  10
                         },
                         {
@@ -131840,7 +126810,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "miusic",
+                            "text":  "music",
                             "points":  10
                         },
                         {
@@ -131956,7 +126926,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "exersice",
+                            "text":  "exercise",
                             "points":  11
                         },
                         {
@@ -132314,28 +127284,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4993,
-        "question":  "Besides a regular Sunday, tell me an occasion when you might go to church.",
-        "answers":  [
-                        {
-                            "text":  "wedding",
-                            "points":  32
-                        },
-                        {
-                            "text":  "christmas",
-                            "points":  23
-                        },
-                        {
-                            "text":  "easter",
-                            "points":  22
-                        },
-                        {
-                            "text":  "funeral",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  4994,
         "question":  "Besides shoes, name something people buy for their feet.",
         "answers":  [
@@ -132530,7 +127478,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "frige/appliance",
+                            "text":  "fridge/appliance",
                             "points":  13
                         },
                         {
@@ -132674,7 +127622,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "mind...to waste",
+                            "text":  "a mind is a terrible thing to waste",
                             "points":  13
                         },
                         {
@@ -132844,10 +127792,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "How many pairs of pants does the average man own?",
         "answers":  [
                         {
-                            "text":  "4",
-                            "points":  10
-                        },
-                        {
                             "text":  "5",
                             "points":  19
                         },
@@ -132864,12 +127808,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "12",
-                            "points":  4
+                            "text":  "4",
+                            "points":  10
                         },
                         {
                             "text":  "15",
                             "points":  9
+                        },
+                        {
+                            "text":  "12",
+                            "points":  4
                         }
                     ]
     },
@@ -133432,7 +128380,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  43
                         },
                         {
-                            "text":  "going once â¦ gone",
+                            "text":  "going once, going twice, gone",
                             "points":  28
                         },
                         {
@@ -133518,14 +128466,14 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "choc. chip cookie",
+                            "text":  "chocolate chip cookie",
                             "points":  6
                         }
                     ]
     },
     {
         "id":  5040,
-        "question":  "If you made a Zoro doll, name something it might come with.",
+        "question":  "If you made a Zorro doll, name something it might come with.",
         "answers":  [
                         {
                             "text":  "mask",
@@ -133822,28 +128770,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5051,
-        "question":  "If your dog could talk, what might he say?",
-        "answers":  [
-                        {
-                            "text":  "feed them",
-                            "points":  57
-                        },
-                        {
-                            "text":  "walk them",
-                            "points":  12
-                        },
-                        {
-                            "text":  "treats",
-                            "points":  6
-                        },
-                        {
-                            "text":  "crazy",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  5052,
         "question":  "If an angry dog was chasing you, what would you do?",
         "answers":  [
@@ -134012,28 +128938,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "lion",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  5058,
-        "question":  "Movie studio.",
-        "answers":  [
-                        {
-                            "text":  "money",
-                            "points":  50
-                        },
-                        {
-                            "text":  "house",
-                            "points":  26
-                        },
-                        {
-                            "text":  "looks",
-                            "points":  17
-                        },
-                        {
-                            "text":  "eye color",
-                            "points":  7
                         }
                     ]
     },
@@ -134238,7 +129142,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "mutual friiends",
+                            "text":  "mutual friends",
                             "points":  5
                         }
                     ]
@@ -134286,7 +129190,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "terot cards",
+                            "text":  "tarot cards",
                             "points":  8
                         },
                         {
@@ -134372,7 +129276,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "st louise",
+                            "text":  "st louis",
                             "points":  24
                         },
                         {
@@ -134403,19 +129307,19 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "camping",
-                            "points":  46
+                            "points":  39
                         },
                         {
                             "text":  "hiking",
-                            "points":  37
+                            "points":  31
                         },
                         {
                             "text":  "hunting",
-                            "points":  25
+                            "points":  21
                         },
                         {
                             "text":  "hide and seek",
-                            "points":  10
+                            "points":  9
                         }
                     ]
     },
@@ -134714,10 +129618,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  42
                         },
                         {
-                            "text":  "finances",
-                            "points":  2
-                        },
-                        {
                             "text":  "your weight",
                             "points":  16
                         },
@@ -134728,6 +129628,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "scary movie",
                             "points":  7
+                        },
+                        {
+                            "text":  "finances",
+                            "points":  2
                         }
                     ]
     },
@@ -134748,7 +129652,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "monsy",
+                            "text":  "money",
                             "points":  9
                         },
                         {
@@ -134786,7 +129690,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "chaffeur",
+                            "text":  "chauffeur",
                             "points":  5
                         }
                     ]
@@ -135128,7 +130032,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "amer the beautiful",
+                            "text":  "america the beautiful",
                             "points":  12
                         },
                         {
@@ -135142,7 +130046,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a place where they always keep you waiting.",
         "answers":  [
                         {
-                            "text":  "doctor\u0027s office",
+                            "text":  "doctor's office",
                             "points":  29
                         },
                         {
@@ -135154,7 +130058,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "dentist\u0027s office",
+                            "text":  "dentist's office",
                             "points":  9
                         },
                         {
@@ -135167,7 +130071,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "pharmacy",
-                            "points":  0
+                            "points":  6
                         }
                     ]
     },
@@ -135618,7 +130522,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "pinapple",
+                            "text":  "pineapple",
                             "points":  4
                         },
                         {
@@ -135626,7 +130530,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "papya",
+                            "text":  "papaya",
                             "points":  2
                         },
                         {
@@ -135637,7 +130541,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5116,
-        "question":  "Name an occupation where people are paid to tell others what to do (more specific than boss).",
+        "question":  "Name an occupation where people are paid to tell others what to do.",
         "answers":  [
                         {
                             "text":  "doctor",
@@ -135718,7 +130622,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  33
                         },
                         {
-                            "text":  "yeild/caution",
+                            "text":  "yield/caution",
                             "points":  23
                         },
                         {
@@ -135752,7 +130656,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  29
                         },
                         {
-                            "text":  "your name again...?",
+                            "text":  "your name again?",
                             "points":  16
                         },
                         {
@@ -135934,7 +130838,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "coffe maker",
+                            "text":  "coffee maker",
                             "points":  17
                         },
                         {
@@ -136020,7 +130924,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "bad hygeine",
+                            "text":  "bad hygiene",
                             "points":  12
                         },
                         {
@@ -136366,7 +131270,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "pinapple",
+                            "text":  "pineapple",
                             "points":  5
                         },
                         {
@@ -136602,7 +131506,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  33
                         },
                         {
-                            "text":  "sandle castle",
+                            "text":  "sand castle",
                             "points":  14
                         },
                         {
@@ -137036,7 +131940,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an animal that would be an appropriate mascot for a team of marathon runners.",
         "answers":  [
                         {
-                            "text":  "cheeta/cat",
+                            "text":  "cheetah/cat",
                             "points":  44
                         },
                         {
@@ -137048,7 +131952,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "gizelle",
+                            "text":  "gisele",
                             "points":  6
                         },
                         {
@@ -137550,7 +132454,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "not resp. for items",
+                            "text":  "not responsible for lost items",
                             "points":  2
                         }
                     ]
@@ -137606,11 +132510,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "birt",
+                            "text":  "bird",
                             "points":  12
                         },
                         {
-                            "text":  "lizzard",
+                            "text":  "lizard",
                             "points":  9
                         },
                         {
@@ -137728,7 +132632,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  38
                         },
                         {
-                            "text":  "nichole richie",
+                            "text":  "nicole richie",
                             "points":  14
                         }
                     ]
@@ -137760,7 +132664,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a movie or TV show about gangsters.",
         "answers":  [
                         {
-                            "text":  "sapronas",
+                            "text":  "sopranos",
                             "points":  27
                         },
                         {
@@ -137870,28 +132774,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "arm chair",
                             "points":  15
-                        }
-                    ]
-    },
-    {
-        "id":  5201,
-        "question":  "Name a sport that people bet on.",
-        "answers":  [
-                        {
-                            "text":  "football",
-                            "points":  55
-                        },
-                        {
-                            "text":  "horse racing",
-                            "points":  32
-                        },
-                        {
-                            "text":  "boxing",
-                            "points":  6
-                        },
-                        {
-                            "text":  "basketball",
-                            "points":  5
                         }
                     ]
     },
@@ -138024,7 +132906,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "poatmeal",
+                            "text":  "oatmeal",
                             "points":  14
                         },
                         {
@@ -138292,7 +133174,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "chinup bar",
+                            "text":  "chin-up bar",
                             "points":  3
                         }
                     ]
@@ -138310,7 +133192,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  29
                         },
                         {
-                            "text":  "sqirrel",
+                            "text":  "squirrel",
                             "points":  22
                         },
                         {
@@ -138388,7 +133270,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "himilaysa",
+                            "text":  "himalayas",
                             "points":  4
                         }
                     ]
@@ -138520,28 +133402,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "birthday cake",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  5226,
-        "question":  "Name a reason why you'd get a blindfold.",
-        "answers":  [
-                        {
-                            "text":  "surprise party",
-                            "points":  50
-                        },
-                        {
-                            "text":  "pin tail on donkey",
-                            "points":  27
-                        },
-                        {
-                            "text":  "kidnapped",
-                            "points":  18
-                        },
-                        {
-                            "text":  "pinata",
-                            "points":  3
                         }
                     ]
     },
@@ -138715,14 +133575,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5233,
-        "question":  "Name something that you don't want your dog to lick (more specific than \"you\").",
+        "question":  "Name something that you don't want your dog to lick.",
         "answers":  [
                         {
                             "text":  "your face",
                             "points":  50
                         },
                         {
-                            "text":  "it\u0027s rear end",
+                            "text":  "it's rear end",
                             "points":  29
                         },
                         {
@@ -138826,7 +133686,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  29
                         },
                         {
-                            "text":  "toilet papaer",
+                            "text":  "toilet paper",
                             "points":  27
                         },
                         {
@@ -139274,10 +134134,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "be intimate",
-                            "points":  4
-                        },
-                        {
                             "text":  "cook",
                             "points":  12
                         },
@@ -139292,6 +134148,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "cuddle",
                             "points":  5
+                        },
+                        {
+                            "text":  "be intimate",
+                            "points":  4
                         }
                     ]
     },
@@ -139398,20 +134258,20 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name the worst thing to criticize your mother-in-law for.",
         "answers":  [
                         {
-                            "text":  "her cooking",
-                            "points":  37
+                            "text":  "her parenting",
+                            "points":  35
                         },
                         {
-                            "text":  "her parenting",
-                            "points":  38
+                            "text":  "her cooking",
+                            "points":  34
                         },
                         {
                             "text":  "her appearance",
-                            "points":  25
+                            "points":  23
                         },
                         {
                             "text":  "her housekeeping",
-                            "points":  9
+                            "points":  8
                         }
                     ]
     },
@@ -139778,20 +134638,20 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an announcement that you'd hate for your boss to overhear you making.",
         "answers":  [
                         {
-                            "text":  "i\u0027m quitting",
-                            "points":  43
+                            "text":  "i'm quitting",
+                            "points":  41
                         },
                         {
-                            "text":  "i\u0027m pregnant",
-                            "points":  29
+                            "text":  "i'm pregnant",
+                            "points":  27
                         },
                         {
                             "text":  "i got a new job",
-                            "points":  23
+                            "points":  22
                         },
                         {
                             "text":  "i hate this job/boss",
-                            "points":  11
+                            "points":  10
                         }
                     ]
     },
@@ -139856,7 +134716,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  31
                         },
                         {
-                            "text":  "polor bear",
+                            "text":  "polar bear",
                             "points":  14
                         },
                         {
@@ -140121,7 +134981,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5284,
-        "question":  "Name something that's often sold at a swap meet. (Be more specific than junk or stuff.)",
+        "question":  "Name something that's often sold at a swap meet.",
         "answers":  [
                         {
                             "text":  "clothes",
@@ -140399,7 +135259,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "clothes",
-                            "points":  121
+                            "points":  12
                         },
                         {
                             "text":  "diary",
@@ -140704,32 +135564,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5308,
-        "question":  "Name an instrument that can sound whiny.",
-        "answers":  [
-                        {
-                            "text":  "violin",
-                            "points":  40
-                        },
-                        {
-                            "text":  "flute",
-                            "points":  28
-                        },
-                        {
-                            "text":  "clarinet",
-                            "points":  19
-                        },
-                        {
-                            "text":  "guitar",
-                            "points":  6
-                        },
-                        {
-                            "text":  "saxiphone",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  5309,
         "question":  "Name a place where you might find a frog.",
         "answers":  [
@@ -140944,11 +135778,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  25
                         },
                         {
-                            "text":  "tast good",
+                            "text":  "taste good",
                             "points":  22
                         },
                         {
-                            "text":  "can\u0027t fly",
+                            "text":  "can't fly",
                             "points":  3
                         }
                     ]
@@ -141140,7 +135974,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  39
                         },
                         {
-                            "text":  "marshmellow",
+                            "text":  "marshmallow",
                             "points":  18
                         },
                         {
@@ -141367,7 +136201,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "denzel washington",
-                            "points":  0
+                            "points":  6
                         }
                     ]
     },
@@ -141574,7 +136408,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "jewlery",
+                            "text":  "jewelry",
                             "points":  2
                         },
                         {
@@ -141671,7 +136505,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5343,
-        "question":  "Name something that house cleaners clean more often than you do (more specific than a room).",
+        "question":  "Name something that house cleaners clean more often than you do.",
         "answers":  [
                         {
                             "text":  "toilet",
@@ -141932,7 +136766,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  27
                         },
                         {
-                            "text":  "spend time togeather",
+                            "text":  "spend time together",
                             "points":  8
                         },
                         {
@@ -142433,31 +137267,31 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "miami",
-                            "points":  30
+                            "points":  26
                         },
                         {
                             "text":  "orlando",
-                            "points":  27
+                            "points":  23
                         },
                         {
                             "text":  "jacksonville",
-                            "points":  18
+                            "points":  16
                         },
                         {
                             "text":  "tampa bay",
-                            "points":  14
-                        },
-                        {
-                            "text":  "daytona beach",
                             "points":  12
                         },
                         {
-                            "text":  "tellahassee",
-                            "points":  9
+                            "text":  "daytona beach",
+                            "points":  10
+                        },
+                        {
+                            "text":  "tallahassee",
+                            "points":  8
                         },
                         {
                             "text":  "key west",
-                            "points":  6
+                            "points":  5
                         }
                     ]
     },
@@ -142542,7 +137376,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "villian",
+                            "text":  "villain",
                             "points":  4
                         }
                     ]
@@ -142614,7 +137448,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something a person might worry about when speaking in front of a large group.",
         "answers":  [
                         {
-                            "text":  "lack of preperation",
+                            "text":  "lack of preparation",
                             "points":  28
                         },
                         {
@@ -144052,7 +138886,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "openig presents",
+                            "text":  "opening presents",
                             "points":  4
                         }
                     ]
@@ -144594,20 +139428,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5457,
-        "question":  "Name an article of clothing you can\u0027t wash in the washing machine.",
-        "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
-                            "text":  "coat",
-                            "points":  34
-                        }
-                    ]
-    },
-    {
         "id":  5458,
         "question":  "Name something specific a dog barks at.",
         "answers":  [
@@ -144769,7 +139589,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "library",
-                            "points":  0
+                            "points":  28
                         }
                     ]
     },
@@ -144786,7 +139606,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "when my ship c...",
+                            "text":  "when my ship comes in",
                             "points":  7
                         },
                         {
@@ -144812,12 +139632,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  32
                         },
                         {
-                            "text":  "surgeon",
-                            "points":  5
-                        },
-                        {
                             "text":  "cardiologist",
                             "points":  6
+                        },
+                        {
+                            "text":  "surgeon",
+                            "points":  5
                         }
                     ]
     },
@@ -144935,7 +139755,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "raking leaves",
-                            "points":  0
+                            "points":  48
                         },
                         {
                             "text":  "mow",
@@ -144962,7 +139782,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a famous Scott or Scottie.",
         "answers":  [
                         {
-                            "text":  "scotty of startrek",
+                            "text":  "scotty of star trek",
                             "points":  18
                         },
                         {
@@ -144991,10 +139811,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  5478,
         "question":  "Name a reason why someone might apply for a loan.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "house",
                             "points":  45
@@ -145092,10 +139908,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that often gets stolen.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "money",
                             "points":  35
                         }
@@ -145135,10 +139947,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  5486,
         "question":  "Name a city that is expensive to live in.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "new york",
                             "points":  57
@@ -145220,11 +140028,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "univ. of miami",
+                            "text":  "university of miami",
                             "points":  13
                         },
                         {
-                            "text":  "univ. of michigan",
+                            "text":  "university of michigan",
                             "points":  13
                         },
                         {
@@ -145246,12 +140054,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a college major that ends in \"ology.\"",
         "answers":  [
                         {
-                            "text":  "biology",
-                            "points":  28
-                        },
-                        {
                             "text":  "psychology",
                             "points":  31
+                        },
+                        {
+                            "text":  "biology",
+                            "points":  28
                         }
                     ]
     },
@@ -145392,10 +140200,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name someone or something you might get trip ideas from.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "internet",
                             "points":  33
                         }
@@ -145483,12 +140287,8 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5503,
-        "question":  "Name something you do when you\u0027re bored.",
+        "question":  "Name something you do when you're bored.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "watch tv",
                             "points":  34
@@ -145548,16 +140348,16 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a current movie star known for having a great smile.",
         "answers":  [
                         {
-                            "text":  "jim carrey",
-                            "points":  9
-                        },
-                        {
                             "text":  "julia roberts",
                             "points":  26
                         },
                         {
                             "text":  "tom cruise",
                             "points":  17
+                        },
+                        {
+                            "text":  "jim carrey",
+                            "points":  9
                         },
                         {
                             "text":  "arnold schwarzenegger",
@@ -145821,7 +140621,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5516,
-        "question":  "Name a famous college that looks impressive on someone\u0027s resume.",
+        "question":  "Name a famous college that looks impressive on someone's resume.",
         "answers":  [
                         {
                             "text":  "harvard",
@@ -145836,7 +140636,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "notredame",
+                            "text":  "notre dame",
                             "points":  3
                         },
                         {
@@ -145851,10 +140651,10 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5517,
-        "question":  "Name a person who\u0027s famous for having funny-looking hair.",
+        "question":  "Name a person who's famous for having funny-looking hair.",
         "answers":  [
                         {
-                            "text":  "donking",
+                            "text":  "don king",
                             "points":  28
                         },
                         {
@@ -145988,7 +140788,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "betterhalf",
+                            "text":  "better half",
                             "points":  5
                         },
                         {
@@ -146186,7 +140986,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "icecream",
+                            "text":  "ice cream",
                             "points":  3
                         }
                     ]
@@ -146214,28 +141014,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "shiny shoes",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  5531,
-        "question":  "Name something on the highway that doesn\u0027t move.",
-        "answers":  [
-                        {
-                            "text":  "speed limit sign",
-                            "points":  58
-                        },
-                        {
-                            "text":  "road",
-                            "points":  13
-                        },
-                        {
-                            "text":  "street lines",
-                            "points":  12
-                        },
-                        {
-                            "text":  "guardrail",
-                            "points":  7
                         }
                     ]
     },
@@ -146682,40 +141460,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5549,
-        "question":  "Name a food you might find at a barbecue.",
-        "answers":  [
-                        {
-                            "text":  "ribs",
-                            "points":  35
-                        },
-                        {
-                            "text":  "chicken",
-                            "points":  18
-                        },
-                        {
-                            "text":  "hamburgers",
-                            "points":  14
-                        },
-                        {
-                            "text":  "hot dog",
-                            "points":  11
-                        },
-                        {
-                            "text":  "potato salad",
-                            "points":  9
-                        },
-                        {
-                            "text":  "steak",
-                            "points":  8
-                        },
-                        {
-                            "text":  "baked beans",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  5550,
         "question":  "Name a reason a person comes home late from work.",
         "answers":  [
@@ -146742,11 +141486,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a type of shoe you might not wear socks with.",
         "answers":  [
                         {
-                            "text":  "flip flops",
-                            "points":  67
-                        },
-                        {
-                            "text":  "sandals",
+                            "text":  "sandals/flip flops",
                             "points":  67
                         },
                         {
@@ -146754,32 +141494,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "moccasins",
-                            "points":  9
-                        },
-                        {
-                            "text":  "stilettos",
-                            "points":  8
-                        },
-                        {
-                            "text":  "heels",
-                            "points":  8
-                        },
-                        {
                             "text":  "high heels",
                             "points":  8
-                        },
-                        {
-                            "text":  "platforms",
-                            "points":  8
-                        },
-                        {
-                            "text":  "pumps",
-                            "points":  8
-                        },
-                        {
-                            "text":  "penny loafers",
-                            "points":  4
                         },
                         {
                             "text":  "loafers",
@@ -146932,7 +141648,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a popular fast food chain.",
         "answers":  [
                         {
-                            "text":  "mcdonald\u0027s",
+                            "text":  "mcdonald's",
                             "points":  69
                         },
                         {
@@ -146940,11 +141656,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "wendy\u0027s",
+                            "text":  "wendy's",
                             "points":  10
                         },
                         {
-                            "text":  "kentucky fried c.",
+                            "text":  "kentucky fried chicken",
                             "points":  7
                         }
                     ]
@@ -147024,28 +141740,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "archeologist",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  5562,
-        "question":  "Name a food you eat with a spoon.",
-        "answers":  [
-                        {
-                            "text":  "soup",
-                            "points":  53
-                        },
-                        {
-                            "text":  "cereal",
-                            "points":  22
-                        },
-                        {
-                            "text":  "ice cream",
-                            "points":  20
-                        },
-                        {
-                            "text":  "mashed potatoes",
-                            "points":  5
                         }
                     ]
     },
@@ -147441,10 +142135,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  5577,
         "question":  "Name an animal you expect to see at the zoo.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "monkeys",
                             "points":  31
@@ -147990,14 +142680,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something people put a padlock on.",
         "answers":  [
                         {
-                            "text":  "backyard shed",
-                            "points":  23
-                        },
-                        {
-                            "text":  "garden shed",
-                            "points":  23
-                        },
-                        {
                             "text":  "shed",
                             "points":  23
                         },
@@ -148010,52 +142692,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "bicycle",
-                            "points":  14
-                        },
-                        {
-                            "text":  "cycle",
-                            "points":  14
-                        },
-                        {
-                            "text":  "the door",
-                            "points":  10
-                        },
-                        {
                             "text":  "door",
                             "points":  10
                         },
                         {
-                            "text":  "entrance",
-                            "points":  10
-                        },
-                        {
-                            "text":  "strongbox",
-                            "points":  7
-                        },
-                        {
                             "text":  "safe",
                             "points":  7
-                        },
-                        {
-                            "text":  "vault",
-                            "points":  7
-                        },
-                        {
-                            "text":  "coffer",
-                            "points":  7
-                        },
-                        {
-                            "text":  "chest",
-                            "points":  7
-                        },
-                        {
-                            "text":  "gate",
-                            "points":  6
-                        },
-                        {
-                            "text":  "carport",
-                            "points":  6
                         },
                         {
                             "text":  "garage",
@@ -148514,23 +143156,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  63
                         },
                         {
-                            "text":  "nasal cavities",
-                            "points":  11
-                        },
-                        {
                             "text":  "nostrils",
                             "points":  11
                         },
                         {
-                            "text":  "big ears",
-                            "points":  10
-                        },
-                        {
                             "text":  "ears",
-                            "points":  10
-                        },
-                        {
-                            "text":  "rabbit ears",
                             "points":  10
                         },
                         {
@@ -148748,36 +143378,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5624,
-        "question":  "Name something that can destroy a city.",
-        "answers":  [
-                        {
-                            "text":  "bomb",
-                            "points":  40
-                        },
-                        {
-                            "text":  "hurricane",
-                            "points":  32
-                        },
-                        {
-                            "text":  "tsunami",
-                            "points":  12
-                        },
-                        {
-                            "text":  "earthquake",
-                            "points":  7
-                        },
-                        {
-                            "text":  "fire",
-                            "points":  5
-                        },
-                        {
-                            "text":  "godzilla",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  5625,
         "question":  "Name something that is sticky.",
         "answers":  [
@@ -148790,12 +143390,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "candy",
-                            "points":  11
-                        },
-                        {
                             "text":  "honey",
                             "points":  13
+                        },
+                        {
+                            "text":  "candy",
+                            "points":  11
                         },
                         {
                             "text":  "syrup",
@@ -148926,32 +143526,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "butter",
                             "points":  13
-                        }
-                    ]
-    },
-    {
-        "id":  5631,
-        "question":  "Name a famous movie about a dog.",
-        "answers":  [
-                        {
-                            "text":  "lassie",
-                            "points":  49
-                        },
-                        {
-                            "text":  "beethoven",
-                            "points":  17
-                        },
-                        {
-                            "text":  "old yeller",
-                            "points":  15
-                        },
-                        {
-                            "text":  "benji",
-                            "points":  13
-                        },
-                        {
-                            "text":  "air bud",
-                            "points":  6
                         }
                     ]
     },
@@ -149340,64 +143914,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "college",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  5646,
-        "question":  "Name a subject people know lots of trivia about.",
-        "answers":  [
-                        {
-                            "text":  "football",
-                            "points":  31
-                        },
-                        {
-                            "text":  "golf",
-                            "points":  31
-                        },
-                        {
-                            "text":  "field",
-                            "points":  31
-                        },
-                        {
-                            "text":  "hockey",
-                            "points":  31
-                        },
-                        {
-                            "text":  "sports",
-                            "points":  31
-                        },
-                        {
-                            "text":  "competitions",
-                            "points":  31
-                        },
-                        {
-                            "text":  "matches",
-                            "points":  31
-                        },
-                        {
-                            "text":  "track",
-                            "points":  31
-                        },
-                        {
-                            "text":  "games",
-                            "points":  31
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  31
-                        },
-                        {
-                            "text":  "athletics",
-                            "points":  31
-                        },
-                        {
-                            "text":  "basketball",
-                            "points":  31
-                        },
-                        {
-                            "text":  "soccer",
-                            "points":  31
                         }
                     ]
     },
@@ -150109,23 +144625,23 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "the hours",
-                            "points":  39
+                            "points":  36
                         },
                         {
                             "text":  "boss",
-                            "points":  27
+                            "points":  25
                         },
                         {
                             "text":  "the pay",
-                            "points":  23
+                            "points":  21
                         },
                         {
                             "text":  "going",
-                            "points":  9
+                            "points":  8
                         },
                         {
                             "text":  "coworkers",
-                            "points":  7
+                            "points":  6
                         },
                         {
                             "text":  "boring",
@@ -150308,76 +144824,16 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something a germ freak might take from his own kitchen so he does not have to use the one at a restaurant.",
         "answers":  [
                         {
-                            "text":  "cutlery",
-                            "points":  64
-                        },
-                        {
-                            "text":  "utensils",
-                            "points":  64
-                        },
-                        {
-                            "text":  "flatware",
-                            "points":  64
-                        },
-                        {
-                            "text":  "spoons",
-                            "points":  64
-                        },
-                        {
-                            "text":  "forks",
-                            "points":  64
-                        },
-                        {
                             "text":  "silverware",
                             "points":  64
-                        },
-                        {
-                            "text":  "knives",
-                            "points":  64
-                        },
-                        {
-                            "text":  "pint glasses",
-                            "points":  17
-                        },
-                        {
-                            "text":  "wine glasses",
-                            "points":  17
-                        },
-                        {
-                            "text":  "mugs",
-                            "points":  17
-                        },
-                        {
-                            "text":  "cups",
-                            "points":  17
-                        },
-                        {
-                            "text":  "flutes",
-                            "points":  17
                         },
                         {
                             "text":  "glass",
                             "points":  17
                         },
                         {
-                            "text":  "goblets",
-                            "points":  17
-                        },
-                        {
-                            "text":  "saucer",
-                            "points":  13
-                        },
-                        {
                             "text":  "plate",
                             "points":  13
-                        },
-                        {
-                            "text":  "serviette",
-                            "points":  6
-                        },
-                        {
-                            "text":  "towelette",
-                            "points":  6
                         },
                         {
                             "text":  "napkin",
@@ -150416,7 +144872,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "newspaper/mag.",
+                            "text":  "newspaper/magazine",
                             "points":  14
                         },
                         {
@@ -150712,28 +145168,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5696,
-        "question":  "Name the American city you think has the rudest people.",
-        "answers":  [
-                        {
-                            "text":  "new york",
-                            "points":  74
-                        },
-                        {
-                            "text":  "los angeles",
-                            "points":  8
-                        },
-                        {
-                            "text":  "boston",
-                            "points":  4
-                        },
-                        {
-                            "text":  "chicago",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  5697,
         "question":  "Name a kind of pet you had during your childhood.",
         "answers":  [
@@ -150896,10 +145330,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  39
                         },
                         {
-                            "text":  "tired",
-                            "points":  6
-                        },
-                        {
                             "text":  "teething",
                             "points":  20
                         },
@@ -150910,6 +145340,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "gas",
                             "points":  8
+                        },
+                        {
+                            "text":  "tired",
+                            "points":  6
                         },
                         {
                             "text":  "sick",
@@ -150930,12 +145364,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  28
                         },
                         {
-                            "text":  "players",
-                            "points":  9
-                        },
-                        {
                             "text":  "net",
                             "points":  17
+                        },
+                        {
+                            "text":  "players",
+                            "points":  9
                         },
                         {
                             "text":  "spectators",
@@ -150964,7 +145398,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "long jogns",
+                            "text":  "long johns",
                             "points":  5
                         }
                     ]
@@ -151154,7 +145588,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "cuttery",
+                            "text":  "cutlery",
                             "points":  2
                         }
                     ]
@@ -151532,7 +145966,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "icecream",
+                            "text":  "ice cream",
                             "points":  3
                         }
                     ]
@@ -151850,32 +146284,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5739,
-        "question":  "Name something a grandmother might want her grandkids to learn.",
-        "answers":  [
-                        {
-                            "text":  "manners",
-                            "points":  31
-                        },
-                        {
-                            "text":  "family recipes",
-                            "points":  22
-                        },
-                        {
-                            "text":  "knitting/sewing",
-                            "points":  15
-                        },
-                        {
-                            "text":  "family history",
-                            "points":  7
-                        },
-                        {
-                            "text":  "native language",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  5740,
         "question":  "Name a Christmas song you cannot get out of your head during the holidays.",
         "answers":  [
@@ -151892,11 +146300,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "rudolph the re...",
+                            "text":  "rudolph the red-nosed reindeer",
                             "points":  7
                         },
                         {
-                            "text":  "we wish you a...",
+                            "text":  "we wish you a merry christmas",
                             "points":  6
                         },
                         {
@@ -151962,32 +146370,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "alligator",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  5743,
-        "question":  "Name something people like to take pictures of.",
-        "answers":  [
-                        {
-                            "text":  "children",
-                            "points":  43
-                        },
-                        {
-                            "text":  "nature",
-                            "points":  25
-                        },
-                        {
-                            "text":  "family",
-                            "points":  13
-                        },
-                        {
-                            "text":  "sunsets",
-                            "points":  9
-                        },
-                        {
-                            "text":  "themselves",
-                            "points":  8
                         }
                     ]
     },
@@ -152220,7 +146602,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "watch\u0027g tv/movies",
+                            "text":  "watching tv/movies",
                             "points":  11
                         },
                         {
@@ -152286,32 +146668,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "bottom",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  5755,
-        "question":  "Name something you find in a courtroom.",
-        "answers":  [
-                        {
-                            "text":  "judge",
-                            "points":  36
-                        },
-                        {
-                            "text":  "lawyers",
-                            "points":  28
-                        },
-                        {
-                            "text":  "jury",
-                            "points":  21
-                        },
-                        {
-                            "text":  "baliff",
-                            "points":  8
-                        },
-                        {
-                            "text":  "gavel",
-                            "points":  7
                         }
                     ]
     },
@@ -152454,15 +146810,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a company that is known for making cookies.",
         "answers":  [
                         {
-                            "text":  "missus fields",
-                            "points":  23
-                        },
-                        {
-                            "text":  "fields",
-                            "points":  23
-                        },
-                        {
-                            "text":  "mrs fields",
+                            "text":  "mrs. fields",
                             "points":  23
                         },
                         {
@@ -152474,23 +146822,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "amos",
-                            "points":  9
-                        },
-                        {
                             "text":  "famous amos",
                             "points":  9
                         },
                         {
-                            "text":  "mrs allison",
-                            "points":  8
-                        },
-                        {
-                            "text":  "allison",
-                            "points":  8
-                        },
-                        {
-                            "text":  "missus allison",
+                            "text":  "mrs. allison's",
                             "points":  8
                         },
                         {
@@ -153045,7 +147381,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5782,
-        "question":  "Name a famous \"Cary\" (all forms of the name).",
+        "question":  "Name a famous \"Cary.\"",
         "answers":  [
                         {
                             "text":  "jim carrey",
@@ -153208,7 +147544,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  31
                         },
                         {
-                            "text":  "back to the future.",
+                            "text":  "back to the future",
                             "points":  18
                         },
                         {
@@ -153492,87 +147828,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  31
                         },
                         {
-                            "text":  "out",
-                            "points":  31
-                        },
-                        {
-                            "text":  "diner",
-                            "points":  31
-                        },
-                        {
-                            "text":  "restaurant",
-                            "points":  31
-                        },
-                        {
-                            "text":  "cafeteria",
-                            "points":  31
-                        },
-                        {
                             "text":  "movies",
                             "points":  20
                         },
                         {
-                            "text":  "cinema",
-                            "points":  20
-                        },
-                        {
-                            "text":  "films",
-                            "points":  20
-                        },
-                        {
-                            "text":  "hootenanny",
-                            "points":  10
-                        },
-                        {
-                            "text":  "going to party",
-                            "points":  10
-                        },
-                        {
-                            "text":  "to party",
-                            "points":  10
-                        },
-                        {
-                            "text":  "party",
-                            "points":  10
-                        },
-                        {
-                            "text":  "prom",
-                            "points":  10
-                        },
-                        {
-                            "text":  "soiree",
-                            "points":  10
-                        },
-                        {
-                            "text":  "reception",
-                            "points":  10
-                        },
-                        {
-                            "text":  "socialize",
-                            "points":  10
-                        },
-                        {
-                            "text":  "get together",
-                            "points":  10
-                        },
-                        {
-                            "text":  "gathering",
-                            "points":  10
-                        },
-                        {
-                            "text":  "fete",
-                            "points":  10
-                        },
-                        {
-                            "text":  "dance",
-                            "points":  10
-                        },
-                        {
-                            "text":  "fiesta",
-                            "points":  10
-                        },
-                        {
-                            "text":  "formal",
+                            "text":  "going to a party",
                             "points":  10
                         },
                         {
@@ -153580,114 +147840,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "trip",
-                            "points":  6
-                        },
-                        {
-                            "text":  "vacation",
-                            "points":  6
-                        },
-                        {
-                            "text":  "touring",
-                            "points":  6
-                        },
-                        {
-                            "text":  "time off",
-                            "points":  6
-                        },
-                        {
-                            "text":  "safari",
-                            "points":  6
-                        },
-                        {
-                            "text":  "travelling",
-                            "points":  6
-                        },
-                        {
-                            "text":  "days off",
-                            "points":  6
-                        },
-                        {
-                            "text":  "voyage",
-                            "points":  6
-                        },
-                        {
-                            "text":  "holiday",
-                            "points":  6
-                        },
-                        {
-                            "text":  "journey",
-                            "points":  6
-                        },
-                        {
-                            "text":  "car",
-                            "points":  5
-                        },
-                        {
-                            "text":  "steering",
-                            "points":  5
-                        },
-                        {
                             "text":  "driving",
                             "points":  5
                         },
                         {
-                            "text":  "motoring",
-                            "points":  5
-                        },
-                        {
-                            "text":  "auto",
-                            "points":  5
-                        },
-                        {
-                            "text":  "mall",
-                            "points":  3
-                        },
-                        {
-                            "text":  "boutique",
-                            "points":  3
-                        },
-                        {
-                            "text":  "store",
-                            "points":  3
-                        },
-                        {
-                            "text":  "buying",
-                            "points":  3
-                        },
-                        {
                             "text":  "shopping",
                             "points":  3
-                        },
-                        {
-                            "text":  "purchasing",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  5799,
-        "question":  "Name something specific that you might find in a fridge.",
-        "answers":  [
-                        {
-                            "text":  "milk",
-                            "points":  59
-                        },
-                        {
-                            "text":  "butter",
-                            "points":  15
-                        },
-                        {
-                            "text":  "eggs",
-                            "points":  11
-                        },
-                        {
-                            "text":  "soda",
-                            "points":  8
-                        },
-                        {
-                            "text":  "ketchup",
-                            "points":  7
                         }
                     ]
     },
@@ -153894,7 +148052,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "fire hydrarnt",
+                            "text":  "fire hydrant",
                             "points":  5
                         }
                     ]
@@ -154167,14 +148325,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5819,
-        "question":  "Name something specific you\u0027re afraid will happen to you on Friday the 13th.",
+        "question":  "Name something specific you're afraid will happen to you on Friday the 13th.",
         "answers":  [
                         {
                             "text":  "car accident",
                             "points":  45
                         },
                         {
-                            "text":  "black cat...path",
+                            "text":  "black cat crosses your path",
                             "points":  16
                         },
                         {
@@ -154318,7 +148476,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "scubadiving",
+                            "text":  "scuba diving",
                             "points":  10
                         },
                         {
@@ -154826,32 +148984,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5845,
-        "question":  "Name something you might find in a doctor\u0027s waiting room.",
-        "answers":  [
-                        {
-                            "text":  "magazines",
-                            "points":  51
-                        },
-                        {
-                            "text":  "patients",
-                            "points":  23
-                        },
-                        {
-                            "text":  "chairs",
-                            "points":  12
-                        },
-                        {
-                            "text":  "water cooler",
-                            "points":  8
-                        },
-                        {
-                            "text":  "hand sanitizer",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  5846,
         "question":  "Name something that might set off a metal detector in an airport.",
         "answers":  [
@@ -155084,24 +149216,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a command people give their dogs that would make a real person very angry if you gave it to them.",
         "answers":  [
                         {
-                            "text":  "seated",
-                            "points":  38
-                        },
-                        {
                             "text":  "sit",
                             "points":  38
                         },
                         {
-                            "text":  "over",
-                            "points":  16
-                        },
-                        {
                             "text":  "roll over",
                             "points":  16
-                        },
-                        {
-                            "text":  "down",
-                            "points":  12
                         },
                         {
                             "text":  "lay down",
@@ -155516,32 +149636,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5870,
-        "question":  "Name something teenagers can\u0027t live without.",
-        "answers":  [
-                        {
-                            "text":  "cell phone",
-                            "points":  54
-                        },
-                        {
-                            "text":  "music",
-                            "points":  8
-                        },
-                        {
-                            "text":  "friends",
-                            "points":  7
-                        },
-                        {
-                            "text":  "computers",
-                            "points":  6
-                        },
-                        {
-                            "text":  "tv",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  5871,
         "question":  "Name something vampires are afraid of.",
         "answers":  [
@@ -155733,7 +149827,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5878,
-        "question":  "Name something people worry they won\u0027t be able to pay for.",
+        "question":  "Name something people worry they won't be able to pay for.",
         "answers":  [
                         {
                             "text":  "house",
@@ -155748,7 +149842,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "meds.",
+                            "text":  "medicine",
                             "points":  5
                         },
                         {
@@ -156016,7 +150110,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a breed of dog that would never scare away a burglar.",
         "answers":  [
                         {
-                            "text":  "chihauhua",
+                            "text":  "chihuahua",
                             "points":  45
                         },
                         {
@@ -156024,11 +150118,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  41
                         },
                         {
-                            "text":  "dashound",
+                            "text":  "dachshund",
                             "points":  8
                         },
                         {
-                            "text":  "cocker spanial",
+                            "text":  "cocker spaniel",
                             "points":  6
                         }
                     ]
@@ -156496,32 +150590,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5908,
-        "question":  "Name an animal in the cat family that you would never keep as a pet.",
-        "answers":  [
-                        {
-                            "text":  "tiger",
-                            "points":  36
-                        },
-                        {
-                            "text":  "lion",
-                            "points":  31
-                        },
-                        {
-                            "text":  "bobcat",
-                            "points":  10
-                        },
-                        {
-                            "text":  "jaguar",
-                            "points":  6
-                        },
-                        {
-                            "text":  "leopard",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  5909,
         "question":  "Name a place where you might hear music.",
         "answers":  [
@@ -156864,7 +150932,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "scubadive",
+                            "text":  "scuba dive",
                             "points":  13
                         },
                         {
@@ -157126,24 +151194,24 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name someone who cheers you up.",
         "answers":  [
                         {
-                            "text":  "spouses",
-                            "points":  34
+                            "text":  "spouse",
+                            "points":  30
                         },
                         {
                             "text":  "mom",
-                            "points":  23
+                            "points":  20
                         },
                         {
                             "text":  "children",
-                            "points":  22
+                            "points":  19
+                        },
+                        {
+                            "text":  "best friend",
+                            "points":  19
                         },
                         {
                             "text":  "friend",
-                            "points":  14
-                        },
-                        {
-                            "text":  "bestfriend",
-                            "points":  22
+                            "points":  12
                         }
                     ]
     },
@@ -157174,36 +151242,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "debt",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  5931,
-        "question":  "Name an animal you wish didn\u0027t exist.",
-        "answers":  [
-                        {
-                            "text":  "snakes",
-                            "points":  34
-                        },
-                        {
-                            "text":  "rats",
-                            "points":  26
-                        },
-                        {
-                            "text":  "cockroaches",
-                            "points":  17
-                        },
-                        {
-                            "text":  "mosquitoes",
-                            "points":  10
-                        },
-                        {
-                            "text":  "skunks",
-                            "points":  7
-                        },
-                        {
-                            "text":  "sharks",
-                            "points":  6
                         }
                     ]
     },
@@ -157567,7 +151605,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "food",
-                            "points":  0
+                            "points":  1
                         }
                     ]
     },
@@ -157840,36 +151878,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5956,
-        "question":  "Name something you would hate to receive as a Christmas present.",
-        "answers":  [
-                        {
-                            "text":  "socks",
-                            "points":  27
-                        },
-                        {
-                            "text":  "fruit cake",
-                            "points":  18
-                        },
-                        {
-                            "text":  "coal",
-                            "points":  16
-                        },
-                        {
-                            "text":  "underwear",
-                            "points":  13
-                        },
-                        {
-                            "text":  "sweater",
-                            "points":  11
-                        },
-                        {
-                            "text":  "vacuum",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
         "id":  5957,
         "question":  "Name something imported from Germany.",
         "answers":  [
@@ -157897,14 +151905,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  5958,
-        "question":  "Name an occupation that\u0027s not for the squeamish.",
+        "question":  "Name an occupation that's not for the squeamish.",
         "answers":  [
                         {
                             "text":  "doctor",
                             "points":  35
                         },
                         {
-                            "text":  "cornoner",
+                            "text":  "coroner",
                             "points":  27
                         },
                         {
@@ -158188,12 +152196,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might keep a secret stash of.",
         "answers":  [
                         {
-                            "text":  "candy",
-                            "points":  28
-                        },
-                        {
                             "text":  "money",
                             "points":  54
+                        },
+                        {
+                            "text":  "candy",
+                            "points":  28
                         }
                     ]
     },
@@ -158250,24 +152258,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "sunglasses",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  5971,
-        "question":  "Name something that kids count in order to pass time on a car trip.",
-        "answers":  [
-                        {
-                            "text":  "dictionary",
-                            "points":  51
-                        },
-                        {
-                            "text":  "phonebook",
-                            "points":  36
-                        },
-                        {
-                            "text":  "textbook",
-                            "points":  13
                         }
                     ]
     },
@@ -159032,71 +153022,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "soul mate",
-                            "points":  30
-                        },
-                        {
-                            "text":  "matriarch",
-                            "points":  30
-                        },
-                        {
-                            "text":  "lover",
-                            "points":  30
-                        },
-                        {
-                            "text":  "housewife",
-                            "points":  30
-                        },
-                        {
-                            "text":  "girlfriend",
-                            "points":  30
-                        },
-                        {
-                            "text":  "companion",
-                            "points":  30
-                        },
-                        {
-                            "text":  "spouse",
-                            "points":  30
-                        },
-                        {
-                            "text":  "chum",
-                            "points":  20
-                        },
-                        {
-                            "text":  "best friend",
-                            "points":  20
-                        },
-                        {
-                            "text":  "buddy",
-                            "points":  20
-                        },
-                        {
                             "text":  "friend",
                             "points":  20
                         },
                         {
-                            "text":  "pal",
-                            "points":  20
-                        },
-                        {
-                            "text":  "comrade",
-                            "points":  20
-                        },
-                        {
-                            "text":  "amigo",
-                            "points":  20
-                        },
-                        {
-                            "text":  "mum",
-                            "points":  15
-                        },
-                        {
                             "text":  "mother",
-                            "points":  15
-                        },
-                        {
-                            "text":  "mama",
                             "points":  15
                         },
                         {
@@ -159104,67 +153034,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "papa",
-                            "points":  13
-                        },
-                        {
-                            "text":  "dad",
-                            "points":  13
-                        },
-                        {
-                            "text":  "pop",
-                            "points":  13
-                        },
-                        {
-                            "text":  "vicar",
-                            "points":  3
-                        },
-                        {
-                            "text":  "reverend",
-                            "points":  3
-                        },
-                        {
-                            "text":  "priest",
-                            "points":  3
-                        },
-                        {
-                            "text":  "parson",
-                            "points":  3
-                        },
-                        {
-                            "text":  "bishop",
-                            "points":  3
-                        },
-                        {
                             "text":  "clergy",
                             "points":  3
                         },
                         {
-                            "text":  "minister",
-                            "points":  3
-                        },
-                        {
-                            "text":  "pastor",
-                            "points":  3
-                        },
-                        {
-                            "text":  "shrink",
-                            "points":  2
-                        },
-                        {
                             "text":  "therapist",
-                            "points":  2
-                        },
-                        {
-                            "text":  "psychiatrist",
-                            "points":  2
-                        },
-                        {
-                            "text":  "analyst",
-                            "points":  2
-                        },
-                        {
-                            "text":  "alienist",
                             "points":  2
                         }
                     ]
@@ -159222,36 +153096,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "ebay",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  6003,
-        "question":  "Name something you might see in a children\u0027s playground.",
-        "answers":  [
-                        {
-                            "text":  "swing set",
-                            "points":  36
-                        },
-                        {
-                            "text":  "slide",
-                            "points":  25
-                        },
-                        {
-                            "text":  "children",
-                            "points":  18
-                        },
-                        {
-                            "text":  "monkey bars",
-                            "points":  10
-                        },
-                        {
-                            "text":  "merry go round",
-                            "points":  6
-                        },
-                        {
-                            "text":  "sandbox",
-                            "points":  5
                         }
                     ]
     },
@@ -159404,36 +153248,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "shotgun",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  6010,
-        "question":  "Name a performer or group whose music spans generations.",
-        "answers":  [
-                        {
-                            "text":  "cables",
-                            "points":  31
-                        },
-                        {
-                            "text":  "shoes",
-                            "points":  28
-                        },
-                        {
-                            "text":  "carpet",
-                            "points":  15
-                        },
-                        {
-                            "text":  "toys",
-                            "points":  10
-                        },
-                        {
-                            "text":  "pets",
-                            "points":  9
-                        },
-                        {
-                            "text":  "stairs",
-                            "points":  7
                         }
                     ]
     },
@@ -159808,7 +153622,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "...brushing teeth",
+                            "text":  "brushing teeth",
                             "points":  7
                         },
                         {
@@ -159874,32 +153688,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6027,
-        "question":  "Name something a car thief might see inside a car that might make him think twice about stealing it.",
-        "answers":  [
-                        {
-                            "text":  "alarm",
-                            "points":  39
-                        },
-                        {
-                            "text":  "club",
-                            "points":  33
-                        },
-                        {
-                            "text":  "dog",
-                            "points":  13
-                        },
-                        {
-                            "text":  "stereo",
-                            "points":  5
-                        },
-                        {
-                            "text":  "people",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
         "id":  6028,
         "question":  "Name a kind of place where you wouldn\u0027t want to sit in the front row.",
         "answers":  [
@@ -159952,32 +153740,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "swimming",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  6030,
-        "question":  "Name something in the kitchen that makes noise.",
-        "answers":  [
-                        {
-                            "text":  "blender",
-                            "points":  47
-                        },
-                        {
-                            "text":  "dishwasher",
-                            "points":  21
-                        },
-                        {
-                            "text":  "microwave",
-                            "points":  14
-                        },
-                        {
-                            "text":  "pots and pans",
-                            "points":  10
-                        },
-                        {
-                            "text":  "refrigerator",
-                            "points":  8
                         }
                     ]
     },
@@ -160054,7 +153816,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "justin beiber",
+                            "text":  "justin bieber",
                             "points":  11
                         },
                         {
@@ -160106,7 +153868,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "arnold schwartzenager",
+                            "text":  "arnold schwarzenegger",
                             "points":  20
                         },
                         {
@@ -160262,43 +154024,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "ranger",
-                            "points":  30
-                        },
-                        {
-                            "text":  "wayne",
-                            "points":  11
-                        },
-                        {
-                            "text":  "dark knight",
-                            "points":  11
-                        },
-                        {
-                            "text":  "caped crusader",
-                            "points":  1
-                        },
-                        {
-                            "text":  "bruce wayne",
-                            "points":  1
-                        },
-                        {
                             "text":  "batman",
-                            "points":  1
-                        },
-                        {
-                            "text":  "of the opera",
-                            "points":  10
-                        },
-                        {
-                            "text":  "opera",
-                            "points":  10
+                            "points":  11
                         },
                         {
                             "text":  "phantom of the opera",
-                            "points":  10
-                        },
-                        {
-                            "text":  "the opera",
                             "points":  10
                         }
                     ]
@@ -160394,10 +154124,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "exercise/swimming",
                             "points":  8
-                        },
-                        {
-                            "text":  "swimming",
-                            "points":  0
                         }
                     ]
     },
@@ -160642,14 +154368,14 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "spokeperson",
+                            "text":  "spokesperson",
                             "points":  3
                         }
                     ]
     },
     {
         "id":  6054,
-        "question":  "Other than himself, name something a man cleans before a big date (more specific than \"house\").",
+        "question":  "Other than himself, name something a man cleans before a big date.",
         "answers":  [
                         {
                             "text":  "car",
@@ -160908,7 +154634,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "david blane",
+                            "text":  "david blaine",
                             "points":  7
                         }
                     ]
@@ -161030,7 +154756,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  42
                         },
                         {
-                            "text":  "mickie joyner kersee",
+                            "text":  "jackie joyner-kersee",
                             "points":  33
                         },
                         {
@@ -161112,7 +154838,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "...peter apostle",
+                            "text":  "simon peter the apostle",
                             "points":  4
                         },
                         {
@@ -161242,40 +154968,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6077,
-        "question":  "Something people deliver for a living.",
-        "answers":  [
-                        {
-                            "text":  "newspapers",
-                            "points":  33
-                        },
-                        {
-                            "text":  "mail",
-                            "points":  28
-                        },
-                        {
-                            "text":  "pizza",
-                            "points":  20
-                        },
-                        {
-                            "text":  "flowers",
-                            "points":  6
-                        },
-                        {
-                            "text":  "packages",
-                            "points":  3
-                        },
-                        {
-                            "text":  "furniture",
-                            "points":  2
-                        },
-                        {
-                            "text":  "babies",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
         "id":  6078,
         "question":  "Tell me an article of clothing worn by both men and women.",
         "answers":  [
@@ -161333,7 +155025,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6080,
-        "question":  "Tell me the average temperature in Fahrenheit at which people set their thermostat. (Numeric only)",
+        "question":  "Tell me the average temperature in Fahrenheit at which people set their thermostat.",
         "answers":  [
                         {
                             "text":  "70",
@@ -161599,7 +155291,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6089,
-        "question":  "Tell me the age when a girl should be allowed to start dating. (Numeric only)",
+        "question":  "Tell me the age when a girl should be allowed to start dating.",
         "answers":  [
                         {
                             "text":  "16",
@@ -161749,7 +155441,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6094,
-        "question":  "Tell me how many items they allow in most supermarket express lines. (Numeric only)",
+        "question":  "Tell me how many items they allow in most supermarket express lines.",
         "answers":  [
                         {
                             "text":  "10",
@@ -161812,16 +155504,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "bad breath",
                             "points":  54
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
     {
         "id":  6098,
-        "question":  "Tell me something that kids hate to have taken away from them. Be specific.",
+        "question":  "Tell me something that kids hate to have taken away from them.",
         "answers":  [
                         {
                             "text":  "toy",
@@ -161920,36 +155608,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6102,
-        "question":  "Tell me something you see on daytime TV.",
-        "answers":  [
-                        {
-                            "text":  "news",
-                            "points":  28
-                        },
-                        {
-                            "text":  "oprah winfrey",
-                            "points":  23
-                        },
-                        {
-                            "text":  "ellen degeneres",
-                            "points":  19
-                        },
-                        {
-                            "text":  "soap operas",
-                            "points":  14
-                        },
-                        {
-                            "text":  "talk shows",
-                            "points":  9
-                        },
-                        {
-                            "text":  "steve harvey",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  6103,
         "question":  "Tell me something about a duck.",
         "answers":  [
@@ -162011,7 +155669,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6105,
-        "question":  "Tell me someone whom parents tell their kids to have respect for. (More specific than \"elders\")",
+        "question":  "Tell me someone whom parents tell their kids to have respect for.",
         "answers":  [
                         {
                             "text":  "teacher",
@@ -162098,54 +155756,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "touch",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  6109,
-        "question":  "Tell me something a kid might lie about.",
-        "answers":  [
-                        {
-                            "text":  "grades",
-                            "points":  55
-                        },
-                        {
-                            "text":  "fighting",
-                            "points":  15
-                        },
-                        {
-                            "text":  "brush teeth",
-                            "points":  10
-                        },
-                        {
-                            "text":  "friends",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
-        "id":  6110,
-        "question":  "Tell me something you would take with you if you were forced to evacuate your home.",
-        "answers":  [
-                        {
-                            "text":  "family photos",
-                            "points":  36
-                        },
-                        {
-                            "text":  "pet",
-                            "points":  33
-                        },
-                        {
-                            "text":  "clothes",
-                            "points":  18
-                        },
-                        {
-                            "text":  "kids",
-                            "points":  7
-                        },
-                        {
-                            "text":  "computers",
-                            "points":  6
                         }
                     ]
     },
@@ -162254,40 +155864,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6115,
-        "question":  "Tell me the age when boys stop playing with stuffed animals (numeric only).",
-        "answers":  [
-                        {
-                            "text":  "7",
-                            "points":  22
-                        },
-                        {
-                            "text":  "8",
-                            "points":  19
-                        },
-                        {
-                            "text":  "10",
-                            "points":  15
-                        },
-                        {
-                            "text":  "5",
-                            "points":  11
-                        },
-                        {
-                            "text":  "6",
-                            "points":  10
-                        },
-                        {
-                            "text":  "4",
-                            "points":  9
-                        },
-                        {
-                            "text":  "3",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  6116,
         "question":  "Tell me something you would trade in for a better one if you could.",
         "answers":  [
@@ -162334,38 +155910,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "its a tragedy",
+                            "text":  "it's a tragedy",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  6118,
-        "question":  "Tell me a chore you refuse to do.",
-        "answers":  [
-                        {
-                            "text":  "clean the bathroom",
-                            "points":  32
-                        },
-                        {
-                            "text":  "take out the trash",
-                            "points":  20
-                        },
-                        {
-                            "text":  "clean the windows",
-                            "points":  16
-                        },
-                        {
-                            "text":  "wash dishes",
-                            "points":  12
-                        },
-                        {
-                            "text":  "laundry",
-                            "points":  11
-                        },
-                        {
-                            "text":  "scrub floor",
-                            "points":  9
                         }
                     ]
     },
@@ -162392,28 +155938,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "valentine\u0027s icon",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  6120,
-        "question":  "Tell me something you lose while doing laundry.",
-        "answers":  [
-                        {
-                            "text":  "socks",
-                            "points":  57
-                        },
-                        {
-                            "text":  "money",
-                            "points":  22
-                        },
-                        {
-                            "text":  "jewelry",
-                            "points":  6
-                        },
-                        {
-                            "text":  "underwear",
-                            "points":  5
                         }
                     ]
     },
@@ -162760,36 +156284,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "dentist/doctor/shots",
                             "points":  9
-                        }
-                    ]
-    },
-    {
-        "id":  6134,
-        "question":  "Tell me a type of business that usually has an ATM inside.",
-        "answers":  [
-                        {
-                            "text":  "banks",
-                            "points":  40
-                        },
-                        {
-                            "text":  "grocery store",
-                            "points":  22
-                        },
-                        {
-                            "text":  "gas station",
-                            "points":  15
-                        },
-                        {
-                            "text":  "convenient store",
-                            "points":  13
-                        },
-                        {
-                            "text":  "bars",
-                            "points":  5
-                        },
-                        {
-                            "text":  "casino",
-                            "points":  5
                         }
                     ]
     },
@@ -163410,7 +156904,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "coursage",
+                            "text":  "corsage",
                             "points":  11
                         },
                         {
@@ -163458,7 +156952,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "bill collecter",
+                            "text":  "bill collector",
                             "points":  15
                         },
                         {
@@ -163774,7 +157268,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  38
                         },
                         {
-                            "text":  "can\u0027t swim",
+                            "text":  "can't swim",
                             "points":  35
                         },
                         {
@@ -163786,7 +157280,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "clorine",
+                            "text":  "chlorine",
                             "points":  3
                         },
                         {
@@ -163896,7 +157390,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "jewelery",
+                            "text":  "jewelry",
                             "points":  12
                         },
                         {
@@ -163904,7 +157398,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "underware",
+                            "text":  "underwear",
                             "points":  7
                         }
                     ]
@@ -164067,7 +157561,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "sleepy",
-                            "points":  0
+                            "points":  42
                         },
                         {
                             "text":  "grumpy",
@@ -164575,7 +158069,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "amusement park",
-                            "points":  0
+                            "points":  3
                         }
                     ]
     },
@@ -164920,7 +158414,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "sleep\u0027g on ground",
+                            "text":  "sleeping on ground",
                             "points":  3
                         },
                         {
@@ -165586,7 +159080,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  38
                         },
                         {
-                            "text":  "funiture",
+                            "text":  "furniture",
                             "points":  10
                         },
                         {
@@ -165669,7 +159163,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6242,
-        "question":  "Besides for work, tell me how many hours you spend using your computer in one day. (Numeric only please.)",
+        "question":  "Besides for work, tell me how many hours you spend using your computer in one day.",
         "answers":  [
                         {
                             "text":  "2",
@@ -165822,7 +159316,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  25
                         },
                         {
-                            "text":  "cataloupe",
+                            "text":  "cantaloupe",
                             "points":  11
                         },
                         {
@@ -165934,7 +159428,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "ricekrispies",
+                            "text":  "rice krispies",
                             "points":  17
                         },
                         {
@@ -166873,7 +160367,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6288,
-        "question":  "If you commuted to work by jet pack, name something dangerous that could happen. Be specific.",
+        "question":  "If you commuted to work by jet pack, name something dangerous that could happen.",
         "answers":  [
                         {
                             "text":  "fall to earth",
@@ -167147,7 +160641,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "saw in half",
-                            "points":  0
+                            "points":  10
                         }
                     ]
     },
@@ -167279,7 +160773,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "teachers",
-                            "points":  0
+                            "points":  45
                         },
                         {
                             "text":  "books",
@@ -167315,7 +160809,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "getting dates",
-                            "points":  0
+                            "points":  32
                         }
                     ]
     },
@@ -167702,7 +161196,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "fam. reunion/funeral",
+                            "text":  "family reunion/funeral",
                             "points":  5
                         }
                     ]
@@ -167878,7 +161372,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "acty flirty",
+                            "text":  "act flirty",
                             "points":  5
                         }
                     ]
@@ -167892,7 +161386,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  33
                         },
                         {
-                            "text":  "pinapple",
+                            "text":  "pineapple",
                             "points":  27
                         },
                         {
@@ -168040,28 +161534,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6332,
-        "question":  "Name an occupation that a boy wouldn't want his girlfriend's father to have.",
-        "answers":  [
-                        {
-                            "text":  "police officer",
-                            "points":  65
-                        },
-                        {
-                            "text":  "lawyer",
-                            "points":  19
-                        },
-                        {
-                            "text":  "judge",
-                            "points":  6
-                        },
-                        {
-                            "text":  "clergy",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  6333,
         "question":  "Name something a child might do for or give Santa.",
         "answers":  [
@@ -168152,7 +161624,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "tenessee",
+                            "text":  "tennessee",
                             "points":  6
                         },
                         {
@@ -168640,7 +162112,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "tounge",
+                            "text":  "tongue",
                             "points":  16
                         },
                         {
@@ -169269,7 +162741,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6378,
-        "question":  "Name something you never leave unlocked. (More specific than \"door.\")",
+        "question":  "Name something you never leave unlocked.",
         "answers":  [
                         {
                             "text":  "car",
@@ -169351,7 +162823,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "\"just looking\"",
-                            "points":  0
+                            "points":  5
                         }
                     ]
     },
@@ -169506,7 +162978,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  29
                         },
                         {
-                            "text":  "lifejacket/floaties",
+                            "text":  "life jacket/floaties",
                             "points":  14
                         },
                         {
@@ -169662,7 +163134,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a Halloween costume you see on babies but rarely see on their parents.",
         "answers":  [
                         {
-                            "text":  "pumkin",
+                            "text":  "pumpkin",
                             "points":  67
                         },
                         {
@@ -169722,7 +163194,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "barbque sauce",
+                            "text":  "barbecue sauce",
                             "points":  13
                         },
                         {
@@ -169868,7 +163340,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "don\u0027t clean sink",
+                            "text":  "don't clean sink",
                             "points":  21
                         },
                         {
@@ -169876,7 +163348,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "leave underware",
+                            "text":  "leave underwear",
                             "points":  4
                         },
                         {
@@ -169984,7 +163456,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a movie or TV show that has the word diary/diaries in the title.",
         "answers":  [
                         {
-                            "text":  "â¦mad black woman",
+                            "text":  "diary of a mad black woman",
                             "points":  29
                         },
                         {
@@ -169996,7 +163468,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "bridgette jones\u0027",
+                            "text":  "bridget jones's diary",
                             "points":  9
                         },
                         {
@@ -170034,7 +163506,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "reherse",
+                            "text":  "rehearse",
                             "points":  3
                         }
                     ]
@@ -170536,7 +164008,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "habbits",
+                            "text":  "habits",
                             "points":  3
                         }
                     ]
@@ -170760,7 +164232,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "jewlery",
+                            "text":  "jewelry",
                             "points":  3
                         },
                         {
@@ -171368,32 +164840,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6454,
-        "question":  "Name a place you hate to see litter.",
-        "answers":  [
-                        {
-                            "text":  "park",
-                            "points":  68
-                        },
-                        {
-                            "text":  "beach",
-                            "points":  11
-                        },
-                        {
-                            "text":  "roadside",
-                            "points":  8
-                        },
-                        {
-                            "text":  "yard",
-                            "points":  7
-                        },
-                        {
-                            "text":  "schoolyard",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  6455,
         "question":  "Name a pet that makes a good holiday gift.",
         "answers":  [
@@ -171510,7 +164956,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that every movie theatre, fancy or not, has.",
         "answers":  [
                         {
-                            "text":  "consession stand",
+                            "text":  "concession stand",
                             "points":  36
                         },
                         {
@@ -171577,7 +165023,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6462,
-        "question":  "Name a reason that a child might get taken out for ice cream (more specific than \"good\").",
+        "question":  "Name a reason that a child might get taken out for ice cream.",
         "answers":  [
                         {
                             "text":  "good grades",
@@ -171666,7 +165112,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  31
                         },
                         {
-                            "text":  "pardon/excure me",
+                            "text":  "pardon/excuse me",
                             "points":  11
                         },
                         {
@@ -172890,40 +166336,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6511,
-        "question":  "Name something that no wedding ceremony should be without.",
-        "answers":  [
-                        {
-                            "text":  "bride",
-                            "points":  23
-                        },
-                        {
-                            "text":  "minister",
-                            "points":  22
-                        },
-                        {
-                            "text":  "rings",
-                            "points":  19
-                        },
-                        {
-                            "text":  "music",
-                            "points":  12
-                        },
-                        {
-                            "text":  "flowers",
-                            "points":  8
-                        },
-                        {
-                            "text":  "groom",
-                            "points":  7
-                        },
-                        {
-                            "text":  "vows",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  6512,
         "question":  "Name something a drive-thru worker might forget to give you that would be annoying.",
         "answers":  [
@@ -173208,7 +166620,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "cadilac",
+                            "text":  "cadillac",
                             "points":  10
                         },
                         {
@@ -173320,7 +166732,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  32
                         },
                         {
-                            "text":  "reslish",
+                            "text":  "relish",
                             "points":  18
                         },
                         {
@@ -173376,7 +166788,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  45
                         },
                         {
-                            "text":  "yatzee",
+                            "text":  "yahtzee",
                             "points":  34
                         },
                         {
@@ -173384,7 +166796,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "dungeos \u0026 dragons",
+                            "text":  "dungeons & dragons",
                             "points":  5
                         }
                     ]
@@ -173432,7 +166844,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "hippopotamous",
+                            "text":  "hippopotamus",
                             "points":  7
                         },
                         {
@@ -173742,32 +167154,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6543,
-        "question":  "Name a product door-to-door salesmen used to sell.",
-        "answers":  [
-                        {
-                            "text":  "vacuum cleaner",
-                            "points":  46
-                        },
-                        {
-                            "text":  "cosmetics",
-                            "points":  28
-                        },
-                        {
-                            "text":  "encyclopedia",
-                            "points":  11
-                        },
-                        {
-                            "text":  "bible",
-                            "points":  5
-                        },
-                        {
-                            "text":  "knives",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  6544,
         "question":  "Name something a patient in a hospital might have trouble doing on his own.",
         "answers":  [
@@ -173824,32 +167210,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6546,
-        "question":  "Name a recreational activity traditionally done in hot weather.",
-        "answers":  [
-                        {
-                            "text":  "swimming",
-                            "points":  44
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  18
-                        },
-                        {
-                            "text":  "volleyball",
-                            "points":  17
-                        },
-                        {
-                            "text":  "surfing",
-                            "points":  11
-                        },
-                        {
-                            "text":  "boating",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  6547,
         "question":  "Name something that's not allowed in some hotels.",
         "answers":  [
@@ -173864,40 +167224,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "children",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  6548,
-        "question":  "Name a word you might see before or after the word \"wax.\"",
-        "answers":  [
-                        {
-                            "text":  "earwax",
-                            "points":  26
-                        },
-                        {
-                            "text":  "carwax",
-                            "points":  18
-                        },
-                        {
-                            "text":  "beeswax",
-                            "points":  14
-                        },
-                        {
-                            "text":  "wax museum",
-                            "points":  8
-                        },
-                        {
-                            "text":  "hot wax",
-                            "points":  8
-                        },
-                        {
-                            "text":  "wax paper",
-                            "points":  8
-                        },
-                        {
-                            "text":  "candle wax",
-                            "points":  8
                         }
                     ]
     },
@@ -173954,32 +167280,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "air bags",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  6551,
-        "question":  "Name a drink that you might stir.",
-        "answers":  [
-                        {
-                            "text":  "coffee",
-                            "points":  50
-                        },
-                        {
-                            "text":  "tea",
-                            "points":  17
-                        },
-                        {
-                            "text":  "martini",
-                            "points":  12
-                        },
-                        {
-                            "text":  "chocolate milk",
-                            "points":  8
-                        },
-                        {
-                            "text":  "kool aid",
-                            "points":  7
                         }
                     ]
     },
@@ -174376,7 +167676,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "haloween/costume",
+                            "text":  "halloween/costume",
                             "points":  8
                         }
                     ]
@@ -174550,7 +167850,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  54
                         },
                         {
-                            "text":  "relieve thenselves",
+                            "text":  "relieve themselves",
                             "points":  28
                         },
                         {
@@ -174774,7 +168074,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "toll collecter",
+                            "text":  "toll collector",
                             "points":  6
                         },
                         {
@@ -174914,7 +168214,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "hannibal lector",
+                            "text":  "hannibal lecter",
                             "points":  19
                         },
                         {
@@ -174956,7 +168256,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "nternet access",
+                            "text":  "internet access",
                             "points":  8
                         },
                         {
@@ -175090,7 +168390,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "dorthy",
+                            "text":  "dorothy",
                             "points":  7
                         }
                     ]
@@ -175164,32 +168464,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6596,
-        "question":  "Name a topic most men can't stand, but women could discuss for hours.",
-        "answers":  [
-                        {
-                            "text":  "shopping",
-                            "points":  44
-                        },
-                        {
-                            "text":  "clothes",
-                            "points":  19
-                        },
-                        {
-                            "text":  "soap operas",
-                            "points":  14
-                        },
-                        {
-                            "text":  "men",
-                            "points":  11
-                        },
-                        {
-                            "text":  "hair",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  6597,
         "question":  "Name a food that's made from corn.",
         "answers":  [
@@ -175211,7 +168485,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "grits",
-                            "points":  0
+                            "points":  8
                         }
                     ]
     },
@@ -175410,16 +168684,16 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name the age at which a man may get thick around the middle.",
         "answers":  [
                         {
+                            "text":  "40",
+                            "points":  42
+                        },
+                        {
                             "text":  "30",
                             "points":  21
                         },
                         {
                             "text":  "35",
                             "points":  16
-                        },
-                        {
-                            "text":  "40",
-                            "points":  42
                         },
                         {
                             "text":  "45",
@@ -175866,7 +169140,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "oporator",
+                            "text":  "operator",
                             "points":  6
                         }
                     ]
@@ -176604,7 +169878,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  38
                         },
                         {
-                            "text":  "reading matereal",
+                            "text":  "reading material",
                             "points":  27
                         },
                         {
@@ -176850,7 +170124,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  79
                         },
                         {
-                            "text":  "camara",
+                            "text":  "camera",
                             "points":  11
                         },
                         {
@@ -176872,7 +170146,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name an expression that contains the word \"wheel.\"",
         "answers":  [
                         {
-                            "text":  "offortune",
+                            "text":  "of fortune",
                             "points":  27
                         },
                         {
@@ -176950,10 +170224,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a tropical island.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "hawaii",
                             "points":  51
                         }
@@ -176965,7 +170235,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "ipod",
-                            "points":  0
+                            "points":  40
                         },
                         {
                             "text":  "printer",
@@ -177106,7 +170376,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "poisonivy",
+                            "text":  "poison ivy",
                             "points":  4
                         },
                         {
@@ -177163,7 +170433,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6675,
-        "question":  "Name a celebrity who\u0027s served time in the slammer.",
+        "question":  "Name a celebrity who's served time in the slammer.",
         "answers":  [
                         {
                             "text":  "paris hilton",
@@ -177174,7 +170444,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "robert downe",
+                            "text":  "robert downey jr.",
                             "points":  10
                         },
                         {
@@ -177277,7 +170547,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "rap",
-                            "points":  0
+                            "points":  54
                         },
                         {
                             "text":  "rock",
@@ -177407,7 +170677,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "swim",
-                            "points":  0
+                            "points":  42
                         },
                         {
                             "text":  "disneyworld",
@@ -177441,10 +170711,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  6689,
         "question":  "Name a place kids might go if they skipped school.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "mall",
                             "points":  49
@@ -177491,10 +170757,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  6692,
         "question":  "Name something you might buy at a bakery.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "cake",
                             "points":  37
@@ -177720,20 +170982,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6704,
-        "question":  "Name something you should not take away from a baby unless you enjoy the sound of screaming.",
-        "answers":  [
-                        {
-                            "text":  "bottle",
-                            "points":  40
-                        },
-                        {
-                            "text":  "pacifier",
-                            "points":  27
-                        }
-                    ]
-    },
-    {
         "id":  6705,
         "question":  "Name a tiny creature that frightens big people.",
         "answers":  [
@@ -177863,10 +171111,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  6712,
         "question":  "Name something that might ring.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "telephone",
                             "points":  49
@@ -178018,10 +171262,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a real or fictional band that has food in their name.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "red hot chili peppers",
                             "points":  39
                         }
@@ -178059,10 +171299,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  6724,
         "question":  "Name something that friends might swap.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "clothes",
                             "points":  36
@@ -178201,10 +171437,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  6731,
         "question":  "Name an animal that likes to dig.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "dogs",
                             "points":  34
@@ -178421,15 +171653,11 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6742,
-        "question":  "Name something kids believe in that adults don\u0027t.",
+        "question":  "Name something kids believe in that adults don't.",
         "answers":  [
                         {
                             "text":  "santa",
                             "points":  58
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -178593,7 +171821,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "crime",
-                            "points":  0
+                            "points":  11
                         }
                     ]
     },
@@ -178629,10 +171857,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  6753,
         "question":  "Name your favorite thing about your job.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "salary",
                             "points":  54
@@ -178872,7 +172096,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  72
                         },
                         {
-                            "text":  "walkman/cd play\u0027r",
+                            "text":  "walkman/cd player",
                             "points":  6
                         },
                         {
@@ -179036,7 +172260,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "divorce/separ.",
+                            "text":  "divorce/separation",
                             "points":  7
                         },
                         {
@@ -179050,20 +172274,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "the in-laws",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  6771,
-        "question":  "Name something a kid might complain about at summer camp.",
-        "answers":  [
-                        {
-                            "text":  "food",
-                            "points":  37
-                        },
-                        {
-                            "text":  "bugs",
-                            "points":  24
                         }
                     ]
     },
@@ -179820,7 +173030,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  51
                         },
                         {
-                            "text":  "maka a will",
+                            "text":  "make a will",
                             "points":  13
                         },
                         {
@@ -179994,28 +173204,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6807,
-        "question":  "Name something you purchase by the gallon.",
-        "answers":  [
-                        {
-                            "text":  "milk",
-                            "points":  58
-                        },
-                        {
-                            "text":  "gas",
-                            "points":  25
-                        },
-                        {
-                            "text":  "ice cream",
-                            "points":  7
-                        },
-                        {
-                            "text":  "water",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
         "id":  6808,
         "question":  "Name something you might see during an NFL football game.",
         "answers":  [
@@ -180062,7 +173250,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "making lic. plates",
+                            "text":  "making license plates",
                             "points":  4
                         },
                         {
@@ -180852,36 +174040,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6838,
-        "question":  "Name an activity that people wear gloves for.",
-        "answers":  [
-                        {
-                            "text":  "medical procedure",
-                            "points":  18
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  17
-                        },
-                        {
-                            "text":  "gardening",
-                            "points":  15
-                        },
-                        {
-                            "text":  "boxing",
-                            "points":  14
-                        },
-                        {
-                            "text":  "golfing",
-                            "points":  7
-                        },
-                        {
-                            "text":  "skiing",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  6839,
         "question":  "Name something specific that keeps a race car driver from injury.",
         "answers":  [
@@ -181025,14 +174183,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6844,
-        "question":  "Name something you\u0027d expect to find in the home of a man who thinks he\u0027s macho.",
+        "question":  "Name something you'd expect to find in the home of a man who thinks he's macho.",
         "answers":  [
                         {
                             "text":  "weights/gym equip",
                             "points":  56
                         },
                         {
-                            "text":  "girlie pics/mag.",
+                            "text":  "girlie pics/magazines",
                             "points":  10
                         },
                         {
@@ -181348,32 +174506,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6856,
-        "question":  "Name something you make a sandwich with.",
-        "answers":  [
-                        {
-                            "text":  "bread",
-                            "points":  51
-                        },
-                        {
-                            "text":  "ham",
-                            "points":  22
-                        },
-                        {
-                            "text":  "turkey",
-                            "points":  14
-                        },
-                        {
-                            "text":  "mayo",
-                            "points":  8
-                        },
-                        {
-                            "text":  "peanut butter",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  6857,
         "question":  "Name the one thing you want out of life more than any other.",
         "answers":  [
@@ -181680,83 +174812,11 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a subject on which people are always giving unwanted advice.",
         "answers":  [
                         {
-                            "text":  "adoration",
-                            "points":  59
-                        },
-                        {
-                            "text":  "husband",
-                            "points":  59
-                        },
-                        {
-                            "text":  "hug",
-                            "points":  59
-                        },
-                        {
-                            "text":  "dating",
-                            "points":  59
-                        },
-                        {
-                            "text":  "life",
-                            "points":  59
-                        },
-                        {
                             "text":  "love life",
                             "points":  59
                         },
                         {
-                            "text":  "kiss",
-                            "points":  59
-                        },
-                        {
-                            "text":  "boyfriend",
-                            "points":  59
-                        },
-                        {
-                            "text":  "true love",
-                            "points":  59
-                        },
-                        {
-                            "text":  "affection",
-                            "points":  59
-                        },
-                        {
-                            "text":  "amour",
-                            "points":  59
-                        },
-                        {
-                            "text":  "romance",
-                            "points":  59
-                        },
-                        {
-                            "text":  "spouse",
-                            "points":  59
-                        },
-                        {
-                            "text":  "care giving",
-                            "points":  16
-                        },
-                        {
-                            "text":  "rearing",
-                            "points":  16
-                        },
-                        {
-                            "text":  "mothering",
-                            "points":  16
-                        },
-                        {
                             "text":  "parenting",
-                            "points":  16
-                        },
-                        {
-                            "text":  "raising",
-                            "points":  16
-                        },
-                        {
-                            "text":  "childcare",
-                            "points":  16
-                        },
-                        {
-                            "text":  "fathering",
                             "points":  16
                         },
                         {
@@ -181764,119 +174824,15 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "bucks",
-                            "points":  8
-                        },
-                        {
-                            "text":  "wealth",
-                            "points":  8
-                        },
-                        {
-                            "text":  "coinage",
-                            "points":  8
-                        },
-                        {
-                            "text":  "riches",
-                            "points":  8
-                        },
-                        {
-                            "text":  "cash",
-                            "points":  8
-                        },
-                        {
-                            "text":  "currency",
-                            "points":  8
-                        },
-                        {
-                            "text":  "medicine",
-                            "points":  8
-                        },
-                        {
-                            "text":  "sickness",
-                            "points":  8
-                        },
-                        {
-                            "text":  "regularity",
-                            "points":  8
-                        },
-                        {
-                            "text":  "well being",
-                            "points":  8
-                        },
-                        {
-                            "text":  "illness",
-                            "points":  8
-                        },
-                        {
-                            "text":  "fitness",
-                            "points":  8
-                        },
-                        {
                             "text":  "health",
                             "points":  8
-                        },
-                        {
-                            "text":  "baking",
-                            "points":  4
-                        },
-                        {
-                            "text":  "preparing dinner",
-                            "points":  4
                         },
                         {
                             "text":  "cooking",
                             "points":  4
                         },
                         {
-                            "text":  "food preparation",
-                            "points":  4
-                        },
-                        {
-                            "text":  "cuisine",
-                            "points":  4
-                        },
-                        {
-                            "text":  "making dinner",
-                            "points":  4
-                        },
-                        {
-                            "text":  "gastronomic",
-                            "points":  4
-                        },
-                        {
-                            "text":  "occupation",
-                            "points":  2
-                        },
-                        {
-                            "text":  "career",
-                            "points":  2
-                        },
-                        {
-                            "text":  "office",
-                            "points":  2
-                        },
-                        {
-                            "text":  "vocation",
-                            "points":  2
-                        },
-                        {
-                            "text":  "employment",
-                            "points":  2
-                        },
-                        {
                             "text":  "job",
-                            "points":  2
-                        },
-                        {
-                            "text":  "work",
-                            "points":  2
-                        },
-                        {
-                            "text":  "your job",
-                            "points":  2
-                        },
-                        {
-                            "text":  "labor",
                             "points":  2
                         }
                     ]
@@ -182156,24 +175112,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6880,
-        "question":  "Name a type of fruit a kid might have in a lunch bag.",
-        "answers":  [
-                        {
-                            "text":  "apple",
-                            "points":  71
-                        },
-                        {
-                            "text":  "banana",
-                            "points":  20
-                        },
-                        {
-                            "text":  "orange",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  6881,
         "question":  "Name a place you go where you don\u0027t want to sit behind someone with a big head.",
         "answers":  [
@@ -182264,7 +175202,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "souvenirs/shop\u0027ng",
+                            "text":  "souvenirs/shopping",
                             "points":  9
                         },
                         {
@@ -182533,28 +175471,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "swears",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  6895,
-        "question":  "Name someone in a kid\u0027s life who lets them get away with things their parent wouldn\u0027t.",
-        "answers":  [
-                        {
-                            "text":  "grandparents",
-                            "points":  55
-                        },
-                        {
-                            "text":  "babysitter",
-                            "points":  31
-                        },
-                        {
-                            "text":  "aunt/uncle",
-                            "points":  6
-                        },
-                        {
-                            "text":  "teacher",
                             "points":  3
                         }
                     ]
@@ -182864,7 +175780,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you bring in from outdoors before a storm.",
         "answers":  [
                         {
-                            "text":  "lawn furnature",
+                            "text":  "lawn furniture",
                             "points":  24
                         },
                         {
@@ -182941,62 +175857,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "leopard",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  6911,
-        "question":  "Name a part of your body that never stops growing.",
-        "answers":  [
-                        {
-                            "text":  "hair",
-                            "points":  52
-                        },
-                        {
-                            "text":  "nails",
-                            "points":  25
-                        },
-                        {
-                            "text":  "feet",
-                            "points":  6
-                        },
-                        {
-                            "text":  "brain",
-                            "points":  6
-                        },
-                        {
-                            "text":  "bottom",
-                            "points":  4
-                        },
-                        {
-                            "text":  "abdomen",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  6912,
-        "question":  "Name something people drink that is red.",
-        "answers":  [
-                        {
-                            "text":  "kool-aid",
-                            "points":  28
-                        },
-                        {
-                            "text":  "red wine",
-                            "points":  43
-                        },
-                        {
-                            "text":  "cranberry juice",
-                            "points":  14
-                        },
-                        {
-                            "text":  "fruit punch",
-                            "points":  9
-                        },
-                        {
-                            "text":  "tomato juice",
                             "points":  6
                         }
                     ]
@@ -183160,7 +176020,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "automachanic",
+                            "text":  "auto mechanic",
                             "points":  5
                         },
                         {
@@ -183294,7 +176154,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "bagles",
+                            "text":  "bagels",
                             "points":  12
                         },
                         {
@@ -183417,31 +176277,31 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "apple",
-                            "points":  38
+                            "points":  29
                         },
                         {
                             "text":  "peach",
-                            "points":  28
-                        },
-                        {
-                            "text":  "pear",
-                            "points":  17
-                        },
-                        {
-                            "text":  "plum",
-                            "points":  11
-                        },
-                        {
-                            "text":  "lemon",
-                            "points":  6
+                            "points":  22
                         },
                         {
                             "text":  "oranges",
-                            "points":  25
+                            "points":  19
+                        },
+                        {
+                            "text":  "pear",
+                            "points":  13
+                        },
+                        {
+                            "text":  "plum",
+                            "points":  8
+                        },
+                        {
+                            "text":  "lemon",
+                            "points":  5
                         },
                         {
                             "text":  "cherries",
-                            "points":  5
+                            "points":  4
                         }
                     ]
     },
@@ -183930,10 +176790,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might steal from a hotel room.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "towels",
                             "points":  51
                         }
@@ -184078,7 +176934,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might ask the person sitting behind you in a movie theater to stop doing.",
         "answers":  [
                         {
-                            "text":  "talk\u0027g/cell phone",
+                            "text":  "talking/cell phone",
                             "points":  71
                         },
                         {
@@ -184131,10 +176987,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "clothes/shoes",
-                            "points":  43
-                        },
-                        {
-                            "text":  "clothing",
                             "points":  43
                         },
                         {
@@ -184322,7 +177174,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "isreal",
+                            "text":  "israel",
                             "points":  12
                         },
                         {
@@ -184474,7 +177326,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "raisons",
+                            "text":  "raisins",
                             "points":  6
                         }
                     ]
@@ -184524,10 +177376,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  44
                         },
                         {
-                            "text":  "horse stable",
-                            "points":  30
-                        },
-                        {
                             "text":  "stable",
                             "points":  30
                         },
@@ -184536,27 +177384,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "straw",
-                            "points":  6
-                        },
-                        {
                             "text":  "bridle",
                             "points":  6
                         },
                         {
-                            "text":  "rick",
-                            "points":  6
-                        },
-                        {
                             "text":  "horse trailer",
-                            "points":  5
-                        },
-                        {
-                            "text":  "trailer",
-                            "points":  5
-                        },
-                        {
-                            "text":  "wagon",
                             "points":  5
                         }
                     ]
@@ -184730,7 +177562,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a president that Republicans love.",
         "answers":  [
                         {
-                            "text":  "ronald raegan",
+                            "text":  "ronald reagan",
                             "points":  64
                         },
                         {
@@ -184841,7 +177673,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  6982,
-        "question":  "Name something that might be stuffed inside a ravioli. (\"Meat\" is not an answer. Be more specific.)",
+        "question":  "Name something that might be stuffed inside a ravioli.",
         "answers":  [
                         {
                             "text":  "beef",
@@ -184892,20 +177724,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "rosie o\u0027donnell",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  6984,
-        "question":  "Name something you can ride.",
-        "answers":  [
-                        {
-                            "text":  "bicycle",
-                            "points":  43
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -185405,31 +178223,27 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "foot",
-                            "points":  34
+                            "points":  41
                         },
                         {
                             "text":  "table",
-                            "points":  16
+                            "points":  14
                         },
                         {
                             "text":  "fingers",
-                            "points":  16
+                            "points":  14
                         },
                         {
                             "text":  "drum",
-                            "points":  12
+                            "points":  11
                         },
                         {
                             "text":  "pencil",
-                            "points":  12
+                            "points":  10
                         },
                         {
                             "text":  "beer keg",
-                            "points":  12
-                        },
-                        {
-                            "text":  "feet",
-                            "points":  47
+                            "points":  10
                         }
                     ]
     },
@@ -185553,7 +178367,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7010,
-        "question":  "Name something you fold. (\"Clothes\" is not an answer, be more specific.)",
+        "question":  "Name something you fold.",
         "answers":  [
                         {
                             "text":  "t-shirt",
@@ -186221,7 +179035,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7034,
-        "question":  "Name something you shouldn\u0027t eat before a dental checkup.",
+        "question":  "Name something you shouldn't eat before a dental checkup.",
         "answers":  [
                         {
                             "text":  "candy/chocolate",
@@ -186240,7 +179054,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "nuts/p\u0027nut butter",
+                            "text":  "nuts/peanut butter",
                             "points":  4
                         }
                     ]
@@ -186374,28 +179188,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7041,
-        "question":  "Name something that, once you learned how to do it, you never forget.",
-        "answers":  [
-                        {
-                            "text":  "ride a bike",
-                            "points":  59
-                        },
-                        {
-                            "text":  "tie shoes",
-                            "points":  13
-                        },
-                        {
-                            "text":  "walk",
-                            "points":  7
-                        },
-                        {
-                            "text":  "drive",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  7042,
         "question":  "Name something that can light up the sky.",
         "answers":  [
@@ -186492,28 +179284,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7046,
-        "question":  "Name something that people don\u0027t normally pay for in cash.",
-        "answers":  [
-                        {
-                            "text":  "car",
-                            "points":  53
-                        },
-                        {
-                            "text":  "gas",
-                            "points":  20
-                        },
-                        {
-                            "text":  "house",
-                            "points":  20
-                        },
-                        {
-                            "text":  "food",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  7047,
         "question":  "Name a food people throw at politicians.",
         "answers":  [
@@ -186580,28 +179350,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "windows",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  7050,
-        "question":  "Name something a child does to prove to his parents he\u0027s too sick for school.",
-        "answers":  [
-                        {
-                            "text":  "cough",
-                            "points":  50
-                        },
-                        {
-                            "text":  "vomit",
-                            "points":  25
-                        },
-                        {
-                            "text":  "cry",
-                            "points":  13
-                        },
-                        {
-                            "text":  "take temperature",
-                            "points":  10
                         }
                     ]
     },
@@ -186756,81 +179504,19 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7056,
-        "question":  "Name a Greek god that everyone knows.",
-        "answers":  [
-                        {
-                            "text":  "zeus",
-                            "points":  51
-                        },
-                        {
-                            "text":  "poseidon",
-                            "points":  13
-                        },
-                        {
-                            "text":  "hera",
-                            "points":  12
-                        },
-                        {
-                            "text":  "ares",
-                            "points":  9
-                        },
-                        {
-                            "text":  "aphrodite",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  7057,
         "question":  "Name a reason you might be up on your roof.",
         "answers":  [
                         {
-                            "text":  "repairing it",
-                            "points":  33
-                        },
-                        {
-                            "text":  "it",
-                            "points":  33
-                        },
-                        {
                             "text":  "fixing it",
                             "points":  33
-                        },
-                        {
-                            "text":  "cleaning",
-                            "points":  13
-                        },
-                        {
-                            "text":  "ornaments",
-                            "points":  16
-                        },
-                        {
-                            "text":  "mistletoe",
-                            "points":  16
-                        },
-                        {
-                            "text":  "ivy",
-                            "points":  16
-                        },
-                        {
-                            "text":  "holly",
-                            "points":  16
                         },
                         {
                             "text":  "decorations",
                             "points":  16
                         },
                         {
-                            "text":  "scrubbing",
-                            "points":  13
-                        },
-                        {
-                            "text":  "organizing",
-                            "points":  13
-                        },
-                        {
-                            "text":  "tidying",
+                            "text":  "cleaning",
                             "points":  13
                         },
                         {
@@ -186838,51 +179524,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "aerial",
-                            "points":  10
-                        },
-                        {
-                            "text":  "antenna",
-                            "points":  10
-                        },
-                        {
-                            "text":  "adjust antenna",
-                            "points":  10
-                        },
-                        {
-                            "text":  "sphere",
-                            "points":  2
-                        },
-                        {
-                            "text":  "soccer",
-                            "points":  2
-                        },
-                        {
-                            "text":  "softball",
-                            "points":  2
-                        },
-                        {
-                            "text":  "ball",
-                            "points":  2
-                        },
-                        {
-                            "text":  "orb",
-                            "points":  2
-                        },
-                        {
-                            "text":  "kickball",
-                            "points":  2
-                        },
-                        {
-                            "text":  "dodgeball",
-                            "points":  2
-                        },
-                        {
-                            "text":  "hardball",
-                            "points":  2
-                        },
-                        {
-                            "text":  "football",
+                            "text":  "get a ball",
                             "points":  2
                         }
                     ]
@@ -187769,7 +180411,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "football",
-                            "points":  0
+                            "points":  3
                         }
                     ]
     },
@@ -187938,36 +180580,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "intestines",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  7099,
-        "question":  "Name something that people typically trip over.",
-        "answers":  [
-                        {
-                            "text":  "cables",
-                            "points":  31
-                        },
-                        {
-                            "text":  "shoes",
-                            "points":  28
-                        },
-                        {
-                            "text":  "carpet",
-                            "points":  15
-                        },
-                        {
-                            "text":  "toys",
-                            "points":  10
-                        },
-                        {
-                            "text":  "pets",
-                            "points":  9
-                        },
-                        {
-                            "text":  "stairs",
-                            "points":  7
                         }
                     ]
     },
@@ -188217,7 +180829,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7110,
-        "question":  "Name something people hide on purpose and can\u0027t remember where they put it.",
+        "question":  "Name something people hide on purpose and can't remember where they put it.",
         "answers":  [
                         {
                             "text":  "money",
@@ -188237,10 +180849,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "papers",
-                            "points":  2
-                        },
-                        {
-                            "text":  "creditcards",
                             "points":  2
                         },
                         {
@@ -189120,28 +181728,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7144,
-        "question":  "Name something you drink out of the bottle.",
-        "answers":  [
-                        {
-                            "text":  "soda",
-                            "points":  39
-                        },
-                        {
-                            "text":  "water",
-                            "points":  38
-                        },
-                        {
-                            "text":  "beer",
-                            "points":  17
-                        },
-                        {
-                            "text":  "juice",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  7145,
         "question":  "Name something a woman looks forward to that a man dreads.",
         "answers":  [
@@ -189306,36 +181892,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "a good memory",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  7151,
-        "question":  "Name something you would stop eating if you wanted to lose weight.",
-        "answers":  [
-                        {
-                            "text":  "candy",
-                            "points":  41
-                        },
-                        {
-                            "text":  "hamburders",
-                            "points":  15
-                        },
-                        {
-                            "text":  "cake",
-                            "points":  14
-                        },
-                        {
-                            "text":  "ice cream",
-                            "points":  11
-                        },
-                        {
-                            "text":  "bread",
-                            "points":  10
-                        },
-                        {
-                            "text":  "chips",
-                            "points":  9
                         }
                     ]
     },
@@ -189704,34 +182260,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "2001 space ody..",
+                            "text":  "2001: a space odyssey",
                             "points":  5
                         },
                         {
                             "text":  "armageddon",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  7165,
-        "question":  "Name a reason a person might not be hired for a job.",
-        "answers":  [
-                        {
-                            "text":  "no experience",
-                            "points":  51
-                        },
-                        {
-                            "text":  "criminal record",
-                            "points":  20
-                        },
-                        {
-                            "text":  "appearance",
-                            "points":  13
-                        },
-                        {
-                            "text":  "bad attitude",
-                            "points":  6
                         }
                     ]
     },
@@ -189983,14 +182517,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "fred astaire",
-                            "points":  13
-                        },
-                        {
-                            "text":  "travolta",
-                            "points":  33
-                        },
-                        {
-                            "text":  "astaire",
                             "points":  13
                         },
                         {
@@ -190270,28 +182796,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "barbecue",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  7185,
-        "question":  "Name something you might do to prepare for the first day of school.",
-        "answers":  [
-                        {
-                            "text":  "haircut",
-                            "points":  38
-                        },
-                        {
-                            "text":  "pick an outfit",
-                            "points":  25
-                        },
-                        {
-                            "text":  "pack backpack",
-                            "points":  20
-                        },
-                        {
-                            "text":  "sleep",
-                            "points":  17
                         }
                     ]
     },
@@ -191134,28 +183638,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7217,
-        "question":  "Name a body part that many songs mention.",
-        "answers":  [
-                        {
-                            "text":  "the heart",
-                            "points":  47
-                        },
-                        {
-                            "text":  "lips",
-                            "points":  32
-                        },
-                        {
-                            "text":  "the eyes",
-                            "points":  16
-                        },
-                        {
-                            "text":  "the face",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  7218,
         "question":  "Name a person people go to when they feel worried.",
         "answers":  [
@@ -191247,15 +183729,15 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "basketball",
-                            "points":  57
+                            "points":  45
                         },
                         {
                             "text":  "baseball",
-                            "points":  57
+                            "points":  44
                         },
                         {
                             "text":  "football",
-                            "points":  14
+                            "points":  11
                         }
                     ]
     },
@@ -191272,7 +183754,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "isreal",
+                            "text":  "israel",
                             "points":  8
                         },
                         {
@@ -191686,28 +184168,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "talk on phone",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  7239,
-        "question":  "Name a profession where you\u0027d receive lots of mail from strangers.",
-        "answers":  [
-                        {
-                            "text":  "celebrity",
-                            "points":  51
-                        },
-                        {
-                            "text":  "politician",
-                            "points":  36
-                        },
-                        {
-                            "text":  "customer service",
-                            "points":  7
-                        },
-                        {
-                            "text":  "advice columnist",
-                            "points":  5
                         }
                     ]
     },
@@ -192134,10 +184594,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that beach-goers complain about.",
         "answers":  [
                         {
-                            "text":  "hot stand",
-                            "points":  25
-                        },
-                        {
                             "text":  "hot sand",
                             "points":  25
                         },
@@ -192152,10 +184608,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "crowds",
                             "points":  11
-                        },
-                        {
-                            "text":  "jelly fish",
-                            "points":  6
                         },
                         {
                             "text":  "jellyfish",
@@ -192848,32 +185300,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a sport where a spectator might get hit by something.",
         "answers":  [
                         {
-                            "text":  "hardball",
-                            "points":  52
-                        },
-                        {
                             "text":  "baseball",
                             "points":  52
                         },
                         {
-                            "text":  "fastball",
-                            "points":  52
-                        },
-                        {
-                            "text":  "softball field",
-                            "points":  52
-                        },
-                        {
-                            "text":  "ice hockey",
-                            "points":  20
-                        },
-                        {
                             "text":  "hockey",
                             "points":  20
-                        },
-                        {
-                            "text":  "hoops",
-                            "points":  11
                         },
                         {
                             "text":  "basketball",
@@ -192885,10 +185317,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "football",
-                            "points":  6
-                        },
-                        {
-                            "text":  "watch football",
                             "points":  6
                         }
                     ]
@@ -193066,28 +185494,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7287,
-        "question":  "Name a way you can tell if someone is cold.",
-        "answers":  [
-                        {
-                            "text":  "shivering",
-                            "points":  49
-                        },
-                        {
-                            "text":  "goosebumps",
-                            "points":  28
-                        },
-                        {
-                            "text":  "red face",
-                            "points":  6
-                        },
-                        {
-                            "text":  "blue lips",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  7288,
         "question":  "Name a job found in every school.",
         "answers":  [
@@ -193162,28 +185568,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "style his hair",
                             "points":  10
-                        }
-                    ]
-    },
-    {
-        "id":  7291,
-        "question":  "Name something you can do to get a traffic ticket.",
-        "answers":  [
-                        {
-                            "text":  "speeding",
-                            "points":  48
-                        },
-                        {
-                            "text":  "running a red light",
-                            "points":  25
-                        },
-                        {
-                            "text":  "no seat belt",
-                            "points":  12
-                        },
-                        {
-                            "text":  "on the phone",
-                            "points":  5
                         }
                     ]
     },
@@ -193350,56 +185734,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "ice hockey",
-                            "points":  22
-                        },
-                        {
-                            "text":  "fastball",
-                            "points":  8
-                        },
-                        {
-                            "text":  "hardball",
-                            "points":  8
-                        },
-                        {
                             "text":  "baseball",
-                            "points":  8
-                        },
-                        {
-                            "text":  "softball field",
                             "points":  8
                         },
                         {
                             "text":  "cycling",
                             "points":  6
-                        },
-                        {
-                            "text":  "biking",
-                            "points":  6
-                        },
-                        {
-                            "text":  "racing cars",
-                            "points":  4
-                        },
-                        {
-                            "text":  "nascar",
-                            "points":  4
-                        },
-                        {
-                            "text":  "indy car",
-                            "points":  4
-                        },
-                        {
-                            "text":  "grand prix",
-                            "points":  4
-                        },
-                        {
-                            "text":  "formula one",
-                            "points":  4
-                        },
-                        {
-                            "text":  "car racing",
-                            "points":  4
                         },
                         {
                             "text":  "auto racing",
@@ -193532,7 +185872,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  35
                         },
                         {
-                            "text":  "find remote/chan.",
+                            "text":  "find remote/change channel",
                             "points":  20
                         },
                         {
@@ -194356,7 +186696,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "barack oboma",
+                            "text":  "barack obama",
                             "points":  6
                         }
                     ]
@@ -194420,7 +186760,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "kristy yamaguci",
+                            "text":  "kristi yamaguchi",
                             "points":  4
                         }
                     ]
@@ -194506,7 +186846,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "brett farve",
+                            "text":  "brett favre",
                             "points":  8
                         }
                     ]
@@ -194542,7 +186882,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Real or fictional, name someone who's known for being a fast runner.",
         "answers":  [
                         {
-                            "text":  "florance joyner",
+                            "text":  "florence joyner",
                             "points":  38
                         },
                         {
@@ -194624,25 +186964,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7342,
-        "question":  "Superman Christmas card (key words only).",
-        "answers":  [
-                        {
-                            "text":  "lois lane",
-                            "points":  56
-                        },
-                        {
-                            "text":  "batman",
-                            "points":  21
-                        }
-                    ]
-    },
-    {
         "id":  7343,
         "question":  "Since there are no photo booths, name someplace Clark Kent now goes to change into Superman.",
         "answers":  [
                         {
-                            "text":  "men\u0027s room",
+                            "text":  "men's room",
                             "points":  41
                         },
                         {
@@ -194658,7 +186984,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "portapotty",
+                            "text":  "porta potty",
                             "points":  6
                         }
                     ]
@@ -194864,7 +187190,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me a sign that it's time to enroll your dog in obedience school.",
         "answers":  [
                         {
-                            "text":  "not housetrained",
+                            "text":  "not house trained",
                             "points":  26
                         },
                         {
@@ -194880,7 +187206,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "doesn\u0027t obey you",
+                            "text":  "doesn't obey you",
                             "points":  11
                         },
                         {
@@ -194888,7 +187214,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "won\u0027t come when called",
+                            "text":  "won't come when called",
                             "points":  7
                         }
                     ]
@@ -194918,7 +187244,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "telapathy",
+                            "text":  "telepathy",
                             "points":  4
                         },
                         {
@@ -194929,7 +187255,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7354,
-        "question":  "Tell me the number of people who can ride comfortably in a van. (Numeric only)",
+        "question":  "Tell me the number of people who can ride comfortably in a van.",
         "answers":  [
                         {
                             "text":  "6",
@@ -194963,7 +187289,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7355,
-        "question":  "Tell me something a woman might do to spoil herself (more specific than \"spa\").",
+        "question":  "Tell me something a woman might do to spoil herself.",
         "answers":  [
                         {
                             "text":  "shop",
@@ -195234,40 +187560,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7365,
-        "question":  "Tell me how many months it takes before a dog is house trained. (Numeric only)",
-        "answers":  [
-                        {
-                            "text":  "3",
-                            "points":  31
-                        },
-                        {
-                            "text":  "2",
-                            "points":  21
-                        },
-                        {
-                            "text":  "4",
-                            "points":  14
-                        },
-                        {
-                            "text":  "1",
-                            "points":  13
-                        },
-                        {
-                            "text":  "5",
-                            "points":  5
-                        },
-                        {
-                            "text":  "6",
-                            "points":  5
-                        },
-                        {
-                            "text":  "8",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
         "id":  7366,
         "question":  "Tell me a food that goes from your freezer to your toaster.",
         "answers":  [
@@ -195321,7 +187613,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "20",
-                            "points":  0
+                            "points":  38
                         },
                         {
                             "text":  "18",
@@ -195516,7 +187808,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "alcochol",
+                            "text":  "alcohol",
                             "points":  10
                         },
                         {
@@ -195750,28 +188042,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7385,
-        "question":  "Tell me a holiday people wear special colors for.",
-        "answers":  [
-                        {
-                            "text":  "st. patrick\u0027s day",
-                            "points":  44
-                        },
-                        {
-                            "text":  "christmas",
-                            "points":  28
-                        },
-                        {
-                            "text":  "fourth of july",
-                            "points":  18
-                        },
-                        {
-                            "text":  "canada day",
-                            "points":  10
-                        }
-                    ]
-    },
-    {
         "id":  7386,
         "question":  "To stay undercover, what might a criminal have that's fake?",
         "answers":  [
@@ -195847,7 +188117,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7389,
-        "question":  "Tell me an occupation in which you deal with people\u0027s feet.",
+        "question":  "Tell me an occupation in which you deal with people's feet.",
         "answers":  [
                         {
                             "text":  "podiatrist",
@@ -195858,7 +188128,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "shoes saleman",
+                            "text":  "shoes salesman",
                             "points":  10
                         },
                         {
@@ -196178,32 +188448,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7401,
-        "question":  "Tell me something you keep under your sink.",
-        "answers":  [
-                        {
-                            "text":  "cleaning supplies",
-                            "points":  43
-                        },
-                        {
-                            "text":  "dish soap",
-                            "points":  37
-                        },
-                        {
-                            "text":  "drain cleaner",
-                            "points":  9
-                        },
-                        {
-                            "text":  "plunger",
-                            "points":  6
-                        },
-                        {
-                            "text":  "toilet paper",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  7402,
         "question":  "Unlike a wedding, name a social event that you'd never want to crash.",
         "answers":  [
@@ -196272,7 +188516,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "lomg jump",
+                            "text":  "long jump",
                             "points":  10
                         },
                         {
@@ -196458,7 +188702,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "shotput",
+                            "text":  "shot put",
                             "points":  6
                         },
                         {
@@ -196992,40 +189236,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7432,
-        "question":  "What do you find out about a hotel ahead of time when deciding whether to stay there?",
-        "answers":  [
-                        {
-                            "text":  "price",
-                            "points":  39
-                        },
-                        {
-                            "text":  "pool",
-                            "points":  22
-                        },
-                        {
-                            "text":  "location",
-                            "points":  20
-                        },
-                        {
-                            "text":  "star rating",
-                            "points":  7
-                        },
-                        {
-                            "text":  "includes breakfast",
-                            "points":  5
-                        },
-                        {
-                            "text":  "clean",
-                            "points":  3
-                        },
-                        {
-                            "text":  "vacancy",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  7433,
         "question":  "What do you do when you want to sing along with a song but don't know the words?",
         "answers":  [
@@ -197316,7 +189526,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Where were you the last time you felt you'd been ripped off?",
         "answers":  [
                         {
-                            "text":  "mall/ dept store",
+                            "text":  "mall/department store",
                             "points":  36
                         },
                         {
@@ -197410,7 +189620,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  28
                         },
                         {
-                            "text":  "rebelious outfit",
+                            "text":  "rebellious outfit",
                             "points":  24
                         },
                         {
@@ -197614,7 +189824,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "We surveyed 100 men... Name a magazine you always enjoy reading.",
         "answers":  [
                         {
-                            "text":  "sports illustr\u0027d",
+                            "text":  "sports illustrated",
                             "points":  24
                         },
                         {
@@ -197763,7 +189973,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "pickles",
-                            "points":  0
+                            "points":  46
                         },
                         {
                             "text":  "cheese",
@@ -197780,7 +189990,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "We surveyed 100 men... Which magazine cover would you like to be asked to pose for?",
         "answers":  [
                         {
-                            "text":  "sports illustr\u0027d",
+                            "text":  "sports illustrated",
                             "points":  17
                         },
                         {
@@ -197814,19 +190024,19 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  50
                         },
                         {
-                            "text":  "you\u0027re beautiful",
+                            "text":  "you're beautiful",
                             "points":  15
                         },
                         {
-                            "text":  "here\u0027s $ to shop",
+                            "text":  "here's $ to shop",
                             "points":  6
                         },
                         {
-                            "text":  "let\u0027s go vacation",
+                            "text":  "let's go vacation",
                             "points":  6
                         },
                         {
-                            "text":  "let\u0027s go out/eat",
+                            "text":  "let's go out/eat",
                             "points":  5
                         },
                         {
@@ -197834,7 +190044,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "lost lbs./not fat",
+                            "text":  "lost weight",
                             "points":  3
                         }
                     ]
@@ -198068,7 +190278,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "sept.11",
+                            "text":  "september 11",
                             "points":  9
                         },
                         {
@@ -198076,7 +190286,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "first day of new...",
+                            "text":  "first day of new job",
                             "points":  5
                         },
                         {
@@ -198090,7 +190300,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "What toys for kids do adults like to play with during the holidays?",
         "answers":  [
                         {
-                            "text":  "videogames",
+                            "text":  "video games",
                             "points":  41
                         },
                         {
@@ -198775,7 +190985,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7497,
-        "question":  "When mom\u0027s away, name something dad serves kids for dinner.",
+        "question":  "When mom's away, name something dad serves kids for dinner.",
         "answers":  [
                         {
                             "text":  "pizza",
@@ -198790,7 +191000,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "mcdon./hamburger",
+                            "text":  "mcdonald's/hamburger",
                             "points":  7
                         },
                         {
@@ -198866,7 +191076,15 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "At what age do people usually learn to play their first musical instrument?",
         "answers":  [
                         {
+                            "text":  "10",
+                            "points":  27
+                        },
+                        {
                             "text":  "5",
+                            "points":  16
+                        },
+                        {
+                            "text":  "8",
                             "points":  16
                         },
                         {
@@ -198874,20 +191092,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "7",
-                            "points":  9
-                        },
-                        {
-                            "text":  "8",
-                            "points":  16
-                        },
-                        {
-                            "text":  "10",
-                            "points":  27
-                        },
-                        {
                             "text":  "12",
                             "points":  12
+                        },
+                        {
+                            "text":  "7",
+                            "points":  9
                         },
                         {
                             "text":  "13",
@@ -198949,7 +191159,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "vegetables",
-                            "points":  0
+                            "points":  44
                         },
                         {
                             "text":  "spaghetti",
@@ -199006,56 +191216,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "At a fancy party, name something you would expect to find served on a cracker.",
         "answers":  [
                         {
-                            "text":  "swiss cheese",
-                            "points":  38
-                        },
-                        {
-                            "text":  "parmesan",
-                            "points":  38
-                        },
-                        {
-                            "text":  "mozzarella",
-                            "points":  38
-                        },
-                        {
-                            "text":  "havarti",
-                            "points":  38
-                        },
-                        {
-                            "text":  "gouda",
-                            "points":  38
-                        },
-                        {
-                            "text":  "cream cheese",
-                            "points":  38
-                        },
-                        {
                             "text":  "cheese",
                             "points":  38
                         },
                         {
-                            "text":  "cottage cheese",
-                            "points":  38
-                        },
-                        {
-                            "text":  "fish eggs",
-                            "points":  32
-                        },
-                        {
-                            "text":  "spawn",
-                            "points":  32
-                        },
-                        {
-                            "text":  "roe",
-                            "points":  32
-                        },
-                        {
                             "text":  "caviar",
                             "points":  32
-                        },
-                        {
-                            "text":  "fish",
-                            "points":  7
                         },
                         {
                             "text":  "shrimp",
@@ -199066,23 +191232,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "liver",
-                            "points":  5
-                        },
-                        {
-                            "text":  "foie gras",
-                            "points":  5
-                        },
-                        {
-                            "text":  "king crab",
-                            "points":  3
-                        },
-                        {
                             "text":  "crab",
-                            "points":  3
-                        },
-                        {
-                            "text":  "alaskan crab",
                             "points":  3
                         }
                     ]
@@ -199240,7 +191390,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "arguement",
+                            "text":  "argument",
                             "points":  6
                         }
                     ]
@@ -199322,7 +191472,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "addam\u0027s family",
+                            "text":  "addams family",
                             "points":  3
                         }
                     ]
@@ -199332,7 +191482,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Besides president, name a political office people run for.",
         "answers":  [
                         {
-                            "text":  "governer",
+                            "text":  "governor",
                             "points":  32
                         },
                         {
@@ -199372,20 +191522,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "boxes",
                             "points":  23
-                        }
-                    ]
-    },
-    {
-        "id":  7518,
-        "question":  "Besides White Christmas, name a song on Bing Crosby's White Christmas album.",
-        "answers":  [
-                        {
-                            "text":  "jingle bells",
-                            "points":  40
-                        },
-                        {
-                            "text":  "silver bells",
-                            "points":  15
                         }
                     ]
     },
@@ -199476,7 +191612,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "humming bird",
+                            "text":  "hummingbird",
                             "points":  4
                         },
                         {
@@ -199485,10 +191621,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "blue jay",
-                            "points":  4
-                        },
-                        {
-                            "text":  "hummingbird",
                             "points":  4
                         }
                     ]
@@ -199506,16 +191638,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "house",
-                            "points":  7
-                        },
-                        {
                             "text":  "career",
                             "points":  18
                         },
                         {
                             "text":  "college",
                             "points":  11
+                        },
+                        {
+                            "text":  "house",
+                            "points":  7
                         },
                         {
                             "text":  "choosing church",
@@ -199770,7 +191902,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "mother theresa",
+                            "text":  "mother teresa",
                             "points":  7
                         },
                         {
@@ -200036,32 +192168,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7544,
-        "question":  "Give me something a woman does to prevent her date from kissing her.",
-        "answers":  [
-                        {
-                            "text":  "turns her head",
-                            "points":  35
-                        },
-                        {
-                            "text":  "pretends sickness",
-                            "points":  19
-                        },
-                        {
-                            "text":  "moves away",
-                            "points":  13
-                        },
-                        {
-                            "text":  "onions/bad breath",
-                            "points":  10
-                        },
-                        {
-                            "text":  "offers her hand",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  7545,
         "question":  "Give me a reason you might be late for work.",
         "answers":  [
@@ -200232,32 +192338,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "fight",
                             "points":  20
-                        }
-                    ]
-    },
-    {
-        "id":  7552,
-        "question":  "If you were the Incredible Hulk, tell me what part of your day would most likely turn you into a monster.",
-        "answers":  [
-                        {
-                            "text":  "shopping",
-                            "points":  30
-                        },
-                        {
-                            "text":  "work",
-                            "points":  25
-                        },
-                        {
-                            "text":  "driving",
-                            "points":  19
-                        },
-                        {
-                            "text":  "cleaning",
-                            "points":  14
-                        },
-                        {
-                            "text":  "paying bills",
-                            "points":  9
                         }
                     ]
     },
@@ -200636,7 +192716,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "deoderant",
+                            "text":  "deodorant",
                             "points":  5
                         }
                     ]
@@ -202022,7 +194102,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "pilgrem hat",
+                            "text":  "pilgrim hat",
                             "points":  5
                         },
                         {
@@ -202030,7 +194110,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "indian headress",
+                            "text":  "indian headdress",
                             "points":  3
                         },
                         {
@@ -202320,32 +194400,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "will/heart",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  7630,
-        "question":  "Name something a girl in a pageant would know how to do but most little girls wouldn't.",
-        "answers":  [
-                        {
-                            "text":  "id",
-                            "points":  49
-                        },
-                        {
-                            "text":  "hair",
-                            "points":  19
-                        },
-                        {
-                            "text":  "name",
-                            "points":  18
-                        },
-                        {
-                            "text":  "facial hair",
-                            "points":  10
-                        },
-                        {
-                            "text":  "glasses",
-                            "points":  3
                         }
                     ]
     },
@@ -202778,7 +194832,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "racecar driver",
+                            "text":  "race car driver",
                             "points":  3
                         }
                     ]
@@ -203384,7 +195438,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  29
                         },
                         {
-                            "text":  "101 dalmations",
+                            "text":  "101 dalmatians",
                             "points":  18
                         },
                         {
@@ -203400,7 +195454,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "lady \u0026 the tramp",
+                            "text":  "lady & the tramp",
                             "points":  9
                         },
                         {
@@ -203496,7 +195550,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "camaras",
+                            "text":  "cameras",
                             "points":  16
                         },
                         {
@@ -203683,7 +195737,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7679,
-        "question":  "Name something people take lots of photos of during a vacation. Be specific.",
+        "question":  "Name something people take lots of photos of during a vacation.",
         "answers":  [
                         {
                             "text":  "themselves",
@@ -203874,7 +195928,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "christina agulera",
+                            "text":  "christina aguilera",
                             "points":  8
                         }
                     ]
@@ -203888,7 +195942,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "execising",
+                            "text":  "exercising",
                             "points":  18
                         },
                         {
@@ -204314,12 +196368,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "sweats",
-                            "points":  1
+                            "text":  "underwear/bra",
+                            "points":  7
                         },
                         {
-                            "text":  "underware/bra",
-                            "points":  7
+                            "text":  "sweats",
+                            "points":  1
                         }
                     ]
     },
@@ -204488,12 +196542,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  23
                         },
                         {
-                            "text":  "i\u0027ll get you my pretty",
+                            "text":  "i'll get you my pretty",
                             "points":  13
                         },
                         {
-                            "text":  "lions tigers \u0026 bears",
-                            "points":  0
+                            "text":  "lions tigers & bears",
+                            "points":  7
                         }
                     ]
     },
@@ -204566,7 +196620,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something about The Brady Bunch that is different from most families.",
         "answers":  [
                         {
-                            "text":  "lot\u0027s of kids",
+                            "text":  "lot's of kids",
                             "points":  42
                         },
                         {
@@ -204578,7 +196632,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  14
                         },
                         {
-                            "text":  "thet sing",
+                            "text":  "they sing",
                             "points":  8
                         }
                     ]
@@ -204962,7 +197016,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a breed of dog that might be used as a guard dog.",
         "answers":  [
                         {
-                            "text":  "german shepard",
+                            "text":  "german shepherd",
                             "points":  36
                         },
                         {
@@ -205688,7 +197742,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a child star who's still famous today.",
         "answers":  [
                         {
-                            "text":  "drew berrymore",
+                            "text":  "drew barrymore",
                             "points":  27
                         },
                         {
@@ -205841,7 +197895,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7758,
-        "question":  "Name a movie theater food that gets stuck in your teeth. Be specific!",
+        "question":  "Name a movie theater food that gets stuck in your teeth.",
         "answers":  [
                         {
                             "text":  "pop corn",
@@ -206042,7 +198096,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "bill collecter",
+                            "text":  "bill collector",
                             "points":  9
                         },
                         {
@@ -206155,7 +198209,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "birdbath",
-                            "points":  0
+                            "points":  6
                         }
                     ]
     },
@@ -206406,7 +198460,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "new oleeans",
+                            "text":  "new orleans",
                             "points":  14
                         },
                         {
@@ -206614,11 +198668,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  39
                         },
                         {
-                            "text":  "resume/expeirience",
+                            "text":  "resume/experience",
                             "points":  3
                         },
                         {
-                            "text":  "can\u0027t work overtime",
+                            "text":  "can't work overtime",
                             "points":  2
                         }
                     ]
@@ -206739,28 +198793,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "jeep",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  7792,
-        "question":  "Name a synonym for marriage that doesn't make it sound fun.",
-        "answers":  [
-                        {
-                            "text":  "ball and chain",
-                            "points":  57
-                        },
-                        {
-                            "text":  "tie the knot",
-                            "points":  23
-                        },
-                        {
-                            "text":  "hitched",
-                            "points":  12
-                        },
-                        {
-                            "text":  "tied down",
                             "points":  3
                         }
                     ]
@@ -207238,7 +199270,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "jason vorhees",
+                            "text":  "jason voorhees",
                             "points":  14
                         },
                         {
@@ -207454,7 +199486,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  52
                         },
                         {
-                            "text":  "brittney spears",
+                            "text":  "britney spears",
                             "points":  25
                         },
                         {
@@ -207684,24 +199716,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7828,
-        "question":  "Name something kids might collect from the beach.",
-        "answers":  [
-                        {
-                            "text":  "shells",
-                            "points":  68
-                        },
-                        {
-                            "text":  "sand",
-                            "points":  15
-                        },
-                        {
-                            "text":  "rocks",
-                            "points":  15
-                        }
-                    ]
-    },
-    {
         "id":  7829,
         "question":  "Name something kids get away with in schools today that they wouldn't have years ago.",
         "answers":  [
@@ -207836,40 +199850,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "radishes",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  7834,
-        "question":  "Name a club Bill Gates probably belonged to in high school.",
-        "answers":  [
-                        {
-                            "text":  "computer",
-                            "points":  32
-                        },
-                        {
-                            "text":  "chess",
-                            "points":  24
-                        },
-                        {
-                            "text":  "debate",
-                            "points":  10
-                        },
-                        {
-                            "text":  "glee club",
-                            "points":  7
-                        },
-                        {
-                            "text":  "boy scouts",
-                            "points":  7
-                        },
-                        {
-                            "text":  "math",
-                            "points":  7
-                        },
-                        {
-                            "text":  "science",
-                            "points":  6
                         }
                     ]
     },
@@ -208322,7 +200302,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "jewelery",
+                            "text":  "jewelry",
                             "points":  8
                         },
                         {
@@ -208349,7 +200329,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "survey",
-                            "points":  0
+                            "points":  5
                         }
                     ]
     },
@@ -208537,7 +200517,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7860,
-        "question":  "Name a shade of blue (light and dark are not answers).",
+        "question":  "Name a shade of blue.",
         "answers":  [
                         {
                             "text":  "navy blue",
@@ -208672,7 +200652,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "body ordor",
+                            "text":  "body odor",
                             "points":  5
                         },
                         {
@@ -208700,10 +200680,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "bike",
                             "points":  2
-                        },
-                        {
-                            "text":  "2",
-                            "points":  0
                         }
                     ]
     },
@@ -208764,7 +200740,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "insect repelant",
+                            "text":  "insect repellent",
                             "points":  26
                         },
                         {
@@ -208776,7 +200752,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  15
                         },
                         {
-                            "text":  "deoderant",
+                            "text":  "deodorant",
                             "points":  4
                         }
                     ]
@@ -208998,12 +200974,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a fruit they put in ice cream.",
         "answers":  [
                         {
-                            "text":  "strawberry",
-                            "points":  13
-                        },
-                        {
                             "text":  "peach",
                             "points":  18
+                        },
+                        {
+                            "text":  "strawberry",
+                            "points":  13
                         },
                         {
                             "text":  "banana",
@@ -209287,7 +201263,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7887,
-        "question":  "Name how many people can ride comfortably in the back of a limo. (Numeric only)",
+        "question":  "Name how many people can ride comfortably in the back of a limo.",
         "answers":  [
                         {
                             "text":  "6",
@@ -209568,7 +201544,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "friemd\u0027s/party",
+                            "text":  "friend's/party",
                             "points":  10
                         }
                     ]
@@ -209776,7 +201752,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  9
                         },
                         {
-                            "text":  "sleep alot",
+                            "text":  "sleep a lot",
                             "points":  8
                         },
                         {
@@ -209943,7 +201919,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  7911,
-        "question":  "Name something that a waitress on roller skates would say is her mortal enemy. (More specific than food/drinks)",
+        "question":  "Name something that a waitress on roller skates would say is her mortal enemy.",
         "answers":  [
                         {
                             "text":  "rocks",
@@ -210222,28 +202198,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7921,
-        "question":  "Name a meal that sometimes comes with a bib even for adults.",
-        "answers":  [
-                        {
-                            "text":  "ribs",
-                            "points":  34
-                        },
-                        {
-                            "text":  "wings",
-                            "points":  32
-                        },
-                        {
-                            "text":  "seafood",
-                            "points":  22
-                        },
-                        {
-                            "text":  "steak",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  7922,
         "question":  "Name a place where you might see lots of minivans in the parking lot.",
         "answers":  [
@@ -210338,7 +202292,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something Hawaiians do to celebrate winter.",
         "answers":  [
                         {
-                            "text":  "lu\u0027au",
+                            "text":  "luau",
                             "points":  30
                         },
                         {
@@ -210458,7 +202412,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  47
                         },
                         {
-                            "text":  "weather forcast",
+                            "text":  "weather forecast",
                             "points":  26
                         },
                         {
@@ -210623,19 +202577,19 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "horse",
-                            "points":  35
-                        },
-                        {
-                            "text":  "airplane",
                             "points":  33
                         },
                         {
+                            "text":  "airplane",
+                            "points":  31
+                        },
+                        {
                             "text":  "roller coaster",
-                            "points":  21
+                            "points":  19
                         },
                         {
                             "text":  "motorcycle",
-                            "points":  14
+                            "points":  13
                         },
                         {
                             "text":  "train",
@@ -210972,7 +202926,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  53
                         },
                         {
-                            "text":  "info. on kids",
+                            "text":  "info on kids",
                             "points":  12
                         },
                         {
@@ -211300,7 +203254,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "politition",
+                            "text":  "politician",
                             "points":  6
                         },
                         {
@@ -211414,10 +203368,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something besides books that a student might carry in their backpack.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "pencils",
                             "points":  49
                         }
@@ -211437,7 +203387,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "boyfriend",
-                            "points":  0
+                            "points":  15
                         }
                     ]
     },
@@ -211491,7 +203441,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "cat in the hat",
-                            "points":  0
+                            "points":  44
                         },
                         {
                             "text":  "catwoman",
@@ -211722,12 +203672,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a specific food you should not eat on a queasy stomach.",
         "answers":  [
                         {
-                            "text":  "seafood",
-                            "points":  11
-                        },
-                        {
                             "text":  "pizza",
                             "points":  15
+                        },
+                        {
+                            "text":  "seafood",
+                            "points":  11
                         },
                         {
                             "text":  "hamburgers",
@@ -211834,10 +203784,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something a student might get in trouble for.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "cheating",
                             "points":  45
                         }
@@ -211891,10 +203837,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  7992,
         "question":  "Name a personal possession that you might keep on your desk at work.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "pictures",
                             "points":  57
@@ -211961,10 +203903,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  7995,
         "question":  "Name something you never leave the house without.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "keys",
                             "points":  49
@@ -212101,7 +204039,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "leave classroom",
-                            "points":  0
+                            "points":  48
                         },
                         {
                             "text":  "exit building",
@@ -212136,7 +204074,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  26
                         },
                         {
-                            "text":  "big/many bathr\u0027ms",
+                            "text":  "big/many bathrooms",
                             "points":  12
                         },
                         {
@@ -212241,7 +204179,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "makeup",
-                            "points":  0
+                            "points":  32
                         }
                     ]
     },
@@ -212261,7 +204199,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  8010,
-        "question":  "Name something that some men wear and others don\u0027t.",
+        "question":  "Name something that some men wear and others don't.",
         "answers":  [
                         {
                             "text":  "underwear",
@@ -212276,7 +204214,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  13
                         },
                         {
-                            "text":  "cologne/aft\u0027shave",
+                            "text":  "cologne/aftershave",
                             "points":  12
                         },
                         {
@@ -212516,7 +204454,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "robert downe jr.",
+                            "text":  "robert downey jr.",
                             "points":  5
                         },
                         {
@@ -212574,7 +204512,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a classic pickup line a guy might use on a girl.",
         "answers":  [
                         {
-                            "text":  "haven\u0027d we met before",
+                            "text":  "haven't we met before",
                             "points":  51
                         },
                         {
@@ -212641,7 +204579,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "ball",
-                            "points":  0
+                            "points":  53
                         },
                         {
                             "text":  "ball glove",
@@ -212702,7 +204640,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "an officer and a gentlema",
+                            "text":  "an officer and a gentleman",
                             "points":  5
                         }
                     ]
@@ -212746,10 +204684,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "police cars",
                             "points":  59
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -212763,7 +204697,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "snowflake",
-                            "points":  0
+                            "points":  31
                         }
                     ]
     },
@@ -212876,10 +204810,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something or someone that has fangs.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "vampire",
                             "points":  43
                         }
@@ -212926,20 +204856,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "atm card",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  8045,
-        "question":  "Name something you'd need if you wanted to look like the Grim Reaper.",
-        "answers":  [
-                        {
-                            "text":  "black hood \u0026 cape",
-                            "points":  41
-                        },
-                        {
-                            "text":  "scythe",
-                            "points":  0
                         }
                     ]
     },
@@ -213046,8 +204962,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  43
                         },
                         {
-                            "text":  "valentine\u0027s day",
-                            "points":  0
+                            "text":  "valentine's day",
+                            "points":  29
                         }
                     ]
     },
@@ -213109,7 +205025,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "pots and pans",
-                            "points":  0
+                            "points":  37
                         },
                         {
                             "text":  "stove",
@@ -213125,10 +205041,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  8055,
         "question":  "Name something you might find in a garage.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "car",
                             "points":  53
@@ -213180,31 +205092,9 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8058,
-        "question":  "Name something you might bring to the gym.",
-        "answers":  [
-                        {
-                            "text":  "towel",
-                            "points":  40
-                        },
-                        {
-                            "text":  "sneakers",
-                            "points":  7
-                        },
-                        {
-                            "text":  "gym clothes",
-                            "points":  7
-                        }
-                    ]
-    },
-    {
         "id":  8059,
         "question":  "Name something that smells awful when it expires.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "milk",
                             "points":  49
@@ -213218,10 +205108,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "mountain",
                             "points":  44
-                        },
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
                         }
                     ]
     },
@@ -213402,7 +205288,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a hot-headed celebrity who should enroll in an anger management class.",
         "answers":  [
                         {
-                            "text":  "russell cowe",
+                            "text":  "russell crowe",
                             "points":  19
                         },
                         {
@@ -213436,16 +205322,16 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  19
                         },
                         {
-                            "text":  "new york",
-                            "points":  8
-                        },
-                        {
                             "text":  "miami",
                             "points":  9
                         },
                         {
                             "text":  "san francisco",
                             "points":  9
+                        },
+                        {
+                            "text":  "new york",
+                            "points":  8
                         },
                         {
                             "text":  "las vegas",
@@ -213483,10 +205369,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  8074,
         "question":  "Name something you might pretend to be in order to impress someone.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "wealthy",
                             "points":  58
@@ -213774,7 +205656,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  10
                         },
                         {
-                            "text":  "old mother hub\u0027rd",
+                            "text":  "old mother hubbard",
                             "points":  9
                         },
                         {
@@ -214026,35 +205908,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a popular way for people to exercise.",
         "answers":  [
                         {
-                            "text":  "on foot",
-                            "points":  41
-                        },
-                        {
-                            "text":  "hike",
-                            "points":  41
-                        },
-                        {
-                            "text":  "speed walk",
-                            "points":  41
-                        },
-                        {
-                            "text":  "power walk",
-                            "points":  41
-                        },
-                        {
-                            "text":  "stroll",
-                            "points":  41
-                        },
-                        {
-                            "text":  "trek",
-                            "points":  41
-                        },
-                        {
                             "text":  "walk",
-                            "points":  41
-                        },
-                        {
-                            "text":  "amble",
                             "points":  41
                         },
                         {
@@ -214062,44 +205916,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "jog",
-                            "points":  30
-                        },
-                        {
-                            "text":  "sprint",
-                            "points":  30
-                        },
-                        {
                             "text":  "aerobics",
                             "points":  11
                         },
                         {
-                            "text":  "fitaerobics",
-                            "points":  11
-                        },
-                        {
-                            "text":  "riding bike",
-                            "points":  4
-                        },
-                        {
-                            "text":  "cycling",
-                            "points":  4
-                        },
-                        {
                             "text":  "biking",
                             "points":  4
-                        },
-                        {
-                            "text":  "free weights",
-                            "points":  2
-                        },
-                        {
-                            "text":  "dumbbells",
-                            "points":  2
-                        },
-                        {
-                            "text":  "barbells",
-                            "points":  2
                         },
                         {
                             "text":  "weights",
@@ -214198,28 +206020,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "bodies",
                             "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  8099,
-        "question":  "Name something you push.",
-        "answers":  [
-                        {
-                            "text":  "cart",
-                            "points":  50
-                        },
-                        {
-                            "text":  "baby stroller",
-                            "points":  27
-                        },
-                        {
-                            "text":  "vacuum",
-                            "points":  8
-                        },
-                        {
-                            "text":  "lawn mower",
-                            "points":  5
                         }
                     ]
     },
@@ -214362,12 +206162,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  52
                         },
                         {
-                            "text":  "football",
-                            "points":  10
-                        },
-                        {
                             "text":  "basketball",
                             "points":  23
+                        },
+                        {
+                            "text":  "football",
+                            "points":  10
                         },
                         {
                             "text":  "baseball",
@@ -214457,7 +206257,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  8110,
-        "question":  "Name something you\u0027d rather get than give.",
+        "question":  "Name something you'd rather get than give.",
         "answers":  [
                         {
                             "text":  "money",
@@ -214468,7 +206268,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "jewlery",
+                            "text":  "jewelry",
                             "points":  4
                         },
                         {
@@ -214850,36 +206650,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8125,
-        "question":  "Name something many people have trouble keeping.",
-        "answers":  [
-                        {
-                            "text":  "money",
-                            "points":  40
-                        },
-                        {
-                            "text":  "secrets",
-                            "points":  17
-                        },
-                        {
-                            "text":  "promises",
-                            "points":  13
-                        },
-                        {
-                            "text":  "spouse",
-                            "points":  7
-                        },
-                        {
-                            "text":  "job",
-                            "points":  3
-                        },
-                        {
-                            "text":  "track of time",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
         "id":  8126,
         "question":  "Name something campers hate to find in their sleeping bag.",
         "answers":  [
@@ -214924,28 +206694,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "buying a car",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  8128,
-        "question":  "Name something people put on their teeth.",
-        "answers":  [
-                        {
-                            "text":  "toothpaste",
-                            "points":  58
-                        },
-                        {
-                            "text":  "braces",
-                            "points":  17
-                        },
-                        {
-                            "text":  "whitener",
-                            "points":  12
-                        },
-                        {
-                            "text":  "caps",
-                            "points":  4
                         }
                     ]
     },
@@ -215010,12 +206758,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  18
                         },
                         {
-                            "text":  "jeopardy",
-                            "points":  12
-                        },
-                        {
                             "text":  "cheers",
                             "points":  16
+                        },
+                        {
+                            "text":  "jeopardy",
+                            "points":  12
                         },
                         {
                             "text":  "mash",
@@ -215026,20 +206774,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "bunch",
-                            "points":  7
-                        },
-                        {
-                            "text":  "brady bunch",
-                            "points":  7
-                        },
-                        {
                             "text":  "the brady bunch",
                             "points":  7
-                        },
-                        {
-                            "text":  "days",
-                            "points":  5
                         },
                         {
                             "text":  "happy days",
@@ -215188,7 +206924,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "problem w/ kids",
+                            "text":  "problem with kids",
                             "points":  5
                         }
                     ]
@@ -215228,7 +206964,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that makes mammals more unique than other animals.",
         "answers":  [
                         {
-                            "text":  "warm bloded",
+                            "text":  "warm blooded",
                             "points":  32
                         },
                         {
@@ -215284,7 +207020,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a sign a little kid has been in a fight.",
         "answers":  [
                         {
-                            "text":  "blackeye",
+                            "text":  "black eye",
                             "points":  54
                         },
                         {
@@ -215440,43 +207176,9 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8146,
-        "question":  "Name a reason why your eyes might water up.",
-        "answers":  [
-                        {
-                            "text":  "chopping onions",
-                            "points":  27
-                        },
-                        {
-                            "text":  "crying",
-                            "points":  24
-                        },
-                        {
-                            "text":  "allergies",
-                            "points":  18
-                        },
-                        {
-                            "text":  "sad",
-                            "points":  15
-                        },
-                        {
-                            "text":  "dirt in eyes",
-                            "points":  10
-                        },
-                        {
-                            "text":  "cold weather",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  8147,
         "question":  "Name a place people like to bring a camera.",
         "answers":  [
-                        {
-                            "text":  "trip",
-                            "points":  49
-                        },
                         {
                             "text":  "vacation",
                             "points":  49
@@ -215560,32 +207262,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "dog racing",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  8150,
-        "question":  "Name the worst place to celebrate Valentine\u0027s Day.",
-        "answers":  [
-                        {
-                            "text":  "jail",
-                            "points":  29
-                        },
-                        {
-                            "text":  "at home",
-                            "points":  26
-                        },
-                        {
-                            "text":  "at work",
-                            "points":  17
-                        },
-                        {
-                            "text":  "hospital",
-                            "points":  15
-                        },
-                        {
-                            "text":  "bars",
-                            "points":  13
                         }
                     ]
     },
@@ -215724,36 +207400,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "jocks",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  8156,
-        "question":  "Name a country in the Middle East.",
-        "answers":  [
-                        {
-                            "text":  "iraq",
-                            "points":  41
-                        },
-                        {
-                            "text":  "iran",
-                            "points":  34
-                        },
-                        {
-                            "text":  "israel",
-                            "points":  8
-                        },
-                        {
-                            "text":  "saudi arabia",
-                            "points":  6
-                        },
-                        {
-                            "text":  "egypt",
-                            "points":  6
-                        },
-                        {
-                            "text":  "afghanistan",
-                            "points":  5
                         }
                     ]
     },
@@ -216052,10 +207698,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something you might see at a circus.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "clowns",
                             "points":  41
                         },
@@ -216226,40 +207868,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8175,
-        "question":  "Name something people like doing when listening to music.",
-        "answers":  [
-                        {
-                            "text":  "cleaning",
-                            "points":  21
-                        },
-                        {
-                            "text":  "exercising",
-                            "points":  18
-                        },
-                        {
-                            "text":  "singing",
-                            "points":  18
-                        },
-                        {
-                            "text":  "gardening",
-                            "points":  12
-                        },
-                        {
-                            "text":  "eating",
-                            "points":  10
-                        },
-                        {
-                            "text":  "dancing",
-                            "points":  8
-                        },
-                        {
-                            "text":  "driving",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  8176,
         "question":  "Name something children do at the movies that irritates the older patrons.",
         "answers":  [
@@ -216332,7 +207940,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  32
                         },
                         {
-                            "text":  "gardner",
+                            "text":  "gardener",
                             "points":  30
                         },
                         {
@@ -216382,7 +207990,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "alligator/croc.",
+                            "text":  "alligator/crocodile",
                             "points":  6
                         }
                     ]
@@ -216415,14 +208023,14 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  8181,
-        "question":  "Name someone famous who\u0027s in jail.",
+        "question":  "Name someone famous who's in jail.",
         "answers":  [
                         {
                             "text":  "o.j. simpson",
                             "points":  43
                         },
                         {
-                            "text":  "bernard mado",
+                            "text":  "bernard madoff",
                             "points":  26
                         },
                         {
@@ -216434,7 +208042,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "redmond o\u0027neal",
+                            "text":  "redmond o'neal",
                             "points":  2
                         }
                     ]
@@ -216880,40 +208488,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "building",
                             "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  8198,
-        "question":  "Name a sport you might play on a summer day.",
-        "answers":  [
-                        {
-                            "text":  "baseball",
-                            "points":  39
-                        },
-                        {
-                            "text":  "football",
-                            "points":  14
-                        },
-                        {
-                            "text":  "volleyball",
-                            "points":  13
-                        },
-                        {
-                            "text":  "tennis",
-                            "points":  12
-                        },
-                        {
-                            "text":  "basketball",
-                            "points":  10
-                        },
-                        {
-                            "text":  "golf",
-                            "points":  7
-                        },
-                        {
-                            "text":  "soccer",
-                            "points":  5
                         }
                     ]
     },
@@ -217364,28 +208938,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "quiet/can\u0027t speak",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  8214,
-        "question":  "Name a red fruit.",
-        "answers":  [
-                        {
-                            "text":  "strawberry",
-                            "points":  46
-                        },
-                        {
-                            "text":  "cherry",
-                            "points":  29
-                        },
-                        {
-                            "text":  "pomegranate",
-                            "points":  18
-                        },
-                        {
-                            "text":  "apple",
-                            "points":  7
                         }
                     ]
     },
@@ -217884,28 +209436,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8236,
-        "question":  "Name something you order at a restaurant because you rarely cook it at home.",
-        "answers":  [
-                        {
-                            "text":  "lobster",
-                            "points":  33
-                        },
-                        {
-                            "text":  "steak",
-                            "points":  32
-                        },
-                        {
-                            "text":  "fish",
-                            "points":  19
-                        },
-                        {
-                            "text":  "french fries",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  8237,
         "question":  "Name something you do when you wake up in the middle of the night and you are not tired.",
         "answers":  [
@@ -218036,84 +209566,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "spookhouse",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  8242,
-        "question":  "Name something women love to do in the ladies' room.",
-        "answers":  [
-                        {
-                            "text":  "apply makeup",
-                            "points":  62
-                        },
-                        {
-                            "text":  "foundation",
-                            "points":  62
-                        },
-                        {
-                            "text":  "rouge",
-                            "points":  62
-                        },
-                        {
-                            "text":  "lipstick",
-                            "points":  62
-                        },
-                        {
-                            "text":  "lotion",
-                            "points":  62
-                        },
-                        {
-                            "text":  "put on makeup",
-                            "points":  62
-                        },
-                        {
-                            "text":  "makeup",
-                            "points":  62
-                        },
-                        {
-                            "text":  "mascara",
-                            "points":  62
-                        },
-                        {
-                            "text":  "moisturizer",
-                            "points":  62
-                        },
-                        {
-                            "text":  "skin care",
-                            "points":  62
-                        },
-                        {
-                            "text":  "face soap",
-                            "points":  62
-                        },
-                        {
-                            "text":  "eyeliner",
-                            "points":  62
-                        },
-                        {
-                            "text":  "soap",
-                            "points":  62
-                        },
-                        {
-                            "text":  "blush",
-                            "points":  62
-                        },
-                        {
-                            "text":  "cover up",
-                            "points":  62
-                        },
-                        {
-                            "text":  "cosmetics",
-                            "points":  62
-                        },
-                        {
-                            "text":  "cream",
-                            "points":  62
-                        },
-                        {
-                            "text":  "eyeshadow",
-                            "points":  62
                         }
                     ]
     },
@@ -218356,37 +209808,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8252,
-        "question":  "Name something you would buy for your cat.",
-        "answers":  [
-                        {
-                            "text":  "catnip",
-                            "points":  33
-                        },
-                        {
-                            "text":  "litter box",
-                            "points":  31
-                        },
-                        {
-                            "text":  "cat food",
-                            "points":  22
-                        },
-                        {
-                            "text":  "yarn",
-                            "points":  9
-                        },
-                        {
-                            "text":  "ball",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  8253,
         "question":  "Name something a doctor carries in his bag when making a house call.",
         "answers":  [
                         {
-                            "text":  "stethescope",
+                            "text":  "stethoscope",
                             "points":  71
                         },
                         {
@@ -218434,36 +209860,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tree",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  8255,
-        "question":  "Name something that people think is a man\u0027s job.",
-        "answers":  [
-                        {
-                            "text":  "taking out trash",
-                            "points":  33
-                        },
-                        {
-                            "text":  "mowing lawn",
-                            "points":  14
-                        },
-                        {
-                            "text":  "breadwinner",
-                            "points":  13
-                        },
-                        {
-                            "text":  "maintain cars",
-                            "points":  9
-                        },
-                        {
-                            "text":  "construction",
-                            "points":  8
-                        },
-                        {
-                            "text":  "us president",
-                            "points":  4
                         }
                     ]
     },
@@ -218612,7 +210008,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "earthwarm",
+                            "text":  "earthworm",
                             "points":  2
                         }
                     ]
@@ -218678,7 +210074,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  54
                         },
                         {
-                            "text":  "pop warner fo..",
+                            "text":  "pop warner football",
                             "points":  9
                         },
                         {
@@ -218704,28 +210100,8 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something people bring home with them from a wedding.",
         "answers":  [
                         {
-                            "text":  "cheesecake",
-                            "points":  37
-                        },
-                        {
-                            "text":  "tort",
-                            "points":  37
-                        },
-                        {
-                            "text":  "cupcake",
-                            "points":  37
-                        },
-                        {
                             "text":  "cake",
                             "points":  37
-                        },
-                        {
-                            "text":  "piece of cake",
-                            "points":  37
-                        },
-                        {
-                            "text":  "orzo",
-                            "points":  14
                         },
                         {
                             "text":  "rice",
@@ -218736,75 +210112,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "serviettes",
-                            "points":  11
-                        },
-                        {
-                            "text":  "paper towels",
-                            "points":  11
-                        },
-                        {
-                            "text":  "blossoms",
-                            "points":  9
-                        },
-                        {
-                            "text":  "roses",
-                            "points":  9
-                        },
-                        {
-                            "text":  "marigolds",
-                            "points":  9
-                        },
-                        {
-                            "text":  "lilies",
-                            "points":  9
-                        },
-                        {
                             "text":  "flowers",
                             "points":  9
                         },
                         {
-                            "text":  "blooms",
-                            "points":  9
-                        },
-                        {
-                            "text":  "bouquets",
-                            "points":  9
-                        },
-                        {
-                            "text":  "chrysanthemums",
-                            "points":  9
-                        },
-                        {
-                            "text":  "daisies",
-                            "points":  9
-                        },
-                        {
-                            "text":  "dried flowers",
-                            "points":  9
-                        },
-                        {
-                            "text":  "tulips",
-                            "points":  9
-                        },
-                        {
-                            "text":  "cornucopia",
-                            "points":  7
-                        },
-                        {
-                            "text":  "decoration",
-                            "points":  7
-                        },
-                        {
                             "text":  "centerpiece",
-                            "points":  7
-                        },
-                        {
-                            "text":  "ornament",
-                            "points":  7
-                        },
-                        {
-                            "text":  "table ornament",
                             "points":  7
                         }
                     ]
@@ -219468,10 +210780,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  47
                         },
                         {
-                            "text":  "mosquito",
-                            "points":  47
-                        },
-                        {
                             "text":  "ice cream",
                             "points":  24
                         },
@@ -219598,36 +210906,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8293,
-        "question":  "Name a city in which you would love to live.",
-        "answers":  [
-                        {
-                            "text":  "new york",
-                            "points":  42
-                        },
-                        {
-                            "text":  "miami",
-                            "points":  21
-                        },
-                        {
-                            "text":  "las vegas",
-                            "points":  12
-                        },
-                        {
-                            "text":  "orlando",
-                            "points":  12
-                        },
-                        {
-                            "text":  "chicago",
-                            "points":  7
-                        },
-                        {
-                            "text":  "los angeles",
-                            "points":  6
-                        }
-                    ]
-    },
-    {
         "id":  8294,
         "question":  "Name something that reminds you of San Francisco.",
         "answers":  [
@@ -219636,7 +210914,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  39
                         },
                         {
-                            "text":  "golden gate brdg.",
+                            "text":  "golden gate bridge",
                             "points":  34
                         },
                         {
@@ -219659,23 +210937,23 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "new york",
-                            "points":  42
+                            "points":  39
                         },
                         {
                             "text":  "los angeles",
-                            "points":  30
+                            "points":  28
+                        },
+                        {
+                            "text":  "beverly hills",
+                            "points":  16
+                        },
+                        {
+                            "text":  "las vegas",
+                            "points":  12
                         },
                         {
                             "text":  "miami",
                             "points":  5
-                        },
-                        {
-                            "text":  "las vegas",
-                            "points":  13
-                        },
-                        {
-                            "text":  "beverly hills",
-                            "points":  17
                         }
                     ]
     },
@@ -219698,44 +210976,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "dvd",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  8297,
-        "question":  "Name a type of ball you would be surprised to see a golfer tee off with.",
-        "answers":  [
-                        {
-                            "text":  "basketball",
-                            "points":  30
-                        },
-                        {
-                            "text":  "football",
-                            "points":  23
-                        },
-                        {
-                            "text":  "baseball",
-                            "points":  20
-                        },
-                        {
-                            "text":  "tennis ball",
-                            "points":  6
-                        },
-                        {
-                            "text":  "bowling ball",
-                            "points":  5
-                        },
-                        {
-                            "text":  "soccer ball",
-                            "points":  5
-                        },
-                        {
-                            "text":  "beach ball",
-                            "points":  3
-                        },
-                        {
-                            "text":  "ping pong ball",
-                            "points":  2
                         }
                     ]
     },
@@ -219892,12 +211132,8 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a televised event that people throw parties to watch.",
         "answers":  [
                         {
-                            "text":  "superbowl",
-                            "points":  82
-                        },
-                        {
                             "text":  "super bowl",
-                            "points":  81
+                            "points":  82
                         },
                         {
                             "text":  "world series",
@@ -219908,33 +211144,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  6
                         },
                         {
-                            "text":  "new year\u0027s eve",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  8305,
-        "question":  "Name a sign that a couple is really in love.",
-        "answers":  [
-                        {
-                            "text":  "kissing",
-                            "points":  40
-                        },
-                        {
-                            "text":  "hold hands",
-                            "points":  36
-                        },
-                        {
-                            "text":  "married",
-                            "points":  11
-                        },
-                        {
-                            "text":  "smiling",
-                            "points":  8
-                        },
-                        {
-                            "text":  "always together",
+                            "text":  "new year's eve",
                             "points":  5
                         }
                     ]
@@ -219954,10 +211164,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "diet food",
                             "points":  5
-                        },
-                        {
-                            "text":  "good-looking...",
-                            "points":  4
                         },
                         {
                             "text":  "running shoes",
@@ -220552,7 +211758,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "gone w/ the wind",
+                            "text":  "gone with the wind",
                             "points":  28
                         },
                         {
@@ -220634,24 +211840,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  34
                         },
                         {
-                            "text":  "honolulu",
-                            "points":  34
-                        },
-                        {
                             "text":  "niagara falls",
-                            "points":  17
-                        },
-                        {
-                            "text":  "falls",
                             "points":  17
                         },
                         {
                             "text":  "jamaica",
                             "points":  11
-                        },
-                        {
-                            "text":  "nassau",
-                            "points":  10
                         },
                         {
                             "text":  "bahamas",
@@ -220662,15 +211856,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "cancun",
-                            "points":  5
-                        },
-                        {
                             "text":  "las vegas",
-                            "points":  3
-                        },
-                        {
-                            "text":  "vegas",
                             "points":  3
                         }
                     ]
@@ -221168,28 +212354,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8350,
-        "question":  "Name an animal you might see on Old McDonald\u0027s farm.",
-        "answers":  [
-                        {
-                            "text":  "cow",
-                            "points":  48
-                        },
-                        {
-                            "text":  "pig",
-                            "points":  31
-                        },
-                        {
-                            "text":  "duck",
-                            "points":  13
-                        },
-                        {
-                            "text":  "chicken",
-                            "points":  8
-                        }
-                    ]
-    },
-    {
         "id":  8351,
         "question":  "Name something people like to receive in the mail.",
         "answers":  [
@@ -221532,36 +212696,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8364,
-        "question":  "Name a word or phrase that contains \"belly.\"",
-        "answers":  [
-                        {
-                            "text":  "belly button",
-                            "points":  43
-                        },
-                        {
-                            "text":  "jelly belly",
-                            "points":  19
-                        },
-                        {
-                            "text":  "belly dancing",
-                            "points":  18
-                        },
-                        {
-                            "text":  "belly ache",
-                            "points":  9
-                        },
-                        {
-                            "text":  "belly flop",
-                            "points":  6
-                        },
-                        {
-                            "text":  "round belly",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  8365,
         "question":  "Name something that might give you a jolt.",
         "answers":  [
@@ -221644,32 +212778,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "auto mechanic",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  8368,
-        "question":  "Name something a mother would be really embarrassed to have her child do in front of grandma.",
-        "answers":  [
-                        {
-                            "text":  "cuss",
-                            "points":  45
-                        },
-                        {
-                            "text":  "pass gas",
-                            "points":  18
-                        },
-                        {
-                            "text":  "pick nose",
-                            "points":  10
-                        },
-                        {
-                            "text":  "have a tantrum",
-                            "points":  6
-                        },
-                        {
-                            "text":  "whine/cry",
-                            "points":  6
                         }
                     ]
     },
@@ -221797,15 +212905,11 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  8374,
-        "question":  "Name a place you don\u0027t want your cell phone to start ringing.",
+        "question":  "Name a place you don't want your cell phone to start ringing.",
         "answers":  [
                         {
                             "text":  "church",
                             "points":  45
-                        },
-                        {
-                            "text":  "library",
-                            "points":  4
                         },
                         {
                             "text":  "meeting",
@@ -221814,6 +212918,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "movie",
                             "points":  15
+                        },
+                        {
+                            "text":  "library",
+                            "points":  4
                         },
                         {
                             "text":  "driving",
@@ -221860,7 +212968,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  62
                         },
                         {
-                            "text":  "gas/transport.",
+                            "text":  "gas/transportation",
                             "points":  11
                         },
                         {
@@ -222046,32 +213154,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8383,
-        "question":  "Name a day that is considered especially bad to break up on.",
-        "answers":  [
-                        {
-                            "text":  "valentine\u0027s day",
-                            "points":  56
-                        },
-                        {
-                            "text":  "birthday",
-                            "points":  15
-                        },
-                        {
-                            "text":  "christmas",
-                            "points":  8
-                        },
-                        {
-                            "text":  "friday",
-                            "points":  6
-                        },
-                        {
-                            "text":  "anniversary",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  8384,
         "question":  "Name something you do when your zipper gets stuck.",
         "answers":  [
@@ -222096,7 +213178,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "cover with a s...",
+                            "text":  "cover with a shirt",
                             "points":  3
                         }
                     ]
@@ -222228,36 +213310,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8390,
-        "question":  "Name something people do with their index fingers.",
-        "answers":  [
-                        {
-                            "text":  "point",
-                            "points":  63
-                        },
-                        {
-                            "text":  "pick nose",
-                            "points":  23
-                        },
-                        {
-                            "text":  "apply makeup",
-                            "points":  6
-                        },
-                        {
-                            "text":  "wear a ring",
-                            "points":  4
-                        },
-                        {
-                            "text":  "scratch",
-                            "points":  2
-                        },
-                        {
-                            "text":  "dial a phone",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
         "id":  8391,
         "question":  "Name something that could be described as fluffy.",
         "answers":  [
@@ -222344,12 +213396,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  24
                         },
                         {
-                            "text":  "adult items",
-                            "points":  6
-                        },
-                        {
                             "text":  "gun",
                             "points":  23
+                        },
+                        {
+                            "text":  "adult items",
+                            "points":  6
                         }
                     ]
     },
@@ -223122,7 +214174,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  40
                         },
                         {
-                            "text":  "justin beiber",
+                            "text":  "justin bieber",
                             "points":  15
                         },
                         {
@@ -223552,7 +214604,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  20
                         },
                         {
-                            "text":  "jehovas witness",
+                            "text":  "jehovah's witness",
                             "points":  18
                         },
                         {
@@ -223686,32 +214738,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8445,
-        "question":  "Name a food item you might peel.",
-        "answers":  [
-                        {
-                            "text":  "orange",
-                            "points":  42
-                        },
-                        {
-                            "text":  "banana",
-                            "points":  35
-                        },
-                        {
-                            "text":  "potato",
-                            "points":  10
-                        },
-                        {
-                            "text":  "apple",
-                            "points":  8
-                        },
-                        {
-                            "text":  "onion",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  8446,
         "question":  "Name a way in which parents spy on their teenagers.",
         "answers":  [
@@ -223830,7 +214856,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  2
                         },
                         {
-                            "text":  "the greatful dead",
+                            "text":  "the grateful dead",
                             "points":  2
                         }
                     ]
@@ -223986,34 +215012,8 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "andrea agassi",
+                            "text":  "andre agassi",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  8456,
-        "question":  "Name something the human body has lots of.",
-        "answers":  [
-                        {
-                            "text":  "hair",
-                            "points":  25
-                        },
-                        {
-                            "text":  "blood",
-                            "points":  20
-                        },
-                        {
-                            "text":  "bones",
-                            "points":  20
-                        },
-                        {
-                            "text":  "cells",
-                            "points":  18
-                        },
-                        {
-                            "text":  "water",
-                            "points":  17
                         }
                     ]
     },
@@ -224116,7 +215116,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "edgar allen poe",
+                            "text":  "edgar allan poe",
                             "points":  11
                         },
                         {
@@ -224284,7 +215284,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name someone who died for a cause.",
         "answers":  [
                         {
-                            "text":  "marin l. king, jr.",
+                            "text":  "martin l. king, jr.",
                             "points":  63
                         },
                         {
@@ -224328,32 +215328,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "steak",
                             "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  8468,
-        "question":  "Name something you might replace after a divorce.",
-        "answers":  [
-                        {
-                            "text":  "house",
-                            "points":  31
-                        },
-                        {
-                            "text":  "spouse",
-                            "points":  30
-                        },
-                        {
-                            "text":  "bed",
-                            "points":  22
-                        },
-                        {
-                            "text":  "car",
-                            "points":  11
-                        },
-                        {
-                            "text":  "furniture",
-                            "points":  6
                         }
                     ]
     },
@@ -224462,7 +215436,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  48
                         },
                         {
-                            "text":  "brussel sprouts",
+                            "text":  "brussels sprouts",
                             "points":  15
                         },
                         {
@@ -225254,43 +216228,9 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8503,
-        "question":  "Name something you hate to be \u0027out of order\u0027.",
-        "answers":  [
-                        {
-                            "text":  "bathroom",
-                            "points":  44
-                        },
-                        {
-                            "text":  "atm",
-                            "points":  24
-                        },
-                        {
-                            "text":  "elevator",
-                            "points":  11
-                        },
-                        {
-                            "text":  "vending machine",
-                            "points":  11
-                        },
-                        {
-                            "text":  "house",
-                            "points":  5
-                        },
-                        {
-                            "text":  "files",
-                            "points":  5
-                        }
-                    ]
-    },
-    {
         "id":  8504,
         "question":  "Name a time-honored tradition that fans observe at baseball games.",
         "answers":  [
-                        {
-                            "text":  "national anth",
-                            "points":  66
-                        },
                         {
                             "text":  "national anthem",
                             "points":  66
@@ -225348,10 +216288,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "sweating",
-                            "points":  2
-                        },
-                        {
                             "text":  "halting",
                             "points":  4
                         },
@@ -225362,6 +216298,10 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "hesitating",
                             "points":  4
+                        },
+                        {
+                            "text":  "sweating",
+                            "points":  2
                         }
                     ]
     },
@@ -225393,7 +216333,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  8508,
-        "question":  "Name a breed of dog a man would be embarrassed to admit he\u0027s afraid of.",
+        "question":  "Name a breed of dog a man would be embarrassed to admit he's afraid of.",
         "answers":  [
                         {
                             "text":  "poodle",
@@ -225412,29 +216352,11 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "yorkshire ter",
+                            "text":  "yorkshire terrier",
                             "points":  3
                         },
                         {
                             "text":  "pekingese",
-                            "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  8509,
-        "question":  "Name an expense that's much bigger if you have kids.",
-        "answers":  [
-                        {
-                            "text":  "grocery bill",
-                            "points":  58
-                        },
-                        {
-                            "text":  "clothes",
-                            "points":  18
-                        },
-                        {
-                            "text":  "travel",
                             "points":  3
                         }
                     ]
@@ -225678,7 +216600,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  16
                         },
                         {
-                            "text":  "windsheild wipers",
+                            "text":  "windshield wipers",
                             "points":  15
                         },
                         {
@@ -225726,12 +216648,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something funny someone could do to the family photo.",
         "answers":  [
                         {
-                            "text":  "stick tongue out",
-                            "points":  33
-                        },
-                        {
                             "text":  "make funny face",
                             "points":  40
+                        },
+                        {
+                            "text":  "stick tongue out",
+                            "points":  33
                         },
                         {
                             "text":  "bunny ears",
@@ -225774,32 +216696,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "babysitting",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  8523,
-        "question":  "Name a reason you might not answer the door when you\u0027re home.",
-        "answers":  [
-                        {
-                            "text":  "using the bathroom",
-                            "points":  41
-                        },
-                        {
-                            "text":  "sales person",
-                            "points":  20
-                        },
-                        {
-                            "text":  "jehovah\u0027s witness",
-                            "points":  18
-                        },
-                        {
-                            "text":  "sleeping",
-                            "points":  14
-                        },
-                        {
-                            "text":  "bill collector",
-                            "points":  7
                         }
                     ]
     },
@@ -226932,7 +217828,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name a word or phrase that has the word \"sponge\" in it.",
         "answers":  [
                         {
-                            "text":  "spongebob...pants",
+                            "text":  "spongebob squarepants",
                             "points":  65
                         },
                         {
@@ -227066,12 +217962,12 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something a tourist visits in Washington, D.C.",
         "answers":  [
                         {
-                            "text":  "washington monument",
-                            "points":  29
-                        },
-                        {
                             "text":  "white house",
                             "points":  50
+                        },
+                        {
+                            "text":  "washington monument",
+                            "points":  29
                         }
                     ]
     },
@@ -227136,50 +218032,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "dessert",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  8574,
-        "question":  "Name something you'd buy at a bakery for Christmas.",
-        "answers":  [
-                        {
-                            "text":  "cookies",
-                            "points":  40
-                        },
-                        {
-                            "text":  "cake",
-                            "points":  17
-                        },
-                        {
-                            "text":  "pie",
-                            "points":  16
-                        }
-                    ]
-    },
-    {
-        "id":  8575,
-        "question":  "Name a movie about magic.",
-        "answers":  [
-                        {
-                            "text":  "harry potter",
-                            "points":  53
-                        },
-                        {
-                            "text":  "hocus pocus",
-                            "points":  13
-                        },
-                        {
-                            "text":  "cinderella",
-                            "points":  11
-                        },
-                        {
-                            "text":  "now you see me",
-                            "points":  6
-                        },
-                        {
-                            "text":  "practical magic",
-                            "points":  6
                         }
                     ]
     },
@@ -227270,7 +218122,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Name something that always ends up costing more money than you expect it to.",
         "answers":  [
                         {
-                            "text":  "auto machanic",
+                            "text":  "auto mechanic",
                             "points":  31
                         },
                         {
@@ -228198,7 +219050,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  5
                         },
                         {
-                            "text":  "jullian barberie",
+                            "text":  "jillian barberie",
                             "points":  4
                         },
                         {
@@ -228227,7 +219079,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  8615,
-        "question":  "Other than a baby, name something you\u0027d see in a crib.",
+        "question":  "Other than a baby, name something you'd see in a crib.",
         "answers":  [
                         {
                             "text":  "toy",
@@ -228250,7 +219102,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  4
                         },
                         {
-                            "text":  "bumber pads",
+                            "text":  "bumper pads",
                             "points":  4
                         }
                     ]
@@ -228260,7 +219112,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Past or present, name a famous singing duo.",
         "answers":  [
                         {
-                            "text":  "sonnyand cher",
+                            "text":  "sonny and cher",
                             "points":  37
                         },
                         {
@@ -228280,7 +219132,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  7
                         },
                         {
-                            "text":  "simon and garfunkle",
+                            "text":  "simon and garfunkel",
                             "points":  5
                         },
                         {
@@ -228298,7 +219150,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  28
                         },
                         {
-                            "text":  "aubrey hepburn",
+                            "text":  "audrey hepburn",
                             "points":  6
                         },
                         {
@@ -228350,7 +219202,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  36
                         },
                         {
-                            "text":  "...small world",
+                            "text":  "it's a small world",
                             "points":  19
                         },
                         {
@@ -228362,7 +219214,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  8
                         },
                         {
-                            "text":  "pirates of carib.",
+                            "text":  "pirates of the caribbean",
                             "points":  5
                         },
                         {
@@ -228456,7 +219308,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  3
                         },
                         {
-                            "text":  "jose gerco",
+                            "text":  "jose greco",
                             "points":  3
                         },
                         {
@@ -228484,40 +219336,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "loving",
                             "points":  9
-                        }
-                    ]
-    },
-    {
-        "id":  8624,
-        "question":  "Tell me the most number of people that could squeeze into a telephone booth.",
-        "answers":  [
-                        {
-                            "text":  "2",
-                            "points":  15
-                        },
-                        {
-                            "text":  "3",
-                            "points":  17
-                        },
-                        {
-                            "text":  "4",
-                            "points":  11
-                        },
-                        {
-                            "text":  "5",
-                            "points":  19
-                        },
-                        {
-                            "text":  "6",
-                            "points":  10
-                        },
-                        {
-                            "text":  "10",
-                            "points":  13
-                        },
-                        {
-                            "text":  "20",
-                            "points":  11
                         }
                     ]
     },
@@ -228743,7 +219561,7 @@ export const surveyQuestions: SurveyQuestion[] = [
     },
     {
         "id":  8633,
-        "question":  "Tell me the average number of keys the average person carries around with them (numeric only).",
+        "question":  "Tell me the average number of keys the average person carries around with them.",
         "answers":  [
                         {
                             "text":  "5",
@@ -228788,7 +219606,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  30
                         },
                         {
-                            "text":  "camara flash",
+                            "text":  "camera flash",
                             "points":  11
                         },
                         {
@@ -229034,10 +219852,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something you would feel uncomfortable talking to your grandmother about.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "love life",
                             "points":  44
                         }
@@ -229047,10 +219861,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "id":  8644,
         "question":  "Tell me something you might do on a Sunday.",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "church",
                             "points":  49
@@ -229066,10 +219876,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me a way you reward yourself.",
         "answers":  [
                         {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
-                        {
                             "text":  "buy stuff",
                             "points":  29
                         }
@@ -229081,7 +219887,7 @@ export const surveyQuestions: SurveyQuestion[] = [
         "answers":  [
                         {
                             "text":  "41",
-                            "points":  0
+                            "points":  41
                         },
                         {
                             "text":  "30",
@@ -229194,30 +220000,6 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "Tell me something people love to catch other people doing.",
         "answers":  [
                         {
-                            "text":  "around",
-                            "points":  60
-                        },
-                        {
-                            "text":  "playing",
-                            "points":  60
-                        },
-                        {
-                            "text":  "mucking about",
-                            "points":  60
-                        },
-                        {
-                            "text":  "messing around",
-                            "points":  60
-                        },
-                        {
-                            "text":  "horseplay",
-                            "points":  60
-                        },
-                        {
-                            "text":  "goofing around",
-                            "points":  60
-                        },
-                        {
                             "text":  "fooling around",
                             "points":  60
                         },
@@ -229226,87 +220008,19 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  11
                         },
                         {
-                            "text":  "fibbing",
-                            "points":  11
-                        },
-                        {
-                            "text":  "exaggerating",
-                            "points":  11
-                        },
-                        {
-                            "text":  "bending truth",
-                            "points":  11
-                        },
-                        {
-                            "text":  "untruth",
-                            "points":  11
-                        },
-                        {
-                            "text":  "dishonest",
-                            "points":  11
-                        },
-                        {
-                            "text":  "picking",
-                            "points":  8
-                        },
-                        {
                             "text":  "nose picking",
                             "points":  8
-                        },
-                        {
-                            "text":  "their diet",
-                            "points":  4
-                        },
-                        {
-                            "text":  "diet",
-                            "points":  4
                         },
                         {
                             "text":  "breaking their diet",
                             "points":  4
                         },
                         {
-                            "text":  "breaking diet",
-                            "points":  4
-                        },
-                        {
-                            "text":  "busybodies",
-                            "points":  3
-                        },
-                        {
                             "text":  "gossiping",
                             "points":  3
                         },
                         {
-                            "text":  "rumor",
-                            "points":  3
-                        },
-                        {
-                            "text":  "robbing",
-                            "points":  2
-                        },
-                        {
-                            "text":  "burglarizing",
-                            "points":  2
-                        },
-                        {
-                            "text":  "snatching",
-                            "points":  2
-                        },
-                        {
                             "text":  "stealing",
-                            "points":  2
-                        },
-                        {
-                            "text":  "pickpocketing",
-                            "points":  2
-                        },
-                        {
-                            "text":  "thieving",
-                            "points":  2
-                        },
-                        {
-                            "text":  "shoplifting",
                             "points":  2
                         }
                     ]
@@ -229386,28 +220100,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8655,
-        "question":  "Tell me a celebrity you would hate to sit next to on a flight.",
-        "answers":  [
-                        {
-                            "text":  "justin beiber",
-                            "points":  39
-                        },
-                        {
-                            "text":  "gilbert gottfried",
-                            "points":  28
-                        },
-                        {
-                            "text":  "miley cyrus",
-                            "points":  22
-                        },
-                        {
-                            "text":  "lindsay lohan",
-                            "points":  11
-                        }
-                    ]
-    },
-    {
         "id":  8656,
         "question":  "Tell me something that you split.",
         "answers":  [
@@ -229482,32 +220174,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "sports",
                             "points":  2
-                        }
-                    ]
-    },
-    {
-        "id":  8659,
-        "question":  "Tell me something people decorate their house with for Halloween.",
-        "answers":  [
-                        {
-                            "text":  "jack o\u0027lanterns",
-                            "points":  58
-                        },
-                        {
-                            "text":  "ghosts",
-                            "points":  15
-                        },
-                        {
-                            "text":  "spider webs",
-                            "points":  11
-                        },
-                        {
-                            "text":  "skeletons",
-                            "points":  10
-                        },
-                        {
-                            "text":  "halloween lights",
-                            "points":  6
                         }
                     ]
     },
@@ -230140,7 +220806,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  22
                         },
                         {
-                            "text":  "parties alot",
+                            "text":  "parties a lot",
                             "points":  13
                         },
                         {
@@ -230296,7 +220962,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  21
                         },
                         {
-                            "text":  "sanswiches",
+                            "text":  "sandwiches",
                             "points":  16
                         },
                         {
@@ -230521,7 +221187,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "too long",
-                            "points":  0
+                            "points":  3
                         }
                     ]
     },
@@ -230642,7 +221308,7 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  12
                         },
                         {
-                            "text":  "michaelangelo",
+                            "text":  "michelangelo",
                             "points":  10
                         }
                     ]
@@ -231248,6 +221914,14 @@ export const surveyQuestions: SurveyQuestion[] = [
         "question":  "We asked married people, after how many did you know your partner was the one?",
         "answers":  [
                         {
+                            "text":  "3",
+                            "points":  23
+                        },
+                        {
+                            "text":  "5",
+                            "points":  21
+                        },
+                        {
                             "text":  "1",
                             "points":  18
                         },
@@ -231256,20 +221930,12 @@ export const surveyQuestions: SurveyQuestion[] = [
                             "points":  17
                         },
                         {
-                            "text":  "3",
-                            "points":  23
+                            "text":  "10",
+                            "points":  14
                         },
                         {
                             "text":  "4",
                             "points":  5
-                        },
-                        {
-                            "text":  "5",
-                            "points":  21
-                        },
-                        {
-                            "text":  "10",
-                            "points":  14
                         }
                     ]
     },
@@ -231296,32 +221962,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "pumpkin/zucchini",
                             "points":  6
-                        }
-                    ]
-    },
-    {
-        "id":  8726,
-        "question":  "What do cats have that we don't have?",
-        "answers":  [
-                        {
-                            "text":  "tails",
-                            "points":  28
-                        },
-                        {
-                            "text":  "claws",
-                            "points":  25
-                        },
-                        {
-                            "text":  "fur",
-                            "points":  22
-                        },
-                        {
-                            "text":  "paws",
-                            "points":  16
-                        },
-                        {
-                            "text":  "9 lives",
-                            "points":  7
                         }
                     ]
     },
@@ -231764,27 +222404,9 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8744,
-        "question":  "When you're stressed out, name the part of your body where you feel it the most.",
-        "answers":  [
-                        {
-                            "text":  "head",
-                            "points":  40
-                        },
-                        {
-                            "text":  "chest",
-                            "points":  2
-                        }
-                    ]
-    },
-    {
         "id":  8745,
         "question":  "What did people use to plan vacations before the internet?",
         "answers":  [
-                        {
-                            "text":  "send us your answers!",
-                            "points":  10
-                        },
                         {
                             "text":  "travel agent",
                             "points":  40
@@ -232637,36 +223259,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "grandparents",
-                            "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  8777,
-        "question":  "Which extra piece of clothing might be worn to a strip poker game to delay taking off your essentials?",
-        "answers":  [
-                        {
-                            "text":  "socks/stockings",
-                            "points":  27
-                        },
-                        {
-                            "text":  "undershirt",
-                            "points":  23
-                        },
-                        {
-                            "text":  "jacket",
-                            "points":  21
-                        },
-                        {
-                            "text":  "scarf",
-                            "points":  8
-                        },
-                        {
-                            "text":  "thermals",
-                            "points":  7
-                        },
-                        {
-                            "text":  "hat",
                             "points":  4
                         }
                     ]

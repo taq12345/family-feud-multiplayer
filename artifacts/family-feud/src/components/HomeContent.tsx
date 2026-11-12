@@ -49,7 +49,7 @@ export const homeFaqSchema = {
       name: "What kind of questions are in the game?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Friendly Feud includes over 8,700 classic survey-style questions with real point values. You can also use AI to generate a custom round on any topic you choose.",
+        text: "Friendly Feud includes over 8,500 classic survey-style questions with real point values. You can also use AI to generate a custom round on any topic you choose.",
       },
     },
     {
@@ -91,7 +91,7 @@ const FEATURES = [
     d: "Up to 10 players per room with live scoring, a Face-Off, strikes, a steal round and built-in chat.",
   },
   {
-    t: "8,700+ questions & AI rounds",
+    t: "8,500+ questions & AI rounds",
     d: "A huge bank of classic survey questions with real point values, plus AI-generated rounds on any topic.",
   },
   {
@@ -162,7 +162,7 @@ export function HomeContent() {
           Friendly Feud is the fastest way to play a Family Feud–style survey game online
           with friends — no download, no account, and no cost. Create a private room, share
           the link, and your friends join instantly from any device. Split into two teams and
-          race to guess the top survey answers before the other side does. With 8,700+ classic
+          race to guess the top survey answers before the other side does. With 8,500+ classic
           questions and AI-powered custom rounds on any topic you choose, every game night
           plays out differently.
         </p>

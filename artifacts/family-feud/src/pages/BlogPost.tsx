@@ -293,7 +293,7 @@ export default function BlogPost() {
       <section className="mt-12 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 p-6 text-center">
         <h2 className="text-xl font-bold text-white mb-2">Play a round right now</h2>
         <p className="text-slate-400 text-sm mb-4 max-w-xl mx-auto">
-          Create a free room or start a solo game — no download, no account, 8,700+ survey questions.
+          Create a free room or start a solo game — no download, no account, 8,500+ survey questions.
         </p>
         <Link
           href="/"

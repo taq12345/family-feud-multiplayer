@@ -709,7 +709,7 @@ export default function Lobby() {
   return (
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO
-        description="Play Family Feud online with friends for free — no account or download needed. Create a room, share the link, split into teams, and guess the top survey answers. 8,700+ questions & AI rounds."
+        description="Play Family Feud online with friends for free — no account or download needed. Create a room, share the link, split into teams, and guess the top survey answers. 8,500+ questions & AI rounds."
         canonical="https://friendlyfeud.fun/"
         schema={homeFaqSchema}
       />

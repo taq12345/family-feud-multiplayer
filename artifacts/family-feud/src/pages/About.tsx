@@ -27,7 +27,7 @@ export default function About() {
     <div className="min-h-screen bg-[#070d1f] text-white overflow-x-hidden">
       <SEO
         title="About Friendly Feud"
-        description="Learn about Friendly Feud, a free Family Feud-style multiplayer survey game: how it works, where the 8,700+ questions come from, how answers are judged, and who builds it."
+        description="Learn about Friendly Feud, a free Family Feud-style multiplayer survey game: how it works, where the 8,500+ questions come from, how answers are judged, and who builds it."
         canonical={canonicalUrl("/about")}
         schema={{
           "@context": "https://schema.org",
@@ -134,7 +134,7 @@ export default function About() {
             </h2>
             <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-5 sm:p-6 space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed">
               <p>
-                The classic mode draws from a curated bank of more than 8,700 survey-style questions,
+                The classic mode draws from a curated bank of more than 8,500 survey-style questions,
                 each with a ranked answer board and point values in the style of the television format.
                 Questions are cleaned and de-duplicated before they enter the bank. Separately, the{" "}
                 <Link href="/questions" onClick={() => playClickSound()} className="text-amber-400 hover:underline">Survey Questions</Link>{" "}
@@ -174,7 +174,7 @@ export default function About() {
               {[
                 { icon: Users, title: "Real-time multiplayer", desc: "Up to 10 players per room with live scoring, strikes, steals and built-in chat." },
                 { icon: Globe, title: "Free and web-based", desc: "No download or registration. Works on desktop, tablet and mobile browsers." },
-                { icon: Sparkles, title: "8,700+ questions & AI rounds", desc: "A large classic bank plus generated boards on any topic." },
+                { icon: Sparkles, title: "8,500+ questions & AI rounds", desc: "A large classic bank plus generated boards on any topic." },
                 { icon: Heart, title: "Optional accounts", desc: "Sign in to reserve your nickname and track stats on the leaderboard — never required to play." },
               ].map(({ icon: Icon, title, desc }) => (
                 <div key={title} className="rounded-xl bg-white/[0.03] border border-white/10 p-4">
