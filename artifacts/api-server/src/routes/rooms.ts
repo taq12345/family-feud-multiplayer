@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { roomsTable } from "@workspace/db/schema";
-import { getRoomPlayers, isNicknameTaken, getPlayerSlot, broadcastLobbyUpdate } from "../lib/socketHandlers.js";
+import { getRoomPlayers, isNicknameTaken, getPlayerSlot, broadcastLobbyUpdate, getLobbyRooms, registerCreatedRoom } from "../lib/socketHandlers.js";
 import { notifyRoomCreated } from "../lib/notify.js";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
@@ -10,27 +10,10 @@ import { surveyQuestions } from "../lib/questionsBank.js";
 const router: IRouter = Router();
 const ALLOWED_TOTAL_ROUNDS = new Set([2, 4, 6, 8, 10]);
 
-router.get("/rooms", async (_req, res) => {
-  try {
-    const rooms = await db.select().from(roomsTable).orderBy(roomsTable.createdAt);
-    res.json(rooms.map(r => ({
-      id: r.id,
-      name: r.name,
-      hostName: r.hostName,
-      status: r.status,
-      playerCount: r.playerCount,
-      maxPlayers: r.maxPlayers,
-      team1Name: r.team1Name,
-      team2Name: r.team2Name,
-      team1Score: r.team1Score,
-      team2Score: r.team2Score,
-      currentRound: r.currentRound,
-      totalRounds: r.totalRounds,
-      createdAt: r.createdAt.toISOString(),
-    })));
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch rooms" });
-  }
+// Served from in-memory game state, not the database: this is requested on
+// every home page visit, and a query here would wake the database each time.
+router.get("/rooms", (_req, res) => {
+  res.json(getLobbyRooms());
 });
 
 router.post("/rooms", async (req, res) => {
@@ -99,6 +82,7 @@ router.post("/rooms", async (req, res) => {
       createdAt: room.createdAt.toISOString(),
     });
     void notifyRoomCreated(room);
+    registerCreatedRoom(room);
     broadcastLobbyUpdate();
     return;
   } catch (err) {

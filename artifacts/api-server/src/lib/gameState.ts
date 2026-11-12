@@ -24,6 +24,8 @@ export interface GameState {
   isSolo: boolean;
   maxPlayers: number;
   createdAt: string;
+  /** Who created the room. Shown as the host in the room list until a player has joined and holds the host seat. */
+  createdByName?: string;
   /** In-memory chat history — serves reconnects without hitting the DB. Capped at 100 messages. */
   chatHistory: ChatMessage[];
   players: Map<string, Player>;

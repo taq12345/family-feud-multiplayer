@@ -25,11 +25,13 @@ const answerProcessing = new Map<string, boolean>();
 // nickname (lowercase) → socket.id – tracks every connected player across all rooms
 const activeNicknames = new Map<string, string>();
 
-export function broadcastLobbyUpdate() {
-  if (!ioInstance) return;
-  // Build the lobby payload entirely from in-memory state — no DB query needed.
-  // This prevents rate-limit errors when many game events fire in quick succession.
-  const payload = Array.from(gameStates.values())
+/**
+ * The public room list, built entirely from in-memory state — no DB query.
+ * Used for both the live lobby broadcast and GET /api/rooms, so a home page
+ * visit does not wake the database.
+ */
+export function getLobbyRooms() {
+  return Array.from(gameStates.values())
     .filter(s => !s.isSolo)
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
     .map(s => {
@@ -38,7 +40,7 @@ export function broadcastLobbyUpdate() {
       return {
         id: s.roomId,
         name: s.roomName,
-        hostName: host?.name ?? "",
+        hostName: host?.name ?? s.createdByName ?? "",
         status: dbStatus,
         playerCount: s.players.size,
         maxPlayers: s.maxPlayers,
@@ -51,7 +53,36 @@ export function broadcastLobbyUpdate() {
         createdAt: s.createdAt,
       };
     });
-  ioInstance.to("lobby").emit("lobby_update", payload);
+}
+
+export function broadcastLobbyUpdate() {
+  if (!ioInstance) return;
+  ioInstance.to("lobby").emit("lobby_update", getLobbyRooms());
+}
+
+/**
+ * Puts a newly created room into memory, so it is in the room list before the
+ * host's browser has joined it. Also starts the inactivity timer, so a room
+ * nobody ever joins is deleted after ROOM_INACTIVITY_MS instead of lingering.
+ */
+export function registerCreatedRoom(room: {
+  id: string;
+  name: string;
+  hostName: string;
+  team1Name: string;
+  team2Name: string;
+  totalRounds: number;
+  maxPlayers: number;
+  createdAt: Date;
+}) {
+  if (gameStates.has(room.id)) return;
+  const state = createGameState(
+    room.id, room.name, room.team1Name, room.team2Name, room.totalRounds,
+    room.maxPlayers, room.createdAt.toISOString(),
+  );
+  state.createdByName = room.hostName;
+  gameStates.set(room.id, state);
+  if (ioInstance) bumpRoomActivity(ioInstance, room.id);
 }
 
 export function isNicknameTaken(name: string, excludeSocketId?: string): boolean {

@@ -32,13 +32,35 @@ async function requireAuth(req: AuthedRequest, res: Response, next: NextFunction
   }
 }
 
-async function ensureUserRow(clerkUserId: string) {
+type UserRow = typeof usersTable.$inferSelect;
+
+// User rows this server has already loaded, keyed by Clerk user id. A signed-in
+// page load asks for the profile several times; answering from here means those
+// requests do not wake the database. This server is the only writer of the
+// users table and every write below goes through rememberUser, so the copy
+// stays current. It is empty again after a restart.
+const USER_CACHE_MAX = 5000;
+const userRowCache = new Map<string, UserRow>();
+
+function rememberUser(row: UserRow): UserRow {
+  userRowCache.delete(row.clerkUserId);
+  if (userRowCache.size >= USER_CACHE_MAX) {
+    userRowCache.delete(userRowCache.keys().next().value!);
+  }
+  userRowCache.set(row.clerkUserId, row);
+  return row;
+}
+
+async function ensureUserRow(clerkUserId: string): Promise<UserRow> {
+  const cached = userRowCache.get(clerkUserId);
+  if (cached) return cached;
+
   const existing = await db
     .select()
     .from(usersTable)
     .where(eq(usersTable.clerkUserId, clerkUserId))
     .limit(1);
-  if (existing[0]) return existing[0];
+  if (existing[0]) return rememberUser(existing[0]);
 
   let email: string | null = null;
   let avatarUrl: string | null = null;
@@ -61,14 +83,14 @@ async function ensureUserRow(clerkUserId: string) {
     .onConflictDoNothing({ target: usersTable.clerkUserId })
     .returning();
 
-  if (inserted[0]) return inserted[0];
+  if (inserted[0]) return rememberUser(inserted[0]);
 
   const refetch = await db
     .select()
     .from(usersTable)
     .where(eq(usersTable.clerkUserId, clerkUserId))
     .limit(1);
-  return refetch[0]!;
+  return rememberUser(refetch[0]!);
 }
 
 /**
@@ -94,6 +116,7 @@ router.post("/users/me/sync-avatar", requireAuth, async (req: AuthedRequest, res
       .set({ avatarUrl })
       .where(eq(usersTable.clerkUserId, req.userId!))
       .returning();
+    if (updated[0]) rememberUser(updated[0]);
     res.json({ avatarUrl: updated[0]?.avatarUrl ?? null });
   } catch (err) {
     console.error("[users/me/sync-avatar]", err);
@@ -191,6 +214,7 @@ router.post("/users/me/nickname", requireAuth, async (req: AuthedRequest, res) =
       .set({ nickname: raw, nicknameLower: lower, nicknameSetAt: sql`now()` })
       .where(eq(usersTable.clerkUserId, req.userId!))
       .returning();
+    if (updated[0]) rememberUser(updated[0]);
 
     res.json({
       id: updated[0]!.id,
