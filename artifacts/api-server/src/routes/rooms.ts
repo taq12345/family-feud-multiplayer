@@ -5,7 +5,6 @@ import { getRoomPlayers, isNicknameTaken, getPlayerSlot, broadcastLobbyUpdate, g
 import { notifyRoomCreated } from "../lib/notify.js";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { surveyQuestions } from "../lib/questionsBank.js";
 
 const router: IRouter = Router();
 const ALLOWED_TOTAL_ROUNDS = new Set([2, 4, 6, 8, 10]);
@@ -146,10 +145,6 @@ router.get("/player-slots", (req, res) => {
   const slot = getPlayerSlot(nickname);
   res.json(slot ?? null);
   return;
-});
-
-router.get("/questions", (_req, res) => {
-  res.json(surveyQuestions);
 });
 
 export default router;

@@ -34,6 +34,10 @@ function StrikeDisplay({ strikes }: { strikes: number }) {
   );
 }
 
+function blockCopy(e: { preventDefault: () => void }) {
+  e.preventDefault();
+}
+
 function AnswerBoard({ question, answers }: {
   question: string;
   answers: Array<{ text: string | null; points: number | null; revealed: boolean; index: number }>;
@@ -41,7 +45,19 @@ function AnswerBoard({ question, answers }: {
   return (
     <div className="h-full flex flex-col rounded-2xl bg-white/[0.03] border border-amber-500/25 shadow-[0_0_30px_rgba(251,191,36,0.08)] overflow-hidden">
       <div className="shrink-0 bg-gradient-to-r from-amber-500/15 to-amber-600/10 border-b border-amber-500/20 px-4 py-2 text-center">
-        <p className="text-amber-300 font-bold text-sm sm:text-base leading-snug">{question}</p>
+        {/* Not selectable or copyable, so the question cannot be pasted
+            straight into a search box during a turn. Retyping it is still
+            possible; this only removes the one-step shortcut. */}
+        <p
+          className="text-amber-300 font-bold text-sm sm:text-base leading-snug select-none"
+          style={{ WebkitTouchCallout: "none" }}
+          onCopy={blockCopy}
+          onCut={blockCopy}
+          onContextMenu={blockCopy}
+          onDragStart={blockCopy}
+        >
+          {question}
+        </p>
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto p-2 grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] sm:grid-cols-2 gap-1 content-start">
         {answers.map((a, i) => (
