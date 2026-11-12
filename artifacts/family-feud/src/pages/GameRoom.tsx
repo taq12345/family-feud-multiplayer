@@ -8,6 +8,7 @@ import { Button } from "../components/ui/button";
 import { playClickSound, playJoinSound, playBuzzerSound, playCorrectSound, playAnswerRevealSound, playRoundStartSound, playRoundEndSound, playPlayerJoinSound, playPlayerLeaveSound, playApplauseSound, playTickSound } from "../lib/sounds";
 import { Input } from "../components/ui/input";
 import { FriendlyFeudLogo, FriendlyFeudWordmark } from "../components/FriendlyFeudLogo";
+import { AnimatedDots } from "../components/AnimatedDots";
 import { Send, Trophy, Zap, Users, Crown, LogOut, MessageCircle, Gamepad2, Share2, Check, UserX, Wand2, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
@@ -1637,7 +1638,7 @@ export default function GameRoom() {
             {customQuestionsLoading && (
               <div className="flex items-center gap-2.5 text-slate-300 text-sm bg-white/5 rounded-lg px-3 py-2.5 border border-white/10">
                 <Loader2 className="w-4 h-4 animate-spin text-pink-400 shrink-0" />
-                <span>Generating {gameState?.totalRounds} questions about "<span className="text-pink-300 font-medium">{customTopic}</span>"… <span className="text-slate-500">(may take up to a minute)</span></span>
+                <span>Generating {gameState?.totalRounds} questions about "<span className="text-pink-300 font-medium">{customTopic}</span>"<AnimatedDots /> <span className="text-slate-500">(may take up to a minute)</span></span>
               </div>
             )}
             <Button
@@ -1645,7 +1646,7 @@ export default function GameRoom() {
               onClick={handleGenerateCustomQuestions}
               disabled={customQuestionsLoading || !customTopic.trim()}
             >
-              {customQuestionsLoading ? "Generating…" : "Generate & Start"}
+              {customQuestionsLoading ? <>Generating<AnimatedDots /></> : "Generate & Start"}
             </Button>
           </div>
         </DialogContent>
@@ -1725,7 +1726,7 @@ export default function GameRoom() {
               className="w-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold border-0 shadow-[0_0_16px_rgba(16,185,129,0.25)] hover:shadow-[0_0_24px_rgba(16,185,129,0.4)] transition-all disabled:opacity-50"
             >
               {soloReplayLoading
-                ? (soloReplayMode === "custom" ? <><Loader2 className="w-4 h-4 animate-spin inline mr-2" />Generating...</> : "Starting...")
+                ? (soloReplayMode === "custom" ? <><Loader2 className="w-4 h-4 animate-spin inline mr-2" />Generating<AnimatedDots /></> : "Starting...")
                 : "Start Game"}
             </Button>
           </div>

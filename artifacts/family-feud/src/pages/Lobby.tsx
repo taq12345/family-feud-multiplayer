@@ -46,6 +46,7 @@ import {
 import { createSoloGame } from "../hooks/useGameSocket";
 import { getSocket } from "../lib/socket";
 import { AdUnit } from "../components/AdSense";
+import { AnimatedDots } from "../components/AnimatedDots";
 import { HomeContent, homeFaqSchema } from "../components/HomeContent";
 import { AuthHeaderButton } from "../components/AuthGate";
 import { useUser } from "@clerk/react";
@@ -1203,7 +1204,7 @@ export default function Lobby() {
                 >
                   {soloLoading
                     ? soloMode === "custom"
-                      ? "Generating..."
+                      ? <>Generating<AnimatedDots /></>
                       : "Starting..."
                     : "Start Solo Game"}
                 </Button>
