@@ -68,12 +68,15 @@ async function validateTopic(topic: string, parentSignal?: AbortSignal): Promise
   try {
     const response = await Promise.race([
       openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-6-luna",
+        // Reasoning off: a yes/no check, and reasoning tokens would count
+        // against the 80-token cap below.
+        reasoning_effort: "none",
         messages: [{
           role: "user",
           content: `Is "${topic}" a real, meaningful topic suitable for Family Feud survey questions? It must be a recognisable concept, object, activity, place, person, or theme that most people know and could be meaningfully surveyed about. Reject nonsense strings, gibberish, random characters, inappropriate adult content, or anything so obscure that no one could survey about it. Reply ONLY with JSON: {"valid":true} or {"valid":false,"reason":"brief reason"}`,
         }],
-        max_tokens: 80,
+        max_completion_tokens: 80,
         response_format: { type: "json_object" },
       }),
       timeoutPromise,

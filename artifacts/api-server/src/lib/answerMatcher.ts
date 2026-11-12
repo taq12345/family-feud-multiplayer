@@ -241,7 +241,11 @@ async function aiSemanticMatchBatch(
 
   try {
     const aiCall = openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-6-luna",
+      // Reasoning must stay off: reasoning tokens count against
+      // max_completion_tokens, so with it on the 5-token reply comes back
+      // empty. temperature is also only accepted when reasoning is off.
+      reasoning_effort: "none",
       messages: [
         {
           role: "system",
