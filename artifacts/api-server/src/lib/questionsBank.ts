@@ -1,4 +1,5 @@
 import { surveyQuestions as rawSurveyQuestions, type SurveyQuestion } from "../data/questions.js";
+import { season27Questions } from "../data/questionsSeason27.js";
 
 function cleanQuestionText(q: SurveyQuestion): string {
   switch (q.id) {
@@ -32,4 +33,8 @@ export const surveyQuestions: SurveyQuestion[] = rawSurveyQuestions
       .map((a) => ({ ...a, text: cleanAnswerText(q, a.text) })),
   }))
   .filter((q) => q.id !== 3410);
+
+// The boards classic games draw from. Currently only the season 27 set;
+// the main bank above is kept but not played.
+export const gameplayQuestions: SurveyQuestion[] = season27Questions;
 

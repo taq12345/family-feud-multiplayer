@@ -1,6 +1,6 @@
-import { surveyQuestions } from "./questionsBank.js";
+import { gameplayQuestions } from "./questionsBank.js";
 import type { SurveyQuestion } from "../data/questions.js";
-export { surveyQuestions };
+export { gameplayQuestions };
 
 export interface Player {
   id: string;
@@ -76,7 +76,7 @@ export function createGameState(
   maxPlayers = 10,
   createdAt = new Date().toISOString(),
 ): GameState {
-  const allQuestions = [...surveyQuestions];
+  const allQuestions = [...gameplayQuestions];
   // Shuffle
   for (let i = allQuestions.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

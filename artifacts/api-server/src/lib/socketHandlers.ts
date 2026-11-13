@@ -2,7 +2,7 @@ import { Server as SocketServer, Socket } from "socket.io";
 import { db } from "@workspace/db";
 import { roomsTable, chatMessagesTable, usersTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
-import { GameState, createGameState, getNextQuestion, serializeGameState, surveyQuestions } from "./gameState.js";
+import { GameState, createGameState, getNextQuestion, serializeGameState, gameplayQuestions } from "./gameState.js";
 import { findMatchIndex, normalizeSubmittedAnswer } from "./answerMatcher.js";
 import { generateCustomQuestions } from "./questionGenerator.js";
 import { creditGuess, creditSteal, creditRoundEnd, creditGameEnd } from "./stats.js";
@@ -902,8 +902,8 @@ export function setupSocketHandlers(io: SocketServer) {
         }
         return a;
       }
-      const freshQuestions = surveyQuestions.filter(q => !previouslyUsed.has(q.id));
-      const staleQuestions = surveyQuestions.filter(q => previouslyUsed.has(q.id));
+      const freshQuestions = gameplayQuestions.filter(q => !previouslyUsed.has(q.id));
+      const staleQuestions = gameplayQuestions.filter(q => previouslyUsed.has(q.id));
       state.questions = [...shuffle(freshQuestions), ...shuffle(staleQuestions)];
       state.usedQuestionIds = new Set();
 

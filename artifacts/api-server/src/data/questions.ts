@@ -12764,16 +12764,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  505,
-        "question":  "Name something you receive multiple times per day.",
-        "answers":  [
-                        {
-                            "text":  "phone calls",
-                            "points":  45
-                        }
-                    ]
-    },
-    {
         "id":  506,
         "question":  "Name a holiday dessert with cinnamon in it.",
         "answers":  [
@@ -12802,16 +12792,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "candles",
                             "points":  14
-                        }
-                    ]
-    },
-    {
-        "id":  508,
-        "question":  "Name something you don't want to do when you're tired.",
-        "answers":  [
-                        {
-                            "text":  "work",
-                            "points":  44
                         }
                     ]
     },
@@ -13020,16 +13000,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tigers",
                             "points":  10
-                        }
-                    ]
-    },
-    {
-        "id":  519,
-        "question":  "Name a party game that might be more fun to play nude.",
-        "answers":  [
-                        {
-                            "text":  "twister",
-                            "points":  53
                         }
                     ]
     },
@@ -28272,16 +28242,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1109,
-        "question":  "Tell me something you might do to show someone you love them.",
-        "answers":  [
-                        {
-                            "text":  "kiss them",
-                            "points":  33
-                        }
-                    ]
-    },
-    {
         "id":  1110,
         "question":  "Tell me the kind of dancing you think is the hardest.",
         "answers":  [
@@ -28358,16 +28318,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tortoise",
                             "points":  18
-                        }
-                    ]
-    },
-    {
-        "id":  1114,
-        "question":  "Tell me something that would ruin a cruise.",
-        "answers":  [
-                        {
-                            "text":  "illness",
-                            "points":  34
                         }
                     ]
     },
@@ -44682,16 +44632,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1746,
-        "question":  "Name something you'd hate to forget if you were going camping.",
-        "answers":  [
-                        {
-                            "text":  "tent",
-                            "points":  39
-                        }
-                    ]
-    },
-    {
         "id":  1747,
         "question":  "Name something that might annoy a gardener.",
         "answers":  [
@@ -44798,16 +44738,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1755,
-        "question":  "Name something you can't wait to do at a party.",
-        "answers":  [
-                        {
-                            "text":  "dance",
-                            "points":  44
-                        }
-                    ]
-    },
-    {
         "id":  1756,
         "question":  "Name something that has holes in it.",
         "answers":  [
@@ -44908,16 +44838,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "gifts",
                             "points":  8
-                        }
-                    ]
-    },
-    {
-        "id":  1762,
-        "question":  "Name something birds have that humans don't.",
-        "answers":  [
-                        {
-                            "text":  "wings",
-                            "points":  58
                         }
                     ]
     },
@@ -45302,16 +45222,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1783,
-        "question":  "Name something you might find in a kid's room.",
-        "answers":  [
-                        {
-                            "text":  "toys",
-                            "points":  57
-                        }
-                    ]
-    },
-    {
         "id":  1784,
         "question":  "Name something everyone tries to get out of.",
         "answers":  [
@@ -45418,16 +45328,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  1789,
-        "question":  "Name something you put on your head.",
-        "answers":  [
-                        {
-                            "text":  "hat",
-                            "points":  49
-                        }
-                    ]
-    },
-    {
         "id":  1790,
         "question":  "Name a sign that the person you're talking to is drunk.",
         "answers":  [
@@ -45437,16 +45337,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         },
                         {
                             "text":  "slurring",
-                            "points":  31
-                        }
-                    ]
-    },
-    {
-        "id":  1791,
-        "question":  "Name a real-life situation where people might spontaneously break into song.",
-        "answers":  [
-                        {
-                            "text":  "birthday",
                             "points":  31
                         }
                     ]
@@ -62314,16 +62204,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2446,
-        "question":  "When you're at a restaurant, name something you do not want to see your waiter do.",
-        "answers":  [
-                        {
-                            "text":  "picking their nose",
-                            "points":  59
-                        }
-                    ]
-    },
-    {
         "id":  2447,
         "question":  "What do people do while watching a sports game?",
         "answers":  [
@@ -75638,16 +75518,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2961,
-        "question":  "Name a country where people go to ski.",
-        "answers":  [
-                        {
-                            "text":  "switzerland",
-                            "points":  52
-                        }
-                    ]
-    },
-    {
         "id":  2962,
         "question":  "Name a job that makes men wear tights.",
         "answers":  [
@@ -75852,16 +75722,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2972,
-        "question":  "Name a time when you might wear a mask.",
-        "answers":  [
-                        {
-                            "text":  "halloween",
-                            "points":  59
-                        }
-                    ]
-    },
-    {
         "id":  2973,
         "question":  "Name something in a person\u0027s house that stays on all night long.",
         "answers":  [
@@ -75990,16 +75850,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  2982,
-        "question":  "Name something you might budget for.",
-        "answers":  [
-                        {
-                            "text":  "a new car",
-                            "points":  39
-                        }
-                    ]
-    },
-    {
         "id":  2983,
         "question":  "Name a sport where you still see athletes playing after they are forty.",
         "answers":  [
@@ -76060,16 +75910,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "rotten fruit",
                             "points":  9
-                        }
-                    ]
-    },
-    {
-        "id":  2987,
-        "question":  "Name a place where you would not want to get a flat tire.",
-        "answers":  [
-                        {
-                            "text":  "highway",
-                            "points":  55
                         }
                     ]
     },
@@ -94766,16 +94606,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  3710,
-        "question":  "What do you call someone who is too careful with money?",
-        "answers":  [
-                        {
-                            "text":  "cheap",
-                            "points":  35
-                        }
-                    ]
-    },
-    {
         "id":  3711,
         "question":  "We surveyed 100 married women... Name a place where your husband spends so much time, he might as well live there.",
         "answers":  [
@@ -106702,16 +106532,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4172,
-        "question":  "Name a movie people like to watch at Christmas.",
-        "answers":  [
-                        {
-                            "text":  "a christmas story",
-                            "points":  23
-                        }
-                    ]
-    },
-    {
         "id":  4173,
         "question":  "Name something you'd see at a very fancy restaurant you'd never expect to see at McDonald's.",
         "answers":  [
@@ -106956,16 +106776,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4185,
-        "question":  "Name something you might decorate your work desk with.",
-        "answers":  [
-                        {
-                            "text":  "pictures",
-                            "points":  42
-                        }
-                    ]
-    },
-    {
         "id":  4186,
         "question":  "Name something people do in the water at a lake.",
         "answers":  [
@@ -106990,16 +106800,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "snort",
                             "points":  17
-                        }
-                    ]
-    },
-    {
-        "id":  4188,
-        "question":  "Name a job you should avoid if you are afraid of public speaking.",
-        "answers":  [
-                        {
-                            "text":  "politician",
-                            "points":  52
                         }
                     ]
     },
@@ -107288,16 +107088,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4207,
-        "question":  "Name a situation where you might need to wear ear plugs.",
-        "answers":  [
-                        {
-                            "text":  "concerts",
-                            "points":  37
-                        }
-                    ]
-    },
-    {
         "id":  4208,
         "question":  "Name a dairy item that's sold as non-fat.",
         "answers":  [
@@ -107388,16 +107178,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tea",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  4213,
-        "question":  "Name a piece of furniture you might see in someone's living room.",
-        "answers":  [
-                        {
-                            "text":  "couch",
-                            "points":  54
                         }
                     ]
     },
@@ -114202,16 +113982,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4488,
-        "question":  "Name something that some people just cannot hold onto.",
-        "answers":  [
-                        {
-                            "text":  "money",
-                            "points":  78
-                        }
-                    ]
-    },
-    {
         "id":  4489,
         "question":  "Name the top things children tend to lie about.",
         "answers":  [
@@ -114322,16 +114092,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "telephone",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  4494,
-        "question":  "Name something you can ride.",
-        "answers":  [
-                        {
-                            "text":  "bicycle",
-                            "points":  43
                         }
                     ]
     },
@@ -122756,16 +122516,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  4819,
-        "question":  "Tell me something you might do after you get a bad grade on a test.",
-        "answers":  [
-                        {
-                            "text":  "get upset",
-                            "points":  51
-                        }
-                    ]
-    },
-    {
         "id":  4821,
         "question":  "Tell me what a man does to cover up his bald spot.",
         "answers":  [
@@ -122780,16 +122530,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "toupee",
                             "points":  21
-                        }
-                    ]
-    },
-    {
-        "id":  4822,
-        "question":  "Tell me something you expect to find in a hotel.",
-        "answers":  [
-                        {
-                            "text":  "beds",
-                            "points":  56
                         }
                     ]
     },
@@ -139700,16 +139440,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5478,
-        "question":  "Name a reason why someone might apply for a loan.",
-        "answers":  [
-                        {
-                            "text":  "house",
-                            "points":  45
-                        }
-                    ]
-    },
-    {
         "id":  5479,
         "question":  "Name something listed on a wedding invitation.",
         "answers":  [
@@ -139796,16 +139526,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5484,
-        "question":  "Name something that often gets stolen.",
-        "answers":  [
-                        {
-                            "text":  "money",
-                            "points":  35
-                        }
-                    ]
-    },
-    {
         "id":  5485,
         "question":  "Name something most burglars never steal during a home robbery.",
         "answers":  [
@@ -139832,16 +139552,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "dishes",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  5486,
-        "question":  "Name a city that is expensive to live in.",
-        "answers":  [
-                        {
-                            "text":  "new york",
-                            "points":  57
                         }
                     ]
     },
@@ -140088,16 +139798,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  5498,
-        "question":  "Name someone or something you might get trip ideas from.",
-        "answers":  [
-                        {
-                            "text":  "internet",
-                            "points":  33
-                        }
-                    ]
-    },
-    {
         "id":  5499,
         "question":  "Name something that might keep the doctor away.",
         "answers":  [
@@ -140174,16 +139874,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "actors",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  5503,
-        "question":  "Name something you do when you're bored.",
-        "answers":  [
-                        {
-                            "text":  "watch tv",
-                            "points":  34
                         }
                     ]
     },
@@ -155374,16 +155064,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6097,
-        "question":  "Tell me something a person could have that makes you not want to kiss them.",
-        "answers":  [
-                        {
-                            "text":  "bad breath",
-                            "points":  54
-                        }
-                    ]
-    },
-    {
         "id":  6098,
         "question":  "Tell me something that kids hate to have taken away from them.",
         "answers":  [
@@ -170088,16 +169768,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6663,
-        "question":  "Name a tropical island.",
-        "answers":  [
-                        {
-                            "text":  "hawaii",
-                            "points":  51
-                        }
-                    ]
-    },
-    {
         "id":  6664,
         "question":  "Name an accessory people buy for their computer.",
         "answers":  [
@@ -170572,16 +170242,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6689,
-        "question":  "Name a place kids might go if they skipped school.",
-        "answers":  [
-                        {
-                            "text":  "mall",
-                            "points":  49
-                        }
-                    ]
-    },
-    {
         "id":  6690,
         "question":  "Name something you might find at a circus.",
         "answers":  [
@@ -170972,16 +170632,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6712,
-        "question":  "Name something that might ring.",
-        "answers":  [
-                        {
-                            "text":  "telephone",
-                            "points":  49
-                        }
-                    ]
-    },
-    {
         "id":  6713,
         "question":  "Name a place where you can sleep.",
         "answers":  [
@@ -171122,16 +170772,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6721,
-        "question":  "Name a real or fictional band that has food in their name.",
-        "answers":  [
-                        {
-                            "text":  "red hot chili peppers",
-                            "points":  39
-                        }
-                    ]
-    },
-    {
         "id":  6722,
         "question":  "Name a place where you stand in line, but nobody's in a hurry.",
         "answers":  [
@@ -171156,16 +170796,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "four-leaf clover",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  6724,
-        "question":  "Name something that friends might swap.",
-        "answers":  [
-                        {
-                            "text":  "clothes",
-                            "points":  36
                         }
                     ]
     },
@@ -171294,16 +170924,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "shoes",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  6731,
-        "question":  "Name an animal that likes to dig.",
-        "answers":  [
-                        {
-                            "text":  "dogs",
-                            "points":  34
                         }
                     ]
     },
@@ -171516,16 +171136,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  6742,
-        "question":  "Name something kids believe in that adults don't.",
-        "answers":  [
-                        {
-                            "text":  "santa",
-                            "points":  58
-                        }
-                    ]
-    },
-    {
         "id":  6743,
         "question":  "Name a gift for a friend who travels a lot.",
         "answers":  [
@@ -171714,16 +171324,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "camera",
                             "points":  28
-                        }
-                    ]
-    },
-    {
-        "id":  6753,
-        "question":  "Name your favorite thing about your job.",
-        "answers":  [
-                        {
-                            "text":  "salary",
-                            "points":  54
                         }
                     ]
     },
@@ -172704,16 +172304,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "job",
                             "points":  3
-                        }
-                    ]
-    },
-    {
-        "id":  6793,
-        "question":  "Name something people do in their car that you'd be surprised to see a race car driver do during a competition.",
-        "answers":  [
-                        {
-                            "text":  "on phone",
-                            "points":  56
                         }
                     ]
     },
@@ -176638,16 +176228,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "guns",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  6947,
-        "question":  "Name something you might steal from a hotel room.",
-        "answers":  [
-                        {
-                            "text":  "towels",
-                            "points":  51
                         }
                     ]
     },
@@ -203190,16 +202770,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7967,
-        "question":  "Name something besides books that a student might carry in their backpack.",
-        "answers":  [
-                        {
-                            "text":  "pencils",
-                            "points":  49
-                        }
-                    ]
-    },
-    {
         "id":  7968,
         "question":  "Name the one person who is always tough to choose a gift for.",
         "answers":  [
@@ -203316,16 +202886,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "fishing",
                             "points":  18
-                        }
-                    ]
-    },
-    {
-        "id":  7974,
-        "question":  "Name something people buy at the last minute before Thanksgiving.",
-        "answers":  [
-                        {
-                            "text":  "turkey",
-                            "points":  46
                         }
                     ]
     },
@@ -203602,16 +203162,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  7989,
-        "question":  "Name something a student might get in trouble for.",
-        "answers":  [
-                        {
-                            "text":  "cheating",
-                            "points":  45
-                        }
-                    ]
-    },
-    {
         "id":  7990,
         "question":  "Name a place where strangers become fast friends.",
         "answers":  [
@@ -203652,16 +203202,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "detective",
                             "points":  13
-                        }
-                    ]
-    },
-    {
-        "id":  7992,
-        "question":  "Name a personal possession that you might keep on your desk at work.",
-        "answers":  [
-                        {
-                            "text":  "pictures",
-                            "points":  57
                         }
                     ]
     },
@@ -203718,16 +203258,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "friendship",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  7995,
-        "question":  "Name something you never leave the house without.",
-        "answers":  [
-                        {
-                            "text":  "keys",
-                            "points":  49
                         }
                     ]
     },
@@ -204500,16 +204030,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8034,
-        "question":  "Name something that has flashing lights.",
-        "answers":  [
-                        {
-                            "text":  "police cars",
-                            "points":  59
-                        }
-                    ]
-    },
-    {
         "id":  8035,
         "question":  "Name a word or phrase beginning with the word \"snow.\"",
         "answers":  [
@@ -204624,16 +204144,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "mango",
                             "points":  29
-                        }
-                    ]
-    },
-    {
-        "id":  8042,
-        "question":  "Name something or someone that has fangs.",
-        "answers":  [
-                        {
-                            "text":  "vampire",
-                            "points":  43
                         }
                     ]
     },
@@ -204860,16 +204370,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8055,
-        "question":  "Name something you might find in a garage.",
-        "answers":  [
-                        {
-                            "text":  "car",
-                            "points":  53
-                        }
-                    ]
-    },
-    {
         "id":  8056,
         "question":  "Name a celebrity who doesn\u0027t take marriage very seriously.",
         "answers":  [
@@ -204910,26 +204410,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "tarot cards",
                             "points":  7
-                        }
-                    ]
-    },
-    {
-        "id":  8059,
-        "question":  "Name something that smells awful when it expires.",
-        "answers":  [
-                        {
-                            "text":  "milk",
-                            "points":  49
-                        }
-                    ]
-    },
-    {
-        "id":  8060,
-        "question":  "Name a place you would go to get a good view.",
-        "answers":  [
-                        {
-                            "text":  "mountain",
-                            "points":  44
                         }
                     ]
     },
@@ -205184,16 +204664,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "bathroom",
                             "points":  9
-                        }
-                    ]
-    },
-    {
-        "id":  8074,
-        "question":  "Name something you might pretend to be in order to impress someone.",
-        "answers":  [
-                        {
-                            "text":  "wealthy",
-                            "points":  58
                         }
                     ]
     },
@@ -211046,16 +210516,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "breeze",
                             "points":  4
-                        }
-                    ]
-    },
-    {
-        "id":  8309,
-        "question":  "Name something people wear when they want to dress casual.",
-        "answers":  [
-                        {
-                            "text":  "jeans",
-                            "points":  49
                         }
                     ]
     },
@@ -219658,16 +219118,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                     ]
     },
     {
-        "id":  8643,
-        "question":  "Tell me something you would feel uncomfortable talking to your grandmother about.",
-        "answers":  [
-                        {
-                            "text":  "love life",
-                            "points":  44
-                        }
-                    ]
-    },
-    {
         "id":  8644,
         "question":  "Tell me something you might do on a Sunday.",
         "answers":  [
@@ -219678,16 +219128,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "sleep in",
                             "points":  11
-                        }
-                    ]
-    },
-    {
-        "id":  8645,
-        "question":  "Tell me a way you reward yourself.",
-        "answers":  [
-                        {
-                            "text":  "buy stuff",
-                            "points":  29
                         }
                     ]
     },
@@ -222206,16 +221646,6 @@ export const surveyQuestions: SurveyQuestion[] = [
                         {
                             "text":  "cd\u0027s/music",
                             "points":  5
-                        }
-                    ]
-    },
-    {
-        "id":  8745,
-        "question":  "What did people use to plan vacations before the internet?",
-        "answers":  [
-                        {
-                            "text":  "travel agent",
-                            "points":  40
                         }
                     ]
     },
