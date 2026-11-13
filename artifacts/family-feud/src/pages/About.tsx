@@ -216,7 +216,7 @@ export default function About() {
                 </a>
                 . A community{" "}
                 <a
-                  href="https://discord.gg/vug29JzN"
+                  href="https://discord.gg/GSexTbRCxS"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-amber-400 hover:underline"

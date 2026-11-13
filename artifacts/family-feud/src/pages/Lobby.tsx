@@ -1076,7 +1076,7 @@ export default function Lobby() {
             Consider supporting :)
           </a>
           <a
-            href="https://discord.gg/vug29JzN"
+            href="https://discord.gg/GSexTbRCxS"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => playClickSound()}
