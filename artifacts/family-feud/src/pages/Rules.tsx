@@ -40,7 +40,7 @@ const faqSchema = {
       "name": "Who controls when the next round starts?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The host can advance to the next round manually after the between-round summary is shown. If the host doesn't act, the game auto-advances after 60 seconds."
+        "text": "The host can advance to the next round manually after the between-round summary is shown. If the host doesn't act, the game auto-advances after 15 seconds."
       }
     },
     {
@@ -250,7 +250,7 @@ export default function Rules() {
                 },
                 {
                   q: "Who controls when the next round starts?",
-                  a: "The host can advance to the next round manually after the between-round summary is shown. If the host doesn't act, the game auto-advances after 60 seconds.",
+                  a: "The host can advance to the next round manually after the between-round summary is shown. If the host doesn't act, the game auto-advances after 15 seconds.",
                 },
                 {
                   q: "Is there a chat during the game?",

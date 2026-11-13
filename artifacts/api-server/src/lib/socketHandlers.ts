@@ -172,7 +172,7 @@ function clearAutoAdvanceTimer(roomId: string) {
   }
 }
 
-const AUTO_ADVANCE_MS = 60 * 1000; // 60 seconds between rounds before auto-advancing
+const AUTO_ADVANCE_MS = 15 * 1000; // 15 seconds between rounds before auto-advancing
 
 async function advanceToNextRound(io: SocketServer, roomId: string): Promise<string | null> {
   const state = gameStates.get(roomId);
@@ -1530,7 +1530,7 @@ async function endRound(io: SocketServer, state: GameState, roomId: string, winn
     creditGameEnd(state).catch(() => {});
   }
 
-  // Auto-advance to next round if host doesn't click within 60 seconds.
+  // Auto-advance to next round if host doesn't click within 15 seconds.
   // Always schedule when there are more rounds — advanceToNextRound guards against advancing
   // into a faceoff when a team is empty, but the timer must exist so the round unblocks
   // as soon as a player rejoins and fills the empty team.

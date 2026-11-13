@@ -768,16 +768,17 @@ export default function GameRoom() {
     if (isGameOver) playApplauseSound();
   }, [gameState?.status, gameState?.currentRound, gameState?.totalRounds]);
 
-  // 60s auto-advance countdown shown during between_rounds (not on game over).
-  // Use the server-provided betweenRoundsStartedAt timestamp so the countdown
-  // resumes from the correct remaining time on rejoin instead of resetting to 60.
+  // 15s auto-advance countdown shown during between_rounds (not on game over).
+  // Must match AUTO_ADVANCE_MS on the server. Use the server-provided
+  // betweenRoundsStartedAt timestamp so the countdown resumes from the correct
+  // remaining time on rejoin instead of resetting to 15.
   useEffect(() => {
     if (!gameState) return;
     const isGameOver = gameState.currentRound >= gameState.totalRounds;
     if (gameState.status === "between_rounds" && !isGameOver) {
       const startedAt = gameState.betweenRoundsStartedAt ?? Date.now();
       const elapsedSec = Math.floor((Date.now() - startedAt) / 1000);
-      const initial = Math.max(0, 60 - elapsedSec);
+      const initial = Math.max(0, 15 - elapsedSec);
       setAutoAdvanceCountdown(initial);
       if (initial === 0) return;
       const interval = setInterval(() => {

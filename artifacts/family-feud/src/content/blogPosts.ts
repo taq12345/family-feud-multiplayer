@@ -413,7 +413,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "p",
         text:
-          "Each round starts with a **Face-Off** between one player from each team, moves into the **Playing** phase for the team that wins control, and can end with a **Steal** if that team collects three strikes. Every turn has a 25-second timer, so the pace stays brisk even with a big group. After a round ends, a summary appears; the host can advance immediately or let the game move on by itself after 60 seconds. If you want the full breakdown of each phase, read [Family Feud rules explained](/blog/family-feud-rules-explained) or the shorter [How to Play](/rules) page.",
+          "Each round starts with a **Face-Off** between one player from each team, moves into the **Playing** phase for the team that wins control, and can end with a **Steal** if that team collects three strikes. Every turn has a 25-second timer, so the pace stays brisk even with a big group. After a round ends, a summary appears; the host can advance immediately or let the game move on by itself after 15 seconds. If you want the full breakdown of each phase, read [Family Feud rules explained](/blog/family-feud-rules-explained) or the shorter [How to Play](/rules) page.",
       },
       { type: "h2", text: "Hosting tips that make a real difference" },
       {
@@ -514,7 +514,7 @@ export const BLOG_POSTS: BlogPost[] = [
         type: "ul",
         items: [
           "**25 seconds** per turn in every phase. If the clock runs out, the turn passes (or, in the Playing phase, counts as a strike).",
-          "**60 seconds** between rounds. The host can advance sooner; if they do nothing, the next round starts automatically.",
+          "**15 seconds** between rounds. The host can advance sooner; if they do nothing, the next round starts automatically.",
           "**30 minutes** of grace for a disconnected player. Reopen the link within that window and you are back in your seat.",
         ],
       },
@@ -712,7 +712,7 @@ export const BLOG_POSTS: BlogPost[] = [
           "Explain the one rule that surprises newcomers: only the **designated player's typed answer** counts, even though the whole team can discuss.",
           "Point out the **25-second timer** so nobody is caught out on their first turn.",
           "Read each question aloud and repeat the revealed answers — it keeps people who are multitasking in the loop.",
-          "Between rounds, the game waits 60 seconds or until you press continue. Use that gap to recap the score.",
+          "Between rounds, the game waits 15 seconds or until you press continue. Use that gap to recap the score.",
           "Screenshot the final scoreboard and post it in the team channel. Trophies are optional but strongly encouraged.",
         ],
       },
@@ -827,7 +827,7 @@ export const BLOG_POSTS: BlogPost[] = [
         items: [
           "Agree in advance that the whole team may discuss but only the current player types — it prevents the fastest typist from taking over.",
           "Use the 25-second timer as a feature: it keeps the pace up and stops the “just one more idea” spiral.",
-          "Between rounds the game pauses for up to 60 seconds. That gap is your moment to ask a discussion question.",
+          "Between rounds the game pauses for up to 15 seconds. That gap is your moment to ask a discussion question.",
           "Keep a running scoreboard on the whiteboard across weeks. Students remember a term-long rivalry far longer than a one-off game.",
         ],
       },
