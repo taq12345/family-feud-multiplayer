@@ -4,14 +4,15 @@ import type { SurveyQuestion } from "./questions.js";
 // Boards from Family Feud season 27 (taped in 2025), including the 2025
 // season of Celebrity Family Feud, as transcribed at
 // https://mstiescott.neocities.org/feud27 (crawled 2026-11-13).
-// Ids start at 100001 so they never clash with the main bank (1-8782)
-// or AI-generated questions (9000+). The site's 52 one-answer boards are
-// left out, so a face-off can never clear a board by itself.
+// Ids start at 100001 (each season has its own block of 10,000), so they
+// never clash with the main bank (1-8782), AI questions (9000+) or other
+// seasons. The site's 52 one-answer boards are left out, so a face-off can
+// never clear a board by itself.
 export const SEASON27_SET = "season27";
 export const SEASON27_ID_START = 100001;
 
 export function isSeason27Question(id: number): boolean {
-  return id >= SEASON27_ID_START && id < SEASON27_ID_START + 100000;
+  return id >= SEASON27_ID_START && id < SEASON27_ID_START + 10000;
 }
 
 export const season27Questions: SurveyQuestion[] = [
@@ -169,7 +170,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100005,
-        "question":  "We asked 100 parents...Some days, you'd happily trade your kids for what?",
+        "question":  "We asked 100 parents... Some days, you'd happily trade your kids for what?",
         "answers":  [
                         {
                             "text":  "cat/pet",
@@ -207,7 +208,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100006,
-        "question":  "We asked 100 men...Fill in the blank: She's no sugar mama if she's not buying me ______.",
+        "question":  "We asked 100 men... Fill in the blank: She's no sugar mama if she's not buying me ______.",
         "answers":  [
                         {
                             "text":  "food/sugar!",
@@ -321,7 +322,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100009,
-        "question":  "We asked 100 married men...At your reunion, a hot classmate confesses that you were her secret crush. What do you do?",
+        "question":  "We asked 100 married men... At your reunion, a hot classmate confesses that you were her secret crush. What do you do?",
         "answers":  [
                         {
                             "text":  "\"i'm married\"",
@@ -435,7 +436,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100012,
-        "question":  "We asked 100 men...What superhero would you like to be called in the bedroom?",
+        "question":  "We asked 100 men... What superhero would you like to be called in the bedroom?",
         "answers":  [
                         {
                             "text":  "superman",
@@ -549,7 +550,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100015,
-        "question":  "We asked 100 married men...You thought you were sexting with your wife. But it was who?",
+        "question":  "We asked 100 married men... You thought you were sexting with your wife. But it was who?",
         "answers":  [
                         {
                             "text":  "mother-in-law",
@@ -1347,7 +1348,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100036,
-        "question":  "We asked 100 women...I can tell a man will be a good lover by the way he does what?",
+        "question":  "We asked 100 women... I can tell a man will be a good lover by the way he does what?",
         "answers":  [
                         {
                             "text":  "kisses",
@@ -1613,7 +1614,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100043,
-        "question":  "We asked 100 married women...Your father-in-law is a better what than your husband?",
+        "question":  "We asked 100 married women... Your father-in-law is a better what than your husband?",
         "answers":  [
                         {
                             "text":  "handyman/mechanic",
@@ -1727,7 +1728,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100046,
-        "question":  "We asked 100 wives...Your husband is attractive. But he's not as hot as your what?",
+        "question":  "We asked 100 wives... Your husband is attractive. But he's not as hot as your what?",
         "answers":  [
                         {
                             "text":  "celebrity crush",
@@ -1803,7 +1804,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100048,
-        "question":  "We asked 100 married women...What's the most cringeworthy thing your husband does in public?",
+        "question":  "We asked 100 married women... What's the most cringeworthy thing your husband does in public?",
         "answers":  [
                         {
                             "text":  "let 'em rip",
@@ -1841,7 +1842,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100049,
-        "question":  "We asked 100 married women...Fill in the blank: My husband is too ______ to ever leave me.",
+        "question":  "We asked 100 married women... Fill in the blank: My husband is too ______ to ever leave me.",
         "answers":  [
                         {
                             "text":  "committed/loyal",
@@ -1879,7 +1880,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100050,
-        "question":  "We asked 100 women...You have a big date but a bad haircut, and no hats allowed. What do you do?",
+        "question":  "We asked 100 women... You have a big date but a bad haircut, and no hats allowed. What do you do?",
         "answers":  [
                         {
                             "text":  "wear a wig",
@@ -2107,7 +2108,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100056,
-        "question":  "We asked 100 parents...What do you tell your kids if they walk in on you making love?",
+        "question":  "We asked 100 parents... What do you tell your kids if they walk in on you making love?",
         "answers":  [
                         {
                             "text":  "get out/go to bed",
@@ -2221,7 +2222,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100059,
-        "question":  "We asked 100 women...If you think your man is going to propose tonight, what are you doing to prepare?",
+        "question":  "We asked 100 women... If you think your man is going to propose tonight, what are you doing to prepare?",
         "answers":  [
                         {
                             "text":  "my nails",
@@ -2525,7 +2526,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100067,
-        "question":  "We asked 100 women...Sometimes you wish your beautiful friend got what to make her less attractive?",
+        "question":  "We asked 100 women... Sometimes you wish your beautiful friend got what to make her less attractive?",
         "answers":  [
                         {
                             "text":  "chubby",
@@ -2639,7 +2640,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100070,
-        "question":  "We asked 100 women...Name something a Disney Princess has that you wish you could have, too.",
+        "question":  "We asked 100 women... Name something a Disney Princess has that you wish you could have, too.",
         "answers":  [
                         {
                             "text":  "a castle",
@@ -3019,7 +3020,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100080,
-        "question":  "We asked 100 parents...What's something you tell to your kids to get them to behave?",
+        "question":  "We asked 100 parents... What's something you tell to your kids to get them to behave?",
         "answers":  [
                         {
                             "text":  "no screens/vid games",
@@ -3057,7 +3058,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100081,
-        "question":  "We asked 100 married men...Tell me the reason your wife last yelled at you.",
+        "question":  "We asked 100 married men... Tell me the reason your wife last yelled at you.",
         "answers":  [
                         {
                             "text":  "not listening",
@@ -3095,7 +3096,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100082,
-        "question":  "We asked 100 men...You'd be shocked if your doctor put on what kind of glove to do your prostate exam?",
+        "question":  "We asked 100 men... You'd be shocked if your doctor put on what kind of glove to do your prostate exam?",
         "answers":  [
                         {
                             "text":  "leather",
@@ -3133,7 +3134,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100083,
-        "question":  "We asked 100 wives...Name a reason your husband wouldn't make a good action movie star.",
+        "question":  "We asked 100 wives... Name a reason your husband wouldn't make a good action movie star.",
         "answers":  [
                         {
                             "text":  "chubster",
@@ -3171,7 +3172,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100084,
-        "question":  "We asked 100 men...Name something a friend has that you might ask to borrow for the night.",
+        "question":  "We asked 100 men... Name something a friend has that you might ask to borrow for the night.",
         "answers":  [
                         {
                             "text":  "a pillow",
@@ -3285,7 +3286,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100087,
-        "question":  "We asked 100 women...Tell us why your mate would be a terrible cowboy.",
+        "question":  "We asked 100 women... Tell us why your mate would be a terrible cowboy.",
         "answers":  [
                         {
                             "text":  "can't ride/hates horses",
@@ -3399,7 +3400,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100090,
-        "question":  "We asked 100 married men...Somewhere right now, your wife is talking about what?",
+        "question":  "We asked 100 married men... Somewhere right now, your wife is talking about what?",
         "answers":  [
                         {
                             "text":  "our genius kids",
@@ -3437,7 +3438,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100091,
-        "question":  "We asked 100 women...Why might you say kissing your boyfriend is like kissing a frog?",
+        "question":  "We asked 100 women... Why might you say kissing your boyfriend is like kissing a frog?",
         "answers":  [
                         {
                             "text":  "wet/slimy",
@@ -3475,7 +3476,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100092,
-        "question":  "We asked 100 women...Tell me a way a man might be like a hamburger.",
+        "question":  "We asked 100 women... Tell me a way a man might be like a hamburger.",
         "answers":  [
                         {
                             "text":  "meaty/beefy",
@@ -3513,7 +3514,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100093,
-        "question":  "We asked 100 married women...You'd laugh out loud if your husband said he applied for what job?",
+        "question":  "We asked 100 married women... You'd laugh out loud if your husband said he applied for what job?",
         "answers":  [
                         {
                             "text":  "dancer/stripper",
@@ -3893,7 +3894,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100103,
-        "question":  "We asked 100 men...Be honest: Your body shape is closest to what kind of animal?",
+        "question":  "We asked 100 men... Be honest: Your body shape is closest to what kind of animal?",
         "answers":  [
                         {
                             "text":  "bear/panda",
@@ -4045,7 +4046,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100107,
-        "question":  "We asked 100 women...You can't bring yourself to dump your boyfriend. What do you do to get him to break up with you?",
+        "question":  "We asked 100 women... You can't bring yourself to dump your boyfriend. What do you do to get him to break up with you?",
         "answers":  [
                         {
                             "text":  "ignore him/calls",
@@ -4497,7 +4498,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100119,
-        "question":  "We asked 100 women...My man would be a lot more fun if he liked to do what like a woman?",
+        "question":  "We asked 100 women... My man would be a lot more fun if he liked to do what like a woman?",
         "answers":  [
                         {
                             "text":  "shop",
@@ -4535,7 +4536,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100120,
-        "question":  "We asked 100 women...Your man kisses like he's playing what sport with his tongue?",
+        "question":  "We asked 100 women... Your man kisses like he's playing what sport with his tongue?",
         "answers":  [
                         {
                             "text":  "hockey",
@@ -4611,7 +4612,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100122,
-        "question":  "We asked 100 husbands...I knew my wife was mad when she threw what at me?",
+        "question":  "We asked 100 husbands... I knew my wife was mad when she threw what at me?",
         "answers":  [
                         {
                             "text":  "pan/pot",
@@ -5333,7 +5334,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100141,
-        "question":  "We asked 100 married women...You start choking during dinner. What is your husband doing?",
+        "question":  "We asked 100 married women... You start choking during dinner. What is your husband doing?",
         "answers":  [
                         {
                             "text":  "on his phone",
@@ -5599,7 +5600,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100148,
-        "question":  "We asked 100 women...Fill in the blank: In my next life, I want to be a ______.",
+        "question":  "We asked 100 women... Fill in the blank: In my next life, I want to be a ______.",
         "answers":  [
                         {
                             "text":  "millionaire",
@@ -5929,7 +5930,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100157,
-        "question":  "We asked 100 married men...To keep your wife happy, you've pretended to like what?",
+        "question":  "We asked 100 married men... To keep your wife happy, you've pretended to like what?",
         "answers":  [
                         {
                             "text":  "her fam/mom",
@@ -5963,7 +5964,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100158,
-        "question":  "We asked 100 married men...In a perfect world, your ex would teach your wife how to what?",
+        "question":  "We asked 100 married men... In a perfect world, your ex would teach your wife how to what?",
         "answers":  [
                         {
                             "text":  "make love",
@@ -5997,7 +5998,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100159,
-        "question":  "We asked 100 men...Your ex should never contact you again unless they're what?",
+        "question":  "We asked 100 men... Your ex should never contact you again unless they're what?",
         "answers":  [
                         {
                             "text":  "dying/sick/in danger",
@@ -6133,7 +6134,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100163,
-        "question":  "We asked 100 married women...Name something your man and a polar bear have in common.",
+        "question":  "We asked 100 married women... Name something your man and a polar bear have in common.",
         "answers":  [
                         {
                             "text":  "hairy/white hair",
@@ -6167,7 +6168,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100164,
-        "question":  "We asked 100 married men...What does your mother-in-law have that's bigger than yours?",
+        "question":  "We asked 100 married men... What does your mother-in-law have that's bigger than yours?",
         "answers":  [
                         {
                             "text":  "bank account",
@@ -6201,7 +6202,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100165,
-        "question":  "We asked 100 single women...I'd definitely match with a man holding what in his dating app picture?",
+        "question":  "We asked 100 single women... I'd definitely match with a man holding what in his dating app picture?",
         "answers":  [
                         {
                             "text":  "puppy/kitten",
@@ -6303,7 +6304,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100168,
-        "question":  "We asked 100 women...Name an excuse a man gives you for why he didn't text you back.",
+        "question":  "We asked 100 women... Name an excuse a man gives you for why he didn't text you back.",
         "answers":  [
                         {
                             "text":  "busy working",
@@ -6711,7 +6712,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100180,
-        "question":  "We asked 100 men...It would be hard to resist the devil if he tempted you with what?",
+        "question":  "We asked 100 men... It would be hard to resist the devil if he tempted you with what?",
         "answers":  [
                         {
                             "text":  "money",
@@ -6813,7 +6814,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100183,
-        "question":  "We asked 100 women...If you hooked up with a farmer, name something you'd be surprised he asked you to help do in the morning.",
+        "question":  "We asked 100 women... If you hooked up with a farmer, name something you'd be surprised he asked you to help do in the morning.",
         "answers":  [
                         {
                             "text":  "milk the cows",
@@ -6847,7 +6848,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100184,
-        "question":  "We asked 100 married women...Tell me a kind of plastic surgery you wish your husband would get.",
+        "question":  "We asked 100 married women... Tell me a kind of plastic surgery you wish your husband would get.",
         "answers":  [
                         {
                             "text":  "lipo/tummy tuck",
@@ -6881,7 +6882,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100185,
-        "question":  "We asked 100 married men...You discover that your wife's three exes died under mysterious circumstances. What do you do?",
+        "question":  "We asked 100 married men... You discover that your wife's three exes died under mysterious circumstances. What do you do?",
         "answers":  [
                         {
                             "text":  "run/divorce",
@@ -7119,7 +7120,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100192,
-        "question":  "We asked 100 married women...Name something you'd do to help prepare your husband for a male beauty pageant.",
+        "question":  "We asked 100 married women... Name something you'd do to help prepare your husband for a male beauty pageant.",
         "answers":  [
                         {
                             "text":  "shave/wax/pluck",
@@ -7255,7 +7256,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100196,
-        "question":  "We asked 100 husbands...What's something you can do to make your boo smile when they're mad at you?",
+        "question":  "We asked 100 husbands... What's something you can do to make your boo smile when they're mad at you?",
         "answers":  [
                         {
                             "text":  "tell a joke",
@@ -7289,7 +7290,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100197,
-        "question":  "We asked 100 women...What would you do if a man tried to shush you in public?",
+        "question":  "We asked 100 women... What would you do if a man tried to shush you in public?",
         "answers":  [
                         {
                             "text":  "talk louder",
@@ -7323,7 +7324,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100198,
-        "question":  "We asked 100 married men...You'd hate to die and look down to see your wife's new guy using your what?",
+        "question":  "We asked 100 married men... You'd hate to die and look down to see your wife's new guy using your what?",
         "answers":  [
                         {
                             "text":  "bed",
@@ -7357,7 +7358,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100199,
-        "question":  "We asked 100 married people...You'd be suspicious if your spouse did what while talking on the phone?",
+        "question":  "We asked 100 married people... You'd be suspicious if your spouse did what while talking on the phone?",
         "answers":  [
                         {
                             "text":  "left room",
@@ -7459,7 +7460,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100202,
-        "question":  "We asked 100 women...If your mom blames her gray hair on you, you can blame your big what on her?",
+        "question":  "We asked 100 women... If your mom blames her gray hair on you, you can blame your big what on her?",
         "answers":  [
                         {
                             "text":  "booty",
@@ -7867,7 +7868,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100214,
-        "question":  "We asked 100 women...If your man picked out your clothing tomorrow, what would you be wearing?",
+        "question":  "We asked 100 women... If your man picked out your clothing tomorrow, what would you be wearing?",
         "answers":  [
                         {
                             "text":  "tight jeans",
@@ -7901,7 +7902,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100215,
-        "question":  "We asked 100 single guys...Tell me a way you realize a girl has put you in the friend zone.",
+        "question":  "We asked 100 single guys... Tell me a way you realize a girl has put you in the friend zone.",
         "answers":  [
                         {
                             "text":  "no sex/kisses",
@@ -7935,7 +7936,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100216,
-        "question":  "We asked 100 women...You met your new guy on an app, but you tell everyone you met where?",
+        "question":  "We asked 100 women... You met your new guy on an app, but you tell everyone you met where?",
         "answers":  [
                         {
                             "text":  "store/bookstore",
@@ -8105,7 +8106,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100221,
-        "question":  "We asked 100 women...Fill in the blank: Some men make love like they're riding a ______.",
+        "question":  "We asked 100 women... Fill in the blank: Some men make love like they're riding a ______.",
         "answers":  [
                         {
                             "text":  "horse",
@@ -8275,7 +8276,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100226,
-        "question":  "We asked 100 women...Name something a woman might do around your man that would make you give her the side-eye.",
+        "question":  "We asked 100 women... Name something a woman might do around your man that would make you give her the side-eye.",
         "answers":  [
                         {
                             "text":  "handsy/grab butt",
@@ -8411,7 +8412,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100230,
-        "question":  "We asked 100 women...It's not technically cheating, but you'd be mad if your man did what with another woman?",
+        "question":  "We asked 100 women... It's not technically cheating, but you'd be mad if your man did what with another woman?",
         "answers":  [
                         {
                             "text":  "dinner/drinks",
@@ -8445,7 +8446,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100231,
-        "question":  "We asked 100 married women...What's the last thing you'd say to your husband if he was going to jail?",
+        "question":  "We asked 100 married women... What's the last thing you'd say to your husband if he was going to jail?",
         "answers":  [
                         {
                             "text":  "\"divorce/bye!\"",
@@ -8547,7 +8548,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100234,
-        "question":  "We asked 100 women...Name something you might do at a bar that your mom wouldn't call ladylike.",
+        "question":  "We asked 100 women... Name something you might do at a bar that your mom wouldn't call ladylike.",
         "answers":  [
                         {
                             "text":  "tequila shots",
@@ -8819,7 +8820,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100242,
-        "question":  "We asked 100 women...Fill in the blank: I like to think I'm ______er than most other women.",
+        "question":  "We asked 100 women... Fill in the blank: I like to think I'm ______er than most other women.",
         "answers":  [
                         {
                             "text":  "smarter",
@@ -9125,7 +9126,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100251,
-        "question":  "We asked 100 women...If your Uber driver is really hot, where might you ask him to take you?",
+        "question":  "We asked 100 women... If your Uber driver is really hot, where might you ask him to take you?",
         "answers":  [
                         {
                             "text":  "restaurant/dinner",
@@ -9601,7 +9602,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100265,
-        "question":  "We asked 100 men...If you're on the kiss cam at a football game, name someone you would not want to be sitting next to.",
+        "question":  "We asked 100 men... If you're on the kiss cam at a football game, name someone you would not want to be sitting next to.",
         "answers":  [
                         {
                             "text":  "mom",
@@ -9873,7 +9874,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100273,
-        "question":  "We asked 100 men...If your nickname in the bedroom was something from the ocean, what would it be?",
+        "question":  "We asked 100 men... If your nickname in the bedroom was something from the ocean, what would it be?",
         "answers":  [
                         {
                             "text":  "shark",
@@ -9941,7 +9942,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100275,
-        "question":  "We asked 100 women...What do men do for women in chick flicks that you wish your man did for you?",
+        "question":  "We asked 100 women... What do men do for women in chick flicks that you wish your man did for you?",
         "answers":  [
                         {
                             "text":  "open doors",
@@ -9975,7 +9976,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100276,
-        "question":  "We asked 100 men...When you get to heaven, you'll be sad if there's no what there?",
+        "question":  "We asked 100 men... When you get to heaven, you'll be sad if there's no what there?",
         "answers":  [
                         {
                             "text":  "babes/whoopee",
@@ -10247,7 +10248,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100284,
-        "question":  "We asked 100 parents...Your kid is officially too old to sleep in your bed when they can do what?",
+        "question":  "We asked 100 parents... Your kid is officially too old to sleep in your bed when they can do what?",
         "answers":  [
                         {
                             "text":  "use toilet",
@@ -10349,7 +10350,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100287,
-        "question":  "We asked 100 people over 40...What do you regret not doing more of in your twenties?",
+        "question":  "We asked 100 people over 40... What do you regret not doing more of in your twenties?",
         "answers":  [
                         {
                             "text":  "traveling",
@@ -10417,7 +10418,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100289,
-        "question":  "We asked 100 women...I bet Channing Tatum smells like what?",
+        "question":  "We asked 100 women... I bet Channing Tatum smells like what?",
         "answers":  [
                         {
                             "text":  "cologne/musk",
@@ -11255,7 +11256,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100314,
-        "question":  "We asked 100 single women...His ring is off, but how can you tell that the guy you're on a date with is married?",
+        "question":  "We asked 100 single women... His ring is off, but how can you tell that the guy you're on a date with is married?",
         "answers":  [
                         {
                             "text":  "ring mark",
@@ -11315,7 +11316,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100316,
-        "question":  "We asked 100 women...Name an activity you'd put on the itinerary for a Vegas divorce party.",
+        "question":  "We asked 100 women... Name an activity you'd put on the itinerary for a Vegas divorce party.",
         "answers":  [
                         {
                             "text":  "male strip joint",
@@ -11345,7 +11346,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100317,
-        "question":  "We asked 100 women...What do women talk about when you go to the restroom together?",
+        "question":  "We asked 100 women... What do women talk about when you go to the restroom together?",
         "answers":  [
                         {
                             "text":  "men/their dates",
@@ -11375,7 +11376,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100318,
-        "question":  "We asked 100 women...Name something about Mister Rogers that would be a turnoff in your man.",
+        "question":  "We asked 100 women... Name something about Mister Rogers that would be a turnoff in your man.",
         "answers":  [
                         {
                             "text":  "his cardigan",
@@ -11435,7 +11436,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100320,
-        "question":  "We asked 100 men...The last name you'd want to accidentally call your wife in a passionate moment is whose?",
+        "question":  "We asked 100 men... The last name you'd want to accidentally call your wife in a passionate moment is whose?",
         "answers":  [
                         {
                             "text":  "my ex's",
@@ -11465,7 +11466,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100321,
-        "question":  "We asked 100 married men...Tell me something you notice that makes you think your wife is becoming a nun.",
+        "question":  "We asked 100 married men... Tell me something you notice that makes you think your wife is becoming a nun.",
         "answers":  [
                         {
                             "text":  "no sex!",
@@ -11495,7 +11496,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100322,
-        "question":  "We asked 100 women...You just discovered the diamond in your engagement ring is fake. What do you do?",
+        "question":  "We asked 100 women... You just discovered the diamond in your engagement ring is fake. What do you do?",
         "answers":  [
                         {
                             "text":  "confront/yell",
@@ -11525,7 +11526,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100323,
-        "question":  "We asked 100 married men...What does your wife do when she thinks you're not listening to her?",
+        "question":  "We asked 100 married men... What does your wife do when she thinks you're not listening to her?",
         "answers":  [
                         {
                             "text":  "yells/talks louder",
@@ -11555,7 +11556,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100324,
-        "question":  "We asked 100 women...Some men you've dated smell like what stinky animal?",
+        "question":  "We asked 100 women... Some men you've dated smell like what stinky animal?",
         "answers":  [
                         {
                             "text":  "dog",
@@ -11705,7 +11706,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100329,
-        "question":  "We asked 100 women...You'd never tell your boo that you had a freaky dream about who?",
+        "question":  "We asked 100 women... You'd never tell your boo that you had a freaky dream about who?",
         "answers":  [
                         {
                             "text":  "my ex",
@@ -11885,7 +11886,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100335,
-        "question":  "We asked 100 married women...What would you do if you saw a dating app on your husband's phone?",
+        "question":  "We asked 100 married women... What would you do if you saw a dating app on your husband's phone?",
         "answers":  [
                         {
                             "text":  "confront/yell",
@@ -11915,7 +11916,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100336,
-        "question":  "We asked 100 married women...When your husband is hoping for a little romance, he puts on what?",
+        "question":  "We asked 100 married women... When your husband is hoping for a little romance, he puts on what?",
         "answers":  [
                         {
                             "text":  "marvin gaye/music",
@@ -11945,7 +11946,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100337,
-        "question":  "We asked 100 women...Name something about the underwear your man is wearing that's a turnoff.",
+        "question":  "We asked 100 women... Name something about the underwear your man is wearing that's a turnoff.",
         "answers":  [
                         {
                             "text":  "stains/smelly",
@@ -11975,7 +11976,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100338,
-        "question":  "We asked 100 men...What's the sexiest thing about you?",
+        "question":  "We asked 100 men... What's the sexiest thing about you?",
         "answers":  [
                         {
                             "text":  "face/smile/eyes",
@@ -12035,7 +12036,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100340,
-        "question":  "We asked 100 married men...Your boss comes to dinner and hits on your wife. What do you do?",
+        "question":  "We asked 100 married men... Your boss comes to dinner and hits on your wife. What do you do?",
         "answers":  [
                         {
                             "text":  "ignore/let him",
@@ -12065,7 +12066,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100341,
-        "question":  "We asked 100 married men...You might practice what to impress your wife on your anniversary?",
+        "question":  "We asked 100 married men... You might practice what to impress your wife on your anniversary?",
         "answers":  [
                         {
                             "text":  "cooking",
@@ -12125,7 +12126,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100343,
-        "question":  "We asked 100 married men...You just found out that your marriage is invalid. What do you do?",
+        "question":  "We asked 100 married men... You just found out that your marriage is invalid. What do you do?",
         "answers":  [
                         {
                             "text":  "remarry",
@@ -12155,7 +12156,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100344,
-        "question":  "We asked 100 women...Give me an affectionate term your man calls you that starts with \"baby.\"",
+        "question":  "We asked 100 women... Give me an affectionate term your man calls you that starts with \"baby.\"",
         "answers":  [
                         {
                             "text":  "baby girl",
@@ -12215,7 +12216,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100346,
-        "question":  "We asked 100 single men...Name something you hope a girl doesn't bring with her on a date.",
+        "question":  "We asked 100 single men... Name something you hope a girl doesn't bring with her on a date.",
         "answers":  [
                         {
                             "text":  "her friend",
@@ -12935,7 +12936,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100370,
-        "question":  "We asked 100 men...If you woke up as a woman tomorrow, what would you do?",
+        "question":  "We asked 100 men... If you woke up as a woman tomorrow, what would you do?",
         "answers":  [
                         {
                             "text":  "explore/touch bod",
@@ -12965,7 +12966,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100371,
-        "question":  "We asked 100 women...Why might you think your date is older than his dating profile?",
+        "question":  "We asked 100 women... Why might you think your date is older than his dating profile?",
         "answers":  [
                         {
                             "text":  "gray/balding",
@@ -13085,7 +13086,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100375,
-        "question":  "We asked 100 married women...Your husband said he's going to pamper you this weekend. What are you hoping he'll do?",
+        "question":  "We asked 100 married women... Your husband said he's going to pamper you this weekend. What are you hoping he'll do?",
         "answers":  [
                         {
                             "text":  "massage/spa",
@@ -13235,7 +13236,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100380,
-        "question":  "We asked 100 women...When you picture the man of your dreams, he's holding what?",
+        "question":  "We asked 100 women... When you picture the man of your dreams, he's holding what?",
         "answers":  [
                         {
                             "text":  "me/my hand",
@@ -14135,7 +14136,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100410,
-        "question":  "We asked 100 men...What do other men do in a sexier way than you do?",
+        "question":  "We asked 100 men... What do other men do in a sexier way than you do?",
         "answers":  [
                         {
                             "text":  "talk/chat up",
@@ -14225,7 +14226,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100413,
-        "question":  "We asked 100 women...Name something that you just don't understand why men like it so much.",
+        "question":  "We asked 100 women... Name something that you just don't understand why men like it so much.",
         "answers":  [
                         {
                             "text":  "sports",
@@ -14315,7 +14316,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100416,
-        "question":  "We asked 100 men...Name a work uniform you might wear in the bedroom.",
+        "question":  "We asked 100 men... Name a work uniform you might wear in the bedroom.",
         "answers":  [
                         {
                             "text":  "police officer",
@@ -15095,7 +15096,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100442,
-        "question":  "We asked 100 women...What pizza topping would make a good pet name for your man?",
+        "question":  "We asked 100 women... What pizza topping would make a good pet name for your man?",
         "answers":  [
                         {
                             "text":  "sausage",
@@ -15125,7 +15126,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100443,
-        "question":  "We asked 100 women...Name something men lie about that you pretend to believe.",
+        "question":  "We asked 100 women... Name something men lie about that you pretend to believe.",
         "answers":  [
                         {
                             "text":  "$$$/job",
@@ -15755,7 +15756,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100464,
-        "question":  "We asked 100 men...What celebrity would make the best gym partner?",
+        "question":  "We asked 100 men... What celebrity would make the best gym partner?",
         "answers":  [
                         {
                             "text":  "dwayne johnson",
@@ -16145,7 +16146,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100477,
-        "question":  "We asked 100 women...Name a sexy Halloween costume you'd wear to make an ex jealous.",
+        "question":  "We asked 100 women... Name a sexy Halloween costume you'd wear to make an ex jealous.",
         "answers":  [
                         {
                             "text":  "nurse",
@@ -16295,7 +16296,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100482,
-        "question":  "We asked 100 women...Fill in the blank: If a date asked you to drive him to ______, you'd run away.",
+        "question":  "We asked 100 women... Fill in the blank: If a date asked you to drive him to ______, you'd run away.",
         "answers":  [
                         {
                             "text":  "jail",
@@ -16711,7 +16712,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100496,
-        "question":  "We asked 100 married women...Name something Mickey Mouse has that would be weird if your husband had it too.",
+        "question":  "We asked 100 married women... Name something Mickey Mouse has that would be weird if your husband had it too.",
         "answers":  [
                         {
                             "text":  "big mouse ears",
@@ -16737,7 +16738,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100497,
-        "question":  "We asked 100 women...Name something you do to a bald man's head to get him in the mood.",
+        "question":  "We asked 100 women... Name something you do to a bald man's head to get him in the mood.",
         "answers":  [
                         {
                             "text":  "rub/stroke it",
@@ -16841,7 +16842,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100501,
-        "question":  "We asked 100 women...What Vegas casino game best describes your man in bed?",
+        "question":  "We asked 100 women... What Vegas casino game best describes your man in bed?",
         "answers":  [
                         {
                             "text":  "poker/7-card stud",
@@ -16971,7 +16972,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100506,
-        "question":  "We asked 100 women...If you saw your friend's groom kiss the wedding planner before the ceremony, what would you do?",
+        "question":  "We asked 100 women... If you saw your friend's groom kiss the wedding planner before the ceremony, what would you do?",
         "answers":  [
                         {
                             "text":  "tell the bride",
@@ -17049,7 +17050,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100509,
-        "question":  "We asked 100 married men...Admit it: Just once, you'd like to try on your wife's what?",
+        "question":  "We asked 100 married men... Admit it: Just once, you'd like to try on your wife's what?",
         "answers":  [
                         {
                             "text":  "lingerie/undies",
@@ -17153,7 +17154,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100513,
-        "question":  "We asked 100 married men...You'd be willing to renew your vows if you could skip which one this time?",
+        "question":  "We asked 100 married men... You'd be willing to renew your vows if you could skip which one this time?",
         "answers":  [
                         {
                             "text":  "to obey",
@@ -17257,7 +17258,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100517,
-        "question":  "We asked 100 women...Name something your man would look sexy riding.",
+        "question":  "We asked 100 women... Name something your man would look sexy riding.",
         "answers":  [
                         {
                             "text":  "motorcycle",
@@ -17387,7 +17388,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100522,
-        "question":  "We asked 100 men...It's your first day in prison. Tell me how you're going to make friends with your cellmate.",
+        "question":  "We asked 100 men... It's your first day in prison. Tell me how you're going to make friends with your cellmate.",
         "answers":  [
                         {
                             "text":  "chat/share laughs",
@@ -17413,7 +17414,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100523,
-        "question":  "We asked 100 single women...Oh no -- your boyfriend just confessed to you that he's what?",
+        "question":  "We asked 100 single women... Oh no -- your boyfriend just confessed to you that he's what?",
         "answers":  [
                         {
                             "text":  "gay/bi",
@@ -17439,7 +17440,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100524,
-        "question":  "We asked 100 married women...You'd be furious if your husband did what while you did a sexy dance for him?",
+        "question":  "We asked 100 married women... You'd be furious if your husband did what while you did a sexy dance for him?",
         "answers":  [
                         {
                             "text":  "yawned/fell asleep",
@@ -17465,7 +17466,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100525,
-        "question":  "We asked 100 single women...Name something you do on a first date that your mom would not have done.",
+        "question":  "We asked 100 single women... Name something you do on a first date that your mom would not have done.",
         "answers":  [
                         {
                             "text":  "kiss",
@@ -17491,7 +17492,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100526,
-        "question":  "We asked 100 women...What might you prefer to do with your gay guy friend than with your boyfriend?",
+        "question":  "We asked 100 women... What might you prefer to do with your gay guy friend than with your boyfriend?",
         "answers":  [
                         {
                             "text":  "shop",
@@ -17803,7 +17804,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100538,
-        "question":  "We asked 100 women...You hope your friends tell you if your what is lopsided?",
+        "question":  "We asked 100 women... You hope your friends tell you if your what is lopsided?",
         "answers":  [
                         {
                             "text":  "chest",
@@ -18037,7 +18038,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100547,
-        "question":  "We asked 100 men...If you lost your pocket square, what could you stuff in your suit pocket as a substitute?",
+        "question":  "We asked 100 men... If you lost your pocket square, what could you stuff in your suit pocket as a substitute?",
         "answers":  [
                         {
                             "text":  "napkin/paper towel",
@@ -19201,7 +19202,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100593,
-        "question":  "We asked 100 women...Who might pull on your hair?",
+        "question":  "We asked 100 women... Who might pull on your hair?",
         "answers":  [
                         {
                             "text":  "a child/baby",
@@ -19223,7 +19224,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100594,
-        "question":  "We asked 100 women...Name something ugly you put on at night so you look beautiful in the morning.",
+        "question":  "We asked 100 women... Name something ugly you put on at night so you look beautiful in the morning.",
         "answers":  [
                         {
                             "text":  "face mask/cream",
@@ -19245,7 +19246,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100595,
-        "question":  "We asked 100 single women...If you love bad boys, you'll find plenty of them where?",
+        "question":  "We asked 100 single women... If you love bad boys, you'll find plenty of them where?",
         "answers":  [
                         {
                             "text":  "bar/club",
@@ -19421,7 +19422,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100603,
-        "question":  "We asked 100 women...Name a Disney Princess you'd ask to borrow a dress from for the ball.",
+        "question":  "We asked 100 women... Name a Disney Princess you'd ask to borrow a dress from for the ball.",
         "answers":  [
                         {
                             "text":  "cinderella",
@@ -19795,7 +19796,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100620,
-        "question":  "We asked 100 married women...Name something your mother-in-law thinks she does better than you.",
+        "question":  "We asked 100 married women... Name something your mother-in-law thinks she does better than you.",
         "answers":  [
                         {
                             "text":  "cooks/bakes",
@@ -20037,7 +20038,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100631,
-        "question":  "We asked 100 single women...You'd be annoyed if a guy asked you to do what on a date?",
+        "question":  "We asked 100 single women... You'd be annoyed if a guy asked you to do what on a date?",
         "answers":  [
                         {
                             "text":  "pay",
@@ -20081,7 +20082,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100633,
-        "question":  "We asked 100 men...Name a bad moment to confuse your girlfriend and your ex's names.",
+        "question":  "We asked 100 men... Name a bad moment to confuse your girlfriend and your ex's names.",
         "answers":  [
                         {
                             "text":  "in bed",
@@ -21137,7 +21138,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100681,
-        "question":  "We asked 100 husbands...What's a two-word phrase that will end an argument with your spouse?",
+        "question":  "We asked 100 husbands... What's a two-word phrase that will end an argument with your spouse?",
         "answers":  [
                         {
                             "text":  "you're right",
@@ -21203,7 +21204,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100684,
-        "question":  "We asked 100 parents...Tell me something your kids know more about than you.",
+        "question":  "We asked 100 parents... Tell me something your kids know more about than you.",
         "answers":  [
                         {
                             "text":  "tech/internet",
@@ -21445,7 +21446,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100695,
-        "question":  "We asked 100 married women...Give me a B word or phrase you'd use to describe your husband's belly.",
+        "question":  "We asked 100 married women... Give me a B word or phrase you'd use to describe your husband's belly.",
         "answers":  [
                         {
                             "text":  "big",
@@ -21731,7 +21732,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100708,
-        "question":  "We asked 100 men...Which color of nail polish looks the best on women?",
+        "question":  "We asked 100 men... Which color of nail polish looks the best on women?",
         "answers":  [
                         {
                             "text":  "red/candy apple",
@@ -22237,7 +22238,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100731,
-        "question":  "We asked 100 single women...If I ever get married, I'm going to want my own what?",
+        "question":  "We asked 100 single women... If I ever get married, I'm going to want my own what?",
         "answers":  [
                         {
                             "text":  "$$$/bank account",
@@ -22391,7 +22392,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100738,
-        "question":  "We asked 100 women...It would be creepy to date a man who looks like your who?",
+        "question":  "We asked 100 women... It would be creepy to date a man who looks like your who?",
         "answers":  [
                         {
                             "text":  "dad",
@@ -22435,7 +22436,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100740,
-        "question":  "We asked 100 married people...What do you wear to bed so your spouse knows you're not in the mood?",
+        "question":  "We asked 100 married people... What do you wear to bed so your spouse knows you're not in the mood?",
         "answers":  [
                         {
                             "text":  "flannel pj's/gown",
@@ -22919,7 +22920,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100762,
-        "question":  "We asked 100 married people...What might you put in your spouse's face to wake them up in the morning?",
+        "question":  "We asked 100 married people... What might you put in your spouse's face to wake them up in the morning?",
         "answers":  [
                         {
                             "text":  "coffee/breakfast",
@@ -23271,7 +23272,7 @@ export const season27Questions: SurveyQuestion[] = [
     },
     {
         "id":  100778,
-        "question":  "We asked 100 women...If a man loves you, he should be willing to do what for you?",
+        "question":  "We asked 100 women... If a man loves you, he should be willing to do what for you?",
         "answers":  [
                         {
                             "text":  "clean/the dishes",
